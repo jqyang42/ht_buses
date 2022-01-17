@@ -3,6 +3,10 @@
     font-size: 18px !important;
 }
 
+.active {
+    background-color: rgba(255, 218, 106, 0.4) !important;
+}
+
 .nav-item:hover {
     background-color: rgba(255, 218, 106, 0.4);
 }
@@ -30,3 +34,21 @@
     border: #ADB5BD;
     color: #ffffff;
 }
+
+.bg-gray {
+    background-color: #F3F3F3;
+}
+
+/* .table-hover {
+    background-color: #FFF3CD;
+} */
+
+.table-hover tbody tr:hover td {
+    --bs-table-accent-bg: #FFF3CD; 
+}
+
+.form-check-input:checked {
+    color: #fff;
+    border-color: #FFC107;
+    background-color: #FFC107;
+  }

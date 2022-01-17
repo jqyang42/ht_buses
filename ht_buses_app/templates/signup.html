@@ -1,3 +1,4 @@
+{% extends "index.html" %}
 {% load static %}
 {% load bootstrap5 %}
 {% load bootstrap_icons %}
@@ -43,24 +44,45 @@
                     <div class="container mt-4 mx-2">
                         <div class="row">
                             <div class="col-6">
-                                <h2 class="pb-4">Log In</h2>
+                                <h2 class="pb-4">Sign Up</h2>
                                 <form>
                                     <div class="form-group pb-3">
+                                        <label for="exampleInputName1" class="pb-2">Name</label>
+                                        <input type="name" class="form-control pb-2" id="exampleInputName1"
+                                            placeholder="Enter full name">
+                                    </div>
+                                    <div class="form-group pb-3">
                                         <label for="exampleInputEmail1" class="pb-2">Email</label>
-                                        <input type="email" class="form-control pb-2" id="exampleInputEmail1" aria-describedby="emailHelp"
-                                            placeholder="Enter email">
+                                        <input type="email" class="form-control pb-2" id="exampleInputEmail1" placeholder="Enter email">
                                         <small id="emailHelp" class="form-text text-muted pb-2">We'll never share your email with anyone
                                             else.</small>
+                                    </div>
+                                    <div class="form-group pb-3">
+                                        <label for="exampleInputAddress1" class="pb-2">Address</label>
+                                        <input type="address" class="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address">
+                                    </div>
+                                    <div class="form-group pb-3">
+                                        <div>
+                                            <label for="exampleInputType1" class="pb-2">Type</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="administrator">
+                                            <label class="form-check-label" for="inlineRadio1">Administrator</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="general">
+                                            <label class="form-check-label" for="inlineRadio2">General</label>
+                                          </div>
                                     </div>
                                     <div class="form-group pb-3">
                                         <label for="exampleInputPassword1" class="pb-2">Password</label>
                                         <input type="password" class="form-control pb-2" id="exampleInputPassword1" placeholder="Password">
                                     </div>
-                                    <div class="form-group form-check pb-4">
-                                        <input type="checkbox" class="form-check-input pb-2" id="exampleCheck1">
-                                        <label class="form-check-label pb-2" for="exampleCheck1">Remember me</label>
+                                    <div class="form-group pb-4">
+                                        <label for="exampleInputPassword1" class="pb-2">Confirm Password</label>
+                                        <input type="password" class="form-control pb-2" id="exampleInputPassword1" placeholder="Password">
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Log In</button>
+                                    <button type="submit" class="btn btn-primary">Sign Up</button>
                                 </form>
                             </div>
                         </div>
