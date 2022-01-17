@@ -30,6 +30,3 @@ class UserExtended(models.Model):
     # use is_staff for admin login
     address = models.CharField(max_length=100)
     user_student_group_id = models.ForeignKey(UserStudentGroup, default=None, on_delete=models.CASCADE)
-    
-
-
