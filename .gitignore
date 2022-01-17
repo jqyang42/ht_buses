@@ -1,12 +1,13 @@
 # Based off of djangowaves.com's ultimate Django gitignore
 ht_buses/*
 manage.py
+settings.py
 
 # Django #
 *.log
 *.pot
 *.pyc
-__pycache__
+*/__pycache__/*
 db.sqlite3
 media
 
