@@ -1,0 +1,32 @@
+.nav-link {
+    color: #ffffff !important;
+    font-size: 18px !important;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 218, 106, 0.4);
+}
+
+.btn-primary {
+    background-color: #FFDA6A;
+    border: #FFDA6A;
+    color: #495057;
+}
+
+.btn-primary:hover {
+    background-color: #FFC107;
+    border: #FFC107;
+    color: #495057;
+}
+
+.btn-secondary {
+    background-color: #DEE2E6;
+    border: #DEE2E6;
+    color: #495057;
+}
+
+.btn-secondary:hover {
+    background-color: #ADB5BD;
+    border: #ADB5BD;
+    color: #ffffff;
+}
