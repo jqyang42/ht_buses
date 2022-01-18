@@ -15,3 +15,6 @@ def schools(request):
 
 def routes(request):
     return render(request, 'routes.html', {})
+
+def users(request):
+    return render(request, 'users.html', {})
