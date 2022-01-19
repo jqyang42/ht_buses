@@ -13,13 +13,13 @@ class Student(models.Model):
     school_id = models.ForeignKey(School, default=0, on_delete=models.CASCADE)
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=0, on_delete=models.SET(0))
-    user_extended_id = models.ForeignKey('UserExtended', default=0, on_delete=models.CASCADE) 
+    user_id = models.ForeignKey('User', default=0, on_delete=models.CASCADE) 
     
     class Meta:
         indexes = [
             models.Index(fields=['route_id']),
             models.Index(fields=['school_id']),
-            models.Index(fields=['user_extended_id'])
+            models.Index(fields=['user_id'])
         ]
 
 class Route(models.Model):
@@ -69,7 +69,7 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
-    objects = models.UserExtendedManager()
+    objects = UserManager()
 
 
     
