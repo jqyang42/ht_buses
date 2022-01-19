@@ -31,8 +31,9 @@ class Route(models.Model):
             models.Index(fields=['school_id'])
         ]
 
+# Relook at this
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password= None):
+    def create_user(self, email, first_name, last_name,is_parent, address, password=None):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -52,8 +53,8 @@ class UserManager(BaseUserManager):
         user.save(using= self._db)
         return user 
        
-    def create_admin_user(self, email, first_name, last_name, is_parent, password=None):
-        user = self.create_user(self, email, first_name, last_name, is_parent, password=None)
+    def create_superuser(self, email, first_name, last_name, is_parent, password=None):
+        user = self.create_user(email, first_name, last_name, is_parent, '', password=None)
         user.is_staff = True
         user.save(using=self._db)
         return user
@@ -64,10 +65,10 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email',unique=True)
     is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
-    address = models.CharField(max_length=100, default=None)
+    address = models.CharField(max_length=100, default='')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
 
     objects = UserManager()
 
