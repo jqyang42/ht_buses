@@ -4,41 +4,48 @@ from django.http import HttpResponse
 from .models import School, Route, Student, User
 from django.contrib.auth import authenticate
 
+
 def index(request):
-    if request.POST == 'POST':
-        print("here")
+
+    if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
+        
         user = authenticate(email=email, password=password)
+        current_user = User.objects.filter(first_name = "John") #change once login setup
+
+        if current_user.count() <= 0:
+            createTempUser()
+            current_user = User.objects.filter(first_name = "John")
+        user = current_user[0]
+
         if user is not None:
-            return render(request, 'students.html', {})
+            logged_in = True
+            admin_permissions = user.is_staff
+            f_name = user.first_name
+            l_name = user.last_name
+            return students(request, logged_in = True, admin_permissions = admin_permissions, user=user)
+        else:
+            return render(request, 'index.html', {})
+    
     return render(request, 'index.html', {})
 
-def students(request):
-    logged_in = True #change once login setup
-    is_admin = False #change once login setup
 
-    current_user = User.objects.filter(first_name = "John") #change once login setup
 
-    if current_user.count() <= 0:
-        createTempUser()
-        current_user = User.objects.filter(first_name = "John")
-    print(School.schoolsTable.all())
-    print(Student.studentsTable.all())
-    if logged_in:
-        if is_admin:
-            dictionary =  {'all_students': Student.studentsTable.all(), 'user_': current_user[0], 'displayParent': True }
+
+def students(request, logged_in=False, admin_permissions=False, user = None):
+
+    if logged_in and user is not None:
+        if admin_permissions:
+            dictionary =  {'all_students': Student.studentsTable.all(), 'user_first': user.first_name, 'user_last': user.last_name, 'displayParent': True }
             return render(request, 'students.html', dictionary)
         else: 
-            dictionary =  {'all_students': Student.studentsTable.all(), 'user_': current_user[0], 'displayParent': False}
+            dictionary =  {'all_students': Student.studentsTable.all(), 'user_first': user.first_name, 'user_last': user.last_name, 'displayParent': False}
             return render(request, 'students.html', dictionary)
 
     else: 
-        return render(request, 'students.html', {}) #change to login page if not logged in 
-
-    return render(request, 'students.html', {}) #change to login page if not logged in 
-
-
+        return render(request, 'index.html', {}) #change to login page if not logged in 
+    
 def signup(request):
     return render(request, 'signup.html', {})
 
