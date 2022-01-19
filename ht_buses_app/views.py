@@ -2,16 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from .models import School, Route, Student, User
-
+from django.contrib.auth import authenticate
 
 def index(request):
     if request.POST == 'POST':
+        print("here")
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(email=email, password=password)
         if user is not None:
-            return render(request, 'students.html', {})
-        else:
             return render(request, 'students.html', {})
     return render(request, 'index.html', {})
 
@@ -19,11 +18,11 @@ def students(request):
     logged_in = True #change once login setup
     is_admin = False #change once login setup
 
-    current_user = User.objects.filter(first_name = "Henry") #change once login setup
+    current_user = User.objects.filter(first_name = "John") #change once login setup
 
     if current_user.count() <= 0:
         createTempUser()
-        current_user = User.objects.filter(first_name = "Henry")
+        current_user = User.objects.filter(first_name = "John")
     print(School.schoolsTable.all())
     print(Student.studentsTable.all())
     if logged_in:
@@ -59,7 +58,7 @@ def createTempUser():
      school.save()
      route = Route(name="Route 5", school_id = school,description="This is route 5" )
      route.save()
-     parent = User(first_name = "Henry", last_name= "Smuckers" , email='admin',password='admin',address = "90 East Ave",is_parent=False)
+     parent = User(first_name = "John", last_name= "Garcia" , email='g@duke.edu',password='admin',address = "90 East Ave",is_parent=False)
      parent.save()
      student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_id = parent)
      student.save()
