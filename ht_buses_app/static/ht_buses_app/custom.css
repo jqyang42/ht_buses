@@ -51,4 +51,11 @@
     color: #fff;
     border-color: #FFC107;
     background-color: #FFC107;
-  }
+}
+
+h7 {
+    color: #6C757D;
+    letter-spacing: 0.15em;
+    font-size: 14px;
+    font-weight: 400;
+}

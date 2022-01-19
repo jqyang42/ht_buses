@@ -18,3 +18,6 @@ def routes(request):
 
 def users(request):
     return render(request, 'users.html', {})
+
+def routeplanner(request):
+    return render(request, 'route_planner.html', {})
