@@ -1,6 +1,6 @@
 from django.db import models
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 class School(models.Model):
@@ -31,6 +31,51 @@ class Route(models.Model):
             models.Index(fields=['school_id'])
         ]
 
-class UserExtended(models.Model):
-    # use is_staff for admin login
-    address = models.CharField(max_length=100)
+class UserManager(BaseUserManager):
+    def create_user(self, email, first_name, last_name,is_parent, address, password= None):
+        if not email:
+            raise ValueError('Users must have email address')
+        if not first_name:
+            raise ValueError('Users must have a first name')
+        if not last_name:
+            raise ValueError('Users must have a last name')
+        if is_parent is True and not address:
+                raise ValueError('Users must have an address')
+        user = self.model(
+            email= self.normalize_email(email),
+            first_name = first_name,
+            last_name = last_name,
+            address = address,
+            is_parent = is_parent
+            )
+        user.set_password(password)
+        user.save(using= self._db)
+        return user 
+       
+    def create_admin_user(self, email, first_name, last_name, is_parent, password=None):
+        user = self.create_user(self, email, first_name, last_name, is_parent, password=None)
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
+               
+class User(AbstractBaseUser):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(verbose_name='email',unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_parent = models.BooleanField(default=False)
+    address = models.CharField(max_length=100, default=None)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    objects = models.UserExtendedManager()
+
+
+    
+    
+
+
+    
+
+    
