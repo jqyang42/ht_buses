@@ -13,9 +13,11 @@ def students(request):
     logged_in = True #change once login setup
     is_admin = False #change once login setup
 
-    current_user = UserExtended.allUsers.filter(first_name = "Mary") #change once login setup
-    if current_user.count() < 0:
-        user = createTempUser
+    current_user = UserExtended.allUsers.filter(first_name = "Henry") #change once login setup
+
+    if current_user.count() <= 0:
+        createTempUser()
+        current_user = UserExtended.allUsers.filter(first_name = "Henry")
 
     if logged_in:
         if is_admin:
@@ -37,8 +39,7 @@ def createTempUser():
     school.save()
     route = Route(name="Route 5", school_id = school,description="This is route 5" )
     route.save()
-    parent = UserExtended(first_name = "Mary", last_name= "Quiz" , address = "90 East Ave")
+    parent = UserExtended(first_name = "Henry", last_name= "Smuckers" , address = "90 East Ave")
     parent.save()
-    student = Student(first_name = "John", last_name = "Quiz", school_id = school, student_school_id = 232, route_id = route, user_extended_id = parent)
+    student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_extended_id = parent)
     student.save()
-    return parent 
