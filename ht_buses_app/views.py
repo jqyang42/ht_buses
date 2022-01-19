@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from .models import School, Route, Student, UserExtended
+from .models import School, Route, Student, User
 
 def index(request):
     
@@ -13,11 +13,11 @@ def students(request):
     logged_in = True #change once login setup
     is_admin = False #change once login setup
 
-    current_user = UserExtended.allUsers.filter(first_name = "Henry") #change once login setup
+    current_user = User.objects.filter(first_name = "Henry") #change once login setup
 
     if current_user.count() <= 0:
         createTempUser()
-        current_user = UserExtended.allUsers.filter(first_name = "Henry")
+        current_user = User.objects.filter(first_name = "Henry")
 
     if logged_in:
         if is_admin:
@@ -34,6 +34,16 @@ def signup(request):
     return render(request, 'signup.html', {})
 
 
+def schools(request):
+    return render(request, 'schools.html', {})
+
+def routes(request):
+    return render(request, 'routes.html', {})
+
+def users(request):
+    return render(request, 'users.html', {})
+
+
 def createTempUser():
     school = School(name = "East", address = "56 Yellow Road")
     school.save()
@@ -43,3 +53,4 @@ def createTempUser():
     parent.save()
     student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_extended_id = parent)
     student.save()
+
