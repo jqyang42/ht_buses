@@ -27,11 +27,11 @@ class Route(models.Model):
     name = models.CharField(max_length=25)
     school_id = models.ForeignKey(School, default=0, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
+    routeTables = models.Manager()
     class Meta:
         indexes = [
             models.Index(fields=['school_id'])
         ]
-    routesTable  = models.Manager()
 
 # Relook at this
 class UserManager(BaseUserManager):
@@ -55,8 +55,8 @@ class UserManager(BaseUserManager):
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, password=None):
-        user = self.create_user(email, first_name, last_name, is_parent, '', password=None)
+    def create_superuser(self, email, first_name, last_name, is_parent, address, password=None):
+        user = self.create_user(email, first_name, last_name, is_parent, address, password=None)
         user.is_staff = True
         user.save(using=self._db)
         return user
@@ -70,11 +70,13 @@ class User(AbstractBaseUser):
     address = models.CharField(max_length=100, default='')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
+    # TODO: figure out way to only request when necessary
+    if is_parent :
+        REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent','address']
+    else: 
+        REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
 
     objects = UserManager()
 
 
     
-    
-
