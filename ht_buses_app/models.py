@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class School(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+    schoolsTable = models.Manager()
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
@@ -14,7 +15,7 @@ class Student(models.Model):
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=0, on_delete=models.SET(0))
     user_extended_id = models.ForeignKey('UserExtended', default=0, on_delete=models.CASCADE) 
-    
+    studentsTable = models.Manager()
     class Meta:
         indexes = [
             models.Index(fields=['route_id']),
@@ -30,7 +31,14 @@ class Route(models.Model):
         indexes = [
             models.Index(fields=['school_id'])
         ]
+    routesTable  = models.Manager()
 
 class UserExtended(models.Model):
     # use is_staff for admin login
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+    allUsers = models.Manager()
+
+
+
