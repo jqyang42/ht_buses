@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class School(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+    schoolsTable = models.Manager()
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
@@ -14,7 +15,7 @@ class Student(models.Model):
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=0, on_delete=models.SET(0))
     user_id = models.ForeignKey('User', default=0, on_delete=models.CASCADE) 
-    
+    studentsTable = models.Manager()
     class Meta:
         indexes = [
             models.Index(fields=['route_id']),
@@ -30,6 +31,7 @@ class Route(models.Model):
         indexes = [
             models.Index(fields=['school_id'])
         ]
+    routesTable  = models.Manager()
 
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name,is_parent, address, password= None):
@@ -75,7 +77,3 @@ class User(AbstractBaseUser):
     
     
 
-
-    
-
-    
