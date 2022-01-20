@@ -3,6 +3,7 @@
 {% load bootstrap_icons %}
 
 {% block content %}
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -44,17 +45,18 @@
                         <div class="row">
                             <div class="col-6">
                                 <h2 class="pb-4">Log In</h2>
-                                <form>
+                                <form action= "" method= "post">
+                                    {% csrf_token %}
                                     <div class="form-group pb-3">
                                         <label for="exampleInputEmail1" class="pb-2">Email</label>
-                                        <input type="email" class="form-control pb-2" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                        <input type="email" class="form-control pb-2" name= "email" id="exampleInputEmail1" aria-describedby="emailHelp"
                                             placeholder="Enter email">
                                         <small id="emailHelp" class="form-text text-muted pb-2">We'll never share your email with anyone
                                             else.</small>
                                     </div>
                                     <div class="form-group pb-3">
                                         <label for="exampleInputPassword1" class="pb-2">Password</label>
-                                        <input type="password" class="form-control pb-2" id="exampleInputPassword1" placeholder="Password">
+                                        <input type="password" class="form-control pb-2" name="password" id="exampleInputPassword1" placeholder="Password">
                                     </div>
                                     <div class="form-group form-check pb-4">
                                         <input type="checkbox" class="form-check-input pb-2" id="exampleCheck1">

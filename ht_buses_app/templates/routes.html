@@ -32,12 +32,12 @@
 
                         <!-- Menu Links -->
                         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
-                            <li class="nav-item active">
+                            <li class="nav-item">
                                 <a href="/students" class="nav-link align-middle mx-4 px-4">
                                     {% bs_icon 'list-ul' %} <span class="ms-1 d-none d-sm-inline">Students</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item active">
                                 <a href="/routes" class="nav-link px-0 align-middle mx-4 px-4">
                                     {% bs_icon 'geo-alt' %} <span class="ms-1 d-none d-sm-inline">Bus Routes</span></a>
                             </li>
@@ -59,10 +59,10 @@
                     <div class="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                         <div class="row align-self-center d-flex justify-content-between">
                             <div class="col-md-auto mx-2 py-2">
-                                <h5>Students</h5>
+                                <h5>Bus Routes</h5>
                             </div>
                             <div class="col-md-auto mx-2 py-0 mr-4">
-                                <h6 class="font-weight-bold mb-0">{{ user_first }} {{ user_last }}</h6>
+                                <h6 class="font-weight-bold mb-0">Admin Name</h6>
                                 <p class="text-muted text-small">Administrator</p>
                             </div>
                         </div>
@@ -81,23 +81,25 @@
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>#</th>
                                             <th>Name</th>
-                                            <th>Parent</th>
                                             <th>School</th>
-                                            <th>Route</th>
+                                            <th>Student Count</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for each in all_students %}
                                         <tr>
-                                            <td class="table-active">{{ each.student_school_id }}</td>
-                                            <td>{{ each.first_name }} {{ each.last_name }}</td>
-                                            <td>{{ each.user_id.first_name }} {{ each.user_id.last_name }}</td>
-                                            <td>{{ each.school_id.name }}</td>
-                                            <td>{{ each.route_id.name }}</td>
+                                            <td class="table-active">Example</td>
+                                            <td>Example</td>
+                                            <td>Example</td>
+                                            <td>Example</td>
                                         </tr>
-                                        {% endfor %}
+                                        <tr>
+                                            <td class="">Example</td>
+                                            <td>Example</td>
+                                            <td>Example</td>
+                                            <td>Example</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
