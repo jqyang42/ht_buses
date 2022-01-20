@@ -2,24 +2,18 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from .models import School, Route, Student, User
-from django.contrib.auth import authenticate
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.hashers import check_password
 
 def index(request):
-
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
         
         user = authenticate(email=email, password=password)
-        current_user = User.objects.filter(first_name = "John") #change once login setup
-
-        if current_user.count() <= 0:
-            createTempUser()
-            current_user = User.objects.filter(first_name = "John")
-        user = current_user[0]
-
+        print(user)
         if user is not None:
+            #login(request, user) #request.user
             logged_in = True
             admin_permissions = user.is_staff
             f_name = user.first_name
@@ -59,13 +53,12 @@ def routes(request):
 def users(request):
     return render(request, 'users.html', {})
 
-#TODO: Why is student not getting saved
-def createTempUser():
-     school = School(name = "East", address = "56 Yellow Road")
-     school.save()
-     route = Route(name="Route 5", school_id = school,description="This is route 5" )
-     route.save()
-     parent = User(first_name = "John", last_name= "Garcia" , email='g@duke.edu',password='admin',address = "90 East Ave",is_parent=False)
-     parent.save()
-     student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_id = parent)
-     student.save()
+# def createTempUser():
+#      school = School(name = "East", address = "56 Yellow Road")
+#      school.save()
+#      route = Route(name="Route 5", school_id = school,description="This is route 5" )
+#      route.save()
+#      parent = User(first_name = "John", last_name= "Garcia" , email='g@duke.edu',password='admin',address = "90 East Ave",is_parent=False)
+#      parent.save()
+#      student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_id = parent)
+#      student.save()

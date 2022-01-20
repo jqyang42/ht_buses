@@ -35,7 +35,7 @@ class Route(models.Model):
 
 # Relook at this
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password=None):
+    def create_user(self, email, first_name, last_name,is_parent, address, password):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -51,12 +51,13 @@ class UserManager(BaseUserManager):
             address = address,
             is_parent = is_parent
             )
+        print(password)
         user.set_password(password)
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, address, password=None):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password=None)
+    def create_superuser(self, email, first_name, last_name, is_parent, address, password):
+        user = self.create_user(email, first_name, last_name, is_parent,address, password)
         user.is_staff = True
         user.save(using=self._db)
         return user
@@ -67,14 +68,15 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email',unique=True)
     is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
-    address = models.CharField(max_length=100, default='')
+    if is_parent:
+        address = models.CharField(max_length=100)
+    else: 
+        address = " "
 
     USERNAME_FIELD = 'email'
-    # TODO: figure out way to only request when necessary
-    if is_parent :
-        REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent','address']
-    else: 
-        REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
+    
+
 
     objects = UserManager()
 
