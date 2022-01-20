@@ -62,7 +62,7 @@
                                 <h5>Students</h5>
                             </div>
                             <div class="col-md-auto mx-2 py-0 mr-4">
-                                <h6 class="font-weight-bold mb-0">Admin Name</h6>
+                                <h6 class="font-weight-bold mb-0">{{ user_first }} {{ user_last }}</h6>
                                 <p class="text-muted text-small">Administrator</p>
                             </div>
                         </div>
@@ -89,20 +89,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% for each in all_students %}
                                         <tr>
-                                            <td class="table-active">Example</td>
-                                            <td>Example</td>
-                                            <td>Example</td>
-                                            <td>Example</td>
-                                            <td>Example</td>
+                                            <td class="table-active">{{ each.student_school_id }}</td>
+                                            <td>{{ each.first_name }} {{ each.last_name }}</td>
+                                            <td>{{ each.user_id.first_name }} {{ each.user_id.last_name }}</td>
+                                            <td>{{ each.school_id.name }}</td>
+                                            <td>{{ each.route_id.name }}</td>
                                         </tr>
-                                        <tr>
-                                            <td class="">Example</td>
-                                            <td>Example</td>
-                                            <td>Example</td>
-                                            <td>Example</td>
-                                            <td>Example</td>
-                                        </tr>
+                                        {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
