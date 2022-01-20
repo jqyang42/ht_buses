@@ -23,6 +23,24 @@
     color: #495057;
 }
 
+.btn-primary:active {
+    background-color: #CC9A06;
+    border: #CC9A06;
+    color: #ffffff;
+}
+
+.btn-primary:focus {
+    background-color: #CC9A06;
+    border: #CC9A06;
+    color: #ffffff;
+}
+
+.btn-primary:visited {
+    background-color: #CC9A06;
+    border: #CC9A06;
+    color: #ffffff;
+}
+
 .btn-secondary {
     background-color: #DEE2E6;
     border: #DEE2E6;
@@ -39,6 +57,14 @@
     background-color: #F3F3F3;
 }
 
+.gray-500 {
+    color: #ADB5BD;
+}
+
+.gray-600 {
+    color: #6C757D;
+}
+
 /* .table-hover {
     background-color: #FFF3CD;
 } */
@@ -51,4 +77,24 @@
     color: #fff;
     border-color: #FFC107;
     background-color: #FFC107;
-  }
+}
+
+h7 {
+    color: #6C757D;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+a {
+    color: #CC9A06;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #997404;
+}
+
+.text-height-1 {
+    line-height: 1em;
+}
