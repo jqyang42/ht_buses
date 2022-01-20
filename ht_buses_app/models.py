@@ -51,13 +51,12 @@ class UserManager(BaseUserManager):
             address = address,
             is_parent = is_parent
             )
-        print(password)
         user.set_password(password)
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, address, password):
-        user = self.create_user(email, first_name, last_name, is_parent,address, password)
+    def create_superuser(self, email, first_name, last_name, is_parent, password):
+        user = self.create_user(email, first_name, last_name, is_parent, '', password)
         user.is_staff = True
         user.save(using=self._db)
         return user
@@ -68,11 +67,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email',unique=True)
     is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
-    if is_parent:
-        address = models.CharField(max_length=100)
-    else: 
-        address = " "
-
+    address = models.CharField(max_length=100, default= '')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
     

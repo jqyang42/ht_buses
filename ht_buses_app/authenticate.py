@@ -3,11 +3,12 @@ from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.hashers import check_password
 from .models import User
 
-class SettingsBackend(BaseBackend):
+class AuthenticationBackend(BaseBackend):
 
     def authenticate(self, email, password):    
         try:
             user = User.objects.get(email=email)
+    
             if user.check_password(password):
                 return user
             else:
