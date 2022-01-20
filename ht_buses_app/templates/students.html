@@ -83,9 +83,7 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            {% if displayParent %}
                                             <th>Parent</th>
-                                            {% endif %}
                                             <th>School</th>
                                             <th>Route</th>
                                         </tr>
@@ -95,9 +93,7 @@
                                         <tr>
                                             <td class="table-active">{{ each.student_school_id }}</td>
                                             <td>{{ each.first_name }} {{ each.last_name }}</td>
-                                            {% if displayParent %}
-                                            <td>{{ each.user_extended_id.first_name }} {{ each.user_extended_id.last_name }}</td>
-                                            {% endif %}
+                                            <td>{{ each.user_id.first_name }} {{ each.user_id.last_name }}</td>
                                             <td>{{ each.school_id.name }}</td>
                                             <td>{{ each.route_id.name }}</td>
                                         </tr>
