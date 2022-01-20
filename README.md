@@ -1,4 +1,7 @@
 # ht_buses
-senior design
+ECE458 Senior Design Project
 
-note: ht_buses is django proj and database name
+## main branch: production branch
+* Need to run `manage.py collectstatic` so that all static files are collected into /static
+
+## dev branch: main development branch
