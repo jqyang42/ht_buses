@@ -50,6 +50,12 @@
 .btn-secondary:hover {
     background-color: #ADB5BD;
     border: #ADB5BD;
+    color: #495057;
+}
+
+.btn-secondary:visited {
+    background-color: #6C757D;
+    border: #6C757D;
     color: #ffffff;
 }
 
@@ -98,3 +104,24 @@ a:hover {
 .text-height-1 {
     line-height: 1em;
 }
+
+.accordion-button[aria-expanded="true"] {
+    background-color: #FFF3CD;
+    color: #997404;
+}
+
+.accordion-button[aria-expanded="true"]::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23997404'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.form-group.required .control-label:after { 
+    color: #dc3545;
+    content: " *";
+}
+
+textarea.textarea-autosize {
+    height: auto;
+    min-height: 20em;
+    resize: vertical;
+    overflow-y: hidden;
+  }
