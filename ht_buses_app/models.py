@@ -60,19 +60,17 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.save(using=self._db)
         return user
-               
+
 class User(AbstractBaseUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(verbose_name='email',unique=True)
+    email = models.EmailField(verbose_name='email',unique=True,max_length=128)
     is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
     address = models.CharField(max_length=100, default= '')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
     
-
-
     objects = UserManager()
 
 

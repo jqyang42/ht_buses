@@ -5,23 +5,23 @@ from .models import School, Route, Student, User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
 
-def index(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+# def index(request):
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         password = request.POST['password']
         
-        user = authenticate(email=email, password=password)
-        print(user)
-        if user is not None:
-            #login(request, user) #request.user
-            logged_in = True
-            f_name = user.first_name
-            l_name = user.last_name
-            return students(request, logged_in = True, user=user)
-        else:
-            return render(request, 'index.html', {})
+#         user = authenticate(email=email, password=password)
+#         print(user)
+#         if user is not None:
+#             #login(request, user) #request.user
+#             logged_in = True
+#             f_name = user.first_name
+#             l_name = user.last_name
+#             return students(request, logged_in = True, user=user)
+#         else:
+#             return render(request, 'index.html', {})
     
-    return render(request, 'index.html', {})
+#     return render(request, 'index.html', {})
 
 
 
