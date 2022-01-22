@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import HT_Logo from '../static/img/HT_Logo.png';
 
-const siteName = "Hypothetical Transportation Bus Management System";
-
-//class component
 class Login extends Component {
 	render() {
 		return (
