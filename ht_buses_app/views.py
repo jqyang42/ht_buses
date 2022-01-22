@@ -39,6 +39,9 @@ def students(request, logged_in=False, user = None):
     else: 
         return render(request, 'index.html', {}) #change to login page if not logged in 
     
+def students_edit(request):
+    return render(request, 'students_edit.html', {})
+
 def signup(request):
     return render(request, 'signup.html', {})
 
@@ -48,17 +51,32 @@ def schools(request):
 def schools_detail(request):
     return render(request, 'schools_detail.html', {})
 
+def schools_create(request):
+    return render(request, 'schools_create.html', {})
+
+def schools_edit(request):
+    return render(request, 'schools_edit.html', {})
+
 def routes(request):
     return render(request, 'routes.html', {})
 
 def routes_detail(request):
     return render(request, 'routes_detail.html', {})
 
+def routes_edit(request):
+    return render(request, 'routes_edit.html', {})
+
 def users(request):
     return render(request, 'users.html', {})
 
 def users_detail(request):
     return render(request, 'users_detail.html', {})
+
+def users_create(request):
+    return render(request, 'users_create.html', {})
+
+def users_edit(request):
+    return render(request, 'users_edit.html', {})
 
 def routeplanner(request):
     return render(request, 'route_planner.html', {})
