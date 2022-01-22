@@ -5,6 +5,8 @@ from .models import User
 
 class AuthenticationBackend(BaseBackend):
 
+    
+
     def authenticate(self, email, password):    
         try:
             user = User.objects.get(email=email)
@@ -18,9 +20,9 @@ class AuthenticationBackend(BaseBackend):
         except Exception as e:
             raise ValueError(e)
 
-    def get_user(self, user_id):
+    def get_user(self, email):
         try:
-            user = User.objects.get(sys_id=user_id)
+            user = User.objects.get(email=email)
             return user
         except User.DoesNotExist:
             raise ValueError('User does not exist')

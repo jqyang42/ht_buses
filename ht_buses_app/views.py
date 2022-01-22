@@ -1,29 +1,48 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
-
-# def index(request):
-#     if request.method == 'POST':
-#         email = request.POST['email']
-#         password = request.POST['password']
-        
-#         user = authenticate(email=email, password=password)
-#         print(user)
-#         if user is not None:
-#             #login(request, user) #request.user
-#             logged_in = True
-#             f_name = user.first_name
-#             l_name = user.last_name
-#             return students(request, logged_in = True, user=user)
-#         else:
-#             return render(request, 'index.html', {})
-    
-#     return render(request, 'index.html', {})
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.parsers import json
+from django.core.exceptions import ValidationError
+from rest_framework.response import Response
 
 
+@api_view(["POST"])
+@permission_classes([AllowAny]) 
+def User_login(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    email = reqBody['email']
+    password = reqBody['password']
+    try:
+        user = User.objects.get(email=email)
+    except BaseException as e:
+        raise ValidationError({"message": 'Account does not exist'})
+    if not check_password(password, user.password):
+        raise ValidationError({"message": 'Incorrect password'})
+    if user: 
+        token = Token.objects.get_or_create(user=user)[0].key
+        login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
+        print("here")
+        data["message"] = "user registered successfully"
+        data["email"] = user.email
+        result = {"data": data, "token":token}
+        return Response(result)
+    else: 
+        raise ValidationError({"message": "Account does not exist"})
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def User_logout(request):
+    request.user.auth_token.delete()
+    logout(request._request)
+    return Response('User Logged out successfully')  
 
 
 def students(request, logged_in=False, user = None):
@@ -38,9 +57,28 @@ def students(request, logged_in=False, user = None):
 
     else: 
         return render(request, 'index.html', {}) #change to login page if not logged in 
-    
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) 
 def signup(request):
-    return render(request, 'signup.html', {})
+    try:
+        data = []
+        serializer = RegistrationSerializer(data = request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            token = Token.objects.create(user=user)[0].key
+            data["message"] = "User registered successfully"
+            data["email"] = user.email
+            data["token"] = token
+        else:
+            data= serializer.errors
+        return Response(data)
+    except IntegrityError as e:
+        user = User.objects.get(email = email)
+        user.delete()
+        raise ValidationError({"400": f'{str(e)}'})
+    except KeyError as e:
+        raise ValidationError({"400": f'Field {str(e)} missing'})
 
 
 def schools(request):
