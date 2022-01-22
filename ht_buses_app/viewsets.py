@@ -10,6 +10,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.contrib import auth
+from django.contrib.auth import authenticate, login
+
 
 # Serializer that retrieves a user
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
    
     
     def get_queryset(self):
-        if self.request.user.is_superuser:
+        if self.request.user.is_staff:
             return User.objects.all()
 
     def get_object(self):
@@ -35,9 +41,9 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         try:
             serializer.is_valid(raise_exception=True)
+            login(request, serializer.validated_data['user'])
         except TokenError as e:
             raise InvalidToken(e.args[0])
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
@@ -57,7 +63,6 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
-
         return Response({
             "user": serializer.data,
             "refresh": res["refresh"],
@@ -78,9 +83,17 @@ class RefreshViewSet(viewsets.ViewSet, TokenRefreshView):
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
+class LogoutViewSet(APIView):
+    def get(self, request):
+        # simply delete the token to force a login
+        print(request.user.token)
+        if request.user.is_authenticated():
+            print("here")
+            print(request.user.token)
+            auth.logout(request)
+        return Response(status=status.HTTP_200_OK)
+
+
 # TODO: Create a student viewset
 
 
-
-
-    
