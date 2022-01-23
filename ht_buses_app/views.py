@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http.response import JsonResponse
 
 from .models import School, Route, Student, User
+from .serializers import SchoolSerializer
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
+from rest_framework.decorators import api_view
 
 def index(request):
     if request.method == 'POST':
@@ -45,10 +48,20 @@ def students_edit(request):
 def signup(request):
     return render(request, 'signup.html', {})
 
-@api_view(['GET'])
 def schools(request):
-
     return render(request, 'schools.html', {})
+
+@api_view(['GET'])
+def api_schools(request):
+    if request.method == 'GET':
+        schools = School.objects.all()
+
+        # name = request.GET.get('title', None)
+        # if title is not None:
+        #     schools = schools.filt
+    schools_serializer = SchoolSerializer(schools, many=True)
+    return JsonResponse(schools_serializer.data, safe=False)
+    # return render(request, 'schools.html', {})
 
 def schools_detail(request):
     return render(request, 'schools_detail.html', {})

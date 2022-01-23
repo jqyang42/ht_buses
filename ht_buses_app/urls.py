@@ -19,5 +19,5 @@ urlpatterns = [
     path('users_create', views.users_create, name="users_create"),
     path('users_edit', views.users_edit, name="users_edit"),
     path('routeplanner', views.routeplanner, name="routeplanner"),
-    path('api/schools', views.schools, name='api_schools')
+    path('api/schools', views.api_schools, name='api_schools')
 ]
