@@ -39,6 +39,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 DEBUG = env.bool('DEBUG')
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# $ python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
 SECRET_KEY = env.str('SECRET_KEY')
 
 # Database

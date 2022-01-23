@@ -45,7 +45,9 @@ def students_edit(request):
 def signup(request):
     return render(request, 'signup.html', {})
 
+@api_view(['GET'])
 def schools(request):
+
     return render(request, 'schools.html', {})
 
 def schools_detail(request):
