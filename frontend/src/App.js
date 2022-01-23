@@ -51,10 +51,10 @@ class App extends Component {
           <Route path="/schools/:id/delete" element={<Schools_Delete />} /> */}
 
           <Route path="/users" element={<Users />} />
-          {/* <Route path="/users/create" element={<Users_Create />} />
+          {/* <Route path="/users/create" element={<Users_Create />} /> */}
           <Route path="/users/:id" element={<Users_Detail />} />
-          <Route path="/users/:id/edit" element={<Users_Edit />} />
-          <Route path="/users/:id/delete" element={<Users_Delete />} /> */}
+          {/* <Route path="/users/:id/edit" element={<Users_Edit />} /> */}
+          {/* <Route path="/users/:id/delete" element={<Users_Delete />} /> */}
 
           <Route path="/routes" element={<Bus_Routes />} />
 					{/* <Route path="/routes/:id" element={<Bus_Routes_Detail />} />
