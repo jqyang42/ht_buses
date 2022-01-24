@@ -100,7 +100,7 @@ def api_schools(request):
 
         # name = request.GET.get('title', None)
         # if title is not None:
-        #     schools = schools.filt
+        #     schools = schools.filter etc etc
     schools_serializer = SchoolSerializer(schools, many=True)
     return JsonResponse(schools_serializer.data, safe=False)
     # return render(request, 'schools.html', {})
