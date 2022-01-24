@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
-from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer
+from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 # Login API
 @api_view(["POST"])
@@ -200,8 +200,32 @@ def routes_edit(request):
 def users(request):
     return render(request, 'users.html', {})
 
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def users_detail(request):
-    return render(request, 'users_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    user = User.objects.get(pk=reqBody["id"])
+    user_serializer = UserSerializer(user, many=False)
+    data["first_name"] = user_serializer["data"]["first_name"]
+    data["last_name"] = user_serializer["data"]["last_name"]
+    data["email"] = user_serializer["data"]["email"]
+    if user_serializer["data"]["is_parent"]:
+        data["address"] = user_serializer["data"]["parent"]
+        students = Student.objects.filter(user_id__icontains=reqBody["id"])
+        students_serializer = StudentSerializer(students, many=True)
+        student_list = []
+        for student in students_serializer["data"]:
+            id = student["id"]
+            first_name = student["first_name"]
+            last_name = student["last_name"]
+            route_serializer = Route.objects.get(pk=student["route_id"])
+            route_name = route_serializer["data"]["name"]
+            student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name' : route_name})
+        data["students"] = student_list
+    data["is_staff"] = user_serializer["data"]["is_staff"]
+    return Response(data)
 
 def users_create(request):
     return render(request, 'users_create.html', {})

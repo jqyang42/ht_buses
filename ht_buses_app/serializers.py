@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Route, School, Student
+from .models import Route, School, Student, User
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,3 +15,8 @@ class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = ('id', 'name', 'address')
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'is_staff', 'is_parent', 'address')
