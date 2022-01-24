@@ -10,9 +10,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
+from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
-
-
+# Login API
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def User_login(request):
@@ -37,7 +37,8 @@ def User_login(request):
     else: 
         raise ValidationError({"message": "Account does not exist"})
 
-
+# User Creation API
+# Needs to be changed to IsAuthenticated
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def signup(request):
@@ -60,7 +61,7 @@ def signup(request):
     result = {"data" : data}
     return Response(result)
 
-
+# Student Create
 def student_create(request, user):
     data = {}
     reqBody = json.loads(request.body)
@@ -76,10 +77,26 @@ def student_create(request, user):
     result = {"data" : data}
     return
 
-
+# Students Detail API
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def students_detail(request):
-    return render(request, 'students_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    student = Student.objects.get(pk=reqBody["id"])
+    student_serializer = StudentSerializer(student, many=False)
+    route = Route.objects.get(pk=student_serializer.data["route_id"])
+    route_serializer = RouteSerializer(route, many=False)
+    school = School.objects.get(pk=student_serializer.data["school_id"])
+    school_serializer = SchoolSerializer(school, many=False)
+    data["first_name"] = student_serializer.data["first_name"]
+    data["last_name"] = student_serializer.data["last_name"]
+    data["school"] = school_serializer.data["name"]
+    data["route"] = route_serializer.data["name"]
+    return Response(data)
 
+# Logout API
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def User_logout(request):
