@@ -5,8 +5,6 @@ from .models import User
 
 class AuthenticationBackend(BaseBackend):
 
-    
-
     def authenticate(self, email, password):    
         try:
             user = User.objects.get(email=email)

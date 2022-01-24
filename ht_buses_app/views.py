@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
-from .models import School, Route, Student, User
+from .models import School, Route, Student, User, UserManager
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
@@ -10,6 +10,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
+
 
 
 @api_view(["POST"])
@@ -35,6 +36,46 @@ def User_login(request):
         return Response(result)
     else: 
         raise ValidationError({"message": "Account does not exist"})
+
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) 
+def signup(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    email = reqBody['email']
+    password = reqBody['password']
+    first_name = reqBody['first_name']
+    last_name = reqBody['last_name']
+    address = reqBody['address']
+    is_staff = reqBody['is_staff']
+    is_parent = reqBody['is_parent']
+    if is_staff: 
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address= address)
+    else:
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address= address)
+    if is_parent:
+        student_create(request, user)
+    data["message"] = "User created successfully"
+    result = {"data" : data}
+    return Response(result)
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def student_create(request, user):
+    data = {}
+    reqBody = json.loads(request.body)
+    user_id = user.id
+    for student in reqBody['students']:
+        first_name = student['first_name']
+        last_name = students['last_name']
+        school_id = School.schoolsTable.get(name=student["school"])
+        student_school_id = student['student_school_id']
+        route_id = Route.routeTables.get(name=student['route'])
+        student_object = Students.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+    data["message"] = "student registered successfully"
+    result = {"data" : data}
+    return Response(result)
 
 
 def students_detail(request):
@@ -63,28 +104,6 @@ def students(request, logged_in=False, user = None):
 def students_edit(request):
     return render(request, 'students_edit.html', {})
 
-
-@api_view(["POST"])
-@permission_classes([AllowAny]) 
-def signup(request):
-    try:
-        data = []
-        serializer = RegistrationSerializer(data = request.data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            token = Token.objects.create(user=user)[0].key
-            data["message"] = "User registered successfully"
-            data["email"] = user.email
-            data["token"] = token
-        else:
-            data= serializer.errors
-        return Response(data)
-    except IntegrityError as e:
-        user = User.objects.get(email = email)
-        user.delete()
-        raise ValidationError({"400": f'{str(e)}'})
-    except KeyError as e:
-        raise ValidationError({"400": f'Field {str(e)} missing'})
 
 def schools(request):
     return render(request, 'schools.html', {})
