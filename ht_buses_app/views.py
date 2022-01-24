@@ -37,13 +37,15 @@ def User_login(request):
         raise ValidationError({"message": "Account does not exist"})
 
 
+def students_detail(request):
+    return render(request, 'students_detail.html', {})
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def User_logout(request):
     request.user.auth_token.delete()
     logout(request._request)
     return Response('User Logged out successfully')  
-
 
 def students(request, logged_in=False, user = None):
 
@@ -57,6 +59,10 @@ def students(request, logged_in=False, user = None):
 
     else: 
         return render(request, 'index.html', {}) #change to login page if not logged in 
+    
+def students_edit(request):
+    return render(request, 'students_edit.html', {})
+
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
@@ -80,16 +86,42 @@ def signup(request):
     except KeyError as e:
         raise ValidationError({"400": f'Field {str(e)} missing'})
 
-
 def schools(request):
     return render(request, 'schools.html', {})
+
+def schools_detail(request):
+    return render(request, 'schools_detail.html', {})
+
+def schools_create(request):
+    return render(request, 'schools_create.html', {})
+
+def schools_edit(request):
+    return render(request, 'schools_edit.html', {})
 
 def routes(request):
     return render(request, 'routes.html', {})
 
+def routes_detail(request):
+    return render(request, 'routes_detail.html', {})
+
+def routes_edit(request):
+    return render(request, 'routes_edit.html', {})
+
 def users(request):
     return render(request, 'users.html', {})
 
+def users_detail(request):
+    return render(request, 'users_detail.html', {})
+
+def users_create(request):
+    return render(request, 'users_create.html', {})
+
+def users_edit(request):
+    return render(request, 'users_edit.html', {})
+
+def routeplanner(request):
+    return render(request, 'route_planner.html', {})
+    
 '''
 # NOTE: To create a sample school, route, user, and parent for viewing , add to students, method uncomment below and :
     user = createTempUser()
