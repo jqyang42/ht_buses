@@ -93,9 +93,10 @@ def schools(request):
     return render(request, 'schools.html', {})
 
 @api_view(['GET'])
+@permission_classes([AllowAny]) 
 def api_schools(request):
     if request.method == 'GET':
-        schools = School.objects.all()
+        schools = School.schoolsTable.all()
 
         # name = request.GET.get('title', None)
         # if title is not None:

@@ -1,6 +1,5 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .viewsets import UserViewSet, LoginViewSet, RegistrationViewSet, RefreshViewSet, LogoutViewSet
 from . import views
 
 """
@@ -30,5 +29,5 @@ urlpatterns = [
     path('routeplanner', views.routeplanner, name="routeplanner"),
     path('logout', views.User_logout, name="logout"),
     path('login', views.User_login, name="login"),
-    path('api/schools', views.api_schools, name='api_schools')
+    path('api/schools/', views.api_schools, name='api_schools')
 ]
