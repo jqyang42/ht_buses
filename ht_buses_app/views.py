@@ -129,6 +129,36 @@ def schools(request):
 @permission_classes([AllowAny])
 def schools_detail(request):
     data = {}
+    reqBody = json.loads(request.body)
+    school = School.objects.get(pk=reqBody["school"]["id"])
+    school_serializer = SchoolSerializer(school, many=False)
+    students = Student.objects.filter(school_id__icontains=reqBody["school"]["id"])
+    students_serializer = StudentSerializer(students, many=True)
+    route = Route.objects.filter(school_id__icontains=reqBody["school"]["id"])
+    route_serializer = RouteSerializer(route, many=True)
+    data["name"] = school_serializer["data"]["name"]
+    data["address"] = school_serializer["data"]["address"]
+    student_list = []
+    for student in students_serializer["data"]:
+        id = student["id"]
+        first_name = student["first_name"]
+        last_name = student["last_name"]
+        # need to do lookup on bus route
+        route_id = student["route_id"]
+        student_route = Route.objects.get(pk=route_id)
+        student_route_serializer = RouteSerializer(student_route, many=False)
+        route_name = student_route_serializer["data"]["name"]
+        student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
+    data["students"] = student_list
+    route_list = []
+    for school_route in route_serializer["data"]:
+        id = school_route["name"]
+        name = school_route["name"]
+        # need to find student count per route
+        route_count = Student.objects.filter(route_id__icontains=school_route["route_id"])
+        student_count = len(route_count["data"])
+        route_list.append({'id': id, 'name': name, 'student_count': student_count})
+    data["routes"] = route_list
     return Response(data)
 
 def schools_create(request):
@@ -151,7 +181,7 @@ def routes_detail(request):
     school = School.objects.get(pk=route_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     students = Student.objects.filter(route_id__icontains=reqBody["route"]["id"])
-    students_serializer = StudentSerializer(students, many=True) # how do I populate for multiple students?
+    students_serializer = StudentSerializer(students, many=True)
     data["name"] = route_serializer["data"]["name"]
     data["school"] = school_serializer["data"]["school"]
     data["description"] = route_serializer["data"]["description"]
@@ -181,22 +211,3 @@ def users_edit(request):
 
 def routeplanner(request):
     return render(request, 'route_planner.html', {})
-    
-'''
-# NOTE: To create a sample school, route, user, and parent for viewing , add to students, method uncomment below and :
-    user = createTempUser()
-    logged_in =  True
-'''
-'''
-def createTempUser():
-    school = School(name = "East", address = "56 Yellow Road")
-    school.save()
-    route = Route(name="Route 5", school_id = school,description="This is route 5" )
-    route.save()
-    parent = User(first_name = "John", last_name= "Garcia" , email='g@duke.edu',password='admin',address = "90 East Ave",is_parent=False, is_staff = True)
-    parent = User.objects.get(email = parent.email)
-    parent.save()
-    student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_id = parent)
-    student.save()
-    return parent
-'''
