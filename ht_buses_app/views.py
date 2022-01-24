@@ -68,7 +68,7 @@ def students_edit(request):
 
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAuthenticated]) 
 def signup(request):
     try:
         data = []
