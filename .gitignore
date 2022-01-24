@@ -1,7 +1,4 @@
 # Based off of djangowaves.com's ultimate Django gitignore
-ht_buses/*
-manage.py
-settings.py
 
 # Django #
 *.log

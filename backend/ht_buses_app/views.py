@@ -1,16 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from rest_framework.authtoken.models import Token
-from .models import School, Route, Student, User
+from django.http.response import JsonResponse
+
 from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
+
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 
+from .serializers import SchoolSerializer
+from .models import School, Route, Student, User
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
@@ -35,7 +39,6 @@ def User_login(request):
         return Response(result)
     else: 
         raise ValidationError({"message": "Account does not exist"})
-
 
 def students_detail(request):
     return render(request, 'students_detail.html', {})
@@ -65,7 +68,7 @@ def students_edit(request):
 
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAuthenticated]) 
 def signup(request):
     try:
         data = []
@@ -88,6 +91,19 @@ def signup(request):
 
 def schools(request):
     return render(request, 'schools.html', {})
+
+@api_view(['GET'])
+@permission_classes([AllowAny]) 
+def api_schools(request):
+    if request.method == 'GET':
+        schools = School.schoolsTable.all()
+
+        # name = request.GET.get('title', None)
+        # if title is not None:
+        #     schools = schools.filter etc etc
+    schools_serializer = SchoolSerializer(schools, many=True)
+    return JsonResponse(schools_serializer.data, safe=False)
+    # return render(request, 'schools.html', {})
 
 def schools_detail(request):
     return render(request, 'schools_detail.html', {})

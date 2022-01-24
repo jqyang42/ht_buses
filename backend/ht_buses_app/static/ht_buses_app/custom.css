@@ -1,0 +1,127 @@
+.nav-link {
+    color: #ffffff !important;
+    font-size: 18px !important;
+}
+
+.active {
+    background-color: rgba(255, 218, 106, 0.4) !important;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 218, 106, 0.4);
+}
+
+.btn-primary {
+    background-color: #FFDA6A;
+    border: #FFDA6A;
+    color: #495057;
+}
+
+.btn-primary:hover {
+    background-color: #FFC107;
+    border: #FFC107;
+    color: #495057;
+}
+
+.btn-primary:active {
+    background-color: #CC9A06;
+    border: #CC9A06;
+    color: #ffffff;
+}
+
+.btn-primary:focus {
+    background-color: #CC9A06;
+    border: #CC9A06;
+    color: #ffffff;
+}
+
+.btn-primary:visited {
+    background-color: #CC9A06;
+    border: #CC9A06;
+    color: #ffffff;
+}
+
+.btn-secondary {
+    background-color: #DEE2E6;
+    border: #DEE2E6;
+    color: #495057;
+}
+
+.btn-secondary:hover {
+    background-color: #ADB5BD;
+    border: #ADB5BD;
+    color: #495057;
+}
+
+.btn-secondary:visited {
+    background-color: #6C757D;
+    border: #6C757D;
+    color: #ffffff;
+}
+
+.bg-gray {
+    background-color: #F3F3F3;
+}
+
+.gray-500 {
+    color: #ADB5BD;
+}
+
+.gray-600 {
+    color: #6C757D;
+}
+
+/* .table-hover {
+    background-color: #FFF3CD;
+} */
+
+.table-hover tbody tr:hover td {
+    --bs-table-accent-bg: #FFF3CD; 
+}
+
+.form-check-input:checked {
+    color: #fff;
+    border-color: #FFC107;
+    background-color: #FFC107;
+}
+
+h7 {
+    color: #6C757D;
+    letter-spacing: 0.1em;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+a {
+    color: #CC9A06;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #997404;
+}
+
+.text-height-1 {
+    line-height: 1em;
+}
+
+.accordion-button[aria-expanded="true"] {
+    background-color: #FFF3CD;
+    color: #997404;
+}
+
+.accordion-button[aria-expanded="true"]::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23997404'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.form-group.required .control-label:after { 
+    color: #dc3545;
+    content: " *";
+}
+
+textarea.textarea-autosize {
+    height: auto;
+    min-height: 20em;
+    resize: vertical;
+    overflow-y: hidden;
+  }

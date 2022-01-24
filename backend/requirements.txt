@@ -8,6 +8,7 @@ Django==4.0.1
 django-bootstrap-icons==0.7.5
 django-bootstrap-v5==1.0.8
 django-cors-headers==3.11.0
+django-environ==0.8.1
 djangorestframework==3.13.1
 djangorestframework-oauth==1.1.0
 filelock==3.4.2
