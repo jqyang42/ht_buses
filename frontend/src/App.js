@@ -1,11 +1,12 @@
 // import HT_Logo from './static/img/HT_Logo.png';
 import './App.css';
 import React, { Component } from "react";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import './static/bootstrap/css/bootstrap.min.css';
 import './static/custom.css';
 
 import Login from "./templates/index";
+import Bus_Routes_Planner from "./templates/route-planner";
 
 // import Students from "./templates/students";
 // import Students_Detail from "./templates/students_detail";
@@ -32,12 +33,12 @@ import Login from "./templates/index";
 
 class App extends Component {
   render() {
-		return (
-			<div>
-				<Routes>
-					<Route path="/" element={<Login />} />
+    return (
+      <div>
+        <Routes>
+          <Route path="/" element={<Login />} />
 
-					{/* <Route path="/students" element={<Students />} />
+          {/* <Route path="/students" element={<Students />} />
           <Route path="/students/:id" element={<Students_Detail />} />
           <Route path="/students/:id/edit" element={<Students_Edit />} />
           <Route path="/students/:id/delete" element={<Students_Delete />} />
@@ -59,10 +60,11 @@ class App extends Component {
           <Route path="/schools/:id/routes_planner" element={<Bus_Routes_Planner />} />
           <Route path="/routes/:id/edit" element={<Bus_Routes_Edit />} />
           <Route path="/routes/:id/delete" element={<Bus_Routes_Delete />} /> */}
-				</Routes>
-			</div>
-		);
-	}
+          <Route path="/schools/routes_planner" element={<Bus_Routes_Planner />} />
+        </Routes>
+      </div>
+    );
+  }
 }
 
 export default App;
