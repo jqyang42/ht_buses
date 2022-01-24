@@ -41,6 +41,12 @@
     color: #ffffff;
 }
 
+/* Link .btn-primary:visited[role="button"] {
+    background-color: #FFC107;
+    border: #FFC107;
+    color: #495057;
+} */
+
 .btn-secondary {
     background-color: #DEE2E6;
     border: #DEE2E6;

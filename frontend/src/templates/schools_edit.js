@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 import { Link } from "react-router-dom";
 
-class SchoolsDetail extends Component {
+class SchoolsEdit extends Component {
 	render() {
 		return (
             <main>
@@ -58,6 +58,12 @@ class SchoolsDetail extends Component {
                                                 <div className="w-auto px-2">
                                                     <h5>School Name</h5>
                                                 </div>
+                                                <div className="w-auto px-2">
+                                                    <i className="bi bi-chevron-right"></i>
+                                                </div>
+                                                <div className="w-auto px-2">
+                                                    <h5>Edit School</h5>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="col-md-auto mx-2 py-0 mr-4">
@@ -70,80 +76,29 @@ class SchoolsDetail extends Component {
                                     <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                         <div className="row">
                                             <div className="col">
-                                                <h5>School Name</h5>
-                                                <p>738 Illinois St., Lansdale, PA 19446</p>
+                                                <h5>Edit School</h5>
                                             </div>
-                                            <div className="col">
-                                                <div className="row d-inline-flex float-end">
-                                                    <Link to="/schools/routes_planner" class="btn btn-primary float-end w-auto me-3" role="button">
-                                                        <span class="btn-text">
-                                                            <i className="bi bi-geo-alt-fill me-2"></i>
-                                                            Route Planner
-                                                        </span>
-                                                    </Link>
-                                                    <Link to="/schools_edit" class="btn btn-primary float-end w-auto me-3" role="button">
-                                                        <span class="btn-text">
-                                                            <i className="bi bi-pencil-square me-2"></i>
-                                                            Edit
-                                                        </span>
-                                                    </Link>
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-3">
-                                                        <i className="bi bi-trash me-2"></i>
-                                                        Delete
-                                                    </button>
+                                        </div>
+                                        <form>
+                                            <div className="row">
+                                                <div className="col mt-2">
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                        <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                            value="School Name" placeholder="Enter school name" required></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                        <input type="address" className="form-control pb-2" id="exampleInputAddress1" value="School Address" placeholder="Enter school address"></input>
+                                                    </div>
+                                                    <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                                        <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                        <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
+                                                    </div>
                                                 </div>
+                                                <div className="col mt-2"></div>
                                             </div>
-                                        </div>
-                                        <div className="row mt-4">
-                                            <div className="col me-4">
-                                                <h7>STUDENTS</h7>
-                                                <table className="table table-striped table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>ID</th>
-                                                            <th>Name</th>
-                                                            <th>Bus Route</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <div className="col">
-                                                <h7>ROUTES</h7>
-                                                <table className="table table-striped table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Name</th>
-                                                            <th>Student Count</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                            <td>Example</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -155,4 +110,4 @@ class SchoolsDetail extends Component {
 	}
 }
 
-export default SchoolsDetail;
+export default SchoolsEdit;

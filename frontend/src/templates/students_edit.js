@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 import { Link } from "react-router-dom";
 
-class StudentsDetail extends Component {
+class StudentsEdit extends Component {
 	render() {
 		return (
             <main>
@@ -58,6 +58,12 @@ class StudentsDetail extends Component {
                                                 <div className="w-auto px-2">
                                                     <h5>Student Name</h5>
                                                 </div>
+                                                <div className="w-auto px-2">
+                                                    <i className="bi bi-chevron-right"></i>
+                                                </div>
+                                                <div className="w-auto px-2">
+                                                    <h5>Edit Student</h5>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="col-md-auto mx-2 py-0 mr-4">
@@ -70,46 +76,56 @@ class StudentsDetail extends Component {
                                     <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                         <div className="row">
                                             <div className="col">
-                                                <h5>Student Name</h5>
-                                                <h7>ID #27</h7>
+                                                <h5>Edit Student</h5>
                                             </div>
-                                            <div className="col">
-                                                <div className="row d-inline-flex float-end">
-                                                    <Link to="/students_edit" class="btn btn-primary float-end w-auto me-3" role="button">
-                                                        <span class="btn-text">
-                                                            <i className="bi bi-pencil-square me-2"></i>
-                                                            Edit
-                                                        </span>
-                                                    </Link>
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-3">
-                                                        <i className="bi bi-trash me-2"></i>
-                                                        Delete
-                                                    </button>
+                                        </div>
+                                        <form>
+                                            <div className="row">
+                                                <div className="col mt-2">
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                        <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                            value="Student Name" placeholder="Enter full name" required></input>
+                                                    </div>
+                                                    <div className="form-group pb-3 w-75">
+                                                        <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
+                                                        <input type="id" className="form-control pb-2" id="exampleInputID1" value="Student ID" placeholder="Enter student ID"></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputSchool1" className="control-label pb-2">School</label>
+                                                        <select className="form-select" placeholder="Select a School" aria-label="Select a School">
+                                                            <option>Select a School</option>
+                                                            <option selected value="1">Student School</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group pb-3 w-75">
+                                                        <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
+                                                        <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
+                                                            <option>Select a Route</option>
+                                                            <option selected value="1">Student Route</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputParent1" className="control-label pb-2">Parent</label>
+                                                        <select className="form-select" placeholder="Select a Parent" aria-label="Select a Parent">
+                                                            <option>Select a Parent</option>
+                                                            <option selected value="1">Student Parent</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                                        <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                        <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
+                                                    </div>
                                                 </div>
+                                                <div className="col mt-2"></div>
                                             </div>
-                                        </div>
-                                        <div className="row mt-4">
-                                            <div className="col-1">
-                                                <p className="gray-600">
-                                                    School
-                                                </p>
-                                                <p className="gray-600">
-                                                    Route
-                                                </p>
-                                            </div>
-                                            <div className="col-2 me-4">
-                                                <a href="/schools_detail">
-                                                    <p>
-                                                        School Name
-                                                    </p>
-                                                </a>
-                                                <a href="/routes_detail">
-                                                    <p>
-                                                        Route Name
-                                                    </p>
-                                                </a>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -121,4 +137,4 @@ class StudentsDetail extends Component {
 	}
 }
 
-export default StudentsDetail;
+export default StudentsEdit;

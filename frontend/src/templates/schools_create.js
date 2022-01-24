@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
+import { Link } from "react-router-dom";
 
 class SchoolsCreate extends Component {
 	render() {

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
+import { Link } from "react-router-dom";
 
 class BusRoutesDetail extends Component {
 	render() {
@@ -74,10 +75,12 @@ class BusRoutesDetail extends Component {
                                             </div>
                                             <div className="col">
                                                 <div className="row d-inline-flex float-end">
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-3">
-                                                        <i className="bi bi-pencil-square me-2"></i>
-                                                        Edit
-                                                    </button>
+                                                    <Link to="/routes_edit" class="btn btn-primary float-end w-auto me-3" role="button">
+                                                        <span class="btn-text">
+                                                            <i className="bi bi-pencil-square me-2"></i>
+                                                            Edit
+                                                        </span>
+                                                    </Link>
                                                     <button type="button" className="btn btn-primary float-end w-auto me-3">
                                                         <i className="bi bi-trash me-2"></i>
                                                         Delete
