@@ -184,7 +184,6 @@ def routes(request):
 def routes_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    #Route.routeTables.create(name="Route 1",school_id=School.schoolsTable.get(pk=1),description="This is Route 1")
     route = Route.routeTables.get(pk=reqBody["route"]["id"])
     route_serializer = RouteSerializer(route, many=False)
     school = School.schoolsTable.get(pk=route_serializer.data["school_id"])
@@ -216,26 +215,29 @@ def users(request):
 def users_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    user = User.objects.get(pk=reqBody["id"])
-    user_serializer = UserSerializer(user, many=False)
-    data["first_name"] = user_serializer["data"]["first_name"]
-    data["last_name"] = user_serializer["data"]["last_name"]
-    data["email"] = user_serializer["data"]["email"]
-    if user_serializer["data"]["is_parent"]:
-        data["address"] = user_serializer["data"]["parent"]
-        students = Student.objects.filter(user_id__icontains=reqBody["id"])
-        students_serializer = StudentSerializer(students, many=True)
-        student_list = []
-        for student in students_serializer["data"]:
-            id = student["id"]
-            first_name = student["first_name"]
-            last_name = student["last_name"]
-            route_serializer = Route.objects.get(pk=student["route_id"])
-            route_name = route_serializer["data"]["name"]
-            student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name' : route_name})
-        data["students"] = student_list
-    data["is_staff"] = user_serializer["data"]["is_staff"]
-    return Response(data)
+    try:
+        user = User.objects.get(pk=reqBody["user"]["id"])
+        user_serializer = UserSerializer(user, many=False)
+        data["first_name"] = user_serializer.data["first_name"]
+        data["last_name"] = user_serializer.data["last_name"]
+        data["email"] = user_serializer.data["email"]
+        if user_serializer.data["is_parent"]:
+            data["address"] = user_serializer.data["address"]
+            students = Student.studentsTable.filter(user_id=reqBody["user"]["id"])
+            students_serializer = StudentSerializer(students, many=True)
+            student_list = []
+            for student in students_serializer.data:
+                id = student["id"]
+                first_name = student["first_name"]
+                last_name = student["last_name"]
+                route_serializer = Route.routeTables.get(pk=student["route_id"])
+                route_name = route_serializer.data["name"]
+                student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name' : route_name})
+            data["students"] = student_list
+        data["is_staff"] = user_serializer.data["is_staff"]
+        return Response(data)
+    except BaseException as e:
+        raise ValidationError({"messsage": "User does not exist"})
 
 def users_create(request):
     return render(request, 'users_create.html', {})
