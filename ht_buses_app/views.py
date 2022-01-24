@@ -107,7 +107,7 @@ def schools(request):
 def schools_detail(request):
     return render(request, 'schools_detail.html', {})
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def schools_create(request):
     data = {}
@@ -119,7 +119,7 @@ def schools_create(request):
     result = {"data" : data}
     return Response(result)
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def schools_edit(request):
     data = {}
@@ -134,6 +134,8 @@ def schools_edit(request):
     result = {"data" : data}
     return Response(request)
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def routes_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -145,9 +147,12 @@ def routes_create(request):
     result = {"data" : data}
     return Response(request)
 
+
 def routes_detail(request):
     return render(request, 'routes_detail.html', {})
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
 def routes_edit(request):
     data = {}
     reqBody = json.loads(request.body)
