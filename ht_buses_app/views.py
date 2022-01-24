@@ -84,11 +84,12 @@ def student_create(request, user):
 def students_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    student = Student.objects.get(pk=reqBody["student"]["id"])
+    Student.studentsTable.create(first_name="Mary", last_name="Jane", school_id=School.schoolsTable.get(pk=1), student_school_id=3,route_id=Route.routeTables.get(pk=1),user_id=User.object.get(pk=1))
+    student = Student.studentsTable.get(pk=reqBody["student"]["id"])
     student_serializer = StudentSerializer(student, many=False)
-    route = Route.objects.get(pk=student_serializer.data["route_id"])
+    route = Route.routeTables.get(pk=student_serializer.data["route_id"])
     route_serializer = RouteSerializer(route, many=False)
-    school = School.objects.get(pk=student_serializer.data["school_id"])
+    school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     data["first_name"] = student_serializer.data["first_name"]
     data["last_name"] = student_serializer.data["last_name"]
@@ -150,7 +151,7 @@ def schools_detail(request):
             student_route_serializer = RouteSerializer(student_route, many=False)
             route_name = student_route_serializer.data["name"]
             student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
-            data["students"] = student_list
+        data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
             id = school_route["name"]
@@ -159,7 +160,7 @@ def schools_detail(request):
             route_count = Student.studentsTable.filter(route_id=school_route["route_id"])
             student_count = len(route_count)
             route_list.append({'id': id, 'name': name, 'student_count': student_count})
-            data["routes"] = route_list
+        data["routes"] = route_list
         return Response(data)
     except BaseException as e:
         raise ValidationError({"messsage": "School does not exist"})
@@ -179,17 +180,18 @@ def routes(request):
 def routes_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    route = Route.objects.get(pk=reqBody["route"]["id"])
+    #Route.routeTables.create(name="Route 1",school_id=School.schoolsTable.get(pk=1),description="This is Route 1")
+    route = Route.routeTables.get(pk=reqBody["route"]["id"])
     route_serializer = RouteSerializer(route, many=False)
-    school = School.objects.get(pk=route_serializer.data["school_id"])
+    school = School.schoolsTable.get(pk=route_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
-    students = Student.objects.filter(route_id__icontains=reqBody["route"]["id"])
+    students = Student.studentsTable.filter(route_id=reqBody["route"]["id"])
     students_serializer = StudentSerializer(students, many=True)
-    data["name"] = route_serializer["data"]["name"]
-    data["school"] = school_serializer["data"]["school"]
-    data["description"] = route_serializer["data"]["description"]
+    data["name"] = route_serializer.data["name"]
+    data["school"] = school_serializer.data["name"]
+    data["description"] = route_serializer.data["description"]
     student_list = []
-    for student in students_serializer["data"]:
+    for student in students_serializer.data:
         id = student["id"]
         first_name = student["first_name"]
         last_name = student["last_name"]
