@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 
-class Users_Detail extends Component {
+class UsersDetail extends Component {
 	render() {
 		return (
             <main>
@@ -17,25 +17,25 @@ class Users_Detail extends Component {
                                     <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
                                         <li className="nav-item">
                                             <a href="/students" className="nav-link align-middle mx-4 px-4">
-                                                <i className="bi bi-list-ul"></i>
+                                                <i className="bi bi-list-ul me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Students</span>
                                             </a>
                                         </li>
                                         <li className="nav-item">
                                             <a href="/routes" className="nav-link px-0 align-middle mx-4 px-4">
-                                                <i className="bi bi-geo-alt"></i>
+                                                <i className="bi bi-geo-alt me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                             </a>
                                         </li>
                                         <li className="nav-item">
                                             <a href="/schools" className="nav-link px-0 align-middle mx-4 px-4">
-                                                <i className="bi bi-building"></i>
+                                                <i className="bi bi-building me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Schools</span>
                                             </a>
                                         </li>
                                         <li className="nav-item active">
                                             <a href="/users" className="nav-link px-0 align-middle mx-4 px-4">
-                                                <i className="bi bi-people"></i>
+                                                <i className="bi bi-people me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Manage Users</span>
                                             </a>
                                         </li>
@@ -75,11 +75,11 @@ class Users_Detail extends Component {
                                             <div className="col">
                                                 <div className="row d-inline-flex float-end">
                                                     <button type="button" className="btn btn-primary float-end w-auto me-3">
-                                                        <i className="bi bi-pencil-square"></i>
+                                                        <i className="bi bi-pencil-square me-2"></i>
                                                         Edit
                                                     </button>
                                                     <button type="button" className="btn btn-primary float-end w-auto me-3">
-                                                        <i className="bi bi-trash"></i>
+                                                        <i className="bi bi-trash me-2"></i>
                                                         Delete
                                                     </button>
                                                 </div>
@@ -144,4 +144,4 @@ class Users_Detail extends Component {
 	}
 }
 
-export default Users_Detail;
+export default UsersDetail;

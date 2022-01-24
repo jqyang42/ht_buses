@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 
-class Bus_Routes extends Component {
+class BusRoutes extends Component {
 	render() {
 		return (
             <main>
@@ -17,25 +17,25 @@ class Bus_Routes extends Component {
                                     <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
                                         <li className="nav-item">
                                             <a href="/students" className="nav-link align-middle mx-4 px-4">
-                                                <i className="bi bi-list-ul"></i>
+                                                <i className="bi bi-list-ul me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Students</span>
                                             </a>
                                         </li>
                                         <li className="nav-item active">
                                             <a href="/routes" className="nav-link px-0 align-middle mx-4 px-4">
-                                                <i className="bi bi-geo-alt"></i>
+                                                <i className="bi bi-geo-alt me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                             </a>
                                         </li>
                                         <li className="nav-item">
                                             <a href="/schools" className="nav-link px-0 align-middle mx-4 px-4">
-                                                <i className="bi bi-building"></i>
+                                                <i className="bi bi-building me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Schools</span>
                                             </a>
                                         </li>
                                         <li className="nav-item">
                                             <a href="/users" className="nav-link px-0 align-middle mx-4 px-4">
-                                                <i className="bi bi-people"></i>
+                                                <i className="bi bi-people me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Manage Users</span>
                                             </a>
                                         </li>
@@ -100,4 +100,4 @@ class Bus_Routes extends Component {
 	}
 }
 
-export default Bus_Routes;
+export default BusRoutes;

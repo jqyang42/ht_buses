@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 
-class Students extends Component {
+class SchoolsCreate extends Component {
 	render() {
 		return (
             <main>
@@ -15,7 +15,7 @@ class Students extends Component {
                                     </a>
 
                                     <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
-                                        <li className="nav-item active">
+                                        <li className="nav-item">
                                             <a href="/students" className="nav-link align-middle mx-4 px-4">
                                                 <i className="bi bi-list-ul me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Students</span>
@@ -27,7 +27,7 @@ class Students extends Component {
                                                 <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                             </a>
                                         </li>
-                                        <li className="nav-item">
+                                        <li className="nav-item active">
                                             <a href="/schools" className="nav-link px-0 align-middle mx-4 px-4">
                                                 <i className="bi bi-building me-2"></i>
                                                 <span className="ms-1 d-none d-sm-inline">Schools</span>
@@ -46,8 +46,18 @@ class Students extends Component {
                             <div className="col mx-0 px-0 bg-gray w-100">
                                 <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                     <div className="row align-self-center d-flex justify-content-between">
-                                        <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                            <h5>Students</h5>
+                                        <div className="col-md-auto mx-2 py-2">
+                                            <div className="row d-flex align-middle">
+                                                <div className="w-auto px-2 ps-3">
+                                                    <h5>Schools</h5>
+                                                </div>
+                                                <div className="w-auto px-2">
+                                                    <i className="bi bi-chevron-right"></i>
+                                                </div>
+                                                <div className="w-auto px-2">
+                                                    <h5>Create School</h5>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="col-md-auto mx-2 py-0 mr-4">
                                             <h6 className="font-weight-bold mb-0">Admin Name</h6>
@@ -56,35 +66,32 @@ class Students extends Component {
                                     </div>
                                 </div>
                                 <div className="container my-4 mx-0 w-100 mw-100">
-                                    <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
-                                        <div className="input-group w-25">
-                                            <input id="search-input" type="search" placeholder="Search" id="form1" className="form-control"></input>
-                                            <button id="search-button" type="button" className="btn btn-primary align-items-center pb-2">
-                                            <i className="bi bi-search"></i>
-                                            </button>
+                                    <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
+                                        <div className="row">
+                                            <div className="col">
+                                                <h5>Create New School</h5>
+                                            </div>
                                         </div>
-                                        <div className="mt-4">
-                                            <table className="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>Name</th>
-                                                        <th>Parent</th>
-                                                        <th>School</th>
-                                                        <th>Route</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Student ID</td>
-                                                        <td>Student Name</td>
-                                                        <td>Parent Name</td>
-                                                        <td>School</td>
-                                                        <td>Route</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <form>
+                                            <div className="row">
+                                                <div className="col mt-2">
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                        <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                            placeholder="Enter school name" required></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                        <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter school address"></input>
+                                                    </div>
+                                                    <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                                        <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                        <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
+                                                    </div>
+                                                </div>
+                                                <div className="col mt-2"></div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -96,4 +103,4 @@ class Students extends Component {
 	}
 }
 
-export default Students;
+export default SchoolsCreate;
