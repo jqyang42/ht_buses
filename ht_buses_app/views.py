@@ -130,36 +130,39 @@ def schools(request):
 def schools_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    school = School.objects.get(pk=reqBody["school"]["id"])
-    school_serializer = SchoolSerializer(school, many=False)
-    students = Student.objects.filter(school_id__icontains=reqBody["school"]["id"])
-    students_serializer = StudentSerializer(students, many=True)
-    route = Route.objects.filter(school_id__icontains=reqBody["school"]["id"])
-    route_serializer = RouteSerializer(route, many=True)
-    data["name"] = school_serializer["data"]["name"]
-    data["address"] = school_serializer["data"]["address"]
-    student_list = []
-    for student in students_serializer["data"]:
-        id = student["id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
-        # need to do lookup on bus route
-        route_id = student["route_id"]
-        student_route = Route.objects.get(pk=route_id)
-        student_route_serializer = RouteSerializer(student_route, many=False)
-        route_name = student_route_serializer["data"]["name"]
-        student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
-    data["students"] = student_list
-    route_list = []
-    for school_route in route_serializer["data"]:
-        id = school_route["name"]
-        name = school_route["name"]
-        # need to find student count per route
-        route_count = Student.objects.filter(route_id__icontains=school_route["route_id"])
-        student_count = len(route_count["data"])
-        route_list.append({'id': id, 'name': name, 'student_count': student_count})
-    data["routes"] = route_list
-    return Response(data)
+    try :
+        school = School.schoolsTable.get(pk=reqBody["school"]["id"])
+        school_serializer = SchoolSerializer(school, many=False)
+        students = Student.studentsTable.filter(school_id=reqBody["school"]["id"])
+        students_serializer = StudentSerializer(students, many=True)
+        route = Route.routeTables.filter(school_id=reqBody["school"]["id"])
+        route_serializer = RouteSerializer(route, many=True)
+        data["name"] = school_serializer.data["name"]
+        data["address"] = school_serializer.data["address"]
+        student_list = []
+        for student in students_serializer.data:
+            id = student["id"]
+            first_name = student["first_name"]
+            last_name = student["last_name"]
+            # need to do lookup on bus route
+            route_id = student["route_id"]
+            student_route = Route.routeTables.get(pk=route_id)
+            student_route_serializer = RouteSerializer(student_route, many=False)
+            route_name = student_route_serializer.data["name"]
+            student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
+            data["students"] = student_list
+        route_list = []
+        for school_route in route_serializer.data:
+            id = school_route["name"]
+            name = school_route["name"]
+            # need to find student count per route
+            route_count = Student.studentsTable.filter(route_id=school_route["route_id"])
+            student_count = len(route_count)
+            route_list.append({'id': id, 'name': name, 'student_count': student_count})
+            data["routes"] = route_list
+        return Response(data)
+    except BaseException as e:
+        raise ValidationError({"messsage": "School does not exist"})
 
 def schools_create(request):
     return render(request, 'schools_create.html', {})
