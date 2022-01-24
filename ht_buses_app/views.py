@@ -88,7 +88,6 @@ def User_logout(request):
     return Response('User Logged out successfully')  
 
 def students(request, logged_in=False, user = None):
-
     if logged_in and user is not None:
         if user.is_staff:
             dictionary =  {'all_students': Student.studentsTable.all(), 'user_first': user.first_name, 'user_last': user.last_name}
@@ -96,13 +95,11 @@ def students(request, logged_in=False, user = None):
         else: 
             dictionary =  {'all_students': Student.studentsTable.all(), 'user_first': user.first_name, 'user_last': user.last_name}
             return render(request, 'students.html', dictionary)
-
     else: 
         return render(request, 'index.html', {}) #change to login page if not logged in 
     
 def students_edit(request):
     return render(request, 'students_edit.html', {})
-
 
 def schools(request):
     return render(request, 'schools.html', {})
