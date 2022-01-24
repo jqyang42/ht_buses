@@ -152,16 +152,19 @@ def schools_detail(request):
             student_route_serializer = RouteSerializer(student_route, many=False)
             route_name = student_route_serializer.data["name"]
             student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
-        data["students"] = student_list
+        if len(student_list) != 0:
+            data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
-            id = school_route["name"]
+            id = school_route["id"]
             name = school_route["name"]
             # need to find student count per route
-            route_count = Student.studentsTable.filter(route_id=school_route["route_id"])
-            student_count = len(route_count)
+            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=id))
+            route_count_serialize = StudentSerializer(route_count, many=True)
+            student_count = len(route_count_serialize.data)
             route_list.append({'id': id, 'name': name, 'student_count': student_count})
-        data["routes"] = route_list
+        if len(route_list) != 0:
+            data["routes"] = route_list
         return Response(data)
     except BaseException as e:
         raise ValidationError({"messsage": "School does not exist"})
@@ -197,7 +200,8 @@ def routes_detail(request):
         first_name = student["first_name"]
         last_name = student["last_name"]
         student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name})
-    data["students"] = student_list
+    if len(student_list) != 0:
+        data["students"] = student_list
     return Response(data)
 
 def routes_edit(request):
