@@ -84,7 +84,8 @@ def student_create(request, user):
 def students_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    Student.studentsTable.create(first_name="Mary", last_name="Jane", school_id=School.schoolsTable.get(pk=1), student_school_id=3,route_id=Route.routeTables.get(pk=1),user_id=User.object.get(pk=1))
+    # Cannot be tested, need API for creating a parent
+    Student.studentsTable.create(first_name="Mary", last_name="Jane", school_id=School.schoolsTable.get(pk=1), student_school_id=3,route_id=Route.routeTables.get(pk=1),user_id=User.objects.get(pk=1))
     student = Student.studentsTable.get(pk=reqBody["student"]["id"])
     student_serializer = StudentSerializer(student, many=False)
     route = Route.routeTables.get(pk=student_serializer.data["route_id"])
