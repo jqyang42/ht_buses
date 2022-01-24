@@ -36,8 +36,7 @@ class Login extends Component {
                                                     <label for="exampleInputEmail1" className="pb-2">Email</label>
                                                     <input type="email" className="form-control pb-2" name="email" id="exampleInputEmail1" aria-describedby="emailHelp"
                                                         placeholder="Enter email"></input>
-                                                    <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
-                                                        else.</small>
+                                                    <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone else.</small>
                                                 </div>
                                                 <div className="form-group pb-3">
                                                     <label for="exampleInputPassword1" className="pb-2">Password</label>
