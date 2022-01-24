@@ -84,7 +84,7 @@ def student_create(request, user):
 def students_detail(request):
     data = {}
     reqBody = json.loads(request.body)
-    student = Student.objects.get(pk=reqBody["id"])
+    student = Student.objects.get(pk=reqBody["student"]["id"])
     student_serializer = StudentSerializer(student, many=False)
     route = Route.objects.get(pk=student_serializer.data["route_id"])
     route_serializer = RouteSerializer(route, many=False)
@@ -124,8 +124,12 @@ def students_edit(request):
 def schools(request):
     return render(request, 'schools.html', {})
 
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def schools_detail(request):
-    return render(request, 'schools_detail.html', {})
+    data = {}
+    return Response(data)
 
 def schools_create(request):
     return render(request, 'schools_create.html', {})
@@ -136,8 +140,29 @@ def schools_edit(request):
 def routes(request):
     return render(request, 'routes.html', {})
 
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def routes_detail(request):
-    return render(request, 'routes_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    route = Route.objects.get(pk=reqBody["route"]["id"])
+    route_serializer = RouteSerializer(route, many=False)
+    school = School.objects.get(pk=route_serializer.data["school_id"])
+    school_serializer = SchoolSerializer(school, many=False)
+    students = Student.objects.filter(route_id__icontains=reqBody["route"]["id"])
+    students_serializer = StudentSerializer(students, many=True) # how do I populate for multiple students?
+    data["name"] = route_serializer["data"]["name"]
+    data["school"] = school_serializer["data"]["school"]
+    data["description"] = route_serializer["data"]["description"]
+    student_list = []
+    for student in students_serializer["data"]:
+        id = student["id"]
+        first_name = student["first_name"]
+        last_name = student["last_name"]
+        student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name})
+    data["students"] = student_list
+    return Response(data)
 
 def routes_edit(request):
     return render(request, 'routes_edit.html', {})
