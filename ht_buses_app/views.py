@@ -60,22 +60,21 @@ def signup(request):
     result = {"data" : data}
     return Response(result)
 
-@api_view(["POST"])
-@permission_classes([AllowAny])
+
 def student_create(request, user):
     data = {}
     reqBody = json.loads(request.body)
-    user_id = user.id
+    user_id = user
     for student in reqBody['students']:
         first_name = student['first_name']
-        last_name = students['last_name']
+        last_name = student['last_name']
         school_id = School.schoolsTable.get(name=student["school"])
         student_school_id = student['student_school_id']
         route_id = Route.routeTables.get(name=student['route'])
-        student_object = Students.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+        student_object = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
     data["message"] = "student registered successfully"
     result = {"data" : data}
-    return Response(result)
+    return
 
 
 def students_detail(request):
