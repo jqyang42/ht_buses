@@ -107,20 +107,59 @@ def schools(request):
 def schools_detail(request):
     return render(request, 'schools_detail.html', {})
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def schools_create(request):
-    return render(request, 'schools_create.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    name = reqBody['school_name']
+    address = reqBody['school_address']
+    School.schoolsTable.create(name=name, address = address)
+    data["message"] = "school created successfully"
+    result = {"data" : data}
+    return Response(result)
 
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def schools_edit(request):
-    return render(request, 'schools_edit.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    school_object =  School.schoolsTable.get(name = reqBody['previous_school_name'])
+    new_name = reqBody['new_name']
+    new_address = reqBody['new_address']
+    school_object.name = new_name
+    school_object.address = new_address
+    school_object.save()
+    data["message"] = "school edited successfully"
+    result = {"data" : data}
+    return Response(request)
 
-def routes(request):
-    return render(request, 'routes.html', {})
+def routes_create(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    name = reqBody['route_name']
+    school = School.schoolsTable.get(name = reqBody['school'])
+    description = reqBody['route_description']
+    Route.routeTables.create(name=name, school_id = school, description = description)
+    data["message"] = "route created successfully"
+    result = {"data" : data}
+    return Response(request)
 
 def routes_detail(request):
     return render(request, 'routes_detail.html', {})
 
 def routes_edit(request):
-    return render(request, 'routes_edit.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    route_object =  Route.routeTables.get(name = reqBody['previous_route_name'])
+    new_name = reqBody['new_name']
+    new_address = reqBody['new_address']
+    route_object.name = new_name
+    route_object.address = new_address
+    route_object.save()
+    data["message"] = "route edited successfully"
+    result = {"data" : data}
+    return Response(request)
 
 def users(request):
     return render(request, 'users.html', {})
