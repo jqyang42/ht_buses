@@ -29,7 +29,6 @@ def User_login(request):
     if user: 
         token = Token.objects.get_or_create(user=user)[0].key
         login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
-        print("here")
         data["message"] = "user registered successfully"
         data["email"] = user.email
         result = {"data": data, "token":token}
@@ -107,7 +106,6 @@ def User_logout(request):
     return Response('User Logged out successfully')  
 
 def students(request, logged_in=False, user = None):
-
     if logged_in and user is not None:
         if user.is_staff:
             dictionary =  {'all_students': Student.studentsTable.all(), 'user_first': user.first_name, 'user_last': user.last_name}
@@ -115,13 +113,11 @@ def students(request, logged_in=False, user = None):
         else: 
             dictionary =  {'all_students': Student.studentsTable.all(), 'user_first': user.first_name, 'user_last': user.last_name}
             return render(request, 'students.html', dictionary)
-
     else: 
         return render(request, 'index.html', {}) #change to login page if not logged in 
     
 def students_edit(request):
     return render(request, 'students_edit.html', {})
-
 
 def schools(request):
     return render(request, 'schools.html', {})
@@ -169,14 +165,45 @@ def schools_detail(request):
     except BaseException as e:
         raise ValidationError({"messsage": "School does not exist"})
 
-def schools_create(request):
-    return render(request, 'schools_create.html', {})
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def school_create(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    name = reqBody['school_name']
+    address = reqBody['school_address']
+    School.schoolsTable.create(name=name, address = address)
+    data["message"] = "school created successfully"
+    result = {"data" : data}
+    return Response(result)
 
-def schools_edit(request):
-    return render(request, 'schools_edit.html', {})
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def school_edit(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    school_object =  School.schoolsTable.get(name = reqBody['previous_school_name'])
+    new_name = reqBody['new_name']
+    new_address = reqBody['new_address']
+    school_object.name = new_name
+    school_object.address = new_address
+    school_object.save()
+    data["message"] = "school edited successfully"
+    result = {"data" : data}
+    return Response(result)
 
-def routes(request):
-    return render(request, 'routes.html', {})
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def route_create(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    name = reqBody['route_name']
+    school = School.schoolsTable.get(name = reqBody['school'])
+    description = reqBody['route_description']
+    Route.routeTables.create(name=name, school_id = school, description = description)
+    data["message"] = "route created successfully"
+    result = {"data" : data}
+    return Response(result)
 
 @api_view(["GET"])
 # Needs to be changed to IsAuthenticated
@@ -203,8 +230,33 @@ def routes_detail(request):
         data["students"] = student_list
     return Response(data)
 
-def routes_edit(request):
-    return render(request, 'routes_edit.html', {})
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def route_edit(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    route_object =  Route.routeTables.get(name = reqBody['previous_route_name'])
+    new_name = reqBody['new_name']
+    new_school = School.schoolsTable.get(name = reqBody['new_school'])
+    new_description = reqBody['new_description']
+    route_object.name = new_name
+    route_object.school_id = new_school
+    route_object.description = new_description
+    route_object.save()
+    data["message"] = "route edited successfully"
+    result = {"data" : data}
+    return Response(result)
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def route_delete(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    route_object =  Route.routeTables.get(name = reqBody['route_name'])
+    route_object.delete()
+    data["message"] = "route successfully deleted"
+    result = {"data" : data}
+    return Response(result)
 
 def users(request):
     return render(request, 'users.html', {})
@@ -247,3 +299,4 @@ def users_edit(request):
 
 def routeplanner(request):
     return render(request, 'route_planner.html', {})
+
