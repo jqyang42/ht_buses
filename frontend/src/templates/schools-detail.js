@@ -49,7 +49,7 @@ class SchoolsDetail extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <h5>Schools</h5>
+                                                <a href="/schools"><h5>Schools</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
@@ -74,13 +74,13 @@ class SchoolsDetail extends Component {
                                         </div>
                                         <div className="col">
                                             <div className="row d-inline-flex float-end">
-                                                <Link to="/schools/routes_planner" class="btn btn-primary float-end w-auto me-3" role="button">
+                                                <Link to="/schools/routes-planner" class="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span class="btn-text">
                                                         <i className="bi bi-geo-alt-fill me-2"></i>
                                                         Route Planner
                                                     </span>
                                                 </Link>
-                                                <Link to="/schools_edit" class="btn btn-primary float-end w-auto me-3" role="button">
+                                                <Link to="/schools-edit" class="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span class="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>
                                                         Edit

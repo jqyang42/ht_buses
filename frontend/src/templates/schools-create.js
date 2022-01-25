@@ -49,7 +49,7 @@ class SchoolsCreate extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <h5>Schools</h5>
+                                                <a href="/schools"><h5>Schools</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>

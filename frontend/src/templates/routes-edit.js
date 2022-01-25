@@ -49,13 +49,13 @@ class BusRoutesEdit extends Component {
                                     <div class="col-md-auto mx-2 py-2">
                                         <div class="row d-flex align-middle">
                                             <div class="w-auto px-2 ps-3">
-                                                <h5>Routes</h5>
+                                                <a href="/routes"><h5>Bus Routes</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div class="w-auto px-2">
-                                                <h5>Route Name</h5>
+                                                <a href="/routes-detail"><h5>Route Name</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
@@ -79,7 +79,7 @@ class BusRoutesEdit extends Component {
                                         </div>
                                         <div class="col">
                                             <div class="row d-inline-flex float-end">
-                                                <Link to="/schools/routes_planner" class="btn btn-primary float-end w-auto me-3" role="button">
+                                                <Link to="/schools/routes-planner" class="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span class="btn-text">
                                                         <i className="bi bi-geo-alt-fill me-2"></i>
                                                         Route Planner

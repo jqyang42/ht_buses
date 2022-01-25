@@ -47,7 +47,7 @@ class Users extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>Users</h5>
+                                        <h5>Manage Users</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
                                         <h6 className="font-weight-bold mb-0">Admin Name</h6>
