@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
 
-class BusRoutes extends Component {
+class ParentDashboard extends Component {
     render() {
         return (
             <body className="overflow-hidden">
@@ -10,33 +10,15 @@ class BusRoutes extends Component {
                     <div className="row flex-nowrap">
                         <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
                             <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
-                                <a href="/" className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                                <a href="/dashboard" className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                                     <img src={HT_LOGO} className="img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
                                 </a>
 
                                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
-                                    <li className="nav-item">
-                                        <a href="/students" className="nav-link align-middle mx-4 px-4">
-                                            <i className="bi bi-list-ul me-2"></i>
-                                            <span className="ms-1 d-none d-sm-inline">Students</span>
-                                        </a>
-                                    </li>
                                     <li className="nav-item active">
-                                        <a href="/routes" className="nav-link px-0 align-middle mx-4 px-4">
-                                            <i className="bi bi-geo-alt me-2"></i>
-                                            <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="/schools" className="nav-link px-0 align-middle mx-4 px-4">
-                                            <i className="bi bi-building me-2"></i>
-                                            <span className="ms-1 d-none d-sm-inline">Schools</span>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="/users" className="nav-link px-0 align-middle mx-4 px-4">
-                                            <i className="bi bi-people me-2"></i>
-                                            <span className="ms-1 d-none d-sm-inline">Manage Users</span>
+                                        <a href="/dashboard" className="nav-link align-middle mx-4 px-4">
+                                            <i className="bi bi-house me-2"></i>
+                                            <span className="ms-1 d-none d-sm-inline">Dashboard</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -47,11 +29,11 @@ class BusRoutes extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>Bus Routes</h5>
+                                        <h5>My Dashboard</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
-                                        <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                        <p className="text-muted text-small">Administrator</p>
+                                        <h6 className="font-weight-bold mb-0">User Name</h6>
+                                        <p className="text-muted text-small">Parent</p>
                                     </div>
                                 </div>
                             </div>
@@ -74,24 +56,18 @@ class BusRoutes extends Component {
                                         <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>ID</th>
                                                     <th>Name</th>
                                                     <th>School</th>
-                                                    <th>Student Count</th>
+                                                    <th>Bus Route</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
+                                                    <td>Student ID</td>
+                                                    <td>Student Name</td>
+                                                    <td>School Name</td>
+                                                    <td>Route Name</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -106,4 +82,4 @@ class BusRoutes extends Component {
     }
 }
 
-export default BusRoutes;
+export default ParentDashboard;
