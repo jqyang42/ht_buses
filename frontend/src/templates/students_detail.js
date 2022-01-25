@@ -83,8 +83,20 @@ class StudentsDetail extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Student Name</h5>
-                                            <h7>ID #27</h7>
+                                            {
+                                                this.state.student.map(detail =>
+                                                    <h5 key={detail.id}>
+                                                        {detail.first_name} {detail.last_name}
+                                                    </h5>)
+                                            }
+                                            {
+                                                this.state.student.map(detail =>
+                                                    <h7 key={detail.id}>
+                                                        ID #{detail.id}
+                                                    </h7>
+                                                    )   
+                                            }
+                                            
                                         </div>
                                         <div className="col">
                                             <div className="row d-inline-flex float-end">
