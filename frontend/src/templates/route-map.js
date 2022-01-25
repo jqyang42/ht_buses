@@ -27,18 +27,20 @@ class RouteMap extends Component {
   }
   render() {
     return (
-      <LoadScript
-        googleMapsApiKey={GOOGLE_API_KEY}
-      >
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={15}
+      <div>
+        <LoadScript
+          googleMapsApiKey={GOOGLE_API_KEY}
         >
-          { /* Child components, such as markers, info windows, etc. */}
-          <Marker position={center} icon={this.state.icon} onClick={this.handleClick} />
-        </GoogleMap>
-      </LoadScript>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={15}
+          >
+            { /* Child components, such as markers, info windows, etc. */}
+            <Marker position={center} icon={this.state.icon} onClick={this.handleClick} />
+          </GoogleMap>
+        </LoadScript>
+      </div>
     )
   }
 

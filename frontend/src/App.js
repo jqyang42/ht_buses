@@ -8,7 +8,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './static/custom.css';
 
 import Login from "./templates/index";
-import Bus_Routes_Planner from "./templates/route-planner";
 
 import Students from "./templates/students";
 import StudentsDetail from "./templates/students_detail";
