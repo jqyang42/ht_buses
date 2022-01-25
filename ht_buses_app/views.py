@@ -29,7 +29,6 @@ def User_login(request):
     if user: 
         token = Token.objects.get_or_create(user=user)[0].key
         login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
-        print("here")
         data["message"] = "user registered successfully"
         data["email"] = user.email
         result = {"data": data, "token":token}
@@ -108,8 +107,8 @@ def schools_detail(request):
     return render(request, 'schools_detail.html', {})
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def schools_create(request):
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def school_create(request):
     data = {}
     reqBody = json.loads(request.body)
     name = reqBody['school_name']
@@ -120,8 +119,8 @@ def schools_create(request):
     return Response(result)
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def schools_edit(request):
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def school_edit(request):
     data = {}
     reqBody = json.loads(request.body)
     school_object =  School.schoolsTable.get(name = reqBody['previous_school_name'])
@@ -132,11 +131,11 @@ def schools_edit(request):
     school_object.save()
     data["message"] = "school edited successfully"
     result = {"data" : data}
-    return Response(request)
+    return Response(result)
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def routes_create(request):
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
     name = reqBody['route_name']
@@ -145,26 +144,38 @@ def routes_create(request):
     Route.routeTables.create(name=name, school_id = school, description = description)
     data["message"] = "route created successfully"
     result = {"data" : data}
-    return Response(request)
-
+    return Response(result)
 
 def routes_detail(request):
     return render(request, 'routes_detail.html', {})
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def routes_edit(request):
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def route_edit(request):
     data = {}
     reqBody = json.loads(request.body)
     route_object =  Route.routeTables.get(name = reqBody['previous_route_name'])
     new_name = reqBody['new_name']
-    new_address = reqBody['new_address']
+    new_school = School.schoolsTable.get(name = reqBody['new_school'])
+    new_description = reqBody['new_description']
     route_object.name = new_name
-    route_object.address = new_address
+    route_object.school_id = new_school
+    route_object.description = new_description
     route_object.save()
     data["message"] = "route edited successfully"
     result = {"data" : data}
-    return Response(request)
+    return Response(result)
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def route_delete(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    route_object =  Route.routeTables.get(name = reqBody['route_name'])
+    route_object.delete()
+    data["message"] = "route successfully deleted"
+    result = {"data" : data}
+    return Response(result)
 
 def users(request):
     return render(request, 'users.html', {})
@@ -181,21 +192,3 @@ def users_edit(request):
 def routeplanner(request):
     return render(request, 'route_planner.html', {})
     
-'''
-# NOTE: To create a sample school, route, user, and parent for viewing , add to students, method uncomment below and :
-    user = createTempUser()
-    logged_in =  True
-'''
-'''
-def createTempUser():
-    school = School(name = "East", address = "56 Yellow Road")
-    school.save()
-    route = Route(name="Route 5", school_id = school,description="This is route 5" )
-    route.save()
-    parent = User(first_name = "John", last_name= "Garcia" , email='g@duke.edu',password='admin',address = "90 East Ave",is_parent=False, is_staff = True)
-    parent = User.objects.get(email = parent.email)
-    parent.save()
-    student = Student(first_name = "Peter", last_name = "Piper", school_id = school, student_school_id = 232, route_id = route, user_id = parent)
-    student.save()
-    return parent
-'''
