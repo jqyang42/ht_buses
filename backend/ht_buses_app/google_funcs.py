@@ -7,6 +7,3 @@ def geocode_address(addresses):
     for address in addresses:
         geocodes.append(gmaps.geocode(address)[0]['geometry']['location'])
     return geocodes
-
-address = ['1600 Amphitheatre Parkway, Mountain View, CA']
-print(geocode_address(address))
