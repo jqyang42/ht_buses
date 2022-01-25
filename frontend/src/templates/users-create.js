@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO, GOOGLE_API_KEY } from "../constants";
 import { Link } from "react-router-dom";
+import Autocomplete from "react-google-autocomplete";
 
 class UsersCreate extends Component {
     render() {
@@ -88,7 +89,15 @@ class UsersCreate extends Component {
                                                 </div>
                                                 <div className="form-group pb-3 w-75">
                                                     <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"></input>
+                                                    <Autocomplete
+                                                        apiKey={GOOGLE_API_KEY}
+                                                        onPlaceSelected={(place) => {
+                                                            console.log(place);
+                                                        }}
+                                                        options={{
+                                                            types: 'address'
+                                                        }}
+                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <div>
