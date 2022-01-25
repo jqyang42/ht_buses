@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 import { Link } from "react-router-dom";
 
-class BusRoutes extends Component {
+class BusRoutesDetail extends Component {
 	render() {
 		return (
             <main>
@@ -47,8 +47,18 @@ class BusRoutes extends Component {
                             <div className="col mx-0 px-0 bg-gray w-100">
                                 <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                     <div className="row align-self-center d-flex justify-content-between">
-                                        <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                            <h5>Routes</h5>
+                                        <div className="col-md-auto mx-2 py-2">
+                                            <div className="row d-flex align-middle">
+                                                <div className="w-auto px-2 ps-3">
+                                                    <h5>Bus Routes</h5>
+                                                </div>
+                                                <div className="w-auto px-2">
+                                                    <i className="bi bi-chevron-right"></i>
+                                                </div>
+                                                <div className="w-auto px-2">
+                                                    <h5>Route Name</h5>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div className="col-md-auto mx-2 py-0 mr-4">
                                             <h6 className="font-weight-bold mb-0">Admin Name</h6>
@@ -57,45 +67,58 @@ class BusRoutes extends Component {
                                     </div>
                                 </div>
                                 <div className="container my-4 mx-0 w-100 mw-100">
-                                    <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
+                                    <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                         <div className="row">
                                             <div className="col">
-                                                <div className="input-group w-50">
-                                                    <input id="search-input" type="search" placeholder="Search" id="form1" className="form-control"></input>
-                                                    <button id="search-button" type="button" className="btn btn-primary align-items-center pb-2">
-                                                    <i className="bi bi-search"></i>
+                                                <h5>Route Name</h5>
+                                                <h7>LOREM IPSUM ELEMENTARY SCHOOL</h7>
+                                            </div>
+                                            <div className="col">
+                                                <div className="row d-inline-flex float-end">
+                                                    <Link to="/routes_edit" class="btn btn-primary float-end w-auto me-3" role="button">
+                                                        <span class="btn-text">
+                                                            <i className="bi bi-pencil-square me-2"></i>
+                                                            Edit
+                                                        </span>
+                                                    </Link>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-3">
+                                                        <i className="bi bi-trash me-2"></i>
+                                                        Delete
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div className="col">
-                                            </div>
                                         </div>
-
-                                        <div className="mt-4">
-                                            <table className="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Name</th>
-                                                        <th>School</th>
-                                                        <th>Student Count</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                        <div className="row mt-4">
+                                            <div className="col-7 me-4">
+                                                <div className="bg-gray rounded mb-4 px-4 py-4">
+                                                    <h5>Map</h5>
+                                                </div>
+                                                <h6>Description</h6>
+                                                <p>
+                                                    Here is a relatively longer description of the route. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem fringilla ut. Cras pulvinar mattis nunc sed blandit libero volutpat. Enim nec dui nunc mattis enim ut tellus.
+                                                </p>
+                                            </div>
+                                            <div className="col">
+                                                <h7>STUDENTS</h7>
+                                                <table className="table table-striped table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Name</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Example</td>
+                                                            <td>Example</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Example</td>
+                                                            <td>Example</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -108,4 +131,4 @@ class BusRoutes extends Component {
 	}
 }
 
-export default BusRoutes;
+export default BusRoutesDetail;
