@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { HT_LOGO } from '../constants';
+import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
-import RouteMap from './route-map';
 
-class BusRoutesPlanner extends Component {
+class SchoolsCreate extends Component {
     render() {
         return (
             <body className="overflow-hidden">
@@ -50,19 +49,13 @@ class BusRoutesPlanner extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <h5>Schools</h5>
+                                                <a href="/schools"><h5>Schools</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>School Name</h5>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <i className="bi bi-chevron-right"></i>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <h5>Route Planner</h5>
+                                                <h5>Create School</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -73,59 +66,32 @@ class BusRoutesPlanner extends Component {
                                 </div>
                             </div>
                             <div className="container my-4 mx-0 w-100 mw-100">
-                                <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
-                                    <div>
-                                        <h5>School Name</h5>
-                                        <p>738 Illinois St., Lansdale, PA 19446</p>
-                                    </div>
-                                    <div className="row mt-4">
-                                        <div className="col-7 me-4">
-                                            <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
-                                            <div className="row d-flex mt-2">
-                                                <div className="col-auto float-start">
-                                                    <button type="button" className="btn btn-primary">Add Route</button>
-                                                </div>
-                                                <div className="col justify-content-end">
-                                                    <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
-                                                        <option selected>Select a Route</option>
-                                                        <option value="1">One</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                    </select>
-                                                </div>
-                                                <div className="col-auto">
-                                                    <button type="button" className="btn btn-primary">Assign</button>
-                                                </div>
-                                            </div>
-                                            <div className="bg-gray rounded mt-3 px-4 py-4">
-                                                <h5>Map</h5>
-                                                <RouteMap />
-                                            </div>
-                                        </div>
+                                <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
+                                    <div className="row">
                                         <div className="col">
-                                            <table className="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID</th>
-                                                        <th>Name</th>
-                                                        <th>Bus Route</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                        <td>Example</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <h5>Create New School</h5>
                                         </div>
                                     </div>
+                                    <form>
+                                        <div className="row">
+                                            <div className="col mt-2">
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                        placeholder="Enter school name" required></input>
+                                                </div>
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter school address"></input>
+                                                </div>
+                                                <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                                    <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                    <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
+                                                </div>
+                                            </div>
+                                            <div className="col mt-2"></div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -136,4 +102,4 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-export default BusRoutesPlanner;
+export default SchoolsCreate;

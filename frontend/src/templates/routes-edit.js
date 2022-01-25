@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import HT_Logo from '../static/img/HT_Logo.png';
+import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
 
 class BusRoutesEdit extends Component {
@@ -11,7 +11,7 @@ class BusRoutesEdit extends Component {
                         <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
                             <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
                                 <a href="/" className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                                    <img src={HT_Logo} className="img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
+                                    <img src={HT_LOGO} className="img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
                                 </a>
 
                                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
@@ -49,13 +49,13 @@ class BusRoutesEdit extends Component {
                                     <div class="col-md-auto mx-2 py-2">
                                         <div class="row d-flex align-middle">
                                             <div class="w-auto px-2 ps-3">
-                                                <h5>Routes</h5>
+                                                <a href="/routes"><h5>Bus Routes</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div class="w-auto px-2">
-                                                <h5>Route Name</h5>
+                                                <a href="/routes-detail"><h5>Route Name</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
@@ -79,7 +79,7 @@ class BusRoutesEdit extends Component {
                                         </div>
                                         <div class="col">
                                             <div class="row d-inline-flex float-end">
-                                                <Link to="/schools/routes_planner" class="btn btn-primary float-end w-auto me-3" role="button">
+                                                <Link to="/schools/routes-planner" class="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span class="btn-text">
                                                         <i className="bi bi-geo-alt-fill me-2"></i>
                                                         Route Planner
