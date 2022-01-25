@@ -33,32 +33,50 @@ import BusRoutesPlanner from "./templates/routes-planner";
 import BusRoutesEdit from "./templates/routes-edit";
 // import BusRoutesDelete from "./templates/routes-delete";
 
+import { INDEX_URL } from "./constants";
+import { SCHOOLS_URL } from "./constants";
+import { STUDENTS_URL } from "./constants";
+import { USERS_URL } from "./constants";
+import { ROUTES_URL } from "./constants";
+import { SCHOOLS_DETAIL_URL } from "./constants";
+import { STUDENTS_DETAIL_URL } from "./constants";
+import { USERS_DETAIL_URL } from "./constants";
+import { ROUTES_DETAIL_URL } from "./constants";
+import { SCHOOLS_CREATE_URL } from "./constants";
+import { USERS_CREATE_URL } from "./constants";
+import { ROUTES_PLANNER_URL } from "./constants";
+import { SCHOOLS_EDIT_URL } from "./constants";
+import { STUDENTS_EDIT_URL } from "./constants";
+import { USERS_EDIT_URL } from "./constants";
+import { ROUTES_EDIT_URL } from "./constants";
+import { PARENT_DASHBOARD_URL } from './constants';
+
 class App extends Component {
   render() {
     return (
       <div>
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<ParentDashboard />} />
+          <Route path={INDEX_URL} element={<Login />} />
+          <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
 
-          <Route path="/students" element={<Students />} />
-          <Route path="/students-detail" element={<StudentsDetail />} />
-          <Route path="/students-edit" element={<StudentsEdit />} />
+          <Route path={STUDENTS_URL} element={<Students />} />
+          <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />
+          <Route path={STUDENTS_EDIT_URL} element={<StudentsEdit />} />
 
-          <Route path="/schools" element={<Schools />} />
-          <Route path="/schools/create" element={<SchoolsCreate />} />
-          <Route path="/schools-detail" element={<SchoolsDetail />} />
-          <Route path="/schools-edit" element={<SchoolsEdit />} />
+          <Route path={SCHOOLS_URL} element={<Schools />} />
+          <Route path={SCHOOLS_CREATE_URL} element={<SchoolsCreate />} />
+          <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail />} />
+          <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
 
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/create" element={<UsersCreate />} />
-          <Route path="/users-detail" element={<UsersDetail />} />
-          <Route path="/users-edit" element={<UsersEdit />} />
+          <Route path={USERS_URL} element={<Users />} />
+          <Route path={USERS_CREATE_URL} element={<UsersCreate />} />
+          <Route path={USERS_DETAIL_URL} element={<UsersDetail />} />
+          <Route path={USERS_EDIT_URL} element={<UsersEdit />} />
 
-          <Route path="/routes" element={<BusRoutes />} />
-          <Route path="/routes-detail" element={<BusRoutesDetail />} />
-          <Route path="/schools/routes-planner" element={<BusRoutesPlanner />} />
-          <Route path="/routes-edit" element={<BusRoutesEdit />} />
+          <Route path={ROUTES_URL} element={<BusRoutes />} />
+          <Route path={ROUTES_DETAIL_URL} element={<BusRoutesDetail />} />
+          <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
+          <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
         </Routes>
       </div>
     );
