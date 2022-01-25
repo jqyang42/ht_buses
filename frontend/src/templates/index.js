@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { HT_LOGO } from "../constants";
 
 const siteName = "Hypothetical Transportation Bus Management System";
-console.log(HT_LOGO)
 //class component
 class Login extends Component {
     render() {

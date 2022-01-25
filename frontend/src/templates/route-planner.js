@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import { GOOGLE_API_KEY, HT_LOGO } from '../constants';
+import { HT_LOGO } from '../constants';
 import RouteMap from './route-map';
 
 const containerStyle = {
@@ -13,7 +12,7 @@ const center = {
     lng: -38.523
 };
 
-class Bus_Routes_Planner extends Component {
+class BusRoutesPlanner extends Component {
     render() {
         return (
             <main>
