@@ -10,9 +10,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
+from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
-
-
+# Login API
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def User_login(request):
@@ -36,7 +36,8 @@ def User_login(request):
     else: 
         raise ValidationError({"message": "Account does not exist"})
 
-
+# User Creation API
+# Needs to be changed to IsAuthenticated
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def signup(request):
@@ -59,7 +60,7 @@ def signup(request):
     result = {"data" : data}
     return Response(result)
 
-
+# Student Create
 def student_create(request, user):
     data = {}
     reqBody = json.loads(request.body)
@@ -75,10 +76,28 @@ def student_create(request, user):
     result = {"data" : data}
     return
 
-
+# Students Detail API
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def students_detail(request):
-    return render(request, 'students_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    # Cannot be tested, need API for creating a parent
+    Student.studentsTable.create(first_name="Mary", last_name="Jane", school_id=School.schoolsTable.get(pk=1), student_school_id=3,route_id=Route.routeTables.get(pk=1),user_id=User.objects.get(pk=1))
+    student = Student.studentsTable.get(pk=reqBody["student"]["id"])
+    student_serializer = StudentSerializer(student, many=False)
+    route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+    route_serializer = RouteSerializer(route, many=False)
+    school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+    school_serializer = SchoolSerializer(school, many=False)
+    data["first_name"] = student_serializer.data["first_name"]
+    data["last_name"] = student_serializer.data["last_name"]
+    data["school"] = school_serializer.data["name"]
+    data["route"] = route_serializer.data["name"]
+    return Response(data)
 
+# Logout API
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def User_logout(request):
@@ -103,8 +122,48 @@ def students_edit(request):
 def schools(request):
     return render(request, 'schools.html', {})
 
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def schools_detail(request):
-    return render(request, 'schools_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    try :
+        school = School.schoolsTable.get(pk=reqBody["school"]["id"])
+        school_serializer = SchoolSerializer(school, many=False)
+        students = Student.studentsTable.filter(school_id=reqBody["school"]["id"])
+        students_serializer = StudentSerializer(students, many=True)
+        route = Route.routeTables.filter(school_id=reqBody["school"]["id"])
+        route_serializer = RouteSerializer(route, many=True)
+        data["name"] = school_serializer.data["name"]
+        data["address"] = school_serializer.data["address"]
+        student_list = []
+        for student in students_serializer.data:
+            id = student["id"]
+            first_name = student["first_name"]
+            last_name = student["last_name"]
+            # need to do lookup on bus route
+            route_id = student["route_id"]
+            student_route = Route.routeTables.get(pk=route_id)
+            student_route_serializer = RouteSerializer(student_route, many=False)
+            route_name = student_route_serializer.data["name"]
+            student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
+        if len(student_list) != 0:
+            data["students"] = student_list
+        route_list = []
+        for school_route in route_serializer.data:
+            id = school_route["id"]
+            name = school_route["name"]
+            # need to find student count per route
+            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=id))
+            route_count_serialize = StudentSerializer(route_count, many=True)
+            student_count = len(route_count_serialize.data)
+            route_list.append({'id': id, 'name': name, 'student_count': student_count})
+        if len(route_list) != 0:
+            data["routes"] = route_list
+        return Response(data)
+    except BaseException as e:
+        raise ValidationError({"messsage": "School does not exist"})
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
@@ -146,8 +205,30 @@ def route_create(request):
     result = {"data" : data}
     return Response(result)
 
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def routes_detail(request):
-    return render(request, 'routes_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    route = Route.routeTables.get(pk=reqBody["route"]["id"])
+    route_serializer = RouteSerializer(route, many=False)
+    school = School.schoolsTable.get(pk=route_serializer.data["school_id"])
+    school_serializer = SchoolSerializer(school, many=False)
+    students = Student.studentsTable.filter(route_id=reqBody["route"]["id"])
+    students_serializer = StudentSerializer(students, many=True)
+    data["name"] = route_serializer.data["name"]
+    data["school"] = school_serializer.data["name"]
+    data["description"] = route_serializer.data["description"]
+    student_list = []
+    for student in students_serializer.data:
+        id = student["id"]
+        first_name = student["first_name"]
+        last_name = student["last_name"]
+        student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name})
+    if len(student_list) != 0:
+        data["students"] = student_list
+    return Response(data)
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
@@ -180,8 +261,35 @@ def route_delete(request):
 def users(request):
     return render(request, 'users.html', {})
 
+@api_view(["GET"])
+# Needs to be changed to IsAuthenticated
+@permission_classes([AllowAny])
 def users_detail(request):
-    return render(request, 'users_detail.html', {})
+    data = {}
+    reqBody = json.loads(request.body)
+    try:
+        user = User.objects.get(pk=reqBody["user"]["id"])
+        user_serializer = UserSerializer(user, many=False)
+        data["first_name"] = user_serializer.data["first_name"]
+        data["last_name"] = user_serializer.data["last_name"]
+        data["email"] = user_serializer.data["email"]
+        if user_serializer.data["is_parent"]:
+            data["address"] = user_serializer.data["address"]
+            students = Student.studentsTable.filter(user_id=reqBody["user"]["id"])
+            students_serializer = StudentSerializer(students, many=True)
+            student_list = []
+            for student in students_serializer.data:
+                id = student["id"]
+                first_name = student["first_name"]
+                last_name = student["last_name"]
+                route_serializer = Route.routeTables.get(pk=student["route_id"])
+                route_name = route_serializer.data["name"]
+                student_list.append({'id': id, 'first_name': first_name, 'last_name' : last_name, 'route_name' : route_name})
+            data["students"] = student_list
+        data["is_staff"] = user_serializer.data["is_staff"]
+        return Response(data)
+    except BaseException as e:
+        raise ValidationError({"messsage": "User does not exist"})
 
 def users_create(request):
     return render(request, 'users_create.html', {})
@@ -191,4 +299,4 @@ def users_edit(request):
 
 def routeplanner(request):
     return render(request, 'route_planner.html', {})
-    
+
