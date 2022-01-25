@@ -1,16 +1,20 @@
 import json
 from rest_framework.test import APIClient, APITestCase
 from django.core.exceptions import ValidationError
+from .test_user_create import Test_user_create
 
 class Test_user_login(APITestCase):
     endpoint = '/login'
+    create_endpoint = '/users/create'
     # Load login json
     def login_info(path):
         with open(path) as f:
             return json.load(f)
+    def create_admin(self):
+        APIClient().post(self.create_endpoint, data = Test_user_create.signup_info("ht_buses_app/tests/resources/create_user/create_admin_user.json"), format='json')
     # Tests
     def test_user_login_success(self):
-        # Need to somehow populate it with a user, currently fails because of empty database
+        Test_user_login.create_admin(self)
         response = APIClient().post(self.endpoint, data = Test_user_login.login_info("ht_buses_app/tests/resources/login/login_req.json"), format='json')
         assert response.status_code == 200 # Checks that the response code is successful
     
@@ -26,7 +30,7 @@ class Test_user_login(APITestCase):
                 return False
         
     def test_user_login_failed_wrong_password(self):
-        # Need to somehow populate it with a user, currently fails because of empty database
+        Test_user_login.create_admin(self)
         try:
             response = APIClient().post(self.endpoint, data = Test_user_login.login_info("ht_buses_app/tests/resources/login/login_req_wrong_password.json"), format = 'json')
             if response.status_code == 200:
