@@ -83,8 +83,47 @@ class BusRoutesPlanner extends Component {
                                             <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
                                             <div className="row d-flex mt-2">
                                                 <div className="col-auto float-start">
-                                                    <button type="button" className="btn btn-primary">Add Route</button>
+                                                    <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                        Add Route
+                                                    </button>
+
+                                                    <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                        <div className="modal-dialog modal-dialog-centered">
+                                                            <div className="modal-content">
+                                                                <div className="modal-header">
+                                                                    <h5 className="modal-title" id="staticBackdropLabel">Add Route</h5>
+                                                                    <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div className="modal-body">
+                                                                    <form>
+                                                                        <div className="form-group pb-3 required">
+                                                                            <label for="route-name" className="control-label pb-2">Name</label>
+                                                                            <input type="name" className="form-control" id="route-name" placeholder="Enter route name"></input>
+                                                                        </div>
+                                                                        <div className="form-group pb-3 required">
+                                                                            <label for="route-school" className="control-label pb-2">School</label>
+                                                                            <select class="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
+                                                                                <option>Select a School</option>
+                                                                                <option selected value="1">School Name (auto-filled)</option>
+                                                                                <option value="2">Two</option>
+                                                                                <option value="3">Three</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="route-description" class="control-label pb-2">Description</label>
+                                                                            <textarea type="description" class="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description"></textarea>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="button" className="btn btn-primary">Create</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                                 <div className="col justify-content-end">
                                                     <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
                                                         <option selected>Select a Route</option>
@@ -97,8 +136,7 @@ class BusRoutesPlanner extends Component {
                                                     <button type="button" className="btn btn-primary">Assign</button>
                                                 </div>
                                             </div>
-                                            <div className="bg-gray rounded mt-3 px-4 py-4">
-                                                <h5>Map</h5>
+                                            <div className="bg-gray rounded mt-3">
                                                 <RouteMap />
                                             </div>
                                         </div>
