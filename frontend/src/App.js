@@ -1,7 +1,7 @@
 // import HT_Logo from './static/img/HT_Logo.png';
 import './App.css';
 import React, { Component } from "react";
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -34,17 +34,17 @@ import BusRoutesEdit from "./templates/routes_edit";
 
 class App extends Component {
   render() {
-		return (
-			<div>
-				<Routes>
-					<Route path="/" element={<Login />} />
+    return (
+      <div>
+        <Routes>
+          <Route path="/" element={<Login />} />
 
-					<Route path="/students" element={<Students />} />
+          <Route path="/students" element={<Students />} />
           <Route path="/students_detail" element={<StudentsDetail />} />
           <Route path="/students_edit" element={<StudentsEdit />} />
           {/* <Route path="/students/:id/delete" element={<StudentsDelete />} /> */}
 
-					<Route path="/schools" element={<Schools />} />
+          <Route path="/schools" element={<Schools />} />
           <Route path="/schools/create" element={<SchoolsCreate />} />
           <Route path="/schools_detail" element={<SchoolsDetail />} />
           <Route path="/schools_edit" element={<SchoolsEdit />} />
@@ -57,14 +57,14 @@ class App extends Component {
           {/* <Route path="/users/:id/delete" element={<UsersDelete />} /> */}
 
           <Route path="/routes" element={<BusRoutes />} />
-					<Route path="/routes_detail" element={<BusRoutesDetail />} />
+          <Route path="/routes_detail" element={<BusRoutesDetail />} />
           <Route path="/schools/routes_planner" element={<BusRoutesPlanner />} />
           <Route path="/routes_edit" element={<BusRoutesEdit />} />
           {/* <Route path="/routes/:id/delete" element={<BusRoutesDelete />} /> */}
-				</Routes>
-			</div>
-		);
-	}
+        </Routes>
+      </div>
+    );
+  }
 }
 
 export default App;
