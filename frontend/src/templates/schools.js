@@ -1,8 +1,22 @@
+import axios from 'axios';
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 import { Link } from "react-router-dom";
+import { API_DOMAIN } from "../constants";
 
 class Schools extends Component {
+    state = {
+        schools : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `api/schools/`)
+            .then(response => {
+            const schools = response.data;
+            this.setState({ schools });
+            })
+    }
+    
     render() {
         return (
             <body className="overflow-hidden">
@@ -82,13 +96,21 @@ class Schools extends Component {
                                         <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>Name</th>
                                                     <th>Address</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
+                                                {
+                                                this.state.schools
+                                                    .map(school =>
+                                                    <tr key={school.id}>
+                                                        <td>{school.name}</td>
+                                                        <td>{school.address}</td>
+                                                    </tr>
+                                                    )
+                                                }
+                                                {/* <tr>
                                                     <td>Example</td>
                                                     <td>Example</td>
                                                     <td>Example</td>
@@ -97,7 +119,7 @@ class Schools extends Component {
                                                     <td>Example</td>
                                                     <td>Example</td>
                                                     <td>Example</td>
-                                                </tr>
+                                                </tr> */}
                                             </tbody>
                                         </table>
                                     </div>

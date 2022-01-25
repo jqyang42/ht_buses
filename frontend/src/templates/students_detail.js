@@ -1,8 +1,22 @@
+import axios from 'axios';
 import React, { Component } from "react";
 import HT_Logo from '../static/img/HT_Logo.png';
 import { Link } from "react-router-dom";
+import { API_DOMAIN } from "../constants";
 
 class StudentsDetail extends Component {
+    state = {
+        student : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `students/details/`)
+            .then(response => {
+            const student = response.data;
+            this.setState({ student });
+            })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User, UserManager
 from django.contrib.auth import authenticate
