@@ -35,11 +35,11 @@
     color: #ffffff;
 }
 
-.btn-primary:visited {
+/* .btn-primary:visited {
     background-color: #CC9A06;
     border: #CC9A06;
     color: #ffffff;
-}
+} */
 
 /* Link .btn-primary:visited[role="button"] {
     background-color: #FFC107;
@@ -62,6 +62,16 @@
 .btn-secondary:visited {
     background-color: #6C757D;
     border: #6C757D;
+    color: #ffffff;
+}
+
+.btn-danger {
+    background-color: #E35D6A;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background-color: #dc3545;
     color: #ffffff;
 }
 

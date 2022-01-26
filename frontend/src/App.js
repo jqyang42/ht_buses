@@ -8,59 +8,75 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './static/custom.css';
 
 import Login from "./templates/index";
+import ParentDashboard from './templates/parent-dashboard';
 
 import Students from "./templates/students";
-import StudentsDetail from "./templates/students_detail";
-import StudentsEdit from "./templates/students_edit";
-// import StudentsDelete from "./templates/students_delete";
+import StudentsDetail from "./templates/students-detail";
+import StudentsEdit from "./templates/students-edit";
+// import StudentsDelete from "./templates/students-delete";
 
 import Schools from "./templates/schools";
-import SchoolsDetail from "./templates/schools_detail";
-import SchoolsCreate from "./templates/schools_create";
-import SchoolsEdit from "./templates/schools_edit";
-// import SchoolsDelete from "./templates/schools_delete";
+import SchoolsDetail from "./templates/schools-detail";
+import SchoolsCreate from "./templates/schools-create";
+import SchoolsEdit from "./templates/schools-edit";
+// import SchoolsDelete from "./templates/schools-delete";
 
 import Users from "./templates/users";
-import UsersDetail from "./templates/users_detail";
-import UsersCreate from "./templates/users_create";
-import UsersEdit from "./templates/users_edit";
-// import UsersDelete from "./templates/users_delete";
+import UsersDetail from "./templates/users-detail";
+import UsersCreate from "./templates/users-create";
+import UsersEdit from "./templates/users-edit";
+// import UsersDelete from "./templates/users-delete";
 
 import BusRoutes from "./templates/routes";
-import BusRoutesDetail from "./templates/routes_detail";
-import BusRoutesPlanner from "./templates/routes_planner";
-import BusRoutesEdit from "./templates/routes_edit";
-// import BusRoutesDelete from "./templates/routes_delete";
+import BusRoutesDetail from "./templates/routes-detail";
+import BusRoutesPlanner from "./templates/routes-planner";
+import BusRoutesEdit from "./templates/routes-edit";
+// import BusRoutesDelete from "./templates/routes-delete";
+
+import { INDEX_URL } from "./constants";
+import { SCHOOLS_URL } from "./constants";
+import { STUDENTS_URL } from "./constants";
+import { USERS_URL } from "./constants";
+import { ROUTES_URL } from "./constants";
+import { SCHOOLS_DETAIL_URL } from "./constants";
+import { STUDENTS_DETAIL_URL } from "./constants";
+import { USERS_DETAIL_URL } from "./constants";
+import { ROUTES_DETAIL_URL } from "./constants";
+import { SCHOOLS_CREATE_URL } from "./constants";
+import { USERS_CREATE_URL } from "./constants";
+import { ROUTES_PLANNER_URL } from "./constants";
+import { SCHOOLS_EDIT_URL } from "./constants";
+import { STUDENTS_EDIT_URL } from "./constants";
+import { USERS_EDIT_URL } from "./constants";
+import { ROUTES_EDIT_URL } from "./constants";
+import { PARENT_DASHBOARD_URL } from './constants';
 
 class App extends Component {
   render() {
     return (
       <div>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path={INDEX_URL} element={<Login />} />
+          <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
 
-          <Route path="/students" element={<Students />} />
-          <Route path="/students_detail" element={<StudentsDetail />} />
-          <Route path="/students_edit" element={<StudentsEdit />} />
-          {/* <Route path="/students/:id/delete" element={<StudentsDelete />} /> */}
+          <Route path={STUDENTS_URL} element={<Students />} />
+          <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />
+          <Route path={STUDENTS_EDIT_URL} element={<StudentsEdit />} />
 
-          <Route path="/schools" element={<Schools />} />
-          <Route path="/schools/create" element={<SchoolsCreate />} />
-          <Route path="/schools_detail" element={<SchoolsDetail />} />
-          <Route path="/schools_edit" element={<SchoolsEdit />} />
-          {/* <Route path="/schools/:id/delete" element={<SchoolsDelete />} /> */}
+          <Route path={SCHOOLS_URL} element={<Schools />} />
+          <Route path={SCHOOLS_CREATE_URL} element={<SchoolsCreate />} />
+          <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail />} />
+          <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
 
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/create" element={<UsersCreate />} />
-          <Route path="/users_detail" element={<UsersDetail />} />
-          <Route path="/users_edit" element={<UsersEdit />} />
-          {/* <Route path="/users/:id/delete" element={<UsersDelete />} /> */}
+          <Route path={USERS_URL} element={<Users />} />
+          <Route path={USERS_CREATE_URL} element={<UsersCreate />} />
+          <Route path={USERS_DETAIL_URL} element={<UsersDetail />} />
+          <Route path={USERS_EDIT_URL} element={<UsersEdit />} />
 
-          <Route path="/routes" element={<BusRoutes />} />
-          <Route path="/routes_detail" element={<BusRoutesDetail />} />
-          <Route path="/schools/routes_planner" element={<BusRoutesPlanner />} />
-          <Route path="/routes_edit" element={<BusRoutesEdit />} />
-          {/* <Route path="/routes/:id/delete" element={<BusRoutesDelete />} /> */}
+          <Route path={ROUTES_URL} element={<BusRoutes />} />
+          <Route path={ROUTES_DETAIL_URL} element={<BusRoutesDetail />} />
+          <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
+          <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
         </Routes>
       </div>
     );

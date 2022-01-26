@@ -3,7 +3,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { GOOGLE_API_KEY } from '../constants';
 
 const containerStyle = {
-  width: '400px',
+  width: '100%',
   height: '400px'
 };
 
@@ -27,7 +27,7 @@ class RouteMap extends Component {
   }
   render() {
     return (
-      <div>
+      <div class='w-100 h-100'>
         <LoadScript
           googleMapsApiKey={GOOGLE_API_KEY}
         >
