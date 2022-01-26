@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
 from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User, UserManager
 from django.contrib.auth import authenticate
@@ -123,19 +122,6 @@ def schools(request):
     schools = School.schoolsTable.all()
     school_serializer = SchoolSerializer(schools, many=True)
     return Response(school_serializer.data)
-
-@api_view(['GET'])
-@permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
-def api_schools(request):
-    if request.method == 'GET':
-        schools = School.schoolsTable.all()
-
-        # name = request.GET.get('title', None)
-        # if title is not None:
-        #     schools = schools.filter etc etc
-    schools_serializer = SchoolSerializer(schools, many=True)
-    return JsonResponse(schools_serializer.data, safe=False)
-    # return render(request, 'schools.html', {})
 
 @api_view(['GET'])
 @permission_classes([AllowAny]) 
