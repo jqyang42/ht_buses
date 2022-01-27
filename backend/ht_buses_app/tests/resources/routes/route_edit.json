@@ -1,6 +1,6 @@
 {
-    "previous_route_name" : "Route Star",
-    "new_name": "Star Route",
-    "new_school": "North Middle School",
-    "new_description": "This a discription of Star Route"
+    "og_route_name" : "Route Star",
+    "route_name": "Star Route",
+    "school_name": "North Middle School",
+    "route_description": "This a discription of Star Route"
 }

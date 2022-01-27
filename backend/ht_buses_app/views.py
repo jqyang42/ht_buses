@@ -53,13 +53,13 @@ def signup(request):
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address= address)
     if is_parent:
-        student_create(request, user)
+        create_students(request, user)
     data["message"] = "User created successfully"
     result = {"data" : data}
     return Response(result)
 
 # Student Create
-def student_create(request, user):
+def create_students(request, user):
     data = {}
     reqBody = json.loads(request.body)
     user_id = user
@@ -70,9 +70,10 @@ def student_create(request, user):
         student_school_id = student['student_school_id']
         route_id = Route.routeTables.get(name=student['route'])
         student_object = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
-    data["message"] = "student registered successfully"
+    data["message"] = "students registered successfully"
     result = {"data" : data}
-    return
+    return Response(result)
+    
 
 # Students Detail API
 @api_view(["GET"])
@@ -111,9 +112,51 @@ def students(request):
     students = Student.studentsTable.all()
     student_serializer = StudentSerializer(students, many=True)
     return Response(student_serializer.data)
-    
-def students_edit(request):
-    return render(request, 'students_edit.html', {})
+
+@api_view(['POST'])
+@permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated 
+def single_student_edit(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    og_student_school_id = reqBody['og_student_school_id']  #Can different kids in different schools have same id?
+    new_first_name = reqBody['first_name']
+    new_last_name = reqBody['last_name']
+    student_school_id = reqBody['student_school_id']
+    school_id = School.schoolsTable.get(name=reqBody["school_name"]) 
+    route_id = Route.routeTables.get(name = reqBody["route_name"])
+    user_id = User.objects.get(first_name = reqBody["parent_first"], last_name = reqBody["parent_last"]) #change to email?
+    og_student_object = Student.studentsTable.get(student_school_id = og_student_school_id)   
+    og_student_object.last_name = new_last_name
+    og_student_object.first_name = new_first_name
+    og_student_object.school_id = school_id
+    og_student_object.student_school_id = student_school_id
+    og_student_object.route_id  = route_id
+    og_student_object.user_id = user_id
+    og_student_object.save()
+    data["message"] = "Student information successfully updated"
+    result = {"data" : data}
+    return Response(result)
+
+@api_view(['POST'])
+@permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
+def single_student_delete(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    student_object =  Student.studentsTable.get(student_school_id = reqBody['student_school_id'])
+    student_object.delete()
+    data["message"] = "student successfully deleted"
+    result = {"data" : data}
+    return Response(result)
+
+@api_view(['POST'])
+@permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
+def single_student_create(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    edit_or_create_student(reqBody)
+    data["message"] = "student successfully created"
+    result = {"data" : data}
+    return Response(result)
 
 @api_view(['GET'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
@@ -181,13 +224,22 @@ def school_create(request):
 def school_edit(request):
     data = {}
     reqBody = json.loads(request.body)
-    school_object =  School.schoolsTable.get(name = reqBody['previous_school_name'])
-    new_name = reqBody['new_name']
-    new_address = reqBody['new_address']
-    school_object.name = new_name
-    school_object.address = new_address
+    school_object =  School.schoolsTable.get(name = reqBody['og_school_name']) #Is it better if we do school id instead?
+    school_object.name = reqBody['school_name']
+    school_object.address = reqBody['school_address']
     school_object.save()
-    data["message"] = "school edited successfully"
+    data["message"] = "school information updated successfully"
+    result = {"data" : data}
+    return Response(result)
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+def school_delete(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    school_object =  School.schoolTables.get(name = reqBody['school_name'])
+    school_object.delete()
+    data["message"] = "school successfully deleted"
     result = {"data" : data}
     return Response(result)
 
@@ -197,7 +249,7 @@ def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
     name = reqBody['route_name']
-    school = School.schoolsTable.get(name = reqBody['school'])
+    school = School.schoolsTable.get(name = reqBody['school_name']) #assumes front end sends back an id associated with name
     description = reqBody['route_description']
     Route.routeTables.create(name=name, school_id = school, description = description)
     data["message"] = "route created successfully"
@@ -233,15 +285,12 @@ def routes_detail(request):
 def route_edit(request):
     data = {}
     reqBody = json.loads(request.body)
-    route_object =  Route.routeTables.get(name = reqBody['previous_route_name'])
-    new_name = reqBody['new_name']
-    new_school = School.schoolsTable.get(name = reqBody['new_school'])
-    new_description = reqBody['new_description']
-    route_object.name = new_name
-    route_object.school_id = new_school
-    route_object.description = new_description
+    route_object =  Route.routeTables.get(name = reqBody['og_route_name']) 
+    route_object.name = reqBody['route_name']
+    route_object.school_id =  School.schoolsTable.get(name = reqBody['school_name'])
+    route_object.description = reqBody['route_description']
     route_object.save()
-    data["message"] = "route edited successfully"
+    data["message"] = "route updated successfully"
     result = {"data" : data}
     return Response(result)
 
@@ -293,11 +342,73 @@ def users_detail(request):
     except BaseException as e:
         raise ValidationError({"messsage": "User does not exist"})
 
-def users_create(request):
-    return render(request, 'users_create.html', {})
+@api_view(["GET"])
+@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+def user_edit(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    og_first_name = reqBody['og_first_name']
+    og_last_name = reqBody['og_last_name']
+    email = reqBody['email']
+    password = reqBody['password']
+    first_name = reqBody['first_name']
+    last_name = reqBody['last_name']
+    address = reqBody['address']
+    is_staff = reqBody['is_staff']
+    is_parent = reqBody['is_parent']
+    user_object = User.objects.get(first_name = og_first_name, last_name = og_last_name) #might change to og email?
+    user_object.email = email
+    user_object.password = password
+    user_object.first_name = first_name
+    user_object.last_name = last_name
+    user_object.address = address
+    user_object.is_parent = is_parent
+    user_object.is_staff = is_staff
+    if is_parent:
+        for student_info in reqBody["students"]:
+            edit_or_create_student(student_info, user_object)
+    data["message"] = "User and associated students updated successfully"
+    result = {"data" : data}
+    return Response(result)
 
-def users_edit(request):
-    return render(request, 'users_edit.html', {})
+def edit_or_create_student(student_info, user = None):
+    data = {}
+    first_name = student_info['first_name']
+    last_name = student_info['last_name']
+    school_id = School.schoolsTable.get(name =student_info['school_name'])
+    if user is not None: 
+        user_id = user
+    else:
+        user_id = User.objects.get(first_name = student_info['parent_first'], last_name = student_info['parent_last'])
+    student_school_id = student_info['student_school_id']
+    route_id = Route.routeTables.get(name = student_info['route_name'])
+    try: 
+        student_object = Student.studentsTable.get(student_school_id = student_school_id)
+        student_object.first_name = first_name
+        student_object.last_name = last_name
+        student_object.school_id = school_id
+        student_object.student_school_id = student_school_id
+        student_object.route_id = route_id
+        student_object.save()
+        data["message"] = "student updated successfully"
+        result = {"data" : data}
+        return Response(result) 
+    except: 
+        Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+        data["message"] = "student created successfully"
+        result = {"data" : data}
+        return Response(result) 
+    
+@api_view(["GET"])
+@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+def user_delete(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    user_object =  User.objects.get(pk = reqBody['user_id'])
+    user_object.delete()
+    data["message"] = "user successfully deleted"
+    result = {"data" : data}
+    return Response(result)
 
 def routeplanner(request):
     return render(request, 'route_planner.html', {})

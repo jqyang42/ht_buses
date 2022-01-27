@@ -1,5 +1,5 @@
 {
-    "previous_school_name": "East Middle School",
-    "new_name": "Not East School",
-    "new_address": "Other address"
+    "og_school_name": "East Middle School",
+    "school_name": "Not East School",
+    "school_address": "Other address"
 }

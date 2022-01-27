@@ -27,9 +27,12 @@ urlpatterns = [
     path('users', views.users, name="users"),
     path('users/detail', views.users_detail, name="users_detail"),
     path('users/create', views.signup, name="users_create"),
-    path('users/edit', views.users_edit, name="users_edit"),
+    path('users/edit', views.user_edit, name="users_edit"),
     path('routeplanner', views.routeplanner, name="routeplanner"),
     path('logout', views.User_logout, name="logout"),
     path('login', views.User_login, name="login"),
     path('', views.User_login, name="index"),
+    path('student/create', views.single_student_create, name = "create_student"),
+    path('student/delete', views.single_student_delete, name = "delete_student"),
+    path('student/edit', views.single_student_edit, name = "edit_student"),
 ]
