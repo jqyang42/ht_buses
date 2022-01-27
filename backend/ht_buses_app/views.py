@@ -124,7 +124,8 @@ def single_student_edit(request):
     student_school_id = reqBody['student_school_id']
     school_id = School.schoolsTable.get(name=reqBody["school_name"]) 
     route_id = Route.routeTables.get(name = reqBody["route_name"])
-    user_id = User.objects.get(first_name = reqBody["parent_first"], last_name = reqBody["parent_last"]) #change to email?
+    parent = reqBody['parent']
+    user_id = User.objects.get(first_name = parent["first_name"], last_name = parent["last_name"]) #change to email?
     og_student_object = Student.studentsTable.get(student_school_id = og_student_school_id)   
     og_student_object.last_name = new_last_name
     og_student_object.first_name = new_first_name
@@ -380,7 +381,8 @@ def edit_or_create_student(student_info, user = None):
     if user is not None: 
         user_id = user
     else:
-        user_id = User.objects.get(first_name = student_info['parent_first'], last_name = student_info['parent_last'])
+        parent = student_info['parent']
+        user_id = User.objects.get(first_name = parent['first_name'], last_name = parent['last_name'])
     student_school_id = student_info['student_school_id']
     route_id = Route.routeTables.get(name = student_info['route_name'])
     try: 

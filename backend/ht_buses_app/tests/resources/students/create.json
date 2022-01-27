@@ -4,6 +4,8 @@
     "school_name": "East Middle School",
     "student_school_id": 9876,
     "route_name": "Hilly Route",
-    "parent_first": "John",
-    "parent_last": "Smith"
+    "parent": {
+        "first_name": "John",
+        "last_name": "Smith"
+    }
 }
