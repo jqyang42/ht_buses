@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { GOOGLE_API_KEY } from '../constants';
+import { GOOGLE_API_KEY } from '../../constants';
 
 const containerStyle = {
   width: '100%',

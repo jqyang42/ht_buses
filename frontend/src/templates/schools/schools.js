@@ -1,75 +1,30 @@
-import React, { Component, useMemo } from "react";
-import { useTable } from 'react-table'
-import { HT_LOGO } from "../constants";
+import axios from 'axios';
+import React, { Component } from "react";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
-// import { StudentsTable } from "./students-table";
-import { StudentsTable } from "./students-table";
+import { SchoolsTable } from '../tables/schools-table';
+import { API_DOMAIN } from "../../constants";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { SCHOOLS_CREATE_URL } from "../../constants";
 
-export function Setup() {
-    const columns = React.useMemo(
-        () => [
-            {
-                Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-            },
-            {
-                Header: 'Parent',
-                accessor: 'parent',
-            },
-            {
-                Header: 'School',
-                accessor: 'school',
-            },
-            {
-                Header: 'Route',
-                accessor: 'route',
-            },
-        ],
-        []
-    )
+class Schools extends Component {
+    state = {
+        schools : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools`)
+            .then(response => {
+            const schools = response.data;
+            this.setState({ schools });
+            })
+    }
     
-    const data = React.useMemo(
-        () => [
-            {
-                col1: 'Hello',
-                col2: 'World',
-            },
-            {
-                col1: 'react-table',
-                col2: 'rocks',
-            },
-            {
-                col1: 'whatever',
-                col2: 'you want',
-            },
-        ],
-        []
-    )
-}
-
-class Students extends Component {
-
     render() {
         return (
             <body className="overflow-hidden">
@@ -82,7 +37,7 @@ class Students extends Component {
                                 </a>
 
                                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
-                                    <li className="nav-item active">
+                                    <li className="nav-item">
                                         <a href={STUDENTS_URL} className="nav-link align-middle mx-4 px-4">
                                             <i className="bi bi-list-ul me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Students</span>
@@ -94,7 +49,7 @@ class Students extends Component {
                                             <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item active">
                                         <a href={SCHOOLS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-building me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Schools</span>
@@ -114,7 +69,7 @@ class Students extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>Students</h5>
+                                        <h5>Schools</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
                                         <h6 className="font-weight-bold mb-0">Admin Name</h6>
@@ -134,29 +89,36 @@ class Students extends Component {
                                             </div>
                                         </div>
                                         <div className="col">
+                                            <div className="row d-inline-flex float-end">
+                                                <Link to={SCHOOLS_CREATE_URL} class="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span class="btn-text">
+                                                        <i className="bi bi-person-plus-fill me-2"></i>
+                                                        Create
+                                                    </span>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="mt-4">
-                                        <StudentsTable/>
+                                        <SchoolsTable />
                                         {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
                                                     <th>Name</th>
-                                                    <th>Parent</th>
-                                                    <th>School</th>
-                                                    <th>Route</th>
+                                                    <th>Address</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Student ID</td>
-                                                    <td>Student Name</td>
-                                                    <td>Parent Name</td>
-                                                    <td>School</td>
-                                                    <td>Route</td>
-                                                </tr>
+                                                {
+                                                this.state.schools
+                                                    .map(school =>
+                                                    <tr key={school.id}>
+                                                        <td>{school.name}</td>
+                                                        <td>{school.address}</td>
+                                                    </tr>
+                                                    )
+                                                }
                                             </tbody>
                                         </table> */}
                                     </div>
@@ -170,5 +132,4 @@ class Students extends Component {
     }
 }
 
-export default Students;
-
+export default Schools;

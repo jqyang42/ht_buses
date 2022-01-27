@@ -1,25 +1,44 @@
+import axios from "axios";
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
-class UsersPassword extends Component {
+class SchoolsCreate extends Component {
+    state = {
+        school_name: '',
+        school_address: ''
+    }
+
+    handleSchoolNameChange = event => {
+        this.setState({ school_name: event.target.value });
+    }
+
+    handleSchoolAddressChange = event => {
+        this.setState({ school_address: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const school = {
+            school_name: this.state.school_name,
+            school_address: this.state.school_address
+        }
+
+        axios.post(API_DOMAIN + `school/create`, school)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -44,13 +63,13 @@ class UsersPassword extends Component {
                                             <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item active">
                                         <a href={SCHOOLS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-building me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Schools</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item active">
+                                    <li className="nav-item">
                                         <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-people me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Manage Users</span>
@@ -66,19 +85,13 @@ class UsersPassword extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <a href={USERS_URL}><h5>Manage Users</h5></a>
+                                                <a href={SCHOOLS_URL}><h5>Schools</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <a href={USERS_DETAIL_URL}><h5>User Name</h5></a>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <i className="bi bi-chevron-right"></i>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <h5>Change Password</h5>
+                                                <h5>Create School</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -92,31 +105,34 @@ class UsersPassword extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Change Password</h5>
+                                            <h5>Create New School</h5>
                                         </div>
                                     </div>
-                                    <form>
+                                    <form onSubmit={this.handleSubmit}>
                                         <div className="row">
                                             <div className="col mt-2">
-                                                {/* <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputPassword1" className="control-label pb-2">Old Password</label>
-                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Enter old password" required></input>
-                                                </div> */}
                                                 <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
-                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword2" placeholder="Enter new password" required></input>
+                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                        placeholder="Enter school name" required
+                                                        onChange={this.handleSchoolNameChange}></input>
                                                 </div>
-                                                <div className="form-group required pb-4 w-75">
-                                                    <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
-                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword3" placeholder="Re-enter password" required></input>
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1"
+                                                        placeholder="Enter school address"
+                                                        onChange={this.handleSchoolAddressChange}></input>
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                    <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
-                                                    <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
+                                                    <Link to={SCHOOLS_URL} class="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                        <span class="btn-text">
+                                                            Cancel
+                                                        </span>
+                                                    </Link>
+                                                    <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                                 </div>
                                             </div>
-                                            <div className="col mt-2">
-                                            </div>
+                                            <div className="col mt-2"></div>
                                         </div>
                                     </form>
                                 </div>
@@ -129,4 +145,4 @@ class UsersPassword extends Component {
     }
 }
 
-export default UsersPassword;
+export default SchoolsCreate;
