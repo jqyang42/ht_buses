@@ -38,7 +38,7 @@ def user_login(request):
 # Needs to be changed to IsAuthenticated
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
-def users_create(request):
+def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
     email = reqBody['email']
@@ -100,7 +100,7 @@ def students_detail(request):
 # Logout API
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def User_logout(request):
+def user_logout(request):
     request.user.auth_token.delete()
     logout(request._request)
     return Response('User Logged out successfully')  
@@ -139,7 +139,7 @@ def students(request):
 
 @api_view(['PUT'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated 
-def single_student_edit(request):
+def student_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
@@ -167,7 +167,7 @@ def single_student_edit(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
-def single_student_delete(request):
+def student_delete(request):
     data = {}
     reqBody = json.loads(request.body)
     try:
