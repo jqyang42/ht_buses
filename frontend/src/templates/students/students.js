@@ -1,38 +1,26 @@
 import axios from "axios";
-import React, { Component, useMemo } from "react";
-import { HT_LOGO } from "../constants";
+import React, { Component } from "react";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
-import { RoutesTable } from "./routes-table";
+import { StudentsTable } from "../tables/students-table";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
-import { API_DOMAIN } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
-class BusRoutes extends Component {
+class Students extends Component {
     state = {
-        routes : [],
+        students : []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes?page=1`)
+        axios.get(API_DOMAIN + `students?page=1`)
             .then(res => {
-            const routes = res.data.routes
-            this.setState({ routes }
-            )
+            const students = res.data.students;
+            this.setState({ students });
         })
     }
 
@@ -48,13 +36,13 @@ class BusRoutes extends Component {
                                 </a>
 
                                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
-                                    <li className="nav-item">
+                                    <li className="nav-item active">
                                         <a href={STUDENTS_URL} className="nav-link align-middle mx-4 px-4">
                                             <i className="bi bi-list-ul me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Students</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item active">
+                                    <li className="nav-item">
                                         <a href={ROUTES_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-geo-alt me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
@@ -80,7 +68,7 @@ class BusRoutes extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>Bus Routes</h5>
+                                        <h5>Students</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
                                         <h6 className="font-weight-bold mb-0">Admin Name</h6>
@@ -104,7 +92,7 @@ class BusRoutes extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <RoutesTable data={this.state.routes}/>
+                                        <StudentsTable data={this.state.students} />
                                     </div>
                                 </div>
                             </div>
@@ -116,4 +104,5 @@ class BusRoutes extends Component {
     }
 }
 
-export default BusRoutes;
+export default Students;
+

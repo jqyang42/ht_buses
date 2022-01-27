@@ -1,11 +1,30 @@
+import axios from "axios";
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { RoutesTable } from "../tables/routes-table";
 
-import { INDEX_URL } from "../constants";
-import { PARENT_DASHBOARD_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
-class ParentDashboard extends Component {
+class BusRoutes extends Component {
+    state = {
+        routes : [],
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `routes?page=1`)
+            .then(res => {
+            const routes = res.data.routes
+            this.setState({ routes }
+            )
+        })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -13,15 +32,33 @@ class ParentDashboard extends Component {
                     <div className="row flex-nowrap">
                         <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
                             <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
-                                <a href={PARENT_DASHBOARD_URL} className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                                <a href={INDEX_URL} className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                                     <img src={HT_LOGO} className="img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
                                 </a>
 
                                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
+                                    <li className="nav-item">
+                                        <a href={STUDENTS_URL} className="nav-link align-middle mx-4 px-4">
+                                            <i className="bi bi-list-ul me-2"></i>
+                                            <span className="ms-1 d-none d-sm-inline">Students</span>
+                                        </a>
+                                    </li>
                                     <li className="nav-item active">
-                                        <a href={PARENT_DASHBOARD_URL} className="nav-link align-middle mx-4 px-4">
-                                            <i className="bi bi-house me-2"></i>
-                                            <span className="ms-1 d-none d-sm-inline">Dashboard</span>
+                                        <a href={ROUTES_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                                            <i className="bi bi-geo-alt me-2"></i>
+                                            <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a href={SCHOOLS_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                                            <i className="bi bi-building me-2"></i>
+                                            <span className="ms-1 d-none d-sm-inline">Schools</span>
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                                            <i className="bi bi-people me-2"></i>
+                                            <span className="ms-1 d-none d-sm-inline">Manage Users</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -32,11 +69,11 @@ class ParentDashboard extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>My Dashboard</h5>
+                                        <h5>Bus Routes</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
-                                        <h6 className="font-weight-bold mb-0">User Name</h6>
-                                        <p className="text-muted text-small">Parent</p>
+                                        <h6 className="font-weight-bold mb-0">Admin Name</h6>
+                                        <p className="text-muted text-small">Administrator</p>
                                     </div>
                                 </div>
                             </div>
@@ -56,24 +93,7 @@ class ParentDashboard extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>School</th>
-                                                    <th>Bus Route</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Student ID</td>
-                                                    <td>Student Name</td>
-                                                    <td>School Name</td>
-                                                    <td>Route Name</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <RoutesTable data={this.state.routes}/>
                                     </div>
                                 </div>
                             </div>
@@ -85,4 +105,4 @@ class ParentDashboard extends Component {
     }
 }
 
-export default ParentDashboard;
+export default BusRoutes;

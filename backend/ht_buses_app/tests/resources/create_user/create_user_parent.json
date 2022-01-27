@@ -10,9 +10,9 @@
         {
             "first_name": "Dary",
             "last_name": "Smith",
-            "school": "West High School",
+            "school_name": "West High School",
             "student_school_id": 123456,
-            "route": "Route 1"
+            "route_name": "Route 1"
         }
     ]
     

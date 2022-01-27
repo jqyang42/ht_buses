@@ -10,16 +10,16 @@
         {
             "first_name": "James",
             "last_name": "Silvan",
-            "school": "East Middle School",
+            "school_name": "East Middle School",
             "student_school_id": 12345,
-            "route": "Route 2"
+            "route_name": "Route 2"
         },
         {
             "first_name": "Emily",
             "last_name": "Silvan",
-            "school": "East Middle School",
+            "school_name": "East Middle School",
             "student_school_id": 45678,
-            "route": "Route 2"
+            "route_name": "Route 2"
         }
     ]
 }
