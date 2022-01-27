@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { Component } from "react";
+import React, { Component, useMemo } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
 import { RoutesTable } from "./routes-table";
@@ -24,17 +24,17 @@ import { API_DOMAIN } from "../constants";
 
 class BusRoutes extends Component {
     state = {
-        routes : []
+        routes : [],
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools`)
-            .then(response => {
-            const schools = response.data;
-            this.setState({ schools });
+        axios.get(API_DOMAIN + `routes?page=1`)
+            .then(res => {
+            const routes = useMemo(() => res.data, []);
+            this.setState({ routes });
             })
     }
-
+      
     render() {
         return (
             <body className="overflow-hidden">
@@ -103,31 +103,7 @@ class BusRoutes extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <RoutesTable />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Name</th>
-                                                    <th>School</th>
-                                                    <th>Student Count</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
+                                        <RoutesTable data={this.state.routes}/>
                                     </div>
                                 </div>
                             </div>

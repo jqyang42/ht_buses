@@ -1,7 +1,7 @@
 import React, { Component, useMemo } from "react";
 import { useTable } from 'react-table';
     
-export function SchoolsTable() {
+export function SchoolsTable({ data }) {
     const columns = React.useMemo(
         () => [
             {
@@ -20,26 +20,26 @@ export function SchoolsTable() {
         []
     )
     
-    const data = React.useMemo(
-        () => [
-            {
-                id: '0',
-                name: 'example',
-                address: 'example',
-            },
-            {
-                id: '1',
-                name: 'example',
-                address: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                address: 'example',
-            },
-        ],
-        []
-    )
+    // const data = React.useMemo(
+    //     () => [
+    //         {
+    //             id: '0',
+    //             name: 'example',
+    //             address: 'example',
+    //         },
+    //         {
+    //             id: '1',
+    //             name: 'example',
+    //             address: 'example',
+    //         },
+    //         {
+    //             id: '2',
+    //             name: 'example',
+    //             address: 'example',
+    //         },
+    //     ],
+    //     []
+    // )
     
     const tableInstance = useTable({ columns, data })
      

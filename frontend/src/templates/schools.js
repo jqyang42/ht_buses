@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { Component } from "react";
+import React, { Component, useMemo } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
 import { SchoolsTable } from './schools-table';
@@ -27,11 +27,11 @@ class Schools extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools`)
-            .then(response => {
-            const schools = response.data;
+        axios.get(API_DOMAIN + `schools?page=1`)
+            .then(res => {
+            const schools = useMemo(() => res.data, []);
             this.setState({ schools });
-            })
+        })
     }
     
     render() {
@@ -110,7 +110,7 @@ class Schools extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <SchoolsTable />
+                                        <SchoolsTable data={this.state.schools} />
                                         {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
