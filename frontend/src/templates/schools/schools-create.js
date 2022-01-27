@@ -32,7 +32,7 @@ class SchoolsCreate extends Component {
             school_address: this.state.school_address
         }
 
-        axios.post(API_DOMAIN + `school/create`, school)
+        axios.post(API_DOMAIN + `schools/create`, school)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -129,7 +129,12 @@ class SchoolsCreate extends Component {
                                                             Cancel
                                                         </span>
                                                     </Link>
-                                                    <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
+                                                    {/* <Link to={SCHOOLS_URL} class="btn btn-primary w-auto me-0 justify-content-end" role="button" type="submit">
+                                                        <span class="btn-text">
+                                                            Create
+                                                        </span>
+                                                    </Link> */}
+                                                    <button href={SCHOOLS_URL} type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                                 </div>
                                             </div>
                                             <div className="col mt-2"></div>
