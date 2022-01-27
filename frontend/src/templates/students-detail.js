@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
+import { API_DOMAIN } from "../constants";
 
 import { INDEX_URL } from "../constants";
 import { SCHOOLS_URL } from "../constants";
@@ -20,6 +22,18 @@ import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 
 class StudentsDetail extends Component {
+    state = {
+        student : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `students/details?id=1`) // I think we could do + this.state.student.id
+            .then(response => {
+            const student = response.data;
+            this.setState({ student });
+            })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -86,8 +100,13 @@ class StudentsDetail extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Student Name</h5>
-                                            <h7>ID #27</h7>
+                                                <h5>
+                                                    {this.state.student.first_name} {this.state.student.last_name}
+                                                </h5>
+                                                <h7>
+                                                    ID #{this.state.student.id}
+                                                </h7>
+                                            
                                         </div>
                                         <div className="col">
                                             <div className="row d-inline-flex float-end">

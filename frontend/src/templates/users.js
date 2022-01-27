@@ -1,7 +1,9 @@
+import axios from 'axios';
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
 
+import { API_DOMAIN } from '../constants';
 import { INDEX_URL } from "../constants";
 import { SCHOOLS_URL } from "../constants";
 import { STUDENTS_URL } from "../constants";
@@ -20,6 +22,17 @@ import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 
 class Users extends Component {
+    state = {
+        users : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `users`)
+            .then(response => {
+            const users = response.data;
+            this.setState({ users });
+            })
+    }
     render() {
         return (
             <body className="overflow-hidden">
@@ -99,7 +112,6 @@ class Users extends Component {
                                         <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>Name</th>
                                                     <th>Email</th>
                                                     <th>Address</th>
@@ -107,20 +119,17 @@ class Users extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
+                                            {
+                                                this.state.users
+                                                    .map(user =>
+                                                    <tr key={user.id}>
+                                                        <td>{user.first_name} {user.last_name}</td>
+                                                        <td>{user.email}</td>
+                                                        <td>{user.address ? (user.address) : ('-')}</td>
+                                                        <td>{user.is_staff ? ('Administrator') : ('General')}</td>
+                                                    </tr>
+                                                    )
+                                                }
                                             </tbody>
                                         </table>
                                     </div>

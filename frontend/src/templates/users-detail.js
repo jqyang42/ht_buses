@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { API_DOMAIN } from '../constants';
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
@@ -21,6 +23,17 @@ import { USERS_PASSWORD_URL } from '../constants';
 import { ROUTES_EDIT_URL } from "../constants";
 
 class UsersDetail extends Component {
+    state = {
+        users : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `users/detail?id=2`)
+            .then(response => {
+            const users = response.data;
+            this.setState({ users });
+            })
+    }
     render() {
         return (
             <body className="overflow-hidden">
@@ -73,7 +86,7 @@ class UsersDetail extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>User Name</h5>
+                                                <h5>{this.state.users.first_name} {this.state.users.last_name}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -87,8 +100,12 @@ class UsersDetail extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>User Name</h5>
-                                            <h7>ADMINISTRATOR</h7>
+                                            <h5>
+                                                {this.state.users.first_name} {this.state.users.last_name}
+                                            </h5>
+                                            <h7>
+                                            {this.state.users.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
+                                            </h7>
                                         </div>
                                         <div className="col">
                                             <div className="row d-inline-flex float-end">

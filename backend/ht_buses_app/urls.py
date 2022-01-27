@@ -32,6 +32,4 @@ urlpatterns = [
     path('logout', views.User_logout, name="logout"),
     path('login', views.User_login, name="login"),
     path('', views.User_login, name="index"),
-    # path('api/login/', views.api_login, name=''),
-    path('api/schools/', views.api_schools, name='api_schools')
 ]
