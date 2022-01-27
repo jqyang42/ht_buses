@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
@@ -18,8 +19,21 @@ import { SCHOOLS_EDIT_URL } from "../constants";
 import { STUDENTS_EDIT_URL } from "../constants";
 import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
+import { API_DOMAIN } from "../constants";
 
 class BusRoutes extends Component {
+    state = {
+        routes : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools`)
+            .then(response => {
+            const schools = response.data;
+            this.setState({ schools });
+            })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">

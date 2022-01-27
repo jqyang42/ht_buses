@@ -14,7 +14,6 @@ urlpatterns = [
     path('students', views.students, name='students'),
     path('students/detail', views.students_detail, name="students_detail"),
     #path('students/edit', views.users_create, name="students_edit"),
-    path('signup', views.signup, name="signup"),
     path('schools', views.schools, name="schools"),
     path('schools/detail', views.schools_detail, name="schools_detail"),
     path('school/create', views.school_create, name="school_create"),
@@ -31,5 +30,5 @@ urlpatterns = [
     path('routeplanner', views.routeplanner, name="routeplanner"),
     path('logout', views.User_logout, name="logout"),
     path('login', views.user_login, name="login"),
-    path('', views.User_login, name="index"),
+    path('', views.user_login, name="index"),
 ]
