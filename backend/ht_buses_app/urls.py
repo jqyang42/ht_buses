@@ -13,11 +13,6 @@ routes.register(r'', LoginViewSet, basename='auth-login')
 urlpatterns = [
     path('students', views.students, name='students'),
     path('students/detail', views.students_detail, name="students_detail"),
-<<<<<<< HEAD
-    #path('students/edit', views.users_create, name="students_edit"),
-    #path('signup', views.signup, name="signup"),
-=======
->>>>>>> fe27ec8c37f21eca30339a03f9eea20a409ec90a
     path('schools', views.schools, name="schools"),
     path('schools/detail', views.schools_detail, name="schools_detail"),
     path('schools/create', views.school_create, name="school_create"),
@@ -36,11 +31,7 @@ urlpatterns = [
     path('routeplanner', views.routeplanner, name="routeplanner"),
     path('logout', views.user_logout, name="logout"),
     path('login', views.user_login, name="login"),
-<<<<<<< HEAD
-    #path('', views.User_login, name="index"),
-=======
     path('', views.user_login, name="index"),
     path('students/delete', views.student_delete, name = "delete_student"),
     path('students/edit', views.student_edit, name = "edit_student"),
->>>>>>> fe27ec8c37f21eca30339a03f9eea20a409ec90a
 ]
