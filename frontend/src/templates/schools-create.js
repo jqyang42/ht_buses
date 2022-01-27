@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
@@ -18,8 +19,37 @@ import { SCHOOLS_EDIT_URL } from "../constants";
 import { STUDENTS_EDIT_URL } from "../constants";
 import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
+import { API_DOMAIN } from "../constants";
 
 class SchoolsCreate extends Component {
+    state = {
+        school_name: '',
+        school_address: ''
+    }
+
+    handleSchoolNameChange = event => {
+        this.setState({ school_name: event.target.value });
+    }
+
+    handleSchoolAddressChange = event => {
+        this.setState({ school_address: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const school = {
+            school_name: this.state.school_name,
+            school_address: this.state.school_address
+        }
+
+        axios.post(API_DOMAIN + `school/create`, school)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -89,17 +119,20 @@ class SchoolsCreate extends Component {
                                             <h5>Create New School</h5>
                                         </div>
                                     </div>
-                                    <form>
+                                    <form onSubmit={this.handleSubmit}>
                                         <div className="row">
                                             <div className="col mt-2">
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputName1" className="control-label pb-2">Name</label>
                                                     <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                        placeholder="Enter school name" required></input>
+                                                        placeholder="Enter school name" required
+                                                        onChange={this.handleSchoolNameChange}></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter school address"></input>
+                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1"
+                                                        placeholder="Enter school address"
+                                                        onChange={this.handleSchoolAddressChange}></input>
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                     <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
