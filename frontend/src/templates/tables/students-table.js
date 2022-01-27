@@ -2,7 +2,7 @@ import React, { Component, useMemo } from "react";
 import { useTable, usePagination } from 'react-table';
 import TablePagination from "../components/pagination";
     
-export function StudentsTable() {
+export function StudentsTable( {data} ) {
     const columns = React.useMemo(
         () => [
             {
@@ -10,47 +10,28 @@ export function StudentsTable() {
                 accessor: 'id', // accessor is the "key" in the data
             },
             {
-                Header: 'Name',
-                accessor: 'name',
+                Header: 'First Name',
+                accessor: 'first_name',
             },
             {
-                Header: 'Parent',
-                accessor: 'parent',
+                Header: 'Last Name',
+                accessor: 'last_name',
             },
             {
                 Header: 'School',
-                accessor: 'school',
+                accessor: 'school_name',
             },
             {
-                Header: 'Bus Route',
-                accessor: 'route',
-            },
-        ],
-        []
-    )
-    
-    const data = React.useMemo(
-        () => [
+                Header: 'Route',
+                accessor: 'route_name',
+            },            
             {
-                id: '0',
-                name: 'example',
-                parent: 'example',
-                school: 'example',
-                route: 'example',
+                Header: 'Parent First Name',
+                accessor: 'parent.first_name',
             },
             {
-                id: '1',
-                name: 'example',
-                parent: 'example',
-                school: 'example',
-                route: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                parent: 'example',
-                school: 'example',
-                route: 'example',
+                Header: 'Parent Last Name',
+                accessor: 'parent.last_name',
             },
         ],
         []
