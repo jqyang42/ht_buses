@@ -18,7 +18,7 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users`)
+        axios.get(API_DOMAIN + `users?page=1`)
             .then(response => {
             const users = response.data.users;
             this.setState({ users });
@@ -102,29 +102,6 @@ class Users extends Component {
 
                                     <div className="mt-4">
                                         <UsersTable data={this.state.users} />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Email</th>
-                                                    <th>Address</th>
-                                                    <th>Type</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            {
-                                                this.state.users
-                                                    .map(user =>
-                                                    <tr key={user.id}>
-                                                        <td>{user.first_name} {user.last_name}</td>
-                                                        <td>{user.email}</td>
-                                                        <td>{user.address ? (user.address) : ('-')}</td>
-                                                        <td>{user.is_staff ? ('Administrator') : ('General')}</td>
-                                                    </tr>
-                                                    )
-                                                }
-                                            </tbody>
-                                        </table> */}
                                     </div>
                                 </div>
                             </div>
