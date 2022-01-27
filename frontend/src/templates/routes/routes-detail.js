@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
@@ -9,8 +10,23 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { ROUTES_EDIT_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class BusRoutesDetail extends Component {
+    state = {
+        route : [],
+        students : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `routes/detail?id=0`)  // TODO: use onclick id values
+            .then(res => {
+            const route = res.data;
+            const students = route.students;
+            this.setState({ route: route, students: students });
+            })
+    }
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -63,7 +79,7 @@ class BusRoutesDetail extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Route Name</h5>
+                                                <h5>{this.state.route.name}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -77,8 +93,8 @@ class BusRoutesDetail extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Route Name</h5>
-                                            <h7>LOREM IPSUM ELEMENTARY SCHOOL</h7>
+                                            <h5>{this.state.route.name}</h5>
+                                            <h7>{this.state.route.school_name}</h7>
                                         </div>
                                         <div className="col">
                                             <div className="row d-inline-flex float-end">
@@ -121,12 +137,12 @@ class BusRoutesDetail extends Component {
                                             </div>
                                             <h6>Description</h6>
                                             <p>
-                                                Here is a relatively longer description of the route. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Scelerisque viverra mauris in aliquam sem fringilla ut. Cras pulvinar mattis nunc sed blandit libero volutpat. Enim nec dui nunc mattis enim ut tellus.
+                                                {this.state.route.description}
                                             </p>
                                         </div>
                                         <div className="col">
                                             <h7>STUDENTS</h7>
-                                            <RouteStudentsTable />
+                                            <RouteStudentsTable data={this.state.students} />
                                             {/* <table className="table table-striped table-hover">
                                                 <thead>
                                                     <tr>
