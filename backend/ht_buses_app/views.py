@@ -11,6 +11,14 @@ from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
+# TESTER METHOD FOR FRONTEND PAGINATION
+@api_view(['GET'])
+@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+def schools_all(request):
+    schools = School.schoolsTable.all()
+    school_serializer = SchoolSerializer(schools, many=True)
+    return Response(school_serializer.data)
+
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def user_login(request):
