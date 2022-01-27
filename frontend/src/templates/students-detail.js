@@ -27,7 +27,7 @@ class StudentsDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/details?id=1`) // I think we could do + this.state.student.id
+        axios.get(API_DOMAIN + `students/detail?id=0`)  // TODO: use onclick id values
             .then(response => {
             const student = response.data;
             this.setState({ student });
@@ -86,7 +86,7 @@ class StudentsDetail extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Student Name</h5>
+                                                <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -104,7 +104,7 @@ class StudentsDetail extends Component {
                                                     {this.state.student.first_name} {this.state.student.last_name}
                                                 </h5>
                                                 <h7>
-                                                    ID #{this.state.student.id}
+                                                    ID #{this.state.student.student_school_id}
                                                 </h7>
                                             
                                         </div>
@@ -153,12 +153,12 @@ class StudentsDetail extends Component {
                                         <div className="col-2 me-4">
                                             <a href={SCHOOLS_DETAIL_URL}>
                                                 <p>
-                                                    School Name
+                                                    {this.state.student.school}
                                                 </p>
                                             </a>
                                             <a href={ROUTES_DETAIL_URL}>
                                                 <p>
-                                                    Route Name
+                                                    {this.state.student.route}
                                                 </p>
                                             </a>
                                         </div>
