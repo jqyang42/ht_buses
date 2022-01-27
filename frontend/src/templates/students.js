@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useMemo } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
 
@@ -19,7 +19,54 @@ import { STUDENTS_EDIT_URL } from "../constants";
 import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 
+export function Setup() {
+    const columns = React.useMemo(
+        () => [
+            {
+                Header: 'ID',
+                accessor: 'id', // accessor is the "key" in the data
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+            },
+            {
+                Header: 'Parent',
+                accessor: 'parent',
+            },
+            {
+                Header: 'School',
+                accessor: 'school',
+            },
+            {
+                Header: 'Route',
+                accessor: 'route',
+            },
+        ],
+        []
+    )
+    
+    const data = React.useMemo(
+        () => [
+            {
+                col1: 'Hello',
+                col2: 'World',
+            },
+            {
+                col1: 'react-table',
+                col2: 'rocks',
+            },
+            {
+                col1: 'whatever',
+                col2: 'you want',
+            },
+        ],
+        []
+    )
+}
+
 class Students extends Component {
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -120,3 +167,4 @@ class Students extends Component {
 }
 
 export default Students;
+
