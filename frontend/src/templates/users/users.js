@@ -1,26 +1,29 @@
+import axios from 'axios';
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
-import { RoutesTable } from "./routes-table";
+import { UsersTable } from '../tables/users-table';
+import { API_DOMAIN } from '../../constants';
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { USERS_CREATE_URL } from "../../constants";
 
-class BusRoutes extends Component {
+class Users extends Component {
+    state = {
+        users : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `users`)
+            .then(response => {
+            const users = response.data;
+            this.setState({ users });
+            })
+    }
     render() {
         return (
             <body className="overflow-hidden">
@@ -39,7 +42,7 @@ class BusRoutes extends Component {
                                             <span className="ms-1 d-none d-sm-inline">Students</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item active">
+                                    <li className="nav-item">
                                         <a href={ROUTES_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-geo-alt me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
@@ -51,7 +54,7 @@ class BusRoutes extends Component {
                                             <span className="ms-1 d-none d-sm-inline">Schools</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item active">
                                         <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-people me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Manage Users</span>
@@ -65,7 +68,7 @@ class BusRoutes extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>Bus Routes</h5>
+                                        <h5>Manage Users</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
                                         <h6 className="font-weight-bold mb-0">Admin Name</h6>
@@ -85,33 +88,40 @@ class BusRoutes extends Component {
                                             </div>
                                         </div>
                                         <div className="col">
+                                            <div className="row d-inline-flex float-end">
+                                                <Link to={USERS_CREATE_URL} class="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span class="btn-text">
+                                                        <i className="bi bi-person-plus-fill me-2"></i>
+                                                        Create
+                                                    </span>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="mt-4">
-                                        <RoutesTable />
+                                        <UsersTable />
                                         {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>Name</th>
-                                                    <th>School</th>
-                                                    <th>Student Count</th>
+                                                    <th>Email</th>
+                                                    <th>Address</th>
+                                                    <th>Type</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
+                                            {
+                                                this.state.users
+                                                    .map(user =>
+                                                    <tr key={user.id}>
+                                                        <td>{user.first_name} {user.last_name}</td>
+                                                        <td>{user.email}</td>
+                                                        <td>{user.address ? (user.address) : ('-')}</td>
+                                                        <td>{user.is_staff ? ('Administrator') : ('General')}</td>
+                                                    </tr>
+                                                    )
+                                                }
                                             </tbody>
                                         </table> */}
                                     </div>
@@ -125,4 +135,4 @@ class BusRoutes extends Component {
     }
 }
 
-export default BusRoutes;
+export default Users;

@@ -1,7 +1,7 @@
 import React, { Component, useMemo } from "react";
 import { useTable } from 'react-table';
     
-export function StudentsTable() {
+export function SchoolStudentsTable() {
     const columns = React.useMemo(
         () => [
             {
@@ -13,15 +13,7 @@ export function StudentsTable() {
                 accessor: 'name',
             },
             {
-                Header: 'Parent',
-                accessor: 'parent',
-            },
-            {
-                Header: 'School',
-                accessor: 'school',
-            },
-            {
-                Header: 'Route',
+                Header: 'Bus Route',
                 accessor: 'route',
             },
         ],
@@ -33,22 +25,16 @@ export function StudentsTable() {
             {
                 id: '0',
                 name: 'example',
-                parent: 'example',
-                school: 'example',
                 route: 'example',
             },
             {
                 id: '1',
                 name: 'example',
-                parent: 'example',
-                school: 'example',
                 route: 'example',
             },
             {
                 id: '2',
                 name: 'example',
-                parent: 'example',
-                school: 'example',
                 route: 'example',
             },
         ],
