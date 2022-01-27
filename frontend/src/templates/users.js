@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
+import { UsersTable } from './users-table';
 
 import { API_DOMAIN } from '../constants';
 import { INDEX_URL } from "../constants";
@@ -109,7 +110,8 @@ class Users extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <table className="table table-striped table-hover">
+                                        <UsersTable />
+                                        {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>Name</th>
@@ -131,7 +133,7 @@ class Users extends Component {
                                                     )
                                                 }
                                             </tbody>
-                                        </table>
+                                        </table> */}
                                     </div>
                                 </div>
                             </div>
