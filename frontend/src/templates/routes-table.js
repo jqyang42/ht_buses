@@ -1,37 +1,37 @@
 import React, { Component, useMemo } from "react";
 import { useTable } from 'react-table';
     
-export function RoutesTable({ columns, data }) {
-    // const columns = React.useMemo(
-    //     () => [
-    //         {
-    //             Header: '#',
-    //             accessor: 'id', // accessor is the "key" in the data
-    //         },
-    //         {
-    //             Header: 'Name',
-    //             accessor: 'name',
-    //         },
-    //         {
-    //             Header: 'School',
-    //             accessor: 'school',
-    //         },
-    //         {
-    //             Header: 'Student Count',
-    //             accessor: 'student_count',
-    //         },
-    //     ],
-    //     []
-    // )
+export function RoutesTable({ data }) {
+    const columns = React.useMemo(
+        () => [
+            {
+                Header: '#',
+                accessor: 'id', // accessor is the "key" in the data
+            },
+            {
+                Header: 'Name',
+                accessor: 'name',
+            },
+            {
+                Header: 'School',
+                accessor: 'school',
+            },
+            {
+                Header: 'Student Count',
+                accessor: 'student_count',
+            },
+        ],
+        []
+    )
     
     // const data = React.useMemo(
     //     () => [
-    //         {
-    //             id: '0',
-    //             name: 'example',
-    //             school: 'example',
-    //             student_count: 'example',
-    //         },
+            // {
+            //     id: '0',
+            //     name: 'example',
+            //     school: 'example',
+            //     student_count: 'example',
+            // },
     //         {
     //             id: '1',
     //             name: 'example',

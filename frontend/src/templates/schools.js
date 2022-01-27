@@ -29,7 +29,7 @@ class Schools extends Component {
     componentDidMount() {
         axios.get(API_DOMAIN + `schools?page=1`)
             .then(res => {
-            const schools = useMemo(() => res.data, []);
+            const schools = res.data.schools;
             this.setState({ schools });
         })
     }

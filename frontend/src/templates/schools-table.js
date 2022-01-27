@@ -20,27 +20,6 @@ export function SchoolsTable({ data }) {
         []
     )
     
-    // const data = React.useMemo(
-    //     () => [
-    //         {
-    //             id: '0',
-    //             name: 'example',
-    //             address: 'example',
-    //         },
-    //         {
-    //             id: '1',
-    //             name: 'example',
-    //             address: 'example',
-    //         },
-    //         {
-    //             id: '2',
-    //             name: 'example',
-    //             address: 'example',
-    //         },
-    //     ],
-    //     []
-    // )
-    
     const tableInstance = useTable({ columns, data })
      
     const {

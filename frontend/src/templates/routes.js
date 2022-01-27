@@ -30,11 +30,12 @@ class BusRoutes extends Component {
     componentDidMount() {
         axios.get(API_DOMAIN + `routes?page=1`)
             .then(res => {
-            const routes = useMemo(() => res.data, []);
-            this.setState({ routes });
-            })
+            const routes = res.data.routes
+            this.setState({ routes }
+            )
+        })
     }
-      
+
     render() {
         return (
             <body className="overflow-hidden">
