@@ -1,23 +1,16 @@
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { SchoolStudentsTable } from "../tables/school-students-table";
+import { SchoolRoutesTable } from "../tables/school-routes-table";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { ROUTES_PLANNER_URL } from "../../constants";
+import { SCHOOLS_EDIT_URL } from "../../constants";
 
 class SchoolsDetail extends Component {
     render() {
@@ -137,7 +130,8 @@ class SchoolsDetail extends Component {
                                     <div className="row mt-4">
                                         <div className="col me-4">
                                             <h7>STUDENTS</h7>
-                                            <table className="table table-striped table-hover">
+                                            <SchoolStudentsTable />
+                                            {/* <table className="table table-striped table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>ID</th>
@@ -157,11 +151,12 @@ class SchoolsDetail extends Component {
                                                         <td>Example</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table> */}
                                         </div>
                                         <div className="col">
                                             <h7>ROUTES</h7>
-                                            <table className="table table-striped table-hover">
+                                            <SchoolRoutesTable />
+                                            {/* <table className="table table-striped table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -181,7 +176,7 @@ class SchoolsDetail extends Component {
                                                         <td>Example</td>
                                                     </tr>
                                                 </tbody>
-                                            </table>
+                                            </table> */}
                                         </div>
                                     </div>
                                 </div>

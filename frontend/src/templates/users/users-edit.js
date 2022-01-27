@@ -1,26 +1,15 @@
 import React, { Component } from "react";
-import { HT_LOGO, GOOGLE_API_KEY } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
-import Autocomplete from "react-google-autocomplete";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { USERS_DETAIL_URL } from "../../constants";
 
-class UsersCreate extends Component {
+class UsersEdit extends Component {
     render() {
         return (
             <body className="overflow-hidden">
@@ -73,7 +62,13 @@ class UsersCreate extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Create User</h5>
+                                                <a href={USERS_DETAIL_URL}><h5>User Name</h5></a>
+                                            </div>
+                                            <div className="w-auto px-2">
+                                                <i className="bi bi-chevron-right"></i>
+                                            </div>
+                                            <div className="w-auto px-2">
+                                                <h5>Edit User</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -87,55 +82,44 @@ class UsersCreate extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Create New User</h5>
+                                            <h5>Edit User</h5>
                                         </div>
                                     </div>
                                     <form>
                                         <div className="row">
                                             <div className="col mt-2">
                                                 <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                        placeholder="Enter full name" required></input>
+                                                    <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
+                                                        placeholder="Enter first name" value="First Name" required></input>
+                                                </div>
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName1"
+                                                        placeholder="Enter last name" value="Last Name" required></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
-                                                    <input type="email" className="form-control pb-2" id="exampleInputEmail1" placeholder="Enter email" required></input>
+                                                    <input type="email" className="form-control pb-2" id="exampleInputEmail1" placeholder="Enter email" value="User Email" required></input>
                                                     <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                         else.</small>
                                                 </div>
                                                 <div className="form-group pb-3 w-75">
                                                     <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                    <Autocomplete
-                                                        apiKey={GOOGLE_API_KEY}
-                                                        onPlaceSelected={(place) => {
-                                                            console.log(place);
-                                                        }}
-                                                        options={{
-                                                            types: 'address'
-                                                        }}
-                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
+                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address"></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <div>
-                                                        <label for="exampleInputType1" className="control-label pb-2">Type</label>
+                                                        <label for="adminType" className="control-label pb-2">User Type</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="administrator"></input>
-                                                        <label className="form-check-label" for="inlineRadio1">Administrator</label>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
+                                                        <label className="form-check-label" for="administrator">Administrator</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="general"></input>
-                                                        <label className="form-check-label" for="inlineRadio2">General</label>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="general" value="general"></input>
+                                                        <label className="form-check-label" for="general">General</label>
                                                     </div>
-                                                </div>
-                                                <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputPassword1" className="control-label pb-2">Password</label>
-                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Password" required></input>
-                                                </div>
-                                                <div className="form-group required pb-4 w-75">
-                                                    <label for="exampleInputPassword1" className="control-label pb-2">Confirm Password</label>
-                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Password" required></input>
                                                 </div>
                                             </div>
                                             <div className="col mt-2">
@@ -150,7 +134,7 @@ class UsersCreate extends Component {
                                                             <div className="accordion-item">
                                                                 <h2 className="accordion-header" id="headingOne">
                                                                     <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                        Student 1
+                                                                        Student 1 Name
                                                                     </button>
                                                                 </h2>
                                                                 <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -158,19 +142,24 @@ class UsersCreate extends Component {
                                                                         <div className="row">
                                                                             <div className="col">
                                                                                 <div className="form-group required pb-3">
-                                                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                                                        placeholder="Enter full name" required></input>
+                                                                                    <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
+                                                                                        placeholder="Enter first name" value="First Name" required></input>
+                                                                                </div>
+                                                                                <div className="form-group required pb-3">
+                                                                                    <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName1"
+                                                                                        placeholder="Enter last name" value="Last Name" required></input>
                                                                                 </div>
                                                                                 <div className="form-group pb-3">
-                                                                                    <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                                                    <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID" required></input>
+                                                                                    <label for="exampleInputID1" className="control-label pb-2">Student 1 ID</label>
+                                                                                    <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID" value="Student ID" required></input>
                                                                                 </div>
                                                                                 <div className="form-group required pb-3">
                                                                                     <label for="exampleInputSchool1" className="control-label pb-2">School</label>
                                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
-                                                                                        <option selected>Select a School</option>
-                                                                                        <option value="1">One</option>
+                                                                                        <option>Select a School</option>
+                                                                                        <option selected value="1">Student 1 School</option>
                                                                                         <option value="2">Two</option>
                                                                                         <option value="3">Three</option>
                                                                                     </select>
@@ -178,8 +167,8 @@ class UsersCreate extends Component {
                                                                                 <div className="form-group pb-3">
                                                                                     <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                                                     <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
-                                                                                        <option selected>Select a Route</option>
-                                                                                        <option value="1">One</option>
+                                                                                        <option>Select a Route</option>
+                                                                                        <option selected value="1">Student 1 Route</option>
                                                                                         <option value="2">Two</option>
                                                                                         <option value="3">Three</option>
                                                                                     </select>
@@ -192,7 +181,7 @@ class UsersCreate extends Component {
                                                             <div className="accordion-item">
                                                                 <h2 className="accordion-header" id="headingTwo">
                                                                     <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                        Student 2
+                                                                        Student 2 Name
                                                                     </button>
                                                                 </h2>
                                                                 <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -200,28 +189,33 @@ class UsersCreate extends Component {
                                                                         <div className="row">
                                                                             <div className="col">
                                                                                 <div className="form-group required pb-3">
-                                                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                                                        placeholder="Enter full name"></input>
-                                                                                </div>
-                                                                                <div className="form-group pb-3">
-                                                                                    <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                                                    <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID"></input>
+                                                                                    <label for="exampleInputFirstName2" className="control-label pb-2">First Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName2"
+                                                                                        placeholder="Enter first name" value="First Name" required></input>
                                                                                 </div>
                                                                                 <div className="form-group required pb-3">
-                                                                                    <label for="exampleInputSchool1" className="control-label pb-2">School</label>
+                                                                                    <label for="exampleInputLastName2" className="control-label pb-2">Last Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName2"
+                                                                                        placeholder="Enter last name" value="Last Name" required></input>
+                                                                                </div>
+                                                                                <div className="form-group pb-3">
+                                                                                    <label for="exampleInputID2" className="control-label pb-2">Student ID</label>
+                                                                                    <input type="id" className="form-control pb-2" id="exampleInputID2" placeholder="Enter student ID" value="Student 2 ID"></input>
+                                                                                </div>
+                                                                                <div className="form-group required pb-3">
+                                                                                    <label for="exampleInputSchool2" className="control-label pb-2">School</label>
                                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School">
-                                                                                        <option selected>Select a School</option>
-                                                                                        <option value="1">One</option>
+                                                                                        <option>Select a School</option>
+                                                                                        <option selected value="1">Student 2 School</option>
                                                                                         <option value="2">Two</option>
                                                                                         <option value="3">Three</option>
                                                                                     </select>
                                                                                 </div>
                                                                                 <div className="form-group pb-3">
-                                                                                    <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
+                                                                                    <label for="exampleInputRoute2" className="control-label pb-2">Route</label>
                                                                                     <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
-                                                                                        <option selected>Select a Route</option>
-                                                                                        <option value="1">One</option>
+                                                                                        <option>Select a Route</option>
+                                                                                        <option selected value="1">Student 2 Route</option>
                                                                                         <option value="2">Two</option>
                                                                                         <option value="3">Three</option>
                                                                                     </select>
@@ -238,7 +232,7 @@ class UsersCreate extends Component {
                                         </div>
                                         <div className="row justify-content-end mt-2 me-0">
                                             <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
-                                            <button type="submit" className="btn btn-primary w-auto justify-content-end">Create</button>
+                                            <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                                         </div>
                                     </form>
                                 </div>
@@ -251,4 +245,4 @@ class UsersCreate extends Component {
     }
 }
 
-export default UsersCreate;
+export default UsersEdit;

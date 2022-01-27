@@ -1,25 +1,30 @@
+import axios from 'axios';
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { SchoolsTable } from '../tables/schools-table';
+import { API_DOMAIN } from "../../constants";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { SCHOOLS_CREATE_URL } from "../../constants";
 
-class BusRoutes extends Component {
+class Schools extends Component {
+    state = {
+        schools : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools`)
+            .then(response => {
+            const schools = response.data;
+            this.setState({ schools });
+            })
+    }
+    
     render() {
         return (
             <body className="overflow-hidden">
@@ -38,13 +43,13 @@ class BusRoutes extends Component {
                                             <span className="ms-1 d-none d-sm-inline">Students</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item active">
+                                    <li className="nav-item">
                                         <a href={ROUTES_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-geo-alt me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item active">
                                         <a href={SCHOOLS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                             <i className="bi bi-building me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Schools</span>
@@ -64,7 +69,7 @@ class BusRoutes extends Component {
                             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                                 <div className="row align-self-center d-flex justify-content-between">
                                     <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                        <h5>Bus Routes</h5>
+                                        <h5>Schools</h5>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
                                         <h6 className="font-weight-bold mb-0">Admin Name</h6>
@@ -84,34 +89,38 @@ class BusRoutes extends Component {
                                             </div>
                                         </div>
                                         <div className="col">
+                                            <div className="row d-inline-flex float-end">
+                                                <Link to={SCHOOLS_CREATE_URL} class="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span class="btn-text">
+                                                        <i className="bi bi-person-plus-fill me-2"></i>
+                                                        Create
+                                                    </span>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="mt-4">
-                                        <table className="table table-striped table-hover">
+                                        <SchoolsTable />
+                                        {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
                                                     <th>Name</th>
-                                                    <th>School</th>
-                                                    <th>Student Count</th>
+                                                    <th>Address</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
+                                                {
+                                                this.state.schools
+                                                    .map(school =>
+                                                    <tr key={school.id}>
+                                                        <td>{school.name}</td>
+                                                        <td>{school.address}</td>
+                                                    </tr>
+                                                    )
+                                                }
                                             </tbody>
-                                        </table>
+                                        </table> */}
                                     </div>
                                 </div>
                             </div>
@@ -123,4 +132,4 @@ class BusRoutes extends Component {
     }
 }
 
-export default BusRoutes;
+export default Schools;
