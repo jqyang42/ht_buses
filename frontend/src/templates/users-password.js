@@ -19,7 +19,7 @@ import { STUDENTS_EDIT_URL } from "../constants";
 import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 
-class StudentsEdit extends Component {
+class UsersPassword extends Component {
     render() {
         return (
             <body className="overflow-hidden">
@@ -32,27 +32,27 @@ class StudentsEdit extends Component {
                                 </a>
 
                                 <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
-                                    <li className="nav-item active">
+                                    <li className="nav-item">
                                         <a href={STUDENTS_URL} className="nav-link align-middle mx-4 px-4">
-                                            <i className="bi bi-list-ul"></i>
+                                            <i className="bi bi-list-ul me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Students</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a href={ROUTES_URL} className="nav-link px-0 align-middle mx-4 px-4">
-                                            <i className="bi bi-geo-alt"></i>
+                                            <i className="bi bi-geo-alt me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
                                         </a>
                                     </li>
                                     <li className="nav-item">
                                         <a href={SCHOOLS_URL} className="nav-link px-0 align-middle mx-4 px-4">
-                                            <i className="bi bi-building"></i>
+                                            <i className="bi bi-building me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Schools</span>
                                         </a>
                                     </li>
-                                    <li className="nav-item">
+                                    <li className="nav-item active">
                                         <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
-                                            <i className="bi bi-people"></i>
+                                            <i className="bi bi-people me-2"></i>
                                             <span className="ms-1 d-none d-sm-inline">Manage Users</span>
                                         </a>
                                     </li>
@@ -66,19 +66,19 @@ class StudentsEdit extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <a href={STUDENTS_URL}><h5>Students</h5></a>
+                                                <a href={USERS_URL}><h5>Manage Users</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <a href={STUDENTS_DETAIL_URL}><h5>Student Name</h5></a>
+                                                <a href={USERS_DETAIL_URL}><h5>User Name</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Edit Student</h5>
+                                                <h5>Change Password</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -92,59 +92,31 @@ class StudentsEdit extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Edit Student</h5>
+                                            <h5>Change Password</h5>
                                         </div>
                                     </div>
                                     <form>
                                         <div className="row">
                                             <div className="col mt-2">
+                                                {/* <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputPassword1" className="control-label pb-2">Old Password</label>
+                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Enter old password" required></input>
+                                                </div> */}
                                                 <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
-                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                        value="First Name" placeholder="Enter first name" required></input>
+                                                    <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
+                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword2" placeholder="Enter new password" required></input>
                                                 </div>
-                                                <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
-                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                        value="Last Name" placeholder="Enter full name" required></input>
-                                                </div>
-                                                <div className="form-group pb-3 w-75">
-                                                    <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                    <input type="id" className="form-control pb-2" id="exampleInputID1" value="Student ID" placeholder="Enter student ID"></input>
-                                                </div>
-                                                <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputSchool1" className="control-label pb-2">School</label>
-                                                    <select className="form-select" placeholder="Select a School" aria-label="Select a School">
-                                                        <option>Select a School</option>
-                                                        <option selected value="1">Student School</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                    </select>
-                                                </div>
-                                                <div className="form-group pb-3 w-75">
-                                                    <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
-                                                    <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
-                                                        <option>Select a Route</option>
-                                                        <option selected value="1">Student Route</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                    </select>
-                                                </div>
-                                                <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputParent1" className="control-label pb-2">Parent</label>
-                                                    <select className="form-select" placeholder="Select a Parent" aria-label="Select a Parent">
-                                                        <option>Select a Parent</option>
-                                                        <option selected value="1">Student Parent</option>
-                                                        <option value="2">Two</option>
-                                                        <option value="3">Three</option>
-                                                    </select>
+                                                <div className="form-group required pb-4 w-75">
+                                                    <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
+                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword3" placeholder="Re-enter password" required></input>
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                     <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
-                                                    <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
+                                                    <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                                                 </div>
                                             </div>
-                                            <div className="col mt-2"></div>
+                                            <div className="col mt-2">
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
@@ -157,4 +129,4 @@ class StudentsEdit extends Component {
     }
 }
 
-export default StudentsEdit;
+export default UsersPassword;
