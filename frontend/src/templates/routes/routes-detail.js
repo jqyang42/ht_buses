@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
+import RouteMap from './route-map';
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -132,8 +133,8 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="row mt-4">
                                         <div className="col-7 me-4">
-                                            <div className="bg-gray rounded mb-4 px-4 py-4">
-                                                <h5>Map</h5>
+                                            <div className="bg-gray rounded mt-3">
+                                                <RouteMap />
                                             </div>
                                             <h6>Description</h6>
                                             <p>
