@@ -30,10 +30,11 @@ class Users extends Component {
     componentDidMount() {
         axios.get(API_DOMAIN + `users`)
             .then(response => {
-            const users = response.data;
+            const users = response.data.users;
             this.setState({ users });
             })
     }
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -110,7 +111,7 @@ class Users extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <UsersTable />
+                                        <UsersTable data={this.state.users} />
                                         {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
