@@ -113,51 +113,47 @@ def students(request):
     student_serializer = StudentSerializer(students, many=True)
     return Response(student_serializer.data)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated 
 def single_student_edit(request):
     data = {}
+    id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    og_student_school_id = reqBody['og_student_school_id']  #Can different kids in different schools have same id?
     new_first_name = reqBody['first_name']
     new_last_name = reqBody['last_name']
     student_school_id = reqBody['student_school_id']
-    school_id = School.schoolsTable.get(name=reqBody["school_name"]) 
-    route_id = Route.routeTables.get(name = reqBody["route_name"])
-    parent = reqBody['parent']
-    user_id = User.objects.get(first_name = parent["first_name"], last_name = parent["last_name"]) #change to email?
-    og_student_object = Student.studentsTable.get(student_school_id = og_student_school_id)   
-    og_student_object.last_name = new_last_name
-    og_student_object.first_name = new_first_name
-    og_student_object.school_id = school_id
-    og_student_object.student_school_id = student_school_id
-    og_student_object.route_id  = route_id
-    og_student_object.user_id = user_id
-    og_student_object.save()
-    data["message"] = "Student information successfully updated"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        school_id = School.schoolsTable.filter(name=reqBody["school_name"])[0]
+        route_id = Route.routeTables.filter(name = reqBody["route_name"])[0]
+        parent = reqBody['parent']
+        user_id = User.objects.filter(first_name = parent["first_name"], last_name = parent["last_name"], email = parent["email"])[0]
+        og_student_object = Student.studentsTable.get(pk = id)   
+        og_student_object.last_name = new_last_name
+        og_student_object.first_name = new_first_name
+        og_student_object.school_id = school_id
+        og_student_object.student_school_id = student_school_id
+        og_student_object.route_id  = route_id
+        og_student_object.user_id = user_id
+        og_student_object.save()
+        data["message"] = "Student information successfully updated"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(['POST'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
 def single_student_delete(request):
     data = {}
     reqBody = json.loads(request.body)
-    student_object =  Student.studentsTable.get(student_school_id = reqBody['student_school_id'])
-    student_object.delete()
-    data["message"] = "student successfully deleted"
-    result = {"data" : data}
-    return Response(result)
-
-@api_view(['POST'])
-@permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
-def single_student_create(request):
-    data = {}
-    reqBody = json.loads(request.body)
-    edit_or_create_student(reqBody)
-    data["message"] = "student successfully created"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        student_object =  Student.studentsTable.filter(student_school_id = reqBody['student_school_id'])[0]
+        student_object.delete()
+        data["message"] = "student successfully deleted"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "student could not be deleted"})
 
 @api_view(['GET'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
@@ -220,29 +216,36 @@ def school_create(request):
     result = {"data" : data}
     return Response(result)
 
-@api_view(["POST"])
+@api_view(["PUT"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
 def school_edit(request):
     data = {}
+    id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    school_object =  School.schoolsTable.get(name = reqBody['og_school_name']) #Is it better if we do school id instead?
-    school_object.name = reqBody['school_name']
-    school_object.address = reqBody['school_address']
-    school_object.save()
-    data["message"] = "school information updated successfully"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        school_object =  School.schoolsTable.filter(pk = id)
+        school_object.name = reqBody['school_name']
+        school_object.address = reqBody['school_address']
+        school_object.save()
+        data["message"] = "school information updated successfully"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
 def school_delete(request):
     data = {}
     reqBody = json.loads(request.body)
-    school_object =  School.schoolTables.get(name = reqBody['school_name'])
-    school_object.delete()
-    data["message"] = "school successfully deleted"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        school_object =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
+        school_object.delete()
+        data["message"] = "school successfully deleted"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "school could not be deleted"})
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
@@ -250,12 +253,15 @@ def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
     name = reqBody['route_name']
-    school = School.schoolsTable.get(name = reqBody['school_name']) #assumes front end sends back an id associated with name
-    description = reqBody['route_description']
-    Route.routeTables.create(name=name, school_id = school, description = description)
-    data["message"] = "route created successfully"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
+        description = reqBody['route_description']
+        Route.routeTables.create(name=name, school_id = school, description = description)
+        data["message"] = "route created successfully"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "route could not be created"})
 
 @api_view(["GET"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
@@ -281,30 +287,37 @@ def routes_detail(request):
         data["students"] = student_list
     return Response(data)
 
-@api_view(["POST"])
+@api_view(["PUT"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
 def route_edit(request):
     data = {}
+    id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    route_object =  Route.routeTables.get(name = reqBody['og_route_name']) 
-    route_object.name = reqBody['route_name']
-    route_object.school_id =  School.schoolsTable.get(name = reqBody['school_name'])
-    route_object.description = reqBody['route_description']
-    route_object.save()
-    data["message"] = "route updated successfully"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        route_object =  Route.routeTables.get(pk = id)[0]
+        route_object.name = reqBody['route_name']
+        route_object.school_id =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
+        route_object.description = reqBody['route_description']
+        route_object.save()
+        data["message"] = "route updated successfully"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
 def route_delete(request):
     data = {}
     reqBody = json.loads(request.body)
-    route_object =  Route.routeTables.get(name = reqBody['route_name'])
-    route_object.delete()
-    data["message"] = "route successfully deleted"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        route_object =  Route.routeTables.filter(name = reqBody['route_name'])[0]
+        route_object.delete()
+        data["message"] = "route successfully deleted"
+        result = {"data" : data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"messsage": "Route could not be deleted"})
 
 @api_view(['GET'])
 @permission_classes([AllowAny]) # This needs to be changed to IsAuthenticated
@@ -343,50 +356,42 @@ def users_detail(request):
     except BaseException as e:
         raise ValidationError({"messsage": "User does not exist"})
 
-@api_view(["POST"])
+@api_view(["PUT"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
 def user_edit(request):
     data = {}
+    id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    og_first_name = reqBody['og_first_name']
-    og_last_name = reqBody['og_last_name']
-    email = reqBody['email']
-    password = reqBody['password']
-    first_name = reqBody['first_name']
-    last_name = reqBody['last_name']
-    address = reqBody['address']
-    is_staff = reqBody['is_staff']
-    is_parent = reqBody['is_parent']
-    user_object = User.objects.get(first_name = og_first_name, last_name = og_last_name) #might change to og email?
-    user_object.email = email
-    user_object.password = password
-    user_object.first_name = first_name
-    user_object.last_name = last_name
-    user_object.address = address
-    user_object.is_parent = is_parent
-    user_object.is_staff = is_staff
+    user_object = User.objects.get(pk = id)
+    user_object.email = reqBody['email']
+    user_object.password = reqBody['password']
+    user_object.first_name = reqBody['first_name']
+    user_object.last_name = reqBody['last_name']
+    user_object.address = reqBody['address']
+    user_object.is_parent = reqBody['is_parent']
+    user_object.is_staff = reqBody['is_staff']
     user_object.save()
-    if is_parent:
+    if user_object.is_parent is True:
         for student_info in reqBody["students"]:
-            edit_or_create_student(student_info, user_object)
+            edit_or_create_student(student_info, id)
     data["message"] = "User and associated students updated successfully"
     result = {"data" : data}
     return Response(result)
 
-def edit_or_create_student(student_info, user = None):
+def edit_or_create_student(student_info,id=None):
     data = {}
     first_name = student_info['first_name']
     last_name = student_info['last_name']
-    school_id = School.schoolsTable.get(name =student_info['school_name'])
-    if user is not None: 
-        user_id = user
-    else:
-        parent = student_info['parent']
-        user_id = User.objects.get(first_name = parent['first_name'], last_name = parent['last_name'])
     student_school_id = student_info['student_school_id']
-    route_id = Route.routeTables.get(name = student_info['route_name'])
+    try:
+        user_id = User.objects.get(pk = id)
+        route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
+        school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
+
+    except BaseException as e:
+        raise ValidationError({"messsage": "Invalid options were chosen"})
     try: 
-        student_object = Student.studentsTable.get(student_school_id = student_school_id)
+        student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
         student_object.first_name = first_name
         student_object.last_name = last_name
         student_object.school_id = school_id
@@ -407,11 +412,16 @@ def edit_or_create_student(student_info, user = None):
 def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
-    user_object =  User.objects.get(pk = reqBody['user_id'])
-    user_object.delete()
-    data["message"] = "user successfully deleted"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        user_object =  User.objects.filter(first = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])[0]
+        user_object.delete()
+        data["message"] = "user successfully deleted"
+        result = {"data" : data}
+        return Response(result)
+    except:
+        data["message"] = "User could not be deleted"
+        result = {"data" : data}
+        return Response(result)     
 
 def routeplanner(request):
     return render(request, 'route_planner.html', {})
