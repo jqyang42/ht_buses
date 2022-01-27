@@ -27,7 +27,7 @@ class StudentsDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/details/`)
+        axios.get(API_DOMAIN + `students/details?id=1`) // I think we could do + this.state.student.id
             .then(response => {
             const student = response.data;
             this.setState({ student });
@@ -100,19 +100,12 @@ class StudentsDetail extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            {
-                                                this.state.student.map(detail =>
-                                                    <h5 key={detail.id}>
-                                                        {detail.first_name} {detail.last_name}
-                                                    </h5>)
-                                            }
-                                            {
-                                                this.state.student.map(detail =>
-                                                    <h7 key={detail.id}>
-                                                        ID #{detail.id}
-                                                    </h7>
-                                                    )   
-                                            }
+                                                <h5>
+                                                    {this.state.student.first_name} {this.state.student.last_name}
+                                                </h5>
+                                                <h7>
+                                                    ID #{this.state.student.id}
+                                                </h7>
                                             
                                         </div>
                                         <div className="col">
