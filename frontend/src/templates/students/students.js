@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
@@ -8,8 +9,20 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class Students extends Component {
+    state = {
+        students : []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `students?page=1`)
+            .then(res => {
+            const students = res.data.students;
+            this.setState({ students });
+        })
+    }
 
     render() {
         return (
@@ -79,27 +92,7 @@ class Students extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <StudentsTable/>
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Parent</th>
-                                                    <th>School</th>
-                                                    <th>Route</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Student ID</td>
-                                                    <td>Student Name</td>
-                                                    <td>Parent Name</td>
-                                                    <td>School</td>
-                                                    <td>Route</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
+                                        <StudentsTable data={this.state.students} />
                                     </div>
                                 </div>
                             </div>

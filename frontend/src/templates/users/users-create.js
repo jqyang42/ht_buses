@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO, GOOGLE_API_KEY } from "../../constants";
 import { Link } from "react-router-dom";
@@ -8,8 +9,67 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class UsersCreate extends Component {
+    state = {
+        email: '',
+        password: '',
+        first_name: '',
+        last_name: '',
+        address: '',
+        is_staff: '',
+        is_parent: ''
+    }
+
+    handleEmailChange = event => {
+        this.setState( { email: event.target.value })
+    }
+
+    handlePasswordChange = event => {
+        this.setState({ password: event.target.value });
+    }
+
+    handleFirstNameChange = event => {
+        this.setState({ first_name: event.target.value });
+    }
+
+    handleLastNameChange = event => {
+        this.setState({ last_name: event.target.value });
+    }
+
+    handleAddressChange = event => {
+        this.setState({ address: event.target.value });
+    }
+
+    handleIsStaffChange = event => {
+        this.setState({ is_staff: event.target.value });
+    }
+
+    handleIsParentChange = event => {
+        this.setState({ is_parent: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const school = {
+            email: this.state.email,
+            password: this.state.password,
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            address: this.state.address,
+            is_staff: this.state.is_staff,
+            is_parent: this.state.is_parent
+        }
+
+        axios.post(API_DOMAIN + `school/create`, school)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+    
     render() {
         return (
             <body className="overflow-hidden">

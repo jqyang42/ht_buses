@@ -1,60 +1,38 @@
 import React, { Component, useMemo } from "react";
 import { useTable } from 'react-table';
     
-export function UsersTable() {
+export function UsersTable({ data }) {
     const columns = React.useMemo(
         () => [
             {
-                Header: '#',
+                Header: 'ID',
                 accessor: 'id', // accessor is the "key" in the data
             },
             {
-                Header: 'Name',
-                accessor: 'name',
+                Header: 'First Name',
+                accessor: 'first_name',
+            },
+            {
+                Header: 'Last Name',
+                accessor: 'last_name',
             },
             {
                 Header: 'Email',
                 accessor: 'email',
             },
             {
+                id:'is_staff',
+                Header: 'User Type',
+                accessor: d => { return d.is_staff ? 'Admin' : 'General' },
+            },            
+            {
                 Header: 'Address',
                 accessor: 'address',
             },
-            {
-                Header: 'User Type',
-                accessor: 'type',
-            },
         ],
         []
     )
-    
-    const data = React.useMemo(
-        () => [
-            {
-                id: '0',
-                name: 'example',
-                email: 'example',
-                address: 'example',
-                type: 'example',
-            },
-            {
-                id: '1',
-                name: 'example',
-                email: 'example',
-                address: 'example',
-                type: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                email: 'example',
-                address: 'example',
-                type: 'example',
-            },
-        ],
-        []
-    )
-    
+        
     const tableInstance = useTable({ columns, data })
      
     const {

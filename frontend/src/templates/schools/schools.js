@@ -18,11 +18,11 @@ class Schools extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools`)
-            .then(response => {
-            const schools = response.data;
+        axios.get(API_DOMAIN + `schools?page=1`)
+            .then(res => {
+            const schools = res.data.schools;
             this.setState({ schools });
-            })
+        })
     }
     
     render() {
@@ -101,26 +101,7 @@ class Schools extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <SchoolsTable />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Address</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                this.state.schools
-                                                    .map(school =>
-                                                    <tr key={school.id}>
-                                                        <td>{school.name}</td>
-                                                        <td>{school.address}</td>
-                                                    </tr>
-                                                    )
-                                                }
-                                            </tbody>
-                                        </table> */}
+                                        <SchoolsTable data={this.state.schools} />
                                     </div>
                                 </div>
                             </div>
