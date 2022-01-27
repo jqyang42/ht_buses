@@ -503,6 +503,7 @@ def routeplanner(request):
     students = Student.studentsTable.filter(school_id=id)
     student_serializer = StudentSerializer(students, many=True)
     students_arr = []
+    address_arr = []
     for student in student_serializer.data:
         student_route_arr = {}
         id = student["id"]
@@ -513,7 +514,12 @@ def routeplanner(request):
         route_name = route_serializer.data["name"]
         student_route_arr["id"] = route_id
         student_route_arr["name"] = route_name
-        students_arr.append({'id' : id, 'name' : name, 'route' : student_route_arr})
+        parent_id = student["user_id"]
+        parent = User.objects.get(pk=parent_id)
+        parent_serializer = UserSerializer(parent, many=False)
+        address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"]})
+        students_arr.append({'id' : id, 'name' : name, 'parent_id' : parent_id, 'route' : student_route_arr})
         data["students"] = students_arr
+        data["addresses"] = address_arr
     return Response(data)
 
