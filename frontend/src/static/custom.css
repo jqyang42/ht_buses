@@ -140,4 +140,22 @@ textarea.textarea-autosize {
     min-height: 20em;
     resize: vertical;
     overflow-y: hidden;
-  }
+}
+
+li.page-item a {
+    color:#495057;
+}
+
+li.page-item a:hover {
+    background-color: #FFDA6A;
+    color:#495057;
+}
+
+li.page-item a[disabled] {
+    color: #ADB5BD;
+}
+
+li.page-item a[disabled]:hover {
+    background-color: #ffffff;
+    color: #ADB5BD;
+}
