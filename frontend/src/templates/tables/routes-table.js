@@ -23,31 +23,7 @@ export function RoutesTable({ data }) {
         ],
         []
     )
-    
-    // const data = React.useMemo(
-    //     () => [
-            // {
-            //     id: '0',
-            //     name: 'example',
-            //     school: 'example',
-            //     student_count: 'example',
-            // },
-    //         {
-    //             id: '1',
-    //             name: 'example',
-    //             school: 'example',
-    //             student_count: 'example',
-    //         },
-    //         {
-    //             id: '2',
-    //             name: 'example',
-    //             school: 'example',
-    //             student_count: 'example',
-    //         },
-    //     ],
-    //     []
-    // )
-    
+        
     const tableInstance = useTable({ columns, data })
      
     const {
