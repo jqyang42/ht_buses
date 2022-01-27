@@ -111,25 +111,6 @@ class Schools extends Component {
 
                                     <div className="mt-4">
                                         <SchoolsTable data={this.state.schools} />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Address</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                this.state.schools
-                                                    .map(school =>
-                                                    <tr key={school.id}>
-                                                        <td>{school.name}</td>
-                                                        <td>{school.address}</td>
-                                                    </tr>
-                                                    )
-                                                }
-                                            </tbody>
-                                        </table> */}
                                     </div>
                                 </div>
                             </div>
