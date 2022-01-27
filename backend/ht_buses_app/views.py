@@ -1,4 +1,3 @@
-from re import S
 from django.shortcuts import render
 from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User, UserManager
