@@ -86,7 +86,7 @@ class StudentsDetail extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Student Name</h5>
+                                                <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
                                             </div>
                                         </div>
                                     </div>
