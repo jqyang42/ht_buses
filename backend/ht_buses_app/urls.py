@@ -34,4 +34,5 @@ urlpatterns = [
     path('', views.user_login, name="index"),
     path('students/delete', views.student_delete, name = "delete_student"),
     path('students/edit', views.student_edit, name = "edit_student"),
+    path('schools/all', views.schools_all, name='schools_all')
 ]
