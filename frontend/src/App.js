@@ -8,31 +8,31 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './static/custom.css';
 
 import Login from "./templates/index";
-import ParentDashboard from './templates/parent-dashboard';
-import ParentDetail from './templates/parent-detail';
+import ParentDashboard from './templates/parent-view/parent-dashboard';
+import ParentDetail from './templates/parent-view/parent-detail';
 
-import Students from "./templates/students";
-import StudentsDetail from "./templates/students-detail";
-import StudentsEdit from "./templates/students-edit";
+import Students from "./templates/students/students";
+import StudentsDetail from "./templates/students/students-detail";
+import StudentsEdit from "./templates/students/students-edit";
 // import StudentsDelete from "./templates/students-delete";
 
-import Schools from "./templates/schools";
-import SchoolsDetail from "./templates/schools-detail";
-import SchoolsCreate from "./templates/schools-create";
-import SchoolsEdit from "./templates/schools-edit";
+import Schools from "./templates/schools/schools";
+import SchoolsDetail from "./templates/schools/schools-detail";
+import SchoolsCreate from "./templates/schools/schools-create";
+import SchoolsEdit from "./templates/schools/schools-edit";
 // import SchoolsDelete from "./templates/schools-delete";
 
-import Users from "./templates/users";
-import UsersDetail from "./templates/users-detail";
-import UsersCreate from "./templates/users-create";
-import UsersEdit from "./templates/users-edit";
-import UsersPassword from './templates/users-password';
+import Users from "./templates/users/users";
+import UsersDetail from "./templates/users/users-detail";
+import UsersCreate from "./templates/users/users-create";
+import UsersEdit from "./templates/users/users-edit";
+import UsersPassword from './templates/users/users-password';
 // import UsersDelete from "./templates/users-delete";
 
-import BusRoutes from "./templates/routes";
-import BusRoutesDetail from "./templates/routes-detail";
-import BusRoutesPlanner from "./templates/routes-planner";
-import BusRoutesEdit from "./templates/routes-edit";
+import BusRoutes from "./templates/routes/routes";
+import BusRoutesDetail from "./templates/routes/routes-detail";
+import BusRoutesPlanner from "./templates/routes/routes-planner";
+import BusRoutesEdit from "./templates/routes/routes-edit";
 // import BusRoutesDelete from "./templates/routes-delete";
 
 import { INDEX_URL } from "./constants";

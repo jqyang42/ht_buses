@@ -1,55 +1,15 @@
-import axios from "axios";
 import React, { Component } from "react";
-import { HT_LOGO } from "../constants";
+import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
-import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
-import { API_DOMAIN } from "../constants";
+import { INDEX_URL } from "../../constants";
+import { SCHOOLS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
+import { USERS_URL } from "../../constants";
+import { ROUTES_URL } from "../../constants";
+import { SCHOOLS_DETAIL_URL } from "../../constants";
 
-class SchoolsCreate extends Component {
-    state = {
-        school_name: '',
-        school_address: ''
-    }
-
-    handleSchoolNameChange = event => {
-        this.setState({ school_name: event.target.value });
-    }
-
-    handleSchoolAddressChange = event => {
-        this.setState({ school_address: event.target.value });
-    }
-
-    handleSubmit = event => {
-        event.preventDefault();
-
-        const school = {
-            school_name: this.state.school_name,
-            school_address: this.state.school_address
-        }
-
-        axios.post(API_DOMAIN + `school/create`, school)
-            .then(res => {
-                console.log(res);
-                console.log(res.data);
-            })
-    }
-
+class SchoolsEdit extends Component {
     render() {
         return (
             <body className="overflow-hidden">
@@ -102,7 +62,13 @@ class SchoolsCreate extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Create School</h5>
+                                                <a href={SCHOOLS_DETAIL_URL}><h5>School Name</h5></a>
+                                            </div>
+                                            <div className="w-auto px-2">
+                                                <i className="bi bi-chevron-right"></i>
+                                            </div>
+                                            <div className="w-auto px-2">
+                                                <h5>Edit School</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -116,31 +82,24 @@ class SchoolsCreate extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Create New School</h5>
+                                            <h5>Edit School</h5>
                                         </div>
                                     </div>
-                                    <form onSubmit={this.handleSubmit}>
+                                    <form>
                                         <div className="row">
                                             <div className="col mt-2">
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputName1" className="control-label pb-2">Name</label>
                                                     <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                        placeholder="Enter school name" required
-                                                        onChange={this.handleSchoolNameChange}></input>
+                                                        value="School Name" placeholder="Enter school name" required></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1"
-                                                        placeholder="Enter school address"
-                                                        onChange={this.handleSchoolAddressChange}></input>
+                                                    <input type="address" className="form-control pb-2" id="exampleInputAddress1" value="School Address" placeholder="Enter school address"></input>
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                    <Link to={SCHOOLS_URL} class="btn btn-secondary w-auto me-3 justify-content-end" role="button">
-                                                        <span class="btn-text">
-                                                            Cancel
-                                                        </span>
-                                                    </Link>
-                                                    <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
+                                                    <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                    <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                                 </div>
                                             </div>
                                             <div className="col mt-2"></div>
@@ -156,4 +115,4 @@ class SchoolsCreate extends Component {
     }
 }
 
-export default SchoolsCreate;
+export default SchoolsEdit;

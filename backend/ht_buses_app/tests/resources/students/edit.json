@@ -1,0 +1,11 @@
+{
+    "first_name":"Not Henry",
+    "last_name": "Not Smith",
+    "school_name": "North Middle School",
+    "student_school_id": 1234,
+    "route_name": "Hilly Route",
+    "parent": {
+        "first_name": "Gary",
+        "last_name": "First"
+    }
+}
