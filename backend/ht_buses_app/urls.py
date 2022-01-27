@@ -26,10 +26,10 @@ urlpatterns = [
     path('route/delete', views.route_delete, name="route_delete"),
     path('users', views.users, name="users"),
     path('users/detail', views.users_detail, name="users_detail"),
-    path('users/create', views.signup, name="users_create"),
+    path('users/create', views.users_create, name="users_create"),
     path('users/edit', views.users_edit, name="users_edit"),
     path('routeplanner', views.routeplanner, name="routeplanner"),
     path('logout', views.User_logout, name="logout"),
-    path('login', views.User_login, name="login"),
+    path('login', views.user_login, name="login"),
     path('', views.User_login, name="index"),
 ]

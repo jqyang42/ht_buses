@@ -13,7 +13,7 @@ from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, U
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
-def User_login(request):
+def user_login(request):
     data = {}
     reqBody = json.loads(request.body)
     email = reqBody['email']
@@ -38,7 +38,7 @@ def User_login(request):
 # Needs to be changed to IsAuthenticated
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
-def signup(request):
+def users_create(request):
     data = {}
     reqBody = json.loads(request.body)
     email = reqBody['email']
@@ -66,9 +66,9 @@ def student_create(request, user):
     for student in reqBody['students']:
         first_name = student['first_name']
         last_name = student['last_name']
-        school_id = School.schoolsTable.get(name=student["school"])
+        school_id = School.schoolsTable.get(name=student["school_name"])
         student_school_id = student['student_school_id']
-        route_id = Route.routeTables.get(name=student['route'])
+        route_id = Route.routeTables.get(name=student['route_name'])
         student_object = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
     data["message"] = "student registered successfully"
     result = {"data" : data}
@@ -292,9 +292,6 @@ def users_detail(request):
         return Response(data)
     except BaseException as e:
         raise ValidationError({"messsage": "User does not exist"})
-
-def users_create(request):
-    return render(request, 'users_create.html', {})
 
 def users_edit(request):
     return render(request, 'users_edit.html', {})
