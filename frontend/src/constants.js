@@ -23,6 +23,8 @@ export const ROUTES_PLANNER_URL = "/schools/routes-planner";
 export const SCHOOLS_EDIT_URL = "/schools-edit";
 export const STUDENTS_EDIT_URL = "/students-edit";
 export const USERS_EDIT_URL = "/users-edit";
+export const USERS_PASSWORD_URL = "/users-change-password";
 export const ROUTES_EDIT_URL = "/routes-edit";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
+export const PARENT_DETAIL_URL = "/dashboard/detail";
