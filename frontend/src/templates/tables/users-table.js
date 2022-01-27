@@ -5,24 +5,29 @@ export function UsersTable({ data }) {
     const columns = React.useMemo(
         () => [
             {
-                Header: '#',
+                Header: 'ID',
                 accessor: 'id', // accessor is the "key" in the data
             },
             {
-                Header: 'Name',
-                accessor: 'name',
+                Header: 'First Name',
+                accessor: 'first_name',
+            },
+            {
+                Header: 'Last Name',
+                accessor: 'last_name',
             },
             {
                 Header: 'Email',
                 accessor: 'email',
             },
             {
+                id:'is_staff',
+                Header: 'User Type',
+                accessor: d => { return d.is_staff ? 'Admin' : 'General' },
+            },            
+            {
                 Header: 'Address',
                 accessor: 'address',
-            },
-            {
-                Header: 'User Type',
-                accessor: 'type',
             },
         ],
         []

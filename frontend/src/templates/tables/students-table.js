@@ -20,7 +20,7 @@ export function StudentsTable( {data} ) {
                 Header: 'School',
                 accessor: 'school_name',
             },
-                {
+            {
                 Header: 'Route',
                 accessor: 'route_name',
             },            
