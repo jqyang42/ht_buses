@@ -99,9 +99,14 @@ class StudentsEdit extends Component {
                                         <div className="row">
                                             <div className="col mt-2">
                                                 <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                        value="Student Name" placeholder="Enter full name" required></input>
+                                                    <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
+                                                        value="First Name" placeholder="Enter first name" required></input>
+                                                </div>
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName1"
+                                                        value="Last Name" placeholder="Enter full name" required></input>
                                                 </div>
                                                 <div className="form-group pb-3 w-75">
                                                     <label for="exampleInputID1" className="control-label pb-2">Student ID</label>

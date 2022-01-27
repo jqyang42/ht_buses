@@ -1,6 +1,9 @@
 import React, { Component, useMemo } from "react";
+import { useTable } from 'react-table'
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
+// import { StudentsTable } from "./students-table";
+import { StudentsTable } from "./students-table";
 
 import { INDEX_URL } from "../constants";
 import { SCHOOLS_URL } from "../constants";
@@ -135,7 +138,8 @@ class Students extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <table className="table table-striped table-hover">
+                                        <StudentsTable/>
+                                        {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -154,7 +158,7 @@ class Students extends Component {
                                                     <td>Route</td>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table> */}
                                     </div>
                                 </div>
                             </div>

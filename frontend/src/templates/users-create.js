@@ -94,9 +94,14 @@ class UsersCreate extends Component {
                                         <div className="row">
                                             <div className="col mt-2">
                                                 <div className="form-group required pb-3 w-75">
-                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                        placeholder="Enter full name" required></input>
+                                                    <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
+                                                        placeholder="Enter first name" required></input>
+                                                </div>
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
+                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName1"
+                                                        placeholder="Enter last name" required></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
@@ -118,15 +123,15 @@ class UsersCreate extends Component {
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <div>
-                                                        <label for="exampleInputType1" className="control-label pb-2">Type</label>
+                                                        <label for="adminType" className="control-label pb-2">User Type</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="administrator"></input>
-                                                        <label className="form-check-label" for="inlineRadio1">Administrator</label>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
+                                                        <label className="form-check-label" for="administrator">Administrator</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="general"></input>
-                                                        <label className="form-check-label" for="inlineRadio2">General</label>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="general" value="general"></input>
+                                                        <label className="form-check-label" for="general">General</label>
                                                     </div>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
@@ -158,9 +163,14 @@ class UsersCreate extends Component {
                                                                         <div className="row">
                                                                             <div className="col">
                                                                                 <div className="form-group required pb-3">
-                                                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                                                        placeholder="Enter full name" required></input>
+                                                                                    <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
+                                                                                        placeholder="Enter first name" required></input>
+                                                                                </div>
+                                                                                <div className="form-group required pb-3">
+                                                                                    <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName1"
+                                                                                        placeholder="Enter last name" required></input>
                                                                                 </div>
                                                                                 <div className="form-group pb-3">
                                                                                     <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
@@ -199,17 +209,22 @@ class UsersCreate extends Component {
                                                                     <div className="accordion-body">
                                                                         <div className="row">
                                                                             <div className="col">
+                                                                            <div className="form-group required pb-3">
+                                                                                    <label for="exampleInputFirstName2" className="control-label pb-2">First Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputFirstName2"
+                                                                                        placeholder="Enter first name" required></input>
+                                                                                </div>
                                                                                 <div className="form-group required pb-3">
-                                                                                    <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                                                    <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                                                        placeholder="Enter full name"></input>
+                                                                                    <label for="exampleInputLastName2" className="control-label pb-2">Last Name</label>
+                                                                                    <input type="name" className="form-control pb-2" id="exampleInputLastName2"
+                                                                                        placeholder="Enter last name" required></input>
                                                                                 </div>
                                                                                 <div className="form-group pb-3">
-                                                                                    <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                                                    <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID"></input>
+                                                                                    <label for="exampleInputID2" className="control-label pb-2">Student ID</label>
+                                                                                    <input type="id" className="form-control pb-2" id="exampleInputID2" placeholder="Enter student ID"></input>
                                                                                 </div>
                                                                                 <div className="form-group required pb-3">
-                                                                                    <label for="exampleInputSchool1" className="control-label pb-2">School</label>
+                                                                                    <label for="exampleInputSchool2" className="control-label pb-2">School</label>
                                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School">
                                                                                         <option selected>Select a School</option>
                                                                                         <option value="1">One</option>
@@ -218,7 +233,7 @@ class UsersCreate extends Component {
                                                                                     </select>
                                                                                 </div>
                                                                                 <div className="form-group pb-3">
-                                                                                    <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
+                                                                                    <label for="exampleInputRoute2" className="control-label pb-2">Route</label>
                                                                                     <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
                                                                                         <option selected>Select a Route</option>
                                                                                         <option value="1">One</option>
@@ -237,7 +252,11 @@ class UsersCreate extends Component {
                                             </div>
                                         </div>
                                         <div className="row justify-content-end mt-2 me-0">
-                                            <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                            <Link to={USERS_URL} class="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                <span class="btn-text">
+                                                    Cancel
+                                                </span>
+                                            </Link>
                                             <button type="submit" className="btn btn-primary w-auto justify-content-end">Create</button>
                                         </div>
                                     </form>
