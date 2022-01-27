@@ -199,22 +199,24 @@ def schools_detail(request):
         data["address"] = school_serializer.data["address"]
         student_list = []
         for student in students_serializer.data:
-            id = student["student_school_id"]
+            student_id = student["id"]
+            student_school_id = student["student_school_id"]
             name = student["first_name"] + ' ' + student["last_name"]
             route_id = student["route_id"]
             student_route = Route.routeTables.get(pk=route_id)
             student_route_serializer = RouteSerializer(student_route, many=False)
             route_name = student_route_serializer.data["name"]
-            student_list.append({'student_school_id': id, 'name': name, 'route_name': route_name})
+            student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': name, 'route_name': route_name})
         if len(student_list) != 0:
             data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
+            route_id = school_route["id"]
             name = school_route["name"]
             route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=id))
             route_count_serialize = StudentSerializer(route_count, many=True)
             student_count = len(route_count_serialize.data)
-            route_list.append({'name': name, 'student_count': student_count})
+            route_list.append({'id' : route_id, 'name': name, 'student_count': student_count})
         if len(route_list) != 0:
             data["routes"] = route_list
         return Response(data)
@@ -296,9 +298,10 @@ def routes_detail(request):
     data["description"] = route_serializer.data["description"]
     student_list = []
     for student in students_serializer.data:
-        id = student["student_school_id"]
+        student_id = student["id"]
+        student_school_id = student["student_school_id"]
         student_name = student["first_name"] + ' ' + student["last_name"]
-        student_list.append({'student_school_id': id, 'name': student_name})
+        student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': student_name})
     if len(student_list) != 0:
         data["students"] = student_list
     return Response(data)
@@ -400,11 +403,12 @@ def users_detail(request):
             students_serializer = StudentSerializer(students, many=True)
             student_list = []
             for student in students_serializer.data:
+                student_id = student["id"]
                 student_school_id = student["student_school_id"]
                 student_name = student["first_name"] + ' ' + student["last_name"]
                 route_serializer = Route.routeTables.get(pk=student["route_id"])
                 route_name = route_serializer.data["name"]
-                student_list.append({'student_school_id': student_school_id, 'name': student_name, 'route_name' : route_name})
+                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': student_name, 'route_name' : route_name})
             data["students"] = student_list
         data["is_staff"] = user_serializer.data["is_staff"]
         data["is_parent"] = user_serializer.data["is_parent"]
