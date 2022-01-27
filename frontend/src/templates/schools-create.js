@@ -135,7 +135,11 @@ class SchoolsCreate extends Component {
                                                         onChange={this.handleSchoolAddressChange}></input>
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                    <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                    <Link to={SCHOOLS_URL} class="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                        <span class="btn-text">
+                                                            Cancel
+                                                        </span>
+                                                    </Link>
                                                     <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                                 </div>
                                             </div>

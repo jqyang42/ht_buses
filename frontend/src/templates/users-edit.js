@@ -120,28 +120,15 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <div>
-                                                        <label for="adminType" className="control-label pb-2">Administrator?</label>
+                                                        <label for="adminType" className="control-label pb-2">User Type</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="adminType" id="adminYes" value="administrator"></input>
-                                                        <label className="form-check-label" for="adminYes">Yes</label>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
+                                                        <label className="form-check-label" for="administrator">Administrator</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="adminType" id="adminNo" value="general"></input>
-                                                        <label className="form-check-label" for="adminNo">No</label>
-                                                    </div>
-                                                </div>
-                                                <div className="form-group required pb-3 w-75">
-                                                    <div>
-                                                        <label for="parentType" className="control-label pb-2">Parent?</label>
-                                                    </div>
-                                                    <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="parentType" id="parentYes" value="parent"></input>
-                                                        <label className="form-check-label" for="parentYes">Yes</label>
-                                                    </div>
-                                                    <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="parentType" id="parentNo" value="notParent"></input>
-                                                        <label className="form-check-label" for="parentNo">No</label>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="general" value="general"></input>
+                                                        <label className="form-check-label" for="general">General</label>
                                                     </div>
                                                 </div>
                                             </div>

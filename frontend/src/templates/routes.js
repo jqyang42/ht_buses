@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../constants";
 import { Link } from "react-router-dom";
+import { RoutesTable } from "./routes-table";
 
 import { INDEX_URL } from "../constants";
 import { SCHOOLS_URL } from "../constants";
@@ -88,7 +89,8 @@ class BusRoutes extends Component {
                                     </div>
 
                                     <div className="mt-4">
-                                        <table className="table table-striped table-hover">
+                                        <RoutesTable />
+                                        {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
@@ -111,7 +113,7 @@ class BusRoutes extends Component {
                                                     <td>Example</td>
                                                 </tr>
                                             </tbody>
-                                        </table>
+                                        </table> */}
                                     </div>
                                 </div>
                             </div>
