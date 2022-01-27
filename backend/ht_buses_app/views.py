@@ -66,9 +66,9 @@ def create_students(request, user):
     for student in reqBody['students']:
         first_name = student['first_name']
         last_name = student['last_name']
-        school_id = School.schoolsTable.get(name=student["school"])
+        school_id = School.schoolsTable.get(name=student["school_name"])
         student_school_id = student['student_school_id']
-        route_id = Route.routeTables.get(name=student['route'])
+        route_id = Route.routeTables.get(name=student['route_name'])
         student_object = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
     data["message"] = "students registered successfully"
     result = {"data" : data}
@@ -342,7 +342,7 @@ def users_detail(request):
     except BaseException as e:
         raise ValidationError({"messsage": "User does not exist"})
 
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
 def user_edit(request):
     data = {}
@@ -364,6 +364,7 @@ def user_edit(request):
     user_object.address = address
     user_object.is_parent = is_parent
     user_object.is_staff = is_staff
+    user_object.save()
     if is_parent:
         for student_info in reqBody["students"]:
             edit_or_create_student(student_info, user_object)
@@ -399,7 +400,7 @@ def edit_or_create_student(student_info, user = None):
         result = {"data" : data}
         return Response(result) 
     
-@api_view(["GET"])
+@api_view(["POST"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
 def user_delete(request):
     data = {}

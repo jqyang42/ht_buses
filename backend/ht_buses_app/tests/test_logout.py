@@ -24,12 +24,9 @@ class Test_user_logout(APITestCase):
         login_res = login_response.json()
         token = login_res["token"]
         req = {"token": token}
-        print(login_res)
         factory = APIRequestFactory()
         response = factory.get(self.logout_endpoint, data = Test_user_logout.logout_info("ht_buses_app/tests/resources/logout/logout_req.json"), format='json')
         user = User.objects.get(email=login_res["data"]["email"])
-        print(user)
         force_authenticate(response,user=user,token=user.auth_token)
-        print(response)
         #print(response.status_code)
         assert response.status_code == 302 # Checks that the response code is successful
