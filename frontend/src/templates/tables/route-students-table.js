@@ -9,13 +9,9 @@ export function RouteStudentsTable({ data }) {
                 accessor: 'student_school_id', // accessor is the "key" in the data
             },
             {
-                Header: 'First Name',
-                accessor: 'first_name',
-            },
-            {
-                Header: 'Last Name',
-                accessor: 'last_name',
-            },
+                Header: 'Name',
+                accessor: 'name',
+            }
         ],
         []
     )
