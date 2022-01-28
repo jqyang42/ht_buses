@@ -1,49 +1,61 @@
 import React, { Component, useMemo } from "react";
-import { useTable, useSortBy, usePagination, setSortBy, useState } from 'react-table';
+import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
-import { withRouter } from 'react-router'
     
-export function SchoolsTable({ data }) {
-    const [search, setSearch] = React.useState('');
-
-    const handleSearch = (event) => {
-      setSearch(event.target.value);
-    };
-
+export function ParentDashboardTable() {
     const columns = React.useMemo(
         () => [
             {
-                Header: '#',
+                Header: 'ID',
                 accessor: 'id', // accessor is the "key" in the data
-                disableSortBy: true
             },
             {
                 Header: 'Name',
                 accessor: 'name',
             },
             {
-                Header: 'Address',
-                accessor: 'address',
-                disableSortBy: true
+                Header: 'School',
+                accessor: 'school_name',
             },
+            {
+                Header: 'Bus Route',
+                accessor: 'route_name',
+                disableSortBy: true
+            },            
         ],
         []
     )
 
-    // const filterItems = data.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
-    // console.log("HERE")
-    // console.log(data)
-    // console.log(filterItems)
-
-    // const filtered_data = filterItems(data, search)
+    const data = React.useMemo(
+        () => [
+            {
+                id: '0',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+            {
+                id: '1',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+            {
+                id: '2',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+        ],
+        []
+    )
          
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         prepareRow,
-        setSortBy,
         page,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
@@ -79,11 +91,6 @@ export function SchoolsTable({ data }) {
 
     return (
         <>
-            {/* <label htmlFor="search">
-                Search:
-                <input id="search" type="text" onChange={handleSearch} />
-            </label> */}
-
             {/* // apply the table props */}
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
@@ -117,7 +124,7 @@ export function SchoolsTable({ data }) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()} onClick={() => this.props.history.push("/schools/detail?id="+this.state.id)}>
+                    <tr {...row.getRowProps()}>
                         {row.cells.map(cell => {
                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}
@@ -136,7 +143,6 @@ export function SchoolsTable({ data }) {
                 canNextPage={canNextPage}
                 pageSize={pageSize}
                 page={page}
-                rows={data.length}
             />
         </>
     )
