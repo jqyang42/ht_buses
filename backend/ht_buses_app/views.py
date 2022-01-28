@@ -36,6 +36,8 @@ def user_login(request):
         token = Token.objects.get_or_create(user=user)[0].key
         login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
         data["message"] = "user registered successfully"
+        data["id"] = user.id
+        data["is_staff"] = user.is_staff
         data["email"] = user.email
         result = {"data": data, "token":token}
         return Response(result)
@@ -540,3 +542,41 @@ def routeplanner(request):
         data["addresses"] = address_arr
     return Response(data)
 
+@api_view(["GET"])
+@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+def parent_dashboard(request):
+    data = {}
+    id = request.query_params["id"] # need id of parent
+    user = User.objects.get(pk=id)
+    user_serializer = UserSerializer(user, many=False)
+    data["name"] = user_serializer.data["first_name"] + ' ' + user_serializer.data["last_name"]
+    students = Student.studentsTable.filter(user_id=id)
+    student_serializer = StudentSerializer(students, many=True)
+    parent_kids = []
+    for student in student_serializer.data:
+        id = student["id"]
+        name = student["first_name"] + ' ' + student["last_name"]
+        school = School.schoolsTable.get(pk=student["school_id"])
+        school_serializer = SchoolSerializer(school, many=False)
+        school_name = school_serializer.data["name"]
+        route = Route.routeTables.get(pk=student["route_id"])
+        route_serializer = RouteSerializer(route, many=False)
+        route_name = route_serializer.data["name"]
+        parent_kids.append({'id' : id, 'name' : name, 'school_name' : school_name, 'route_name' : route_name})
+        data["students"] = parent_kids
+    return Response(data)
+@api_view(["GET"])
+@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+def parent_student_detail(request):
+    data = {}
+    id = request.query_params["id"]
+    student = Student.studentsTable.get(pk=id)
+    student_serializer = StudentSerializer(student, many=False)
+    data["school_student_id"] = student_serializer.data["student_school_id"]
+    school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+    school_serializer = SchoolSerializer(school, many=False)
+    data["school_name"] = school_serializer.data["name"]
+    route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+    route_serializer = RouteSerializer(route, many=False)
+    data["route"] = {'name' : route_serializer.data["name"], 'description' : route_serializer.data["description"]}
+    return Response(data)
