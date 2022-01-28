@@ -2,6 +2,7 @@ import React, { Component, useMemo } from "react";
 import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
+import { withRouter } from 'react-router'
     
 export function SchoolsTable({ data }) {
     const columns = React.useMemo(
@@ -98,7 +99,7 @@ export function SchoolsTable({ data }) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} onClick={() => this.props.history.push("/schools/detail?id="+this.state.id)}>
                         {row.cells.map(cell => {
                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}
