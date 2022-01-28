@@ -78,20 +78,7 @@ class BusRoutes extends Component {
                         </div>
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
-                                <div className="row">
-                                    <div className="col">
-                                        <div className="input-group w-50">
-                                            <input id="search-input" type="search" placeholder="Search" id="form1" className="form-control"></input>
-                                            <button id="search-button" type="button" className="btn btn-primary align-items-center pb-2">
-                                                <i className="bi bi-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className="col">
-                                    </div>
-                                </div>
-
-                                <div className="mt-4">
+                                <div>
                                     <RoutesTable data={this.state.routes}/>
                                 </div>
                             </div>

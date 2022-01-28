@@ -1,22 +1,66 @@
 import React, { Component, useMemo } from "react";
-import { useTable, useSortBy, usePagination, setSortBy, useState } from 'react-table';
+import ReactTable from 'react-table';
+import { useTable, useSortBy, usePagination, setSortBy, useState, setFilter, setState, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router';
     
 export function SchoolsTable({ data }) {
-    const [search, setSearch] = React.useState('');
+    
+    // Global filter, search from any column
 
-    const handleSearch = (event) => {
-      setSearch(event.target.value);
-    };
+    // function GlobalFilter({
+    //     preGlobalFilteredRows,
+    //     globalFilter,
+    //     setGlobalFilter,
+    // }) {
+    //     const count = preGlobalFilteredRows.length
+    //     const [value, setValue] = React.useState(globalFilter)
+    //     const onChange = useAsyncDebounce(value => {
+    //         setGlobalFilter(value || undefined)
+    //     }, 200)
+
+    //     return (
+    //         <span>
+    //             <input
+    //                 className="form-control"
+    //                 value={value || ""}
+    //                 onChange={e => {
+    //                     setValue(e.target.value);
+    //                     onChange(e.target.value);
+    //                 }}
+    //                 placeholder={`Search by name...`}
+    //             />
+    //         </span>
+    //     )
+    // }
+
+    // Filters for each column
+
+    // function DefaultColumnFilter({
+    //     column: { filterValue, preFilteredRows, setFilter },
+    // }) {
+    //     const count = preFilteredRows.length
+    
+    //     return (
+    //         <input
+    //             className="form-control"
+    //             value={filterValue || ''}
+    //             onChange={e => {
+    //                 setFilter(e.target.value || undefined)
+    //             }}
+    //             placeholder={`Search by name...`}
+    //         />
+    //     )
+    // }  
 
     const columns = React.useMemo(
         () => [
             {
                 Header: '#',
                 accessor: 'id', // accessor is the "key" in the data
-                disableSortBy: true
+                disableSortBy: true,
+                disableFilter: true
             },
             {
                 Header: 'Name',
@@ -25,25 +69,31 @@ export function SchoolsTable({ data }) {
             {
                 Header: 'Address',
                 accessor: 'address',
-                disableSortBy: true
+                disableSortBy: true,
+                disableFilter: true
             },
         ],
         []
     )
+ 
+    // Default column for column filtering
 
-    // const filterItems = data.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
-    // console.log("HERE")
-    // console.log(data)
-    // console.log(filterItems)
+    // const defaultColumn = React.useMemo(
+    //     () => ({
+    //         // Default Filter UI
+    //         Filter: DefaultColumnFilter,
+    //     }),
+    //     []
+    // )
 
-    // const filtered_data = filterItems(data, search)
-         
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         prepareRow,
+        setFilter,
         setSortBy,
+        setState,
         page,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
@@ -57,12 +107,17 @@ export function SchoolsTable({ data }) {
         nextPage,
         previousPage,
         setPageSize,
-        state: { pageIndex, pageSize },
+        state: { searchInput, pageIndex, pageSize },
+        preGlobalFilteredRows,
+        setGlobalFilter,
+        state,
     } = useTable(
         {
         columns,
         data,
+        // defaultColumn,
         initialState: { 
+            searchInput: "",
             pageIndex: 0,
             pageSize: 10,
             sortBy: [
@@ -73,17 +128,29 @@ export function SchoolsTable({ data }) {
             ]
         },
         },
+        useFilters,
+        useGlobalFilter,
         useSortBy,
         usePagination,
     )
 
     return (
         <>
-            {/* <label htmlFor="search">
-                Search:
-                <input id="search" type="text" onChange={handleSearch} />
-            </label> */}
 
+            {/* <GlobalFilter
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={state.globalFilter}
+                setGlobalFilter={setGlobalFilter}
+            /> */}
+
+            <input
+                id="search-input"
+                type="search" 
+                className="form-control w-25 mb-3"
+                placeholder="Search by name..."
+                onChange={(e) => setFilter("name", e.target.value)}
+            />
+            
             {/* // apply the table props */}
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
@@ -97,6 +164,11 @@ export function SchoolsTable({ data }) {
                         <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {// Render the header
                         column.render('Header')}
+                        
+                        {/* Column filter UI */}
+                        {/* <div>{column.canFilter ? column.render('Filter') : null}</div> */}
+                        
+                        {/* Sorting UI */}
                         <span className="w-auto ms-2 me-0 float-right text-end">
                             {!column.disableSortBy ? (column.isSorted
                             ? column.isSortedDesc
