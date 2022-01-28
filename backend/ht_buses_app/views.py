@@ -500,7 +500,7 @@ def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
     try:
-        user_object =  User.objects.filter(first = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])[0]
+        user_object =  User.objects.filter(first_name = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])
         user_object.delete()
         data["message"] = "user successfully deleted"
         result = {"data" : data}
