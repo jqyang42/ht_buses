@@ -37,6 +37,7 @@ def user_login(request):
         login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
         data["message"] = "user registered successfully"
         data["id"] = user.id
+        data["is_staff"] = user.is_staff
         data["email"] = user.email
         result = {"data": data, "token":token}
         return Response(result)
