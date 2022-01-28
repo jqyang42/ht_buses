@@ -55,7 +55,7 @@ class UsersCreate extends Component {
         console.log("print")
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
-        this.samePassword  = this.state.password == this.password2
+        this.samePassword  = this.state.password === this.password2
         this.validPassword = this.passwordValidation() && this.samePassword
     }
 
@@ -87,8 +87,8 @@ class UsersCreate extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff == 'General' ? false : true,
-            is_parent: this.state.students.length != 0
+            is_staff: this.state.is_staff === 'General' ? false : true,
+            is_parent: this.state.students.length !== 0
         }
 
         console.log(user)
