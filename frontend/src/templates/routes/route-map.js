@@ -16,42 +16,22 @@ class RouteMap extends Component {
     center: { lat: 0, lng: 0 },
   }
 
-  handleClick = (e) => {
+  handleClicks = (e) => {
     this.setState({
       icon: "https://www.google.com/mapfiles/marker_yellow.png"
     })
   }
-  // handleLoad = (e) => {
-  //   Geocode.fromAddress(this.state.locations.address).then(
-  //     (response) => {
-  //       center = response.results[0].geometry.location;
-  //     },
-  //     (error) => {
-  //       console.error(error);
-  //     }
-  //   );
-  //   for (const [index, value] of this.state.locations) {
-  //     Geocode.fromAddress(value.addresses).then(
-  //       (response) => {
-  //         const { lat, lng } = response.results[0].geometry.location;
-  //         this.state.latLngs.push({ lat, lng });
-  //       },
-  //       (error) => {
-  //         console.error(error);
-  //       }
-  //     );
-  //   }
-  // }
-  render() {
+  handleClick = (e) => {
     Geocode.fromAddress(this.state.locations.address).then(
       (response) => {
-        const center = response.results[0].geometry.location;
-        this.setState({ center });
+        this.setState({
+          center: response.results[0].geometry.location
+        })
       },
       (error) => {
         console.error(error);
       }
-    );
+    )
     for (const [index, value] of this.state.locations) {
       Geocode.fromAddress(value.addresses).then(
         (response) => {
@@ -63,6 +43,28 @@ class RouteMap extends Component {
         }
       );
     }
+  }
+  render() {
+    // Geocode.fromAddress(this.state.locations.address).then(
+    //   (response) => {
+    //     const center = response.results[0].geometry.location;
+    //     this.setState({ center });
+    //   },
+    //   (error) => {
+    //     console.error(error);
+    //   }
+    // );
+    // for (const [index, value] of this.state.locations) {
+    //   Geocode.fromAddress(value.addresses).then(
+    //     (response) => {
+    //       const { lat, lng } = response.results[0].geometry.location;
+    //       this.state.latLngs.push({ lat, lng });
+    //     },
+    //     (error) => {
+    //       console.error(error);
+    //     }
+    //   );
+    // }
     return (
       <div class='w-100 h-100'>
         <LoadScript
@@ -72,10 +74,11 @@ class RouteMap extends Component {
             mapContainerStyle={containerStyle}
             center={this.state.center}
             zoom={15}
+            onLoad={() => this.handleClick}
           >
             { /* Child components, such as markers, info windows, etc. */}
             {this.state.routes.map((value, index) => {
-              <Marker position={this.state.latLngs[index]} icon={this.state.icon} onClick={this.handleClick} id={value.students[0].id} />
+              <Marker position={this.state.latLngs[index]} icon={this.state.icon} onClick={this.handleClicks} id={value.students[0].id} />
             })}
           </GoogleMap>
         </LoadScript>
