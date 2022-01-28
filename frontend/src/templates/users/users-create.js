@@ -20,7 +20,6 @@ class UsersCreate extends Component {
             last_name: '',
             address: '',
             is_staff: '',
-            is_parent: ''
         },
         students: [],
     }
@@ -49,24 +48,22 @@ class UsersCreate extends Component {
         this.setState({ is_staff: event.target.value });
     }
 
-    handleIsParentChange = event => {
-        this.setState({ is_parent: event.target.value });
-    }
-
     handleSubmit = event => {
         event.preventDefault();
 
-        const school = {
+        const user = {
             email: this.state.email,
             password: this.state.password,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff,
-            is_parent: this.state.is_parent
+            is_staff: this.state.is_staff == 'General' ? false : true,
+            is_parent: this.state.students.length != 0
         }
 
-        axios.post(API_DOMAIN + `school/create`, school)
+        console.log(user)
+
+        axios.post(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -142,22 +139,23 @@ class UsersCreate extends Component {
                                             <h5>Create New User</h5>
                                         </div>
                                     </div>
-                                    <form>
+                                    <form onSubmit={this.handleSubmit} novalidate>
                                         <div className="row">
                                             <div className="col mt-2">
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                     <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                        placeholder="Enter first name" required></input>
+                                                        placeholder="Enter first name" required onChange={this.handleFirstNameChange}></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                     <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                        placeholder="Enter last name" required></input>
+                                                        placeholder="Enter last name" required onChange={this.handleLastNameChange}></input>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
-                                                    <input type="email" className="form-control pb-2" id="exampleInputEmail1" placeholder="Enter email" required></input>
+                                                    <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
+                                                    placeholder="Enter email" required onChange={this.handleEmailChange}></input>
                                                     <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                         else.</small>
                                                 </div>
@@ -171,9 +169,10 @@ class UsersCreate extends Component {
                                                         options={{
                                                             types: 'address'
                                                         }}
-                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
+                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                        onChange={this.handleAddressChange} />
                                                 </div>
-                                                <div className="form-group required pb-3 w-75">
+                                                <div onChange={this.handleIsStaffChange} className="form-group required pb-3 w-75">
                                                     <div>
                                                         <label for="adminType" className="control-label pb-2">User Type</label>
                                                     </div>
@@ -182,13 +181,14 @@ class UsersCreate extends Component {
                                                         <label className="form-check-label" for="administrator">Administrator</label>
                                                     </div>
                                                     <div className="form-check form-check-inline">
-                                                        <input className="form-check-input" type="radio" name="adminType" id="general" value="general"></input>
+                                                        <input className="form-check-input" type="radio" name="adminType" id="general" value="general" ></input>
                                                         <label className="form-check-label" for="general">General</label>
                                                     </div>
                                                 </div>
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="exampleInputPassword1" className="control-label pb-2">Password</label>
-                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Password" required></input>
+                                                    <input type="password" className="form-control pb-2" id="exampleInputPassword1" 
+                                                    placeholder="Password" required onChange={this.handlePasswordChange}></input>
                                                 </div>
                                                 <div className="form-group required pb-4 w-75">
                                                     <label for="exampleInputPassword1" className="control-label pb-2">Confirm Password</label>
