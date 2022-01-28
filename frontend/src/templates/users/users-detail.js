@@ -15,7 +15,7 @@ import { USERS_PASSWORD_URL } from '../../constants';
 
 class UsersDetail extends Component {
     state = {
-        id: 13,
+        id: 9,
         users : [],
         students: []
     }
@@ -55,6 +55,14 @@ class UsersDetail extends Component {
     }
 
     render() {
+        let UserAddress
+        
+        if (this.state.users.address != null) {
+            UserAddress = this.state.users.address
+        } else {
+            UserAddress = `-`
+        }
+
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -105,7 +113,7 @@ class UsersDetail extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <h5>{this.state.users.name}</h5>
+                                            <h5>{this.state.users.first_name} {this.state.users.last_name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +128,7 @@ class UsersDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>
-                                            {this.state.users.name}
+                                            {this.state.users.first_name} {this.state.users.last_name}
                                         </h5>
                                         <h7>
                                         {this.state.users.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
@@ -175,19 +183,13 @@ class UsersDetail extends Component {
                                         <p className="gray-600">
                                             Address
                                         </p>
-                                        <p className="gray-600">
-                                            Password
-                                        </p>
                                     </div>
                                     <div className="col-2 me-4">
                                         <p>
                                             {this.state.users.email}
                                         </p>
                                         <p>
-                                            {this.state.users.address}
-                                        </p>
-                                        <p>
-                                            TODO: SHOULD I BE HERE?
+                                            {UserAddress}
                                         </p>
                                     </div>
                                 </div>
