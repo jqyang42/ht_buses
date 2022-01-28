@@ -1,9 +1,15 @@
 import React, { Component, useMemo } from "react";
-import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
+import { useTable, useSortBy, usePagination, setSortBy, useState } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
 export function SchoolsTable({ data }) {
+    const [search, setSearch] = React.useState('');
+
+    const handleSearch = (event) => {
+      setSearch(event.target.value);
+    };
+
     const columns = React.useMemo(
         () => [
             {
@@ -23,6 +29,13 @@ export function SchoolsTable({ data }) {
         ],
         []
     )
+
+    // const filterItems = data.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()))
+    // console.log("HERE")
+    // console.log(data)
+    // console.log(filterItems)
+
+    // const filtered_data = filterItems(data, search)
          
     const {
         getTableProps,
@@ -65,6 +78,11 @@ export function SchoolsTable({ data }) {
 
     return (
         <>
+            {/* <label htmlFor="search">
+                Search:
+                <input id="search" type="text" onChange={handleSearch} />
+            </label> */}
+
             {/* // apply the table props */}
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
