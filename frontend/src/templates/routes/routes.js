@@ -17,7 +17,7 @@ class BusRoutes extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes?page=1`)
+        axios.get(API_DOMAIN + `routes`)
             .then(res => {
             const routes = res.data.routes
             this.setState({ routes }
