@@ -75,7 +75,8 @@ export function ParentDashboardTable() {
         () => [
             {
                 Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
+                accessor: d => `${d.id}`,
+                id: 'id', // accessor is the "key" in the data
             },
             {
                 Header: 'Name',
