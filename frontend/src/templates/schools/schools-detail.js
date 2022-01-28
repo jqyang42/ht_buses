@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
@@ -11,8 +12,25 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { ROUTES_PLANNER_URL } from "../../constants";
 import { SCHOOLS_EDIT_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class SchoolsDetail extends Component {
+    state = {
+        school: [],
+        students: [],
+        routes: []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools/detail?id=0`)  // TODO: use onclick id values
+            .then(res => {
+                const school = res.data;
+                const students = school.students;
+                const routes = school.routes;
+                this.setState({ school: school, students: students, routes: routes });
+            })
+    }
+
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -64,7 +82,7 @@ class SchoolsDetail extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <h5>School Name</h5>
+                                            <h5>{this.state.school.name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -78,8 +96,8 @@ class SchoolsDetail extends Component {
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
-                                        <h5>School Name</h5>
-                                        <p>738 Illinois St., Lansdale, PA 19446</p>
+                                        <h5>{this.state.school.name}</h5>
+                                        <p>{this.state.school.address}</p>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
@@ -95,7 +113,7 @@ class SchoolsDetail extends Component {
                                                     Edit
                                                 </span>
                                             </Link>
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                 <i className="bi bi-trash me-2"></i>
                                                 Delete
                                             </button>
@@ -129,32 +147,11 @@ class SchoolsDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col me-4">
                                         <h7>STUDENTS</h7>
-                                        <SchoolStudentsTable />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Bus Route</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
+                                        <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        <SchoolRoutesTable />
+                                        <SchoolRoutesTable data={this.state.routes}/>
                                         {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
