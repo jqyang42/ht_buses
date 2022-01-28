@@ -1,9 +1,13 @@
 import React, { Component } from "react";
+import axios from "axios";
 import { HT_LOGO } from '../../constants';
 import { Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
+import Geocode from "react-geocode";
 
+import { GOOGLE_API_KEY } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
@@ -11,7 +15,16 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_DETAIL_URL } from "../../constants";
 
+Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            locations: [],
+            center: {},
+            latLngs: []
+        }
+    }
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
