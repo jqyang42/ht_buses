@@ -112,12 +112,14 @@ def user_logout(request):
 @permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
 def students(request):
     data = {}
-    page_number = request.query_params["page"]
+    # COMMENTED OUT CODE FOR PAGINATION
+    #page_number = request.query_params["page"]
     # For now I will retrieve 10 records for each page request, can be changed
-    if int(page_number) == 1:
-        students = Student.studentsTable.all()[:10*int(page_number)]
-    else:
-        students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
+    # if int(page_number) == 1:
+    #     students = Student.studentsTable.all()[:10*int(page_number)]
+    # else:
+    #     students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
+    students = Student.studentsTable.all()
     student_serializer = StudentSerializer(students, many=True)
     student_list = []
     for student in student_serializer.data:
@@ -182,11 +184,13 @@ def student_delete(request):
 @permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
 def schools(request):
     data = {}
-    page_number = request.query_params["page"]
-    if int(page_number) == 1:
-        schools = School.schoolsTable.all()[:10*int(page_number)]
-    else:
-        schools = School.schoolsTable.all()[(1+10*(int(page_number)-1)):(10*int(page_number))]
+    schools = School.schoolsTable.all()
+    # COMMENTED OUT CODE FOR PAGINATION
+    # page_number = request.query_params["page"]
+    # if int(page_number) == 1:
+    #     schools = School.schoolsTable.all()[:10*int(page_number)]
+    # else:
+    #     schools = School.schoolsTable.all()[(1+10*(int(page_number)-1)):(10*int(page_number))]
     school_serializer = SchoolSerializer(schools, many=True)
     data["schools"] = school_serializer.data
     return Response(data)
@@ -351,12 +355,14 @@ def route_delete(request):
 def routes(request):
     data = {}
     routes_filter = []
-    page_number = request.query_params["page"]
-    # For now I will retrieve 10 records for each page request, can be changed
-    if int(page_number) == 1:
-        routes = Route.routeTables.all()[:10*int(page_number)]
-    else:
-        routes = Route.routeTables.all()[1+10*(int(page_number)-1):10*int(page_number)]
+    routes = Route.routeTables.all()
+    # COMMENTED OUT CODE FOR PAGINATION
+    # page_number = request.query_params["page"]
+    # # For now I will retrieve 10 records for each page request, can be changed
+    # if int(page_number) == 1:
+    #     routes = Route.routeTables.all()[:10*int(page_number)]
+    # else:
+    #     routes = Route.routeTables.all()[1+10*(int(page_number)-1):10*int(page_number)]
     route_serializer = RouteSerializer(routes, many=True)
     # sort routes
     for route in route_serializer.data:
@@ -376,12 +382,14 @@ def routes(request):
 @permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
 def users(request):
     data = {}
-    page_number = request.query_params["page"]
-    # For now I will retrieve 10 records for each page request, can be changed
-    if int(page_number) == 1:
-        users = User.objects.all()[:10*int(page_number)]
-    else:
-        users = User.objects.all()[1+10*(int(page_number)-1):10*int(page_number)]
+    users = User.objects.all()
+    # COMMENTED OUT CODE FOR PAGINATION
+    # page_number = request.query_params["page"]
+    # # For now I will retrieve 10 records for each page request, can be changed
+    # if int(page_number) == 1:
+    #     users = User.objects.all()[:10*int(page_number)]
+    # else:
+    #     users = User.objects.all()[1+10*(int(page_number)-1):10*int(page_number)]
     user_serializers = UserSerializer(users, many=True)
     users_arr = []
     for user in user_serializers.data:
