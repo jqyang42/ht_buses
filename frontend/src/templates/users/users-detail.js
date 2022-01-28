@@ -19,12 +19,13 @@ class UsersDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users/detail?id=2`)
+        axios.get(API_DOMAIN + `users/detail?id=0`)
             .then(response => {
             const users = response.data;
             this.setState({ users });
             })
     }
+
     render() {
         return (
             <body className="overflow-hidden">

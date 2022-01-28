@@ -422,7 +422,7 @@ def users_detail(request):
         data["is_parent"] = user_serializer.data["is_parent"]
         return Response(data)
     except BaseException as e:
-        raise ValidationError({"messsage": "User does not exist"})
+        raise ValidationError({"message": "User does not exist"})
 
 @api_view(["PUT"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
