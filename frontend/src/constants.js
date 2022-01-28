@@ -10,7 +10,7 @@ export const SORT_DESC = sort_desc;
 export const SORT = sort;
 
 export const SITE_NAME = "Hypothetical Transportation Bus Management System";
-export const API_DOMAIN = "http://127.0.0.1:8000/"
+export const API_DOMAIN = "http://localhost:8000/"
 
 // Link URLs
 export const INDEX_URL = "/";
