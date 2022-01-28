@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { GOOGLE_API_KEY, API_DOMAIN } from '../../constants';
@@ -9,47 +8,61 @@ const containerStyle = {
   height: '400px'
 };
 
-const center = {
-  lat: -3.745,
-  lng: -38.523
-};
-
 class RouteMap extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      icon: "https://www.google.com/mapfiles/marker.png",
-      locations: [],
-      latLngs: [],
-    }
+  state = {
+    icon: "https://www.google.com/mapfiles/marker.png",
+    locations: this.props.locations,
+    latLngs: [],
+    center: { lat: 0, lng: 0 },
   }
-  componentDidMount() {
-    axios.get(API_DOMAIN + `schools/routes_planner?id=1`)
-      .then(res => {
-        const locations = res.data;
-        console.log(locations)
-        this.setState({ locations });
-      })
-  }
+
   handleClick = (e) => {
     this.setState({
       icon: "https://www.google.com/mapfiles/marker_yellow.png"
     })
   }
-  handleLoad = (e) => {
+  // handleLoad = (e) => {
+  //   Geocode.fromAddress(this.state.locations.address).then(
+  //     (response) => {
+  //       center = response.results[0].geometry.location;
+  //     },
+  //     (error) => {
+  //       console.error(error);
+  //     }
+  //   );
+  //   for (const [index, value] of this.state.locations) {
+  //     Geocode.fromAddress(value.addresses).then(
+  //       (response) => {
+  //         const { lat, lng } = response.results[0].geometry.location;
+  //         this.state.latLngs.push({ lat, lng });
+  //       },
+  //       (error) => {
+  //         console.error(error);
+  //       }
+  //     );
+  //   }
+  // }
+  render() {
+    Geocode.fromAddress(this.state.locations.address).then(
+      (response) => {
+        const center = response.results[0].geometry.location;
+        this.setState({ center });
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
     for (const [index, value] of this.state.locations) {
-      Geocode.fromAddress(value.address).then(
+      Geocode.fromAddress(value.addresses).then(
         (response) => {
           const { lat, lng } = response.results[0].geometry.location;
-          latLngs.push({ lat, lng });
+          this.state.latLngs.push({ lat, lng });
         },
         (error) => {
           console.error(error);
         }
       );
     }
-  }
-  render() {
     return (
       <div class='w-100 h-100'>
         <LoadScript
@@ -57,9 +70,8 @@ class RouteMap extends Component {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={center}
+            center={this.state.center}
             zoom={15}
-            onLoad={handleLoad}
           >
             { /* Child components, such as markers, info windows, etc. */}
             {this.state.routes.map((value, index) => {

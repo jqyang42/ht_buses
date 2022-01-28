@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import axios from "axios";
 import { HT_LOGO } from '../../constants';
 import { Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 
+import { API_DOMAIN } from "../../constants";
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
@@ -12,6 +14,21 @@ import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_DETAIL_URL } from "../../constants";
 
 class BusRoutesPlanner extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            locations: {}
+        }
+    }
+    componentDidMount() {
+        console.log('testing');
+        axios.get(API_DOMAIN + `routeplanner?id=1`)
+            .then(res => {
+                const locations = res.data.json();
+                console.log(locations)
+                this.setState({ locations });
+            })
+    }
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -144,7 +161,7 @@ class BusRoutesPlanner extends Component {
                                             </div>
                                         </div>
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap />
+                                            <RouteMap locations={this.state.locations} />
                                         </div>
                                     </div>
                                     <div className="col">
