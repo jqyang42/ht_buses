@@ -81,7 +81,8 @@ export function UsersTable({ data }) {
             },
             {
                 Header: 'Name',
-                accessor: 'name',
+                accessor: d => `${d.first_name} ${d.last_name}`,
+                id: 'name'
             },
             {
                 Header: 'Email',

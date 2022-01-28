@@ -80,6 +80,7 @@ export function StudentsTable( {data} ) {
             {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
+                id: 'name'
             },
             {
                 Header: 'School',
