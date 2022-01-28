@@ -16,13 +16,32 @@ import { API_DOMAIN } from "../../constants";
 
 class SchoolsDetail extends Component {
     state = {
+        id: 4,
         school: [],
         students: [],
-        routes: []
+        routes: [],
+        delete_school: ''
+    }
+
+    handleDeleteSchool = event => {
+        this.setState({ delete_school: event.target.value })
+    }
+
+    handleDeleteSubmit = event => {
+        if (this.state.delete_school == this.state.school.name) {
+            event.preventDefault();
+            const deleted_school = {
+                school_name: this.state.delete_school
+            }
+            axios.post(API_DOMAIN + `schools/delete`, deleted_school)
+                .then(res => {
+                    console.log(res)
+                })
+        }
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.state.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
                 const students = school.students;
@@ -145,19 +164,20 @@ class SchoolsDetail extends Component {
                                                             <h5 className="modal-title" id="staticBackdropLabel">Delete School</h5>
                                                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div className="modal-body">
-                                                            <form>
-                                                                <p>Are you sure you want to delete this school and all of its associated students and routes?</p>
-                                                                <div className="form-group required">
-                                                                    <label for="school-name" className="control-label pb-2">Type the school name to confirm.</label>
-                                                                    <input type="text" className="form-control" id="school-name" placeholder="Enter school name"></input>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
-                                                        </div>
+                                                        <form onSubmit={this.handleDeleteSubmit}>
+                                                            <div className="modal-body">
+                                                                    <p>Are you sure you want to delete this school and all of its associated students and routes?</p>
+                                                                    <div className="form-group required">
+                                                                        <label for="school-name" className="control-label pb-2">Type the school name to confirm.</label>
+                                                                        <input type="text" className="form-control" id="school-name" placeholder="Enter school name"
+                                                                        onChange={this.handleDeleteSchool}></input>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
