@@ -22,7 +22,7 @@ export function SchoolRoutesTable({ data }) {
         ],
         []
     )
-        
+       
     const {
         getTableProps,
         getTableBodyProps,

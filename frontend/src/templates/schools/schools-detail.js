@@ -27,7 +27,27 @@ class SchoolsDetail extends Component {
                 const school = res.data;
                 const students = school.students;
                 const routes = school.routes;
-                this.setState({ school: school, students: students, routes: routes });
+                
+                if (students == null) {
+                    this.setState({ students: [{
+                        student_school_id: '-',
+                        name: '-',
+                        route_name: '-'
+                    }]}) 
+                } else {
+                    this.setState({ students: students })
+                }
+
+                if (routes == null) {
+                    this.setState({ routes: [{
+                        id: '-',
+                        name: '-',
+                        student_count: '-'
+                    }]})
+                } else {
+                    this.setState({ routes: routes })
+                }
+                this.setState({ school: school });
             })
     }
 

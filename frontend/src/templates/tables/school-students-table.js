@@ -22,7 +22,7 @@ export function SchoolStudentsTable({ data }) {
         ],
         []
     )
-         
+    
     const {
         getTableProps,
         getTableBodyProps,
