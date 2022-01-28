@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
-import { Autocomplete } from "@react-google-maps/api";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -10,7 +9,6 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
-import { GOOGLE_API_KEY } from "../../constants";
 
 class SchoolsCreate extends Component {
     state = {
@@ -120,19 +118,9 @@ class SchoolsCreate extends Component {
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label className="control-label pb-2">Address</label>
-                                                <Autocomplete
-                                                    apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={(place) => {
-                                                        console.log(place);
-                                                    }}
-                                                    options={{
-                                                        types: 'address'
-                                                    }}
-                                                    placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleSchoolAddressChange} />
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1"
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1"
                                                     placeholder="Enter school address"
-                                                    onChange={this.handleSchoolAddressChange}></input> */}
+                                                    onChange={this.handleSchoolAddressChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
