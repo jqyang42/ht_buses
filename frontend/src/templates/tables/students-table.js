@@ -12,7 +12,7 @@ export function StudentsTable( {data} ) {
             },
             {
                 Header: 'Name',
-                accessor: 'name',
+                accessor: d => `${d.first_name} ${d.last_name}`,
             },
             {
                 Header: 'School',
@@ -25,7 +25,7 @@ export function StudentsTable( {data} ) {
             },            
             {
                 Header: 'Parent Name',
-                accessor: 'parent_name',
+                accessor: d => `${d.parent.first_name} ${d.parent.last_name}`,
                 disableSortBy: true
             },
         ],
