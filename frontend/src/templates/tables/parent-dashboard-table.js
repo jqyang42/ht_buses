@@ -3,43 +3,59 @@ import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
-export function UsersTable({ data }) {
+export function ParentDashboardTable() {
     const columns = React.useMemo(
         () => [
             {
                 Header: 'ID',
                 accessor: 'id', // accessor is the "key" in the data
-                disableSortBy: true
             },
             {
                 Header: 'Name',
                 accessor: 'name',
             },
             {
-                Header: 'Email',
-                accessor: 'email',
+                Header: 'School',
+                accessor: 'school_name',
             },
             {
-                id:'is_staff',
-                Header: 'User Type',
-                accessor: d => { return d.is_staff ? 'Admin' : 'General' },
+                Header: 'Bus Route',
+                accessor: 'route_name',
                 disableSortBy: true
             },            
+        ],
+        []
+    )
+
+    const data = React.useMemo(
+        () => [
             {
-                Header: 'Address',
-                accessor: 'address',
-                disableSortBy: true
+                id: '0',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+            {
+                id: '1',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+            {
+                id: '2',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
             },
         ],
         []
     )
-        
+         
     const {
         getTableProps,
         getTableBodyProps,
         headerGroups,
         prepareRow,
-        setSortBy,
         page,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
