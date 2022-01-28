@@ -1,6 +1,7 @@
 import React, { Component, useMemo } from "react";
-import { useTable, usePagination } from 'react-table';
+import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
+import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
 export function StudentsTable( {data} ) {
     const columns = React.useMemo(
@@ -24,14 +25,17 @@ export function StudentsTable( {data} ) {
             {
                 Header: 'Route',
                 accessor: 'route_name',
+                disableSortBy: true
             },            
             {
                 Header: 'Parent First Name',
                 accessor: 'parent.first_name',
+                disableSortBy: true
             },
             {
                 Header: 'Parent Last Name',
                 accessor: 'parent.last_name',
+                disableSortBy: true
             },
         ],
         []
@@ -62,29 +66,23 @@ export function StudentsTable( {data} ) {
         {
         columns,
         data,
-        initialState: { pageIndex: 0, pageSize: 10 },
+        initialState: { 
+            pageIndex: 0,
+            pageSize: 10,
+            sortBy: [
+                {
+                    id: 'name',
+                    desc: false
+                }
+            ]
         },
-        usePagination
+        },
+        useSortBy,
+        usePagination,
     )
 
     return (
         <>
-            {/* <pre>
-                <code>
-                {JSON.stringify(
-                    {
-                    pageIndex,
-                    pageSize,
-                    pageCount,
-                    canNextPage,
-                    canPreviousPage,
-                    },
-                    null,
-                    2
-                )}
-                </code>
-            </pre> */}
-    
             {/* // apply the table props */}
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
@@ -95,9 +93,16 @@ export function StudentsTable( {data} ) {
                     {// Loop over the headers in each row
                     headerGroup.headers.map(column => (
                         // Apply the header cell props
-                        <th {...column.getHeaderProps()}>
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {// Render the header
                         column.render('Header')}
+                        <span className="w-auto ms-2 me-0 float-right text-end">
+                            {!column.disableSortBy ? (column.isSorted
+                            ? column.isSortedDesc
+                                ? <img src={SORT_DESC} className="img-icon"></img>
+                                : <img src={SORT_ASC} className="img-icon"></img>
+                            : <img src={SORT} className="img-icon"></img>) : ''}
+                        </span>
                         </th>
                     ))}
                     </tr>
@@ -121,16 +126,6 @@ export function StudentsTable( {data} ) {
                 </tbody>
             </table>
 
-            {/* <nav aria-label="Students Pagination">
-                <ul class="pagination">
-                    <li class="page-item"><a class="page-link" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>Previous</a></li>
-                    <li class="page-item"><a class="page-link" onClick={() => previousPage(0)} disabled={!canPreviousPage}>1</a></li>
-                    <li class="page-item"><a class="page-link" onClick={() => nextPage()} disabled={!canNextPage}>2</a></li>
-                    <li class="page-item"><a class="page-link" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>3</a></li>
-                    <li class="page-item"><a class="page-link" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>Next</a></li>
-                </ul>
-            </nav> */}
-
             <TablePagination
                 pageIndex={pageIndex}
                 pageOptions={pageOptions}
@@ -141,51 +136,6 @@ export function StudentsTable( {data} ) {
                 pageSize={pageSize}
                 page={page}
             />
-
-            {/* <div className="pagination">
-                <button className="btn btn-secondary" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-                {'<<'}
-                </button>{' '}
-                <button className="btn btn-secondary" onClick={() => previousPage()} disabled={!canPreviousPage}>
-                {'<'}
-                </button>{' '}
-                <button className="btn btn-secondary" onClick={() => nextPage()} disabled={!canNextPage}>
-                {'>'}
-                </button>{' '}
-                <button className="btn btn-secondary" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-                {'>>'}
-                </button>{' '}
-                <span>
-                Page{' '}
-                <strong>
-                    {pageIndex + 1} of {pageOptions.length}
-                </strong>{' '}
-                </span>
-                <span>
-                | Go to page:{' '}
-                <input
-                    type="number"
-                    defaultValue={pageIndex + 1}
-                    onChange={e => {
-                    const page = e.target.value ? Number(e.target.value) - 1 : 0
-                    gotoPage(page)
-                    }}
-                    style={{ width: '100px' }}
-                />
-                </span>{' '}
-                <select
-                value={pageSize}
-                onChange={e => {
-                    setPageSize(Number(e.target.value))
-                }}
-                >
-                {[10, 20, 30, 40, 50].map(pageSize => (
-                    <option key={pageSize} value={pageSize}>
-                    Show {pageSize}
-                    </option>
-                ))}
-                </select>
-            </div> */}
         </>
     )
 }

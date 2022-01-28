@@ -159,3 +159,12 @@ li.page-item a[disabled]:hover {
     background-color: #ffffff;
     color: #ADB5BD;
 }
+
+.img-icon {
+    height: 20px;
+    width: auto;
+    max-height: 20px;
+    vertical-align: center;
+    margin-bottom: 1px;
+    padding-bottom: 2px;
+}
