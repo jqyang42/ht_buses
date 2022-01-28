@@ -13,13 +13,16 @@ import { API_DOMAIN } from "../../constants";
 
 class UsersCreate extends Component {
     state = {
-        email: '',
-        password: '',
-        first_name: '',
-        last_name: '',
-        address: '',
-        is_staff: '',
-        is_parent: ''
+        user: {
+            email: '',
+            password: '',
+            first_name: '',
+            last_name: '',
+            address: '',
+            is_staff: '',
+            is_parent: ''
+        },
+        students: [],
     }
 
     handleEmailChange = event => {
