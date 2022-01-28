@@ -75,7 +75,8 @@ export function StudentsTable( {data} ) {
         () => [
             {
                 Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
+                accessor: d => `${d.id}`, // accessor is the "key" in the data
+                id: 'id'
             },
             {
                 Header: 'Name',
