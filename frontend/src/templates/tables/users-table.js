@@ -9,12 +9,8 @@ export function UsersTable({ data }) {
                 accessor: 'id', // accessor is the "key" in the data
             },
             {
-                Header: 'First Name',
-                accessor: 'first_name',
-            },
-            {
-                Header: 'Last Name',
-                accessor: 'last_name',
+                Header: 'Name',
+                accessor: 'name',
             },
             {
                 Header: 'Email',

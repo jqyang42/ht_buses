@@ -323,7 +323,7 @@ def route_edit(request):
     try:
         route_object =  Route.routeTables.get(pk = id)[0]
         route_object.name = reqBody['route_name']
-        route_object.school_id =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
+        # route_object.school_id =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
         route_object.description = reqBody['route_description']
         route_object.save()
         data["message"] = "route updated successfully"

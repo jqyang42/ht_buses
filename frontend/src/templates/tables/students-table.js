@@ -9,12 +9,8 @@ export function StudentsTable( {data} ) {
                 accessor: 'id', // accessor is the "key" in the data
             },
             {
-                Header: 'First Name',
-                accessor: 'first_name',
-            },
-            {
-                Header: 'Last Name',
-                accessor: 'last_name',
+                Header: 'Name',
+                accessor: 'name',
             },
             {
                 Header: 'School',
@@ -25,12 +21,8 @@ export function StudentsTable( {data} ) {
                 accessor: 'route_name',
             },            
             {
-                Header: 'Parent First Name',
-                accessor: 'parent.first_name',
-            },
-            {
-                Header: 'Parent Last Name',
-                accessor: 'parent.last_name',
+                Header: 'Parent Name',
+                accessor: 'parent_name',
             },
         ],
         []
