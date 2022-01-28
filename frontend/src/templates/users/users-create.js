@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { HT_LOGO, GOOGLE_API_KEY } from "../../constants";
 import { Link } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
+import { emailRegex, passwordRegex } from "../regex/input-validation";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -10,6 +11,7 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+
 
 class UsersCreate extends Component {
     state = {
@@ -24,12 +26,37 @@ class UsersCreate extends Component {
         students: [],
     }
 
+    password2 = '';
+    validEmail = false;
+    validPassword = false;
+    samePassword = false;
+
+    emailValidation = function() {
+        return (emailRegex.test(this.emailField.value))
+    }
+    
+    passwordValidation = function() {
+        return (passwordRegex.test(this.state.password))
+    }
+
     handleEmailChange = event => {
-        this.setState( { email: event.target.value })
+        this.setState( { email: event.target.value})
+        this.validEmail = this.emailValidation() 
     }
 
     handlePasswordChange = event => {
-        this.setState({ password: event.target.value });
+        this.password2 = '';
+        this.password2Field.value = '';
+        this.samePassword = false;
+        this.setState({ password: event.target.value});
+    }
+
+    handlePassword2Change = event => {
+        console.log("print")
+        this.password2 = event.target.value;
+        this.setState({ password: this.password1Field.value});
+        this.samePassword  = this.state.password == this.password2
+        this.validPassword = this.passwordValidation() && this.samePassword
     }
 
     handleFirstNameChange = event => {
@@ -49,6 +76,9 @@ class UsersCreate extends Component {
     }
 
     handleSubmit = event => {
+        if (!this.validEmail || !this.validPassword) {
+            return 
+        }
         event.preventDefault();
 
         const user = {
@@ -154,7 +184,7 @@ class UsersCreate extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
-                                                placeholder="Enter email" required onChange={this.handleEmailChange}></input>
+                                                placeholder="Enter email" required ref={el => this.emailField = el} onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
                                             </div>
@@ -187,11 +217,11 @@ class UsersCreate extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword1" className="control-label pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword1" 
-                                                placeholder="Password" required onChange={this.handlePasswordChange}></input>
+                                                placeholder="Password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group required pb-4 w-75">
                                                 <label for="exampleInputPassword1" className="control-label pb-2">Confirm Password</label>
-                                                <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Password" required></input>
+                                                <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Password" onChange={this.handlePassword2Change} ref={el => this.password2Field = el} required></input>
                                             </div>
                                         </div>
                                         <div className="col mt-2">
@@ -312,9 +342,12 @@ class UsersCreate extends Component {
                                     </div>
                                 </form>
                             </div>
+                            {!this.validEmail && <p>Your email is invalid</p>}
+                            {!this.passwordValidation() && <p>Your password is invalid</p>} 
+                            {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         );
     }
