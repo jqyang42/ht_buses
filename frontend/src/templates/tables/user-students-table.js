@@ -8,7 +8,7 @@ export function UserStudentsTable({ data }) {
         () => [
             {
                 Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
+                accessor: 'student_school_id', // accessor is the "key" in the data
             },
             {
                 Header: 'Name',
@@ -16,7 +16,7 @@ export function UserStudentsTable({ data }) {
             },
             {
                 Header: 'Bus Route',
-                accessor: 'route',
+                accessor: 'route_name',
             },
         ],
         []

@@ -15,17 +15,43 @@ import { USERS_PASSWORD_URL } from '../../constants';
 
 class UsersDetail extends Component {
     state = {
+        id: 13,
         users : [],
         students: []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users/detail?id=0`)
+        axios.get(API_DOMAIN + `users/detail?id=` + this.state.id)
             .then(response => {
             const users = response.data;
             const students = users.students
-            this.setState({ users: users, students: students });
+            if (students == null) {
+                this.setState({ students: [{
+                    student_school_id: '-',
+                    name: '-',
+                    route_name: '-'
+                }]})
+            } else {
+                this.setState({ students: students })
+            }
+            this.setState({ users: users });
             })
+    }
+
+    handleDeleteSubmit = event => {
+        event.preventDefault();
+
+        const deleted_user = {
+            first_name: this.state.users.first_name,
+            last_name: this.state.users.last_name,
+            email: this.state.users.email
+        }
+
+        axios.post(API_DOMAIN + `users/delete`, deleted_user)
+            .then(res => {
+                console.log(res)
+            })
+        
     }
 
     render() {
@@ -122,17 +148,19 @@ class UsersDetail extends Component {
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title" id="staticBackdropLabel">Delete User</h5>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            Are you sure you want to delete this user and all of its associated students?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
-                                                        </div>
+                                                        <form onSubmit={this.handleDeleteSubmit}>
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title" id="staticBackdropLabel">Delete User</h5>
+                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                Are you sure you want to delete this user and all of its associated students?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -165,28 +193,7 @@ class UsersDetail extends Component {
                                 </div>
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable data={this.state.students}/>
-                                    {/* <table className="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Bus Route</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                            </tr>
-                                        </tbody>
-                                    </table> */}
+                                    <UserStudentsTable data={this.state.students}/>   
                                 </div>
                             </div>
                         </div>
