@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { GOOGLE_API_KEY } from '../../constants';
+import { MARKER_COLORS } from '../../constants';
 
 const x = 50;
 const y = 50;
@@ -21,10 +22,11 @@ class RouteMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      clickNumber: 0,
       icon: {
         path: pinSVGHole,
         fillOpacity: 1,
-        fillColor: "green",
+        fillColor: MARKER_COLORS[0],
         strokeWeight: 2,
         strokeColor: "#000000",
         scale: 2,
@@ -32,11 +34,21 @@ class RouteMap extends Component {
     }
   }
   handleClick = (e) => {
+    if (this.state.clickNumber < Object.keys(MARKER_COLORS).length-1) {
+      this.setState({
+        clickNumber: this.state.clickNumber+1,
+      })
+    } else {
+      this.setState({
+        clickNumber: 0,
+      })
+    }
+    console.log(this.state.clickNumber)
     this.setState({
       icon: {
         path: pinSVGHole,
         fillOpacity: 1,
-        fillColor: "red",
+        fillColor: MARKER_COLORS[this.state.clickNumber],
         strokeWeight: 2,
         strokeColor: "#000000",
         scale: 2,
