@@ -4,7 +4,9 @@ import { HT_LOGO } from '../../constants';
 import { Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
+import Geocode from "react-geocode";
 
+import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -13,21 +15,15 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_DETAIL_URL } from "../../constants";
 
+Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            locations: {}
+            locations: [],
+            center: {},
+            latLngs: []
         }
-    }
-    componentDidMount() {
-        console.log('testing');
-        axios.get(API_DOMAIN + `routeplanner?id=1`)
-            .then(res => {
-                const locations = res.data.json();
-                console.log(locations)
-                this.setState({ locations });
-            })
     }
     render() {
         return (
@@ -161,7 +157,7 @@ class BusRoutesPlanner extends Component {
                                             </div>
                                         </div>
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap locations={this.state.locations} />
+                                            <RouteMap />
                                         </div>
                                     </div>
                                     <div className="col">

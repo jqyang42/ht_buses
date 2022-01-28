@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { GOOGLE_API_KEY, API_DOMAIN } from '../../constants';
+import axios from "axios";
 import Geocode from "react-geocode";
 
 const containerStyle = {
@@ -11,60 +12,54 @@ const containerStyle = {
 class RouteMap extends Component {
   state = {
     icon: "https://www.google.com/mapfiles/marker.png",
-    locations: this.props.locations,
+    locations: [],
     latLngs: [],
-    center: { lat: 0, lng: 0 },
+    center: {},
+    markers: [],
+    isMarkerShown: false
   }
-
-  handleClicks = (e) => {
-    this.setState({
-      icon: "https://www.google.com/mapfiles/marker_yellow.png"
-    })
-  }
-  handleClick = (e) => {
-    Geocode.fromAddress(this.state.locations.address).then(
-      (response) => {
-        this.setState({
-          center: response.results[0].geometry.location
+  componentDidMount() {
+    axios.get(API_DOMAIN + `routeplanner?id=4`)
+      .then(res => {
+        const locations = res.data;
+        this.setState({ locations });
+        Geocode.fromAddress(locations.address).then(
+          (response) => {
+            const lat = parseFloat(response.results[0].geometry.location.lat);
+            const lng = parseFloat(response.results[0].geometry.location.lng);
+            this.setState({
+              center: { lat: lat, lng: lng }
+            })
+          },
+          (error) => {
+            console.error(error);
+          }
+        )
+        locations.addresses.map((address, index) => {
+          Geocode.fromAddress(address.address).then(
+            (response) => {
+              const lat = parseFloat(response.results[0].geometry.location.lat);
+              const lng = parseFloat(response.results[0].geometry.location.lng);
+              this.setState(prevState => ({
+                markers: [...prevState.markers, {
+                  position: {
+                    lat: lat,
+                    lng: lng
+                  },
+                  icon: this.state.icon,
+                  onClick: this.handleClicks,
+                  id: address.parent_id
+                }]
+              }))
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
         })
-      },
-      (error) => {
-        console.error(error);
-      }
-    )
-    for (const [index, value] of this.state.locations) {
-      Geocode.fromAddress(value.addresses).then(
-        (response) => {
-          const { lat, lng } = response.results[0].geometry.location;
-          this.state.latLngs.push({ lat, lng });
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    }
+      })
   }
   render() {
-    // Geocode.fromAddress(this.state.locations.address).then(
-    //   (response) => {
-    //     const center = response.results[0].geometry.location;
-    //     this.setState({ center });
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //   }
-    // );
-    // for (const [index, value] of this.state.locations) {
-    //   Geocode.fromAddress(value.addresses).then(
-    //     (response) => {
-    //       const { lat, lng } = response.results[0].geometry.location;
-    //       this.state.latLngs.push({ lat, lng });
-    //     },
-    //     (error) => {
-    //       console.error(error);
-    //     }
-    //   );
-    // }
     return (
       <div class='w-100 h-100'>
         <LoadScript
@@ -72,13 +67,15 @@ class RouteMap extends Component {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={this.state.center}
+            center={{
+              lat: parseFloat(this.state.center.lat),
+              lng: parseFloat(this.state.center.lng)
+            }}
             zoom={15}
-            onLoad={() => this.handleClick}
           >
-            { /* Child components, such as markers, info windows, etc. */}
-            {this.state.routes.map((value, index) => {
-              <Marker position={this.state.latLngs[index]} icon={this.state.icon} onClick={this.handleClicks} id={value.students[0].id} />
+            <Marker position={this.state.center} icon={this.state.icon} onClick={this.handleClicks} />
+            {this.state.markers.map((value, index) => {
+              return <Marker position={value.position} icon={value.icon} onClick={value.onClick} id={value.id} />
             })}
           </GoogleMap>
         </LoadScript>
