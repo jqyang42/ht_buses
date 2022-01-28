@@ -11,12 +11,8 @@ export function StudentsTable( {data} ) {
                 accessor: 'id', // accessor is the "key" in the data
             },
             {
-                Header: 'First Name',
-                accessor: 'first_name',
-            },
-            {
-                Header: 'Last Name',
-                accessor: 'last_name',
+                Header: 'Name',
+                accessor: 'name',
             },
             {
                 Header: 'School',
@@ -28,21 +24,14 @@ export function StudentsTable( {data} ) {
                 disableSortBy: true
             },            
             {
-                Header: 'Parent First Name',
-                accessor: 'parent.first_name',
-                disableSortBy: true
-            },
-            {
-                Header: 'Parent Last Name',
-                accessor: 'parent.last_name',
+                Header: 'Parent Name',
+                accessor: 'parent_name',
                 disableSortBy: true
             },
         ],
         []
     )
-    
-    // const tableInstance = useTable({ columns, data })
-     
+         
     const {
         getTableProps,
         getTableBodyProps,

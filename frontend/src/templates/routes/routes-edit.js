@@ -10,8 +10,46 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { ROUTES_DETAIL_URL } from "../../constants";
 import { ROUTES_PLANNER_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class BusRoutesEdit extends Component {
+    state = {
+        route_name: '',
+        route_description: '',
+        route: []
+    }
+
+    handleRouteNameChange = event => {
+        this.setState({ route_name: event.target.value });
+    }
+
+    handleDescriptionChange = event => {
+        this.setState({ route_description: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const route = {
+            route_name: this.state.route_name,
+            route_description: this.state.route_description,
+        }
+
+        axios.put(API_DOMAIN + `routes/edit?id=0`, route)  // TODO: use onclick id value
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `routes/detail?id=0`)  // TODO: use onclick id values
+        .then(res => {
+        const route = res.data;
+        this.setState({ route: route });
+        })
+    }
+
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -63,7 +101,8 @@ class BusRoutesEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div class="w-auto px-2">
-                                            <a href={ROUTES_DETAIL_URL}><h5>Route Name</h5></a>
+                                            <a href={ROUTES_DETAIL_URL}><h5>{this.state.route.name}</h5></a>
+                                            {/* TODO: change href to refer to specific route url */}
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -96,26 +135,31 @@ class BusRoutesEdit extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <form>
+                                <form onSubmit={this.handleSubmit}>
                                     <div class="row">
                                         <div class="col mt-2">
                                             <div class="form-group required pb-3 w-75">
                                                 <label for="exampleInputName1" class="control-label pb-2">Name</label>
                                                 <input type="name" class="form-control pb-2" id="exampleInputName1"
-                                                    value="Route Name" placeholder="Enter route name" required></input>
+                                                    defaultValue={this.state.route.name} placeholder="Enter route name" required
+                                                    onChange={this.handleRouteNameChange}></input>
                                             </div>
+                                            {/* DELETE WITH VARIANCE REQUEST
                                             <div class="form-group required pb-3 w-75">
                                                 <label for="exampleInputSchool1" class="control-label pb-2">School</label>
                                                 <select class="form-select" placeholder="Select a School" aria-label="Select a School">
                                                     <option>Select a School</option>
-                                                    <option selected value="1">Route School</option>
+                                                    <option selected value="1">Test School</option>
                                                     <option value="2">Two</option>
                                                     <option value="3">Three</option>
                                                 </select>
-                                            </div>
+                                            </div>  */}
                                             <div class="form-group pb-3 w-75">
                                                 <label for="exampleInputDescription1" class="control-label pb-2">Description</label>
-                                                <textarea type="description" class="form-control textarea-autosize pb-2" id="exampleInputDescription1" value="Route Description" placeholder="Enter route description"></textarea>
+                                                <textarea type="description" class="form-control textarea-autosize pb-2" 
+                                                id="exampleInputDescription1" defaultValue={this.state.route.description}
+                                                placeholder="Enter route description" 
+                                                onChange={this.handleDescriptionChange}></textarea>
                                             </div>
                                             <div class="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <button type="button" class="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>

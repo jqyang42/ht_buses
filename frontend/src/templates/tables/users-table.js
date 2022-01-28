@@ -12,12 +12,8 @@ export function UsersTable({ data }) {
                 disableSortBy: true
             },
             {
-                Header: 'First Name',
-                accessor: 'first_name',
-            },
-            {
-                Header: 'Last Name',
-                accessor: 'last_name',
+                Header: 'Name',
+                accessor: 'name',
             },
             {
                 Header: 'Email',
