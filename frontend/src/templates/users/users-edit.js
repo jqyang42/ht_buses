@@ -22,9 +22,9 @@ class UsersEdit extends Component {
         is_staff: '',
         // student_first_name: '',
         // student_last_name: '',
-        // student_id: '',
-        // school: '',
-        // route: ''
+        // student_school_id: '',
+        // school_name: '',
+        // route_name: ''
         user: [],
         // schools: [],
         // routes: []
@@ -66,7 +66,7 @@ class UsersEdit extends Component {
     // }
 
     // handleStudentIDChange = event => {
-    //     this.setState({ student_id: event.target.value });
+    //     this.setState({ student_school_id: event.target.value });
     // }
 
     // handleSchoolChange = event => {
