@@ -15,14 +15,16 @@ import { USERS_PASSWORD_URL } from '../../constants';
 
 class UsersDetail extends Component {
     state = {
-        users : []
+        users : [],
+        students: []
     }
 
     componentDidMount() {
         axios.get(API_DOMAIN + `users/detail?id=0`)
             .then(response => {
             const users = response.data;
-            this.setState({ users });
+            const students = users.students
+            this.setState({ users: users, students: students });
             })
     }
 
@@ -77,7 +79,7 @@ class UsersDetail extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <h5>{this.state.users.first_name} {this.state.users.last_name}</h5>
+                                            <h5>{this.state.users.name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +94,7 @@ class UsersDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>
-                                            {this.state.users.first_name} {this.state.users.last_name}
+                                            {this.state.users.name}
                                         </h5>
                                         <h7>
                                         {this.state.users.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
@@ -151,19 +153,19 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col-2 me-4">
                                         <p>
-                                            Email Address
+                                            {this.state.users.email}
                                         </p>
                                         <p>
-                                            Home Address
+                                            {this.state.users.address}
                                         </p>
                                         <p>
-                                            ask;dlfahsf;alks
+                                            TODO: SHOULD I BE HERE?
                                         </p>
                                     </div>
                                 </div>
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable />
+                                    <UserStudentsTable data={this.state.students}/>
                                     {/* <table className="table table-striped table-hover">
                                         <thead>
                                             <tr>

@@ -3,7 +3,7 @@ import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
-export function UserStudentsTable() {
+export function UserStudentsTable({ data }) {
     const columns = React.useMemo(
         () => [
             {
@@ -21,28 +21,7 @@ export function UserStudentsTable() {
         ],
         []
     )
-    
-    const data = React.useMemo(
-        () => [
-            {
-                id: '0',
-                name: 'example',
-                route: 'example',
-            },
-            {
-                id: '1',
-                name: 'example',
-                route: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                route: 'example',
-            },
-        ],
-        []
-    )
-    
+        
     const {
         getTableProps,
         getTableBodyProps,
