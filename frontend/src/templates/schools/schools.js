@@ -18,7 +18,7 @@ class Schools extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/all`)
+        axios.get(API_DOMAIN + `schools`)
             .then(res => {
             const schools = res.data;
             this.setState({ schools });

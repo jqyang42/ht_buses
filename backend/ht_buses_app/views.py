@@ -56,9 +56,9 @@ def user_create(request):
     is_staff = reqBody['is_staff']
     is_parent = reqBody['is_parent']
     if is_staff: 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address= address)
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address= address)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password)
     if is_parent:
         create_students(request, user)
     data["message"] = "User created successfully"
@@ -325,7 +325,7 @@ def route_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        route_object =  Route.routeTables.get(pk = id)[0]
+        route_object =  Route.routeTables.get(pk=id)
         route_object.name = reqBody['route_name']
         # route_object.school_id =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
         route_object.description = reqBody['route_description']
@@ -397,7 +397,7 @@ def users(request):
         name = user["first_name"] + ' ' + user["last_name"]
         email = user["email"]
         is_staff = user["is_staff"]
-        is_parent = user["address"]
+        is_parent = user["is_parent"]
         address = user["address"]
         users_arr.append({'id' : id, 'name' : name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address})
     data["users"] = users_arr
@@ -413,16 +413,17 @@ def users_detail(request):
         user_serializer = UserSerializer(user, many=False)
         data["name"] = user_serializer.data["first_name"] + ' ' + user_serializer.data["last_name"]
         data["email"] = user_serializer.data["email"]
-        if user_serializer.data["is_parent"]:
+        if user_serializer.data["is_parent"] == True:
             data["address"] = user_serializer.data["address"]
-            students = Student.studentsTable.filter(user_id=id)
+            students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
             student_list = []
             for student in students_serializer.data:
                 student_id = student["id"]
                 student_school_id = student["student_school_id"]
                 student_name = student["first_name"] + ' ' + student["last_name"]
-                route_serializer = Route.routeTables.get(pk=student["route_id"])
+                route_student = Route.routeTables.get(pk=student["route_id"])
+                route_serializer = RouteSerializer(route_student, many=False)
                 route_name = route_serializer.data["name"]
                 student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': student_name, 'route_name' : route_name})
             data["students"] = student_list
