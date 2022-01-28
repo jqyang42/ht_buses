@@ -3,22 +3,49 @@ import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
-export function SchoolsTable({ data }) {
+export function ParentDashboardTable() {
     const columns = React.useMemo(
         () => [
             {
-                Header: '#',
+                Header: 'ID',
                 accessor: 'id', // accessor is the "key" in the data
-                disableSortBy: true
             },
             {
                 Header: 'Name',
                 accessor: 'name',
             },
             {
-                Header: 'Address',
-                accessor: 'address',
+                Header: 'School',
+                accessor: 'school_name',
+            },
+            {
+                Header: 'Bus Route',
+                accessor: 'route_name',
                 disableSortBy: true
+            },            
+        ],
+        []
+    )
+
+    const data = React.useMemo(
+        () => [
+            {
+                id: '0',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+            {
+                id: '1',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
+            },
+            {
+                id: '2',
+                name: 'example',
+                school_name: 'example',
+                route_name: 'example',
             },
         ],
         []
@@ -29,7 +56,6 @@ export function SchoolsTable({ data }) {
         getTableBodyProps,
         headerGroups,
         prepareRow,
-        setSortBy,
         page,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
@@ -117,7 +143,6 @@ export function SchoolsTable({ data }) {
                 canNextPage={canNextPage}
                 pageSize={pageSize}
                 page={page}
-                rows={data.length}
             />
         </>
     )

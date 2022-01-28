@@ -1,10 +1,15 @@
 import React from "react";
 
 const TablePagination = (props) => {
+    console.log(props.pageOptions)
     return (
-        <div className="row TablePagination">
+        <div className="row TablePagination align-middle align-items-center">
             
-            <div className="col table-pagesIndexing">Showing {(props.pageIndex * props.pageSize) + 1} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.page.length} entries</div>
+            <div className="col table-pagesIndexing">
+                <p>
+                    Showing {(props.pageIndex * props.pageSize) + 1} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |  Page {props.pageIndex + 1} of {props.pageOptions.length}
+                </p>
+            </div>
             <div className="col">
                 <nav className="row d-inline-flex float-end" aria-label="Students Pagination">
                     <ul className="pagination">
@@ -14,7 +19,7 @@ const TablePagination = (props) => {
                         </a>
                     </li>
                     {/* <ul className="pagination d-flex"> */}
-                        {
+                        {/* {
                             props.pageOptions.map((index, page) => {
                                 let totalPages = props.pageOptions.length;
                                 if (page + 1 > 5 && page + 1 < 10 && totalPages >= 10) {
@@ -29,7 +34,7 @@ const TablePagination = (props) => {
                                         return <li className="page-item" key={index}>....{totalPages}</li>
                                     }
                                     if (numbersOFpagesAfter_Page_10.length > 3 && page + 1 <= 12) {
-                                        return <li className="page-item" key={index}>{page + 1}</li>
+                                        return <li className="page-item" key={index}><a className="page-link" onClick={props.page}>{page + 1}</a></li>
                                     }
                                     if (numbersOFpagesAfter_Page_10.length > 3) {
                                         return
@@ -37,7 +42,7 @@ const TablePagination = (props) => {
                                     return <li className="page-item" key={index}>{page + 1}</li>
                                 }
                                 return <li className="page-item" key={index}><a className="page-link" onClick={props.page}>{page + 1}</a></li>
-                            })}
+                            })} */}
                     <li className="page-item">
                         <a className="page-link" onClick={props.nextPage} disabled={!props.canNextPage}>
                             Next
