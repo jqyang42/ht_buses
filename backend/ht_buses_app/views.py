@@ -100,17 +100,12 @@ def students_detail(request):
     data["student_school_id"] = student_serializer.data["student_school_id"]
     data["first_name"] = student_serializer.data["first_name"]
     data["last_name"] = student_serializer.data["last_name"]
-<<<<<<< HEAD
     school_arr = []
     school_arr.append({'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]})
     data["school"] = school_arr[0]
     route_arr = []
     route_arr.append({'id' : route_serializer.data["id"], 'name' : route_serializer.data["name"]})
     data["route"] = route_arr[0]
-=======
-    data["school_name"] = school_serializer.data["name"]
-    data["route_name"] = route_serializer.data["name"]
->>>>>>> 0225df24089c6f9033eea947420c2c0568f2708a
     return Response(data)
 
 # Logout API
