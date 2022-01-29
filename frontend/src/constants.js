@@ -27,7 +27,7 @@ export const ROUTES_DETAIL_URL = "/routes/:id";
 
 export const SCHOOLS_CREATE_URL = "/schools/create";
 export const USERS_CREATE_URL = "/users/create";
-export const ROUTES_PLANNER_URL = "/schools/routes-planner";
+export const ROUTES_PLANNER_URL = "/schools/:id/routes-planner";
 
 export const SCHOOLS_EDIT_URL = "/schools/:id/edit";
 export const STUDENTS_EDIT_URL = "/students/:id/edit";

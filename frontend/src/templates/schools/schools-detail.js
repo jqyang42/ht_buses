@@ -41,8 +41,6 @@ class SchoolsDetail extends Component {
     }
 
     componentDidMount() {
-        this.state.id = this.props.params.id
-
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;

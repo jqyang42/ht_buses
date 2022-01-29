@@ -22,17 +22,12 @@ class UsersEdit extends Component {
         last_name: '',
         address: '',
         is_staff: '',
-        // student_first_name: '',
-        // student_last_name: '',
-        // student_school_id: '',
-        // school_name: '',
-        // route_name: ''
+        student_first_name: '',
+        student_last_name: '',
+        student_school_id: '',
         user: [],
-        // schools: [],
-        // routes: []
-        // students: [],
-        orig_first: '',
-        orig_last: ''
+        schools_dropdown: [],
+        routes_dropdown: []
     }
 
     validEmail = false;
@@ -66,25 +61,42 @@ class UsersEdit extends Component {
         this.setState({ is_staff: event.target.value });
     }
 
-    // handleStudentFirstNameChange = event => {
-    //     this.setState( { student_first_name: event.target.value })
-    // }
+    handleStudentFirstNameChange = event => {
+        this.setState( { student_first_name: event.target.value })
+    }
 
-    // handleStudentLastNameChange = event => {
-    //     this.setState({ student_last_name: event.target.value });
-    // }
+    handleStudentLastNameChange = event => {
+        this.setState({ student_last_name: event.target.value });
+    }
 
-    // handleStudentIDChange = event => {
-    //     this.setState({ student_school_id: event.target.value });
-    // }
+    handleStudentIDChange = event => {
+        this.setState({ student_school_id: event.target.value });
+    }
 
-    // handleSchoolChange = event => {
-    //     this.setState({ school: event.target.value });
-    // }
+    handleSchoolChange = event => {
+        const school_id = event.target.value
 
-    // handleRouteChange = event => {
-    //     this.setState({ route: event.target.value });
-    // }
+        console.log(school_id)
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+            .then(res => {
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                console.log(routes)
+                this.setState({ routes_dropdown: routes })
+            })
+        console.log(this.state.routes_dropdown)
+    }
 
     handleSubmit = event => {
         if (!this.validEmail) {
@@ -117,6 +129,14 @@ class UsersEdit extends Component {
         .then(res => {
         const user = res.data;
         this.setState({ user: user });
+        })
+
+        axios.get(API_DOMAIN + `schools`)
+            .then(res => {            
+            let schools = res.data.schools.map(school => {
+                return {value: school.id, display: school.name}
+            })
+            this.setState({ schools_dropdown: schools})
         })
     }
 
@@ -269,33 +289,35 @@ class UsersEdit extends Component {
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                                                    placeholder="Enter first name" value="First Name" required></input>
+                                                                                    placeholder="Enter first name" required onChange={this.handleStudentFirstNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                                                    placeholder="Enter last name" value="Last Name" required></input>
+                                                                                    placeholder="Enter last name" required onChange={this.handleStudentLastNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputID1" className="control-label pb-2">Student 1 ID</label>
-                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID" value="Student ID" required></input>
+                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID" 
+                                                                                required onChange={this.handleStudentIDChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
+                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School"
+                                                                                required onChange={this.handleSchoolChange}>
                                                                                     <option>Select a School</option>
-                                                                                    <option selected value="1">Student 1 School</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.schools_dropdown.map(school => 
+                                                                                        <option value={school.value}>{school.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
                                                                                     <option>Select a Route</option>
-                                                                                    <option selected value="1">Student 1 Route</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.routes_dropdown.map(route => 
+                                                                                        <option value={route.value}>{route.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                         </div>
