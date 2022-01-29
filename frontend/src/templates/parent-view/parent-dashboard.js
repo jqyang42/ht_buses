@@ -3,6 +3,7 @@ import { API_DOMAIN, HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { ParentDashboardTable } from "../tables/parent-dashboard-table";
 import axios from "axios";
@@ -42,6 +43,11 @@ class ParentDashboard extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
