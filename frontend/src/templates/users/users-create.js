@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO, GOOGLE_API_KEY } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import { emailRegex, passwordRegex } from "../regex/input-validation";
 
@@ -27,6 +28,7 @@ class UsersCreate extends Component {
         students: [],
         schools_dropdown: [],
         routes_dropdown: [],
+        redirect: false,
     }
 
     password2 = '';
@@ -130,13 +132,12 @@ class UsersCreate extends Component {
             is_parent: this.state.students.length !== 0
         }
 
-        console.log(user)
-
         axios.post(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -150,6 +151,10 @@ class UsersCreate extends Component {
     }
     
     render() {
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={USERS_URL}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -239,7 +244,7 @@ class UsersCreate extends Component {
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                <Autocomplete
+                                                {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -251,7 +256,8 @@ class UsersCreate extends Component {
                                                     }}
                                                     value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} />
+                                                    onChange={this.handleAddressChange} /> */}
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address"></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange} className="form-group required pb-3 w-75">
                                                 <div>
