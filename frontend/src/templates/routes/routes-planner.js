@@ -58,13 +58,6 @@ class BusRoutesPlanner extends Component {
             })        
     }
 
-    // updateDropdown() {
-    //     let routes = this.state.routes.map(route => {
-    //         return {value: route.id, display: route.name}
-    //     })
-    //     this.setState({ route_dropdown: routes })
-    // }
-
     handleRouteNameChange = event => {
         this.setState({ create_route_name: event.target.value });
     }
