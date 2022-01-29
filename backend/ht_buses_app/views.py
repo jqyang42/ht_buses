@@ -97,7 +97,8 @@ def students_detail(request):
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     data["student_school_id"] = student_serializer.data["student_school_id"]
-    data["student_name"] = student_serializer.data["first_name"] + ' ' + student_serializer.data["last_name"]
+    data["first_name"] = student_serializer.data["first_name"]
+    data["last_name"] = student_serializer.data["last_name"]
     data["school_name"] = school_serializer.data["name"]
     data["route_name"] = route_serializer.data["name"]
     return Response(data)
