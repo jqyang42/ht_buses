@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Navigate } from "react-router";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -23,7 +24,8 @@ class StudentsEdit extends Component {
         init_route_id: 0,
         schools_dropdown: [],
         routes_dropdown: [],
-        parents_dropdown: []
+        parents_dropdown: [],
+        redirect: false,
     }
 
     handleFirstNameChange = event => {
@@ -78,6 +80,7 @@ class StudentsEdit extends Component {
             console.log(res);
             console.log(res.data);
         })
+        this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -124,6 +127,11 @@ class StudentsEdit extends Component {
     }
 
     render() {
+        const { redirect } = this.state;
+        const redirect_url = SCHOOLS_URL + '/' + this.props.params.id;
+        if (redirect) {
+            return <Navigate to={redirect_url}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">

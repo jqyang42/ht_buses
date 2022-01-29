@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -16,7 +17,8 @@ class SchoolsEdit extends Component {
     state = {
         school_name: '',
         school_address: '',
-        school: []
+        school: [],
+        redirect: false,
     }
 
     handleSchoolNameChange = event => {
@@ -40,6 +42,7 @@ class SchoolsEdit extends Component {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -51,6 +54,11 @@ class SchoolsEdit extends Component {
     }
     
     render() {
+        const { redirect } = this.state;
+        const redirect_url = SCHOOLS_URL + '/' + this.props.params.id;
+        if (redirect) {
+            return <Navigate to={redirect_url}/>;  // TODO: use onclick id values
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -124,7 +132,7 @@ class SchoolsEdit extends Component {
                                         <h5>Edit School</h5>
                                     </div>
                                 </div>
-                                <form onSubmit={this.onSubmit}>
+                                <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div className="form-group required pb-3 w-75">
