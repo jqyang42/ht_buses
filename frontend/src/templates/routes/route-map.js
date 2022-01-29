@@ -30,7 +30,7 @@ class RouteMap extends Component {
     center: {},
     markers: [],
   }
-  handleClick = (e) => {
+  handleClick = (marker, e) => {
     if (this.state.clickNumber < Object.keys(MARKER_COLORS).length-1) {
       this.setState({
         clickNumber: this.state.clickNumber+1,
@@ -82,7 +82,6 @@ class RouteMap extends Component {
                     lng: lng
                   },
                   icon: this.state.icon,
-                  onClick: this.handleClick,
                   id: address.parent_id
                 }]
               }))
@@ -110,7 +109,7 @@ class RouteMap extends Component {
           >
             <Marker position={this.state.center} icon={this.state.icon} onClick={this.handleClick} />
             {this.state.markers.map((value, index) => {
-              return <Marker position={value.position} icon={value.icon} onClick={value.onClick} id={value.id} />
+              return <Marker key={index} position={value.position} icon={value.icon} onClick={this.handleClick} id={value.id} />
             })}
           </GoogleMap>
         </LoadScript>
