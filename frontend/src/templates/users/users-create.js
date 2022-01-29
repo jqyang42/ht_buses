@@ -78,15 +78,15 @@ class UsersCreate extends Component {
     }
 
     handleStudentFirstNameChange = event => {
-        this.setState( { user_student_first_name: event.target.value })
+        this.setState( { student_first_name: event.target.value })
     }
 
     handleStudentLastNameChange = event => {
-        this.setState({ user_student_last_name: event.target.value });
+        this.setState({ student_last_name: event.target.value });
     }
 
     handleStudentIDChange = event => {
-        this.setState({ user_student_id: event.target.value });
+        this.setState({ student_id: event.target.value });
     }
 
     handleSchoolChange = event => {
