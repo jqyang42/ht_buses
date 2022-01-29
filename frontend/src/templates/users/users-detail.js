@@ -23,17 +23,12 @@ class UsersDetail extends Component {
 
     componentDidMount() {
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id)
-            .then(response => {
-            const users = response.data;
-            const students = users.students
-            if (students == null) {
-                this.setState({ students: [{
-                    student_school_id: '-',
-                    name: '-',
-                    route_name: '-'
-                }]})
+            .then(res => {
+            const users = res.data;
+            if (users.students == null) {
+                this.setState({ students: []})
             } else {
-                this.setState({ students: students })
+                this.setState({ students: users.students })
             }
             this.setState({ users: users });
             })

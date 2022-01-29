@@ -46,28 +46,20 @@ class SchoolsDetail extends Component {
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
-                const students = school.students;
-                const routes = school.routes;
                 
-                if (students == null) {
-                    this.setState({ students: [{
-                        student_school_id: '-',
-                        name: '-',
-                        route_name: '-'
-                    }]}) 
+                if (school.students == null) {
+                    this.setState({ students: []}) 
                 } else {
-                    this.setState({ students: students })
+                    this.setState({ students: school.students })
                 }
 
-                if (routes == null) {
-                    this.setState({ routes: [{
-                        id: '-',
-                        name: '-',
-                        student_count: '-'
-                    }]})
+                if (school.routes == null) {
+                    this.setState({ routes: []})
                 } else {
-                    this.setState({ routes: routes })
+                    this.setState({ routes: school.routes })
                 }
+
+                console.log(school)
                 this.setState({ school: school });
             })
     }

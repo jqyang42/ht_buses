@@ -22,7 +22,7 @@ class Users extends Component {
             .then(response => {
             const users = response.data.users;
             this.setState({ users });
-            })
+        })
     }
 
     render() {
