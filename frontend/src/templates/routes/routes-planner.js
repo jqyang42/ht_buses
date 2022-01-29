@@ -189,19 +189,19 @@ class BusRoutesPlanner extends Component {
                                                                     </div>
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-school" className="control-label pb-2">School</label>
-                                                                        <select class="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
+                                                                        <select className="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
                                                                             <option>Select a School</option>
                                                                             <option selected value="1">{this.state.school.name}</option>
                                                                             <option value="2">Two</option>
                                                                             <option value="3">Three</option>
                                                                         </select>
                                                                     </div>
-                                                                    <div class="form-group">
-                                                                        <label for="route-description" class="control-label pb-2">Description</label>
-                                                                        <textarea type="description" class="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description" onChange={this.handleRouteDescriptionChange}></textarea>
+                                                                    <div className="form-group">
+                                                                        <label for="route-description" className="control-label pb-2">Description</label>
+                                                                        <textarea type="description" className="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description" onChange={this.handleRouteDescriptionChange}></textarea>
                                                                     </div>   
                                                                 </div>
-                                                                <div class="modal-footer">
+                                                                <div className="modal-footer">
                                                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                     <button type="submit" className="btn btn-primary">Create</button>
                                                                 </div>

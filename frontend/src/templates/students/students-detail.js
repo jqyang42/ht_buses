@@ -103,8 +103,8 @@ class StudentsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={STUDENTS_EDIT_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
+                                            <Link to={STUDENTS_EDIT_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit
                                                 </span>
@@ -124,7 +124,7 @@ class StudentsDetail extends Component {
                                                         <div className="modal-body">
                                                             Are you sure you want to delete this student?
                                                         </div>
-                                                        <div class="modal-footer">
+                                                        <div className="modal-footer">
                                                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                             <button type="button" className="btn btn-danger">Delete</button>
                                                         </div>

@@ -337,8 +337,8 @@ class UsersCreate extends Component {
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
-                                        <Link to={USERS_URL} class="btn btn-secondary w-auto me-3 justify-content-end" role="button">
-                                            <span class="btn-text">
+                                        <Link to={USERS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                            <span className="btn-text">
                                                 Cancel
                                             </span>
                                         </Link>
