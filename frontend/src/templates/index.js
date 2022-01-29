@@ -27,7 +27,9 @@ class Login extends Component {
     state = {
         email: '',
         password: '',
-        token: ''
+        valid_login: false,
+        token:'',
+        message:''
     }
 
     handleEmailChange = event => {
@@ -40,18 +42,19 @@ class Login extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-
         const creds = {
             email: this.state.email,
             password: this.state.password
         }
 
-        axios.post(API_DOMAIN + `login`, creds)
-            .then(res => {
-                const token = res.token;
-                console.log(res.data.message);
-                this.setState({ token })
-            })
+        axios.post(API_DOMAIN + ``, creds)
+        .then(res => {
+            this.state.token = res.token;
+            this.state.message = res.data.message;
+            this.state.valid_login = res.valid_login;
+        })
+        .catch (err => console.error(err));
+        return 
     }    
 
     render() {
@@ -99,6 +102,8 @@ class Login extends Component {
                                     </div>
                                 </div>
                             </div>
+                            {this.state.valid_login == true && "successfully logged in"}
+                            Token: {this.state.token} {this.state.password}
                         </div>
                     </div>
                 </div>

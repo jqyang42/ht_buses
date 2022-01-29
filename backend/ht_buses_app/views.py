@@ -26,21 +26,25 @@ def user_login(request):
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
+    print(password)
     try:
         user = User.objects.get(email=email)
     except BaseException as e:
         raise ValidationError({"message": 'Account does not exist'})
     if not check_password(password, user.password):
         raise ValidationError({"message": 'Incorrect password'})
-    if user: 
-        token = Token.objects.get_or_create(user=user)[0].key
-        login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
-        data["message"] = "user registered successfully"
-        data["id"] = user.id
-        data["is_staff"] = user.is_staff
-        data["email"] = user.email
-        result = {"data": data, "token":token}
-        return Response(result)
+    if user is not None: 
+        try:
+            login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
+            token = Token.objects.get_or_create(user=user)[0].key
+            data["message"] = "user logged in successfully"
+            data["id"] = user.id
+            data["is_staff"] = user.is_staff
+            data["email"] = user.email
+            result = {"data": data, "token":token, "valid_login": True}
+            return Response(result)
+        except: 
+            raise ValidationError({"message": "Could not log user in",  "token":'', "valid_login": False})
     else: 
         raise ValidationError({"message": "Account does not exist"})
 
