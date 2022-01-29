@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { HT_LOGO } from '../../constants';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
@@ -9,6 +9,7 @@ import Geocode from "react-geocode";
 import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -127,6 +128,11 @@ class BusRoutesPlanner extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 

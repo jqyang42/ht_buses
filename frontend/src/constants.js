@@ -14,6 +14,7 @@ export const API_DOMAIN = "http://localhost:8000/"
 
 // Link URLs
 export const INDEX_URL = "/";
+export const LOGIN_URL = "/login";
 
 export const SCHOOLS_URL = "/schools";
 export const STUDENTS_URL = "/students";
