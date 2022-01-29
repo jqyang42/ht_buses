@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
+import { Navigate } from "react-router";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -15,7 +16,8 @@ import { GOOGLE_API_KEY } from "../../constants";
 class SchoolsCreate extends Component {
     state = {
         school_name: '',
-        school_address: ''
+        school_address: '',
+        redirect: false,
     }
 
     handleSchoolNameChange = event => {
@@ -39,9 +41,14 @@ class SchoolsCreate extends Component {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
 
     render() {
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={SCHOOLS_URL}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -120,7 +127,7 @@ class SchoolsCreate extends Component {
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label className="control-label pb-2">Address</label>
-                                                <Autocomplete
+                                                {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         console.log(place);
@@ -129,10 +136,10 @@ class SchoolsCreate extends Component {
                                                         types: 'address'
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleSchoolAddressChange} />
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1"
+                                                    onChange={this.handleSchoolAddressChange} /> */}
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1"
                                                     placeholder="Enter school address"
-                                                    onChange={this.handleSchoolAddressChange}></input> */}
+                                                    onChange={this.handleSchoolAddressChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -15,7 +16,8 @@ import { API_DOMAIN } from "../../constants";
 class UsersPassword extends Component {
     state = {
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        redirect: false,
     }
    
     handlePasswordChange = event => {
@@ -39,8 +41,14 @@ class UsersPassword extends Component {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
     render() {
+        const { redirect } = this.state;
+        const redirect_url = USERS_URL + '/' + this.props.params.id;
+        if (redirect) {
+            return <Navigate to={redirect_url}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
