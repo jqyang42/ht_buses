@@ -28,6 +28,7 @@ urlpatterns = [
     path('users/create', views.user_create, name="users_create"),
     path('users/edit', views.user_edit, name="users_edit"),
     path('users/delete', views.user_delete, name = "delete_user"),
+    path('users/passwordedit', views.user_password_edit, name = "users_edit_password"),
     path('routeplanner', views.routeplanner, name="routeplanner"),
     path('logout', views.user_logout, name="logout"),
     path('login', views.user_login, name="login"),

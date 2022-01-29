@@ -512,7 +512,7 @@ def user_delete(request):
 
 @api_view(["PUT"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
-def user_change_password(request):
+def user_password_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)

@@ -54,6 +54,9 @@ class Login extends Component {
                 //for setting id, is_staff, etc. 
             }
             this.setState({token: data.token, message: data.message, valid_login: data.valid_login})
+            if(!this.valid_login) {
+                this.passwordField.value = '';
+            }
             console.log(res)
         })
         return 
@@ -93,7 +96,7 @@ class Login extends Component {
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputPassword1" className="pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2" name="password" id="exampleInputPassword1" 
-                                                placeholder="Password" onChange={this.handlePasswordChange}></input>
+                                                placeholder="Password" ref={el => this.passwordField = el} onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group form-check pb-4">
                                                 <input type="checkbox" className="form-check-input pb-2" id="exampleCheck1"></input>
