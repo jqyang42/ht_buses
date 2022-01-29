@@ -70,12 +70,10 @@ class UsersCreate extends Component {
     }
 
     handleLastNameChange = event => {
-        console.log(event.target.value)
         this.setState({ last_name: event.target.value });
     }
 
-    handleAddressChange = (event) => {
-        console.log(event.target.value)
+    handleAddressChange = event => {
         this.setState({ address: event.target.value });
     }
 
@@ -120,11 +118,12 @@ class UsersCreate extends Component {
         }
 
         console.log(user)
+
         axios.post(API_DOMAIN + `users/create`, user)
-        .then(res => {
-            console.log(res);
-            console.log(res.data);
-        });
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
     }
 
     // componentDidMount() {
@@ -246,8 +245,7 @@ class UsersCreate extends Component {
                                                     }}
                                                     value={this.state.address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} 
-                                                    />
+                                                    onChange={this.handleAddressChange} />
                                             </div>
                                             <div onChange={this.handleIsStaffChange} className="form-group required pb-3 w-75">
                                                 <div>
