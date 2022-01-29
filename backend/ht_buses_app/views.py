@@ -321,7 +321,7 @@ def routes_detail(request):
     students = Student.studentsTable.filter(route_id=id)
     students_serializer = StudentSerializer(students, many=True)
     data["name"] = route_serializer.data["name"]
-    data["school_name"] = school_serializer.data["name"]
+    data["school"] = {'id' : route_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
     data["description"] = route_serializer.data["description"]
     student_list = []
     for student in students_serializer.data:
