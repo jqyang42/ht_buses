@@ -96,10 +96,16 @@ def students_detail(request):
     route_serializer = RouteSerializer(route, many=False)
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
+    data["user_id"] = student_serializer.data["user_id"]
     data["student_school_id"] = student_serializer.data["student_school_id"]
-    data["student_name"] = student_serializer.data["first_name"] + ' ' + student_serializer.data["last_name"]
-    data["school_name"] = school_serializer.data["name"]
-    data["route_name"] = route_serializer.data["name"]
+    data["first_name"] = student_serializer.data["first_name"]
+    data["last_name"] = student_serializer.data["last_name"]
+    school_arr = []
+    school_arr.append({'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]})
+    data["school"] = school_arr[0]
+    route_arr = []
+    route_arr.append({'id' : route_serializer.data["id"], 'name' : route_serializer.data["name"]})
+    data["route"] = route_arr[0]
     return Response(data)
 
 # Logout API
@@ -231,7 +237,7 @@ def schools_detail(request):
         for school_route in route_serializer.data:
             route_id = school_route["id"]
             name = school_route["name"]
-            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=id))
+            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=route_id))
             route_count_serialize = StudentSerializer(route_count, many=True)
             student_count = len(route_count_serialize.data)
             route_list.append({'id' : route_id, 'name': name, 'student_count': student_count})
