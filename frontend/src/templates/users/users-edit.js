@@ -33,6 +33,8 @@ class UsersEdit extends Component {
         orig_last: ''
     }
 
+    validEmail = false;
+
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
     }
@@ -78,6 +80,10 @@ class UsersEdit extends Component {
     // }
 
     handleSubmit = event => {
+        if (!this.validEmail) {
+            return 
+        }
+
         event.preventDefault();
 
         const user = {
@@ -200,7 +206,7 @@ class UsersEdit extends Component {
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
                                                 placeholder="Enter email" required
-                                                onChange={this.handleEmailChange}></input>
+                                                onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
                                             </div>
@@ -299,6 +305,7 @@ class UsersEdit extends Component {
                                     </div>
                                 </form>
                             </div>
+                            {!this.validEmail && <p>Please enter a valid email</p>}
                         </div>
                     </div>
                 </div>

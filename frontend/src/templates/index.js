@@ -50,13 +50,12 @@ class Login extends Component {
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
-            this.setState({token: data.token, message: data.data.message, valid_login: data.valid_login})
-            // // this.state.token = res.token;
+            if (data.valid_login) {
+                //for setting id, is_staff, etc. 
+            }
+            this.setState({token: data.token, message: data.message, valid_login: data.valid_login})
             console.log(res)
-            // this.state.message = res.data.message;
-            // this.state.valid_login = res.valid_login;
         })
-        .catch (err => console.error(err));
         return 
     }    
 
@@ -105,8 +104,7 @@ class Login extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {this.state.valid_login == true && "successfully logged in"}
-                            Token: {this.state.token} - {this.state.password}
+                            {!this.state.valid_login && this.state.message}
                         </div>
                     </div>
                 </div>
