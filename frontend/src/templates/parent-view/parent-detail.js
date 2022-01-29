@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";

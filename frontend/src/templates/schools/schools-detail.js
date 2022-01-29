@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import { SchoolRoutesTable } from "../tables/school-routes-table";
 
@@ -16,7 +17,7 @@ import { API_DOMAIN } from "../../constants";
 
 class SchoolsDetail extends Component {
     state = {
-        id: 7,
+        id: '',
         school: [],
         students: [],
         routes: [],
@@ -41,7 +42,9 @@ class SchoolsDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=` + this.state.id)  // TODO: use onclick id values
+        this.state.id = this.props.params.id
+
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
                 const students = school.students;
@@ -224,4 +227,9 @@ class SchoolsDetail extends Component {
     }
 }
 
-export default SchoolsDetail;
+export default (props) => (
+    <SchoolsDetail
+        {...props}
+        params={useParams()}
+    />
+);

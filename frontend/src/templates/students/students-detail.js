@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { API_DOMAIN } from "../../constants";
 
 import { INDEX_URL } from "../../constants";
@@ -19,7 +20,7 @@ class StudentsDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(response => {
             const student = response.data;
             this.setState({ student });
@@ -163,4 +164,9 @@ class StudentsDetail extends Component {
     }
 }
 
-export default StudentsDetail;
+export default (props) => (
+    <StudentsDetail
+        {...props}
+        params={useParams()}
+    />
+);
