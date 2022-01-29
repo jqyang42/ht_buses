@@ -95,7 +95,7 @@ class RouteMap extends Component {
   }
   render() {
     return (
-      <div class='w-100 h-100'>
+      <div className='w-100 h-100'>
         <LoadScript
           googleMapsApiKey={GOOGLE_API_KEY}
         >

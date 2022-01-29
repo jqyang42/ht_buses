@@ -1,6 +1,10 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
+import { useParams } from "react-router-dom";
+import Autocomplete from "react-google-autocomplete";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -8,9 +12,144 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { USERS_DETAIL_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
+import { GOOGLE_API_KEY } from "../../constants";
+import { emailRegex } from "../regex/input-validation";
 
 class UsersEdit extends Component {
+    state = {
+        email: '',
+        first_name: '',
+        last_name: '',
+        address: '',
+        is_staff: '',
+        student_first_name: '',
+        student_last_name: '',
+        student_school_id: '',
+        user: [],
+        schools_dropdown: [],
+        routes_dropdown: [],
+        redirect: false,
+    }
+
+    validEmail = false;
+
+    emailValidation = function() {
+        return (emailRegex.test(this.emailField.value))
+    }
+
+    handleEmailChange = event => {
+        this.setState( { email: event.target.value })
+        this.validEmail = this.emailValidation() 
+    }
+
+    handlePasswordChange = event => {
+        this.setState({ password: event.target.value });
+    }
+
+    handleFirstNameChange = event => {
+        this.setState({ first_name: event.target.value });
+    }
+
+    handleLastNameChange = event => {
+        this.setState({ last_name: event.target.value });
+    }
+
+    handleAddressChange = event => {
+        this.setState({ address: event.target.value });
+    }
+
+    handleIsStaffChange = event => {
+        this.setState({ is_staff: event.target.value });
+    }
+
+    handleStudentFirstNameChange = event => {
+        this.setState( { student_first_name: event.target.value })
+    }
+
+    handleStudentLastNameChange = event => {
+        this.setState({ student_last_name: event.target.value });
+    }
+
+    handleStudentIDChange = event => {
+        this.setState({ student_school_id: event.target.value });
+    }
+
+    handleSchoolChange = event => {
+        const school_id = event.target.value
+
+        console.log(school_id)
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+            .then(res => {
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                console.log(routes)
+                this.setState({ routes_dropdown: routes })
+            })
+        console.log(this.state.routes_dropdown)
+    }
+
+    handleSubmit = event => {
+        if (!this.validEmail) {
+            return 
+        }
+
+        event.preventDefault();
+
+        const user = {
+            email: this.state.email,
+            password: this.state.password,
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            // address: this.state.address,
+            address: '2625 Solano Avenue Hollywood, FL 33024',
+            is_staff: this.state.is_staff == 'General' ? false : true,
+            is_parent: this.state.students.length != 0
+        }
+
+        console.log(user)
+
+        axios.put(API_DOMAIN + `users/edit`, user)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+        this.setState({ redirect: true });
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+        .then(res => {
+        const user = res.data;
+        this.setState({ user: user });
+        })
+
+        axios.get(API_DOMAIN + `schools`)
+            .then(res => {            
+            let schools = res.data.schools.map(school => {
+                return {value: school.id, display: school.name}
+            })
+            this.setState({ schools_dropdown: schools})
+        })
+    }
+
     render() {
+        const { redirect } = this.state;
+        const redirect_url = USERS_URL + '/' + this.props.params.id;
+                if (redirect) {
+                    return <Navigate to={redirect_url}/>;
+                }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -61,7 +200,7 @@ class UsersEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={USERS_DETAIL_URL}><h5>User Name</h5></a>
+                                            <a href={USERS_DETAIL_URL}><h5>{this.state.user.first_name} {this.state.user.last_name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -84,27 +223,41 @@ class UsersEdit extends Component {
                                         <h5>Edit User</h5>
                                     </div>
                                 </div>
-                                <form>
+                                <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                    placeholder="Enter first name" value="First Name" required></input>
+                                                    defaultValue={this.state.user.first_name} placeholder="Enter first name" required
+                                                    onChange={this.handleFirstNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                    placeholder="Enter last name" value="Last Name" required></input>
+                                                    defaultValue={this.state.user.last_name} placeholder="Enter last name" required
+                                                    onChange={this.handleLastNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
-                                                <input type="email" className="form-control pb-2" id="exampleInputEmail1" placeholder="Enter email" value="User Email" required></input>
+                                                <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
+                                                defaultValue={this.state.user.email} placeholder="Enter email" required
+                                                onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                {/* <Autocomplete
+                                                    apiKey={GOOGLE_API_KEY}
+                                                    onPlaceSelected={(place) => {
+                                                        console.log(place);
+                                                    }}
+                                                    options={{
+                                                        types: 'address'
+                                                    }}
+                                                    placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                    defaultValue={this.state.user.address} onChange={this.handleAddressChange} /> */}
                                                 <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address"></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
@@ -112,11 +265,13 @@ class UsersEdit extends Component {
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
+                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
+                                                    defaultChecked={this.state.user.is_staff} ></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="general" value="general"></input>
+                                                    <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
+                                                    defaultChecked={!this.state.user.is_staff}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
@@ -143,80 +298,35 @@ class UsersEdit extends Component {
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                                                    placeholder="Enter first name" value="First Name" required></input>
+                                                                                    placeholder="Enter first name" required onChange={this.handleStudentFirstNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                                                    placeholder="Enter last name" value="Last Name" required></input>
+                                                                                    placeholder="Enter last name" required onChange={this.handleStudentLastNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputID1" className="control-label pb-2">Student 1 ID</label>
-                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID" value="Student ID" required></input>
+                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID" 
+                                                                                required onChange={this.handleStudentIDChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
+                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School"
+                                                                                required onChange={this.handleSchoolChange}>
                                                                                     <option>Select a School</option>
-                                                                                    <option selected value="1">Student 1 School</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.schools_dropdown.map(school => 
+                                                                                        <option value={school.value}>{school.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
                                                                                     <option>Select a Route</option>
-                                                                                    <option selected value="1">Student 1 Route</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="accordion-item">
-                                                            <h2 className="accordion-header" id="headingTwo">
-                                                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                    Student 2 Name
-                                                                </button>
-                                                            </h2>
-                                                            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                                                <div className="accordion-body">
-                                                                    <div className="row">
-                                                                        <div className="col">
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for="exampleInputFirstName2" className="control-label pb-2">First Name</label>
-                                                                                <input type="name" className="form-control pb-2" id="exampleInputFirstName2"
-                                                                                    placeholder="Enter first name" value="First Name" required></input>
-                                                                            </div>
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for="exampleInputLastName2" className="control-label pb-2">Last Name</label>
-                                                                                <input type="name" className="form-control pb-2" id="exampleInputLastName2"
-                                                                                    placeholder="Enter last name" value="Last Name" required></input>
-                                                                            </div>
-                                                                            <div className="form-group pb-3">
-                                                                                <label for="exampleInputID2" className="control-label pb-2">Student ID</label>
-                                                                                <input type="id" className="form-control pb-2" id="exampleInputID2" placeholder="Enter student ID" value="Student 2 ID"></input>
-                                                                            </div>
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for="exampleInputSchool2" className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School">
-                                                                                    <option>Select a School</option>
-                                                                                    <option selected value="1">Student 2 School</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div className="form-group pb-3">
-                                                                                <label for="exampleInputRoute2" className="control-label pb-2">Route</label>
-                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
-                                                                                    <option>Select a Route</option>
-                                                                                    <option selected value="1">Student 2 Route</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.routes_dropdown.map(route => 
+                                                                                        <option value={route.value}>{route.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                         </div>
@@ -235,6 +345,7 @@ class UsersEdit extends Component {
                                     </div>
                                 </form>
                             </div>
+                            {!this.validEmail && <p>Please enter a valid email</p>}
                         </div>
                     </div>
                 </div>
@@ -243,4 +354,9 @@ class UsersEdit extends Component {
     }
 }
 
-export default UsersEdit;
+export default (props) => (
+    <UsersEdit
+        {...props}
+        params={useParams()}
+    />
+);

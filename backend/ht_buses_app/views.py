@@ -29,20 +29,20 @@ def user_login(request):
     try:
         user = User.objects.get(email=email)
     except BaseException as e:
-        raise ValidationError({"message": 'Account does not exist'})
+        return Response({"message": "An account with this email does not exist.",  "token":'', "valid_login": False})
     if not check_password(password, user.password):
-        raise ValidationError({"message": 'Incorrect password'})
-    if user: 
-        token = Token.objects.get_or_create(user=user)[0].key
+        return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
+    try:
         login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
-        data["message"] = "user registered successfully"
+        token = Token.objects.get_or_create(user=user)[0].key
         data["id"] = user.id
         data["is_staff"] = user.is_staff
         data["email"] = user.email
-        result = {"data": data, "token":token}
-        return Response(result)
-    else: 
-        raise ValidationError({"message": "Account does not exist"})
+        message = "User was logged in successfully"
+        return Response({"data": data,"mesage":message, "token":token, "valid_login": True})
+    except: 
+        return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
+   
 
 # User Creation API
 @api_view(["POST"])
@@ -96,10 +96,16 @@ def students_detail(request):
     route_serializer = RouteSerializer(route, many=False)
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
+    data["user_id"] = student_serializer.data["user_id"]
     data["student_school_id"] = student_serializer.data["student_school_id"]
-    data["student_name"] = student_serializer.data["first_name"] + ' ' + student_serializer.data["last_name"]
-    data["school_name"] = school_serializer.data["name"]
-    data["route_name"] = route_serializer.data["name"]
+    data["first_name"] = student_serializer.data["first_name"]
+    data["last_name"] = student_serializer.data["last_name"]
+    school_arr = []
+    school_arr.append({'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]})
+    data["school"] = school_arr[0]
+    route_arr = []
+    route_arr.append({'id' : route_serializer.data["id"], 'name' : route_serializer.data["name"]})
+    data["route"] = route_arr[0]
     return Response(data)
 
 # Logout API
@@ -126,17 +132,21 @@ def students(request):
     student_list = []
     for student in student_serializer.data:
         id = student["id"]
-        student_name = student["first_name"] + ' ' + student["last_name"]
+        student_school_id = student["student_school_id"]
+        first_name = student["first_name"]
+        last_name = student["last_name"]
         parent = User.objects.get(pk=student["user_id"])
         parent_serializer = UserSerializer(parent, many=False)
-        parent_name = parent_serializer.data["first_name"] + ' ' + parent_serializer.data["last_name"]
+        parent_first = parent_serializer.data["first_name"]
+        parent_last = parent_serializer.data["last_name"]
+        parent_name = {'first_name' : parent_first, 'last_name' : parent_last}
         school = School.schoolsTable.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         route = Route.routeTables.get(pk=student["route_id"])
         route_serializer = RouteSerializer(route, many=False)
         route_name = route_serializer.data["name"]
-        student_list.append({'id' : id, 'name' : student_name, 'school_name' : school_name, 'route_name' : route_name, 'parent_name' : parent_name})
+        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
     data["students"] = student_list
     return Response(data)
 
@@ -215,19 +225,20 @@ def schools_detail(request):
         for student in students_serializer.data:
             student_id = student["id"]
             student_school_id = student["student_school_id"]
-            name = student["first_name"] + ' ' + student["last_name"]
+            first_name = student["first_name"]
+            last_name = student["last_name"]
             route_id = student["route_id"]
             student_route = Route.routeTables.get(pk=route_id)
             student_route_serializer = RouteSerializer(student_route, many=False)
             route_name = student_route_serializer.data["name"]
-            student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': name, 'route_name': route_name})
+            student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
         if len(student_list) != 0:
             data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
             route_id = school_route["id"]
             name = school_route["name"]
-            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=id))
+            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=route_id))
             route_count_serialize = StudentSerializer(route_count, many=True)
             student_count = len(route_count_serialize.data)
             route_list.append({'id' : route_id, 'name': name, 'student_count': student_count})
@@ -289,12 +300,14 @@ def route_create(request):
     try:
         school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
         description = reqBody['route_description']
-        Route.routeTables.create(name=name, school_id = school, description = description)
+        route = Route.routeTables.create(name=name, school_id = school, description = description)
+        route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"
+        data["route"] = route_serializer.data
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
-        raise ValidationError({"messsage": "route could not be created"})
+        raise ValidationError({"message": "route could not be created"})
 
 @api_view(["GET"])
 @permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
@@ -314,8 +327,9 @@ def routes_detail(request):
     for student in students_serializer.data:
         student_id = student["id"]
         student_school_id = student["student_school_id"]
-        student_name = student["first_name"] + ' ' + student["last_name"]
-        student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': student_name})
+        first_name = student["first_name"]
+        last_name = student["last_name"]
+        student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': first_name, 'last_name' : last_name})
     if len(student_list) != 0:
         data["students"] = student_list
     return Response(data)
@@ -376,7 +390,7 @@ def routes(request):
         route_students = Student.studentsTable.filter(route_id=id)
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
-        routes_filter.append({'id' : id, 'name' : name, 'school': school_name, 'student_count': student_count})
+        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_name, 'student_count': student_count})
     data["routes"] = routes_filter
     return Response(data)
 
@@ -396,12 +410,13 @@ def users(request):
     users_arr = []
     for user in user_serializers.data:
         id = user["id"]
-        name = user["first_name"] + ' ' + user["last_name"]
+        first_name = user["first_name"]
+        last_name = user["last_name"]
         email = user["email"]
         is_staff = user["is_staff"]
         is_parent = user["is_parent"]
         address = user["address"]
-        users_arr.append({'id' : id, 'name' : name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address})
+        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address})
     data["users"] = users_arr
     return Response(data)
 
@@ -413,7 +428,8 @@ def users_detail(request):
     try:
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
-        data["name"] = user_serializer.data["first_name"] + ' ' + user_serializer.data["last_name"]
+        data["first_name"] = user_serializer.data["first_name"]
+        data["last_name"] = user_serializer.data["last_name"]
         data["email"] = user_serializer.data["email"]
         if user_serializer.data["is_parent"] == True:
             data["address"] = user_serializer.data["address"]
@@ -423,17 +439,18 @@ def users_detail(request):
             for student in students_serializer.data:
                 student_id = student["id"]
                 student_school_id = student["student_school_id"]
-                student_name = student["first_name"] + ' ' + student["last_name"]
+                student_first_name = student["first_name"]
+                student_last_name = student["last_name"]
                 route_student = Route.routeTables.get(pk=student["route_id"])
                 route_serializer = RouteSerializer(route_student, many=False)
                 route_name = route_serializer.data["name"]
-                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'name': student_name, 'route_name' : route_name})
+                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route_name' : route_name})
             data["students"] = student_list
         data["is_staff"] = user_serializer.data["is_staff"]
         data["is_parent"] = user_serializer.data["is_parent"]
         return Response(data)
     except BaseException as e:
-        raise ValidationError({"messsage": "User does not exist"})
+        raise ValidationError({"message": "User does not exist"})
 
 @api_view(["PUT"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
@@ -443,7 +460,7 @@ def user_edit(request):
     reqBody = json.loads(request.body)
     user_object = User.objects.get(pk = id)
     user_object.email = reqBody['email']
-    user_object.password = reqBody['password']
+    #user_object.password = reqBody['password']
     user_object.first_name = reqBody['first_name']
     user_object.last_name = reqBody['last_name']
     user_object.address = reqBody['address']
@@ -457,34 +474,34 @@ def user_edit(request):
     result = {"data" : data}
     return Response(result)
 
-def edit_or_create_student(student_info,id=None):
-    data = {}
-    first_name = student_info['first_name']
-    last_name = student_info['last_name']
-    student_school_id = student_info['student_school_id']
-    try:
-        user_id = User.objects.get(pk = id)
-        route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
-        school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
+# def edit_or_create_student(student_info,id=None):
+#     data = {}
+#     first_name = student_info['first_name']
+#     last_name = student_info['last_name']
+#     student_school_id = student_info['student_school_id']
+#     try:
+#         user_id = User.objects.get(pk = id)
+#         route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
+#         school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
 
-    except BaseException as e:
-        raise ValidationError({"messsage": "Invalid options were chosen"})
-    try: 
-        student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
-        student_object.first_name = first_name
-        student_object.last_name = last_name
-        student_object.school_id = school_id
-        student_object.student_school_id = student_school_id
-        student_object.route_id = route_id
-        student_object.save()
-        data["message"] = "student updated successfully"
-        result = {"data" : data}
-        return Response(result) 
-    except: 
-        Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
-        data["message"] = "student created successfully"
-        result = {"data" : data}
-        return Response(result) 
+#     except BaseException as e:
+#         raise ValidationError({"messsage": "Invalid options were chosen"})
+#     try: 
+#         student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
+#         student_object.first_name = first_name
+#         student_object.last_name = last_name
+#         student_object.school_id = school_id
+#         student_object.student_school_id = student_school_id
+#         student_object.route_id = route_id
+#         student_object.save()
+#         data["message"] = "student updated successfully"
+#         result = {"data" : data}
+#         return Response(result) 
+#     except: 
+#         Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+#         data["message"] = "student created successfully"
+#         result = {"data" : data}
+#         return Response(result) 
     
 @api_view(["POST"])
 @permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
@@ -492,7 +509,7 @@ def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
     try:
-        user_object =  User.objects.filter(first = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])[0]
+        user_object =  User.objects.filter(first_name = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])
         user_object.delete()
         data["message"] = "user successfully deleted"
         result = {"data" : data}
@@ -500,7 +517,25 @@ def user_delete(request):
     except:
         data["message"] = "User could not be deleted"
         result = {"data" : data}
-        return Response(result)     
+        return Response(result) 
+
+@api_view(["PUT"])
+@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+def user_password_edit(request):
+    data = {}
+    id = request.query_params["id"]
+    reqBody = json.loads(request.body)
+    try:
+        user_object = User.objects.get(pk = id)
+        user_object.password = reqBody['password']
+        user_object.save()
+        data["message"] = "User password updated successfully"
+        result = {"data" : data}
+        return Response(result) 
+    except:
+        data["message"] = "User's password could not be updated"
+        result = {"data" : data}
+        return Response(result)    
 
 @api_view(["GET"])
 @permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
@@ -526,7 +561,8 @@ def routeplanner(request):
     for student in student_serializer.data:
         student_route_arr = {}
         id = student["id"]
-        name = student["first_name"] + ' ' + student["last_name"]
+        first_name = student["first_name"]
+        last_name = student["last_name"]
         route_id = student["route_id"]
         student_route = Route.routeTables.get(pk=route_id)
         route_serializer = RouteSerializer(student_route, many=False)
@@ -537,7 +573,7 @@ def routeplanner(request):
         parent = User.objects.get(pk=parent_id)
         parent_serializer = UserSerializer(parent, many=False)
         address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"]})
-        students_arr.append({'id' : id, 'name' : name, 'parent_id' : parent_id, 'route' : student_route_arr})
+        students_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'parent_id' : parent_id, 'route' : student_route_arr})
         data["students"] = students_arr
         data["addresses"] = address_arr
     return Response(data)
@@ -549,20 +585,22 @@ def parent_dashboard(request):
     id = request.query_params["id"] # need id of parent
     user = User.objects.get(pk=id)
     user_serializer = UserSerializer(user, many=False)
-    data["name"] = user_serializer.data["first_name"] + ' ' + user_serializer.data["last_name"]
+    data["first_name"] = user_serializer.data["first_name"]
+    data["last_name"] = user_serializer.data["last_name"]
     students = Student.studentsTable.filter(user_id=id)
     student_serializer = StudentSerializer(students, many=True)
     parent_kids = []
     for student in student_serializer.data:
         id = student["id"]
-        name = student["first_name"] + ' ' + student["last_name"]
+        first_name = student["first_name"]
+        last_name = student["last_name"]
         school = School.schoolsTable.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         route = Route.routeTables.get(pk=student["route_id"])
         route_serializer = RouteSerializer(route, many=False)
         route_name = route_serializer.data["name"]
-        parent_kids.append({'id' : id, 'name' : name, 'school_name' : school_name, 'route_name' : route_name})
+        parent_kids.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
         data["students"] = parent_kids
     return Response(data)
 @api_view(["GET"])
@@ -573,6 +611,8 @@ def parent_student_detail(request):
     student = Student.studentsTable.get(pk=id)
     student_serializer = StudentSerializer(student, many=False)
     data["school_student_id"] = student_serializer.data["student_school_id"]
+    data["first_name"] = student_serializer.data["first_name"]
+    data["last_name"] = student_serializer.data["last_name"]
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     data["school_name"] = school_serializer.data["name"]

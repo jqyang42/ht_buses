@@ -70,7 +70,7 @@ class App extends Component {
 
           <Route path={SCHOOLS_URL} element={<Schools />} />
           <Route path={SCHOOLS_CREATE_URL} element={<SchoolsCreate />} />
-          <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail />} />
+          <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail  route={this.props.route} />} />
           <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
 
           <Route path={USERS_URL} element={<Users />} />

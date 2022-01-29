@@ -3,47 +3,26 @@ import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
-export function SchoolStudentsTable() {
+export function SchoolStudentsTable({ data }) {
     const columns = React.useMemo(
         () => [
             {
                 Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
+                accessor: 'student_school_id', // accessor is the "key" in the data
             },
             {
                 Header: 'Name',
-                accessor: 'name',
+                accessor: d => `${d.first_name} ${d.last_name}`,
             },
             {
                 Header: 'Bus Route',
-                accessor: 'route',
+                accessor: 'route_name',
                 disableSortBy: true
             },
         ],
         []
     )
     
-    const data = React.useMemo(
-        () => [
-            {
-                id: '0',
-                name: 'example',
-                route: 'example',
-            },
-            {
-                id: '1',
-                name: 'example',
-                route: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                route: 'example',
-            },
-        ],
-        []
-    )
-         
     const {
         getTableProps,
         getTableBodyProps,
