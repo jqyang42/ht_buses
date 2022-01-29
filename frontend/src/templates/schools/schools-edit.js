@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -34,7 +35,7 @@ class SchoolsEdit extends Component {
             school_address: this.state.school_address,
         }
 
-        axios.put(API_DOMAIN + `schools/edit?id=0`, school)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -42,7 +43,7 @@ class SchoolsEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
         .then(res => {
         const school = res.data;
         this.setState({ school: school });
@@ -155,4 +156,9 @@ class SchoolsEdit extends Component {
     }
 }
 
-export default SchoolsEdit;
+export default (props) => (
+    <SchoolsEdit
+        {...props}
+        params={useParams()}
+    />
+);

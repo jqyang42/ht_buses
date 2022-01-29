@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -35,7 +36,7 @@ class BusRoutesEdit extends Component {
             route_description: this.state.route_description,
         }
 
-        axios.put(API_DOMAIN + `routes/edit?id=0`, route)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -43,7 +44,7 @@ class BusRoutesEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
         .then(res => {
         const route = res.data;
         this.setState({ route: route });
@@ -178,4 +179,9 @@ class BusRoutesEdit extends Component {
     }
 }
 
-export default BusRoutesEdit;
+export default (props) => (
+    <BusRoutesEdit
+        {...props}
+        params={useParams()}
+    />
+);
