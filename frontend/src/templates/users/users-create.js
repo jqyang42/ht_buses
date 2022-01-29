@@ -15,22 +15,18 @@ import { API_DOMAIN } from "../../constants";
 
 class UsersCreate extends Component {
     state = {
-        user: {
-            email: '',
-            password: '',
-            first_name: '',
-            last_name: '',
-            address: '',
-            is_staff: '',
-            // student_first_name: '',
-            // student_last_name: '',
-            // student_id: '',
-            // school: '',
-            // route: ''
-        },
-        // schools: [],
-        // routes: []
-        students: []
+        user_email: '',
+        user_password: '',
+        user_first_name: '',
+        user_last_name: '',
+        user_address: '',
+        user_is_staff: '',
+        student_first_name: '',
+        student_last_name: '',
+        student_id: '',
+        students: [],
+        schools_dropdown: [],
+        routes_dropdown: [],
     }
 
     password2 = '';
@@ -81,25 +77,42 @@ class UsersCreate extends Component {
         this.setState({ is_staff: event.target.value });
     }
 
-    // handleStudentFirstNameChange = event => {
-    //     this.setState( { student_first_name: event.target.value })
-    // }
+    handleStudentFirstNameChange = event => {
+        this.setState( { student_first_name: event.target.value })
+    }
 
-    // handleStudentLastNameChange = event => {
-    //     this.setState({ student_last_name: event.target.value });
-    // }
+    handleStudentLastNameChange = event => {
+        this.setState({ student_last_name: event.target.value });
+    }
 
-    // handleStudentIDChange = event => {
-    //     this.setState({ student_id: event.target.value });
-    // }
+    handleStudentIDChange = event => {
+        this.setState({ student_id: event.target.value });
+    }
 
-    // handleSchoolChange = event => {
-    //     this.setState({ school: event.target.value });
-    // }
+    handleSchoolChange = event => {
+        const school_id = event.target.value
 
-    // handleRouteChange = event => {
-    //     this.setState({ route: event.target.value });
-    // }
+        console.log(school_id)
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+            .then(res => {
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                console.log(routes)
+                this.setState({ routes_dropdown: routes })
+            })
+        console.log(this.state.routes_dropdown)
+    }
 
     handleSubmit = event => {
         if (!this.validEmail || !this.validPassword) {
@@ -119,29 +132,22 @@ class UsersCreate extends Component {
 
         console.log(user)
 
-        axios.post(API_DOMAIN + `users/create`, user)
+        axios.put(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
     }
 
-    // componentDidMount() {
-    //     axios.get(API_DOMAIN + `schools`)
-    //         .then(res => {
-    //         const schools = res.data;
-    //         this.setState({ schools });
-    //     })
-    // }
-
-    // handleGetRoutes(id) {
-    //     axios.get(API_DOMAIN + `schools/detail?id=` + id)  // TODO: use onclick id values
-    //         .then(res => {
-    //             const school = res.data;
-    //             const routes = school.routes;
-    //             this.setState({ routes: routes });
-    //         })
-    // }
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools`)
+            .then(res => {            
+            let schools = res.data.schools.map(school => {
+                return {value: school.id, display: school.name}
+            })
+            this.setState({ schools_dropdown: schools})
+        })
+    }
     
     render() {
         return (
@@ -289,34 +295,35 @@ class UsersCreate extends Component {
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                                                    placeholder="Enter first name" required></input>
+                                                                                    placeholder="Enter first name" required onChange={this.handleStudentFirstNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                                                    placeholder="Enter last name" required></input>
+                                                                                    placeholder="Enter last name" required onChange={this.handleStudentLastNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
                                                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
-                                                                                placeholder="Enter student ID"></input>
+                                                                                placeholder="Enter student ID" onChange={this.handleStudentIDChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
+                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" 
+                                                                                onChange={this.handleSchoolChange} required>
                                                                                     <option selected>Select a School</option>
-                                                                                    <option value="1">One</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.schools_dropdown.map(school => 
+                                                                                        <option value={school.value}>{school.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
                                                                                     <option selected>Select a Route</option>
-                                                                                    <option value="1">One</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.routes_dropdown.map(route => 
+                                                                                        <option value={route.value}>{route.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                         </div>

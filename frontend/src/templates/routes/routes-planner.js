@@ -83,6 +83,7 @@ class BusRoutesPlanner extends Component {
 
         axios.post(API_DOMAIN + 'routes/create', route)
             .then(res => {
+                // TODO: UPDATE WITH RES
                 this.setState({ route_dropdown: [...this.state.routes, {
                     value: route.id,
                     display: route.route_name
@@ -215,10 +216,7 @@ class BusRoutesPlanner extends Component {
                                                     <option selected>Select a Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value}>{route.display}</option>
-                                                        )}
-                                                    {/* <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option> */}
+                                                    )}
                                                 </select>
                                             </div>
                                             <div className="col-auto">
