@@ -39,11 +39,11 @@ class UsersCreate extends Component {
     }
     
     passwordValidation = function() {
-        return (passwordRegex.test(this.state.password))
+        return (passwordRegex.test(this.state.user_password))
     }
 
     handleEmailChange = event => {
-        this.setState( {email: event.target.value})
+        this.setState( {user_email: event.target.value})
         this.validEmail = this.emailValidation() 
     }
 
@@ -51,30 +51,30 @@ class UsersCreate extends Component {
         this.password2 = '';
         this.password2Field.value = '';
         this.samePassword = false;
-        this.setState({ password: event.target.value});
+        this.setState({ user_password: event.target.value});
     }
 
     handlePassword2Change = event => {
         this.password2 = event.target.value;
-        this.setState({ password: this.password1Field.value});
-        this.samePassword  = this.state.password === this.password2
+        this.setState({ user_password: this.password1Field.value});
+        this.samePassword  = this.state.user_password === this.password2
         this.validPassword = this.passwordValidation() && this.samePassword
     }
 
     handleFirstNameChange = event => {
-        this.setState({ first_name: event.target.value });
+        this.setState({ user_first_name: event.target.value });
     }
 
     handleLastNameChange = event => {
-        this.setState({ last_name: event.target.value });
+        this.setState({ user_last_name: event.target.value });
     }
 
     handleAddressChange = event => {
-        this.setState({ address: event.target.value });
+        this.setState({ user_address: event.target.value });
     }
 
     handleIsStaffChange = event => {
-        this.setState({ is_staff: event.target.value });
+        this.setState({ user_is_staff: event.target.value });
     }
 
     handleStudentFirstNameChange = event => {
@@ -121,18 +121,18 @@ class UsersCreate extends Component {
         event.preventDefault();
 
         const user = {
-            email: this.state.email,
-            password: this.state.password,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            address: this.state.address,
-            is_staff: this.state.is_staff === 'General' ? false : true,
+            email: this.state.user_email,
+            password: this.state.user_password,
+            first_name: this.state.user_first_name,
+            last_name: this.state.user_last_name,
+            address: this.state.user_address,
+            is_staff: this.state.user_is_staff === 'General' ? false : true,
             is_parent: this.state.students.length !== 0
         }
 
         console.log(user)
 
-        axios.put(API_DOMAIN + `users/create`, user)
+        axios.post(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -243,13 +243,13 @@ class UsersCreate extends Component {
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
-                                                            address: place.formatted_address
+                                                            user_address: place.formatted_address
                                                         })
                                                     }}
                                                     options={{
                                                         types: 'address'
                                                     }}
-                                                    value={this.state.address}
+                                                    value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     onChange={this.handleAddressChange} />
                                             </div>
