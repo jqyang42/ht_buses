@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { HT_LOGO } from '../../constants';
-import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
@@ -29,7 +29,7 @@ class BusRoutesPlanner extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=` + 0)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
                 console.log(school)
@@ -96,7 +96,7 @@ class BusRoutesPlanner extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={SCHOOLS_DETAIL_URL}><h5>School Name</h5></a>
+                                            <a href={SCHOOLS_DETAIL_URL}><h5>{this.state.school.name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -115,8 +115,8 @@ class BusRoutesPlanner extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
-                                    <h5>School Name</h5>
-                                    <p>738 Illinois St., Lansdale, PA 19446</p>
+                                    <h5>{this.state.school.name}</h5>
+                                    <p>{this.state.school.address}</p>
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
@@ -192,5 +192,10 @@ class BusRoutesPlanner extends Component {
         );
     }
 }
-
-export default BusRoutesPlanner;
+export default (props) => (
+    <BusRoutesPlanner
+        {...props}
+        params={useParams()}
+    />
+);
+// export default BusRoutesPlanner;
