@@ -3,9 +3,10 @@ import ReactTable from 'react-table';
 import { useTable, useSortBy, usePagination, setSortBy, useState, setFilter, setState, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
-import { withRouter } from 'react-router';
+import { useNavigate } from 'react-router-dom';
     
 export function RoutesTable({ data }) {
+    const navigate = useNavigate();
 
     // Global filter, search from any column
 
@@ -193,7 +194,7 @@ export function RoutesTable({ data }) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} onClick={() => navigate("/schools/" + row.original.id)}>
                         {row.cells.map(cell => {
                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}

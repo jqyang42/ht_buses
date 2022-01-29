@@ -132,14 +132,14 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={USERS_PASSWORD_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
+                                            <Link to={USERS_PASSWORD_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
                                                     <i className="bi bi-key me-2"></i>
                                                     Change Password
                                                 </span>
                                             </Link>
-                                            <Link to={USERS_EDIT_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
+                                            <Link to={USERS_EDIT_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit
                                                 </span>
@@ -160,7 +160,7 @@ class UsersDetail extends Component {
                                                             <div className="modal-body">
                                                                 Are you sure you want to delete this user and all of its associated students?
                                                             </div>
-                                                            <div class="modal-footer">
+                                                            <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="submit" className="btn btn-danger">Delete</button>
                                                             </div>
