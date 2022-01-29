@@ -16,7 +16,7 @@ import { API_DOMAIN } from "../../constants";
 
 class SchoolsDetail extends Component {
     state = {
-        id: 7,
+        id: 0,
         school: [],
         students: [],
         routes: [],

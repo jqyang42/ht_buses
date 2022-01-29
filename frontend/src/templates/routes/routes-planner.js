@@ -22,9 +22,29 @@ class BusRoutesPlanner extends Component {
         this.state = {
             locations: [],
             center: {},
-            latLngs: []
+            latLngs: [],
+            school: [],
+            students: []
         }
     }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools/detail?id=` + 0)  // TODO: use onclick id values
+            .then(res => {
+                const school = res.data;
+                console.log(school)
+                console.log(school.students)
+                this.setState({ school: school });
+                
+                if (school.students == null) {
+                    this.setState({ students: []}) 
+                } else {
+                    this.setState({ students: school.students })
+                }
+            })
+    }
+    
+
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -161,7 +181,7 @@ class BusRoutesPlanner extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <SchoolStudentsTable />
+                                        <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                 </div>
                             </div>
