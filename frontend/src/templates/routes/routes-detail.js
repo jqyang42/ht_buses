@@ -18,7 +18,8 @@ import { API_DOMAIN } from "../../constants";
 class BusRoutesDetail extends Component {
     state = {
         route : [],
-        students : []
+        students : [],
+        uppercaseSchool : ''
     }
 
     componentDidMount() {
@@ -34,6 +35,8 @@ class BusRoutesDetail extends Component {
             this.setState({ route: route });
             })
     }
+
+    // uppercaseSchool = text.toUpperCase()
 
     render() {
         return (
@@ -106,7 +109,9 @@ class BusRoutesDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.route.name}</h5>
-                                        <h7>{this.state.route.school_name}</h7>
+                                        {/* <a href={"/schools/" + this.state.school.id}> */}
+                                            <h7>{this.state.route.school_name}</h7>
+                                        {/* </a> */}
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">

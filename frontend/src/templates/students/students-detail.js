@@ -153,12 +153,12 @@ class StudentsDetail extends Component {
                                         </p>
                                     </div>
                                     <div className="col-2 me-4">
-                                        <a href={SCHOOLS_DETAIL_URL}>
+                                        <a href={"/schools/" + this.state.school.id}>
                                             <p>
-                                                {this.state.route.name}
+                                                {this.state.school.name}
                                             </p>
                                         </a>
-                                        <a href={ROUTES_DETAIL_URL}>
+                                        <a href={"/routes/" + this.state.route.id}>
                                             <p>
                                                 {this.state.route.name}
                                             </p>
