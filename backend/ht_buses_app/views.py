@@ -29,20 +29,20 @@ def user_login(request):
     try:
         user = User.objects.get(email=email)
     except BaseException as e:
-        raise ValidationError({"message": 'Account does not exist'})
+        return Response({"message": "An account with this email does not exist.",  "token":'', "valid_login": False})
     if not check_password(password, user.password):
-        raise ValidationError({"message": 'Incorrect password'})
-    if user: 
-        token = Token.objects.get_or_create(user=user)[0].key
+        return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
+    try:
         login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
-        data["message"] = "user registered successfully"
+        token = Token.objects.get_or_create(user=user)[0].key
         data["id"] = user.id
         data["is_staff"] = user.is_staff
         data["email"] = user.email
-        result = {"data": data, "token":token}
-        return Response(result)
-    else: 
-        raise ValidationError({"message": "Account does not exist"})
+        message = "User was logged in successfully"
+        return Response({"data": data,"mesage":message, "token":token, "valid_login": True})
+    except: 
+        return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
+   
 
 # User Creation API
 @api_view(["POST"])
@@ -451,7 +451,7 @@ def user_edit(request):
     reqBody = json.loads(request.body)
     user_object = User.objects.get(pk = id)
     user_object.email = reqBody['email']
-    user_object.password = reqBody['password']
+    #user_object.password = reqBody['password']
     user_object.first_name = reqBody['first_name']
     user_object.last_name = reqBody['last_name']
     user_object.address = reqBody['address']
@@ -508,7 +508,25 @@ def user_delete(request):
     except:
         data["message"] = "User could not be deleted"
         result = {"data" : data}
-        return Response(result)     
+        return Response(result) 
+
+@api_view(["PUT"])
+@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+def user_password_edit(request):
+    data = {}
+    id = request.query_params["id"]
+    reqBody = json.loads(request.body)
+    try:
+        user_object = User.objects.get(pk = id)
+        user_object.password = reqBody['password']
+        user_object.save()
+        data["message"] = "User password updated successfully"
+        result = {"data" : data}
+        return Response(result) 
+    except:
+        data["message"] = "User's password could not be updated"
+        result = {"data" : data}
+        return Response(result)    
 
 @api_view(["GET"])
 @permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated

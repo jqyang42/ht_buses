@@ -47,7 +47,7 @@ class UsersCreate extends Component {
     }
 
     handleEmailChange = event => {
-        this.setState( { email: event.target.value})
+        this.setState( {email: event.target.value})
         this.validEmail = this.emailValidation() 
     }
 
@@ -59,7 +59,6 @@ class UsersCreate extends Component {
     }
 
     handlePassword2Change = event => {
-        console.log("print")
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
         this.samePassword  = this.state.password === this.password2
@@ -340,8 +339,8 @@ class UsersCreate extends Component {
                                     </div>
                                 </form>
                             </div>
-                            {!this.validEmail && <p>Your email is invalid</p>}
-                            {!this.passwordValidation() && <p>Your password is invalid</p>} 
+                            {!this.validEmail && <p>Please enter a valid email</p>}
+                            {!this.passwordValidation() && <p>Your password is too weak</p>} 
                             {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>
