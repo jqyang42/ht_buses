@@ -66,7 +66,7 @@ class StudentsEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             student_school_id: this.state.student_id,
-            school_name: this.state.route_name,
+            school_name: this.state.school_name,
             route_name: this.state.route_name,
             parent_name: this.state.parent
         }

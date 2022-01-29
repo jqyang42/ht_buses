@@ -132,7 +132,7 @@ class UsersCreate extends Component {
 
         console.log(user)
 
-        axios.post(API_DOMAIN + `users/create`, user)
+        axios.put(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
