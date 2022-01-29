@@ -21,19 +21,7 @@ class Users extends Component {
         axios.get(API_DOMAIN + `users`)
             .then(response => {
             const users = response.data.users;
-
-            if (users == null) {
-                this.setState({ users: [{
-                    id: '-',
-                    first_name: '-',
-                    last_name: '',
-                    email: '-',
-                    is_staff: '-',
-                    address: '-'
-                }]})
-            } else {
-                this.setState({ users });
-            }
+            this.setState({ users });
         })
     }
 
