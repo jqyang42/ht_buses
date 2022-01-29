@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
 
 import { INDEX_URL } from "../../constants";
@@ -112,7 +113,7 @@ class UsersEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
         this.setState({ user: user });
@@ -322,4 +323,9 @@ class UsersEdit extends Component {
     }
 }
 
-export default UsersEdit;
+export default (props) => (
+    <UsersEdit
+        {...props}
+        params={useParams()}
+    />
+);

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { API_DOMAIN } from "../../constants";
 
 import { INDEX_URL } from "../../constants";
@@ -164,4 +165,9 @@ class StudentsDetail extends Component {
     }
 }
 
-export default StudentsDetail;
+export default (props) => (
+    <StudentsDetail
+        {...props}
+        params={useParams()}
+    />
+);

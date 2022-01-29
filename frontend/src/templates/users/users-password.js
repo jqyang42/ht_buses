@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -33,7 +34,7 @@ class UsersPassword extends Component {
             route_description: this.state.route_description,
         }
 
-        axios.put(API_DOMAIN + `I NEED AN URL`, route)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -148,4 +149,9 @@ class UsersPassword extends Component {
     }
 }
 
-export default UsersPassword;
+export default (props) => (
+    <UsersPassword
+        {...props}
+        params={useParams()}
+    />
+);
