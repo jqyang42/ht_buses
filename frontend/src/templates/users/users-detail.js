@@ -3,6 +3,7 @@ import { API_DOMAIN } from '../../constants';
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { UserStudentsTable } from '../tables/user-students-table';
 
 import { INDEX_URL } from "../../constants";
@@ -15,13 +16,13 @@ import { USERS_PASSWORD_URL } from '../../constants';
 
 class UsersDetail extends Component {
     state = {
-        id: 9,
+        id: '',
         users : [],
         students: []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users/detail?id=` + this.state.id)
+        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id)
             .then(res => {
             const users = res.data;
             if (users.students == null) {
@@ -201,4 +202,9 @@ class UsersDetail extends Component {
     }
 }
 
-export default UsersDetail;
+export default (props) => (
+    <UsersDetail
+        {...props}
+        params={useParams()}
+    />
+);

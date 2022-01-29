@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { API_DOMAIN, HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -8,13 +9,12 @@ import axios from "axios";
 
 class ParentDetail extends Component {
     state = {
-        id: 0,
         student: [],
         route: []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.state.id)
+        axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id)
             .then(res => {
                 const student = res.data
                 const route = student.route
@@ -108,4 +108,9 @@ class ParentDetail extends Component {
     }
 }
 
-export default ParentDetail;
+export default (props) => (
+    <ParentDetail
+        {...props}
+        params={useParams()}
+    />
+);
