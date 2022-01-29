@@ -298,7 +298,7 @@ def route_create(request):
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
-        raise ValidationError({"messsage": "route could not be created"})
+        raise ValidationError({"message": "route could not be created"})
 
 @api_view(["GET"])
 @permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated

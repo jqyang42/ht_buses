@@ -24,7 +24,10 @@ class BusRoutesPlanner extends Component {
             center: {},
             latLngs: [],
             school: [],
-            students: []
+            students: [],
+            create_route_name: '',
+            create_school_name: '',
+            create_route_description: ''
         }
     }
 
@@ -32,8 +35,6 @@ class BusRoutesPlanner extends Component {
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
-                console.log(school)
-                console.log(school.students)
                 this.setState({ school: school });
                 
                 if (school.students == null) {
@@ -43,8 +44,36 @@ class BusRoutesPlanner extends Component {
                 }
             })
     }
-    
 
+    handleRouteNameChange = event => {
+        this.setState({ create_route_name: event.target.value });
+    }
+
+    // handleSchoolNameChange = event => {
+    //     this.setState({ create: { school_name: event.target.value }});
+    // }
+
+    handleRouteDescriptionChange = event => {
+        this.setState({ create_route_description: event.target.value });
+    }
+
+    handleRouteCreateSubmit = event => {
+        event.preventDefault();
+
+        const route = {
+            route_name: this.state.create_route_name,
+            school_name: this.state.school.name,
+            route_description: this.state.create_route_description
+        }
+        
+        console.log(route)
+
+        axios.post(API_DOMAIN + 'routes/create', route)
+            .then(res => {
+                console.log(res)
+            })
+    }
+    
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -134,31 +163,32 @@ class BusRoutesPlanner extends Component {
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Add Route</h5>
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <div className="modal-body">
-                                                                <form>
+                                                            <form onSubmit={this.handleRouteCreateSubmit}>
+                                                                <div className="modal-body">
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-name" className="control-label pb-2">Name</label>
-                                                                        <input type="name" className="form-control" id="route-name" placeholder="Enter route name"></input>
+                                                                        <input type="name" className="form-control" id="route-name" required
+                                                                        placeholder="Enter route name" onChange={this.handleRouteNameChange}></input>
                                                                     </div>
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-school" className="control-label pb-2">School</label>
                                                                         <select class="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
                                                                             <option>Select a School</option>
-                                                                            <option selected value="1">School Name (auto-filled)</option>
+                                                                            <option selected value="1">{this.state.school.name}</option>
                                                                             <option value="2">Two</option>
                                                                             <option value="3">Three</option>
                                                                         </select>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="route-description" class="control-label pb-2">Description</label>
-                                                                        <textarea type="description" class="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description"></textarea>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="button" className="btn btn-primary">Create</button>
-                                                            </div>
+                                                                        <textarea type="description" class="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description" onChange={this.handleRouteDescriptionChange}></textarea>
+                                                                    </div>   
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="submit" className="btn btn-primary">Create</button>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
