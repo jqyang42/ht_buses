@@ -242,11 +242,14 @@ class UsersCreate extends Component {
                                                 <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
-                                                        console.log(place);
+                                                        this.setState({
+                                                            address: place.formatted_address
+                                                        })
                                                     }}
                                                     options={{
                                                         types: 'address'
                                                     }}
+                                                    value={this.state.address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     onChange={this.handleAddressChange} />
                                             </div>
