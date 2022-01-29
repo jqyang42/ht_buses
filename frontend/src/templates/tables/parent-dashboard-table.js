@@ -5,7 +5,7 @@ import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
 import { withRouter } from 'react-router';
     
-export function ParentDashboardTable() {
+export function ParentDashboardTable({ data }) {
 
     // Global filter, search from any column
 
@@ -80,7 +80,8 @@ export function ParentDashboardTable() {
             },
             {
                 Header: 'Name',
-                accessor: 'name',
+                accessor: d => `${d.first_name} ${d.last_name}`,
+                id: 'name',
             },
             {
                 Header: 'School',
@@ -106,30 +107,6 @@ export function ParentDashboardTable() {
     //     }),
     //     []
     // )
-
-    const data = React.useMemo(
-        () => [
-            {
-                id: '0',
-                name: 'example',
-                school_name: 'example',
-                route_name: 'example',
-            },
-            {
-                id: '1',
-                name: 'example',
-                school_name: 'example',
-                route_name: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                school_name: 'example',
-                route_name: 'example',
-            },
-        ],
-        []
-    )
          
     const {
         getTableProps,
