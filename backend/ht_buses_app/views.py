@@ -96,11 +96,16 @@ def students_detail(request):
     route_serializer = RouteSerializer(route, many=False)
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
+    data["user_id"] = student_serializer.data["user_id"]
     data["student_school_id"] = student_serializer.data["student_school_id"]
     data["first_name"] = student_serializer.data["first_name"]
     data["last_name"] = student_serializer.data["last_name"]
-    data["school_name"] = school_serializer.data["name"]
-    data["route_name"] = route_serializer.data["name"]
+    school_arr = []
+    school_arr.append({'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]})
+    data["school"] = school_arr[0]
+    route_arr = []
+    route_arr.append({'id' : route_serializer.data["id"], 'name' : route_serializer.data["name"]})
+    data["route"] = route_arr[0]
     return Response(data)
 
 # Logout API
@@ -127,6 +132,7 @@ def students(request):
     student_list = []
     for student in student_serializer.data:
         id = student["id"]
+        student_school_id = student["student_school_id"]
         first_name = student["first_name"]
         last_name = student["last_name"]
         parent = User.objects.get(pk=student["user_id"])
@@ -140,7 +146,7 @@ def students(request):
         route = Route.routeTables.get(pk=student["route_id"])
         route_serializer = RouteSerializer(route, many=False)
         route_name = route_serializer.data["name"]
-        student_list.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
+        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
     data["students"] = student_list
     return Response(data)
 
@@ -232,7 +238,7 @@ def schools_detail(request):
         for school_route in route_serializer.data:
             route_id = school_route["id"]
             name = school_route["name"]
-            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=id))
+            route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=route_id))
             route_count_serialize = StudentSerializer(route_count, many=True)
             student_count = len(route_count_serialize.data)
             route_list.append({'id' : route_id, 'name': name, 'student_count': student_count})
@@ -294,8 +300,10 @@ def route_create(request):
     try:
         school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
         description = reqBody['route_description']
-        Route.routeTables.create(name=name, school_id = school, description = description)
+        route = Route.routeTables.create(name=name, school_id = school, description = description)
+        route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"
+        data["route"] = route_serializer.data
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
