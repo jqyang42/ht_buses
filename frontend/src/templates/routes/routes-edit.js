@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
@@ -17,7 +18,8 @@ class BusRoutesEdit extends Component {
     state = {
         route_name: '',
         route_description: '',
-        route: []
+        route: [],
+        redirect: false,
     }
 
     handleRouteNameChange = event => {
@@ -41,6 +43,7 @@ class BusRoutesEdit extends Component {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -52,6 +55,11 @@ class BusRoutesEdit extends Component {
     }
 
     render() {
+        const { redirect } = this.state;
+        const redirect_url = ROUTES_URL + '/' + this.props.params.id;
+        if (redirect) {
+            return <Navigate to={redirect_url}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
