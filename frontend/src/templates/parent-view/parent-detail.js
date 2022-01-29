@@ -1,12 +1,29 @@
 import React, { Component } from "react";
-import { HT_LOGO } from "../../constants";
+import { API_DOMAIN, HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import axios from "axios";
 
 class ParentDetail extends Component {
+    state = {
+        id: 0,
+        student: [],
+        route: []
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.state.id)
+            .then(res => {
+                const student = res.data
+                const route = student.route
+                this.setState({ student: student, route: route })
+            })
+    }
+
     render() {
+
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
@@ -40,7 +57,7 @@ class ParentDetail extends Component {
                                                 <i className="bi bi-chevron-right"></i>
                                             </div>
                                             <div className="w-auto px-2">
-                                                <h5>Student Name</h5>
+                                                <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -54,8 +71,8 @@ class ParentDetail extends Component {
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
                                         <div className="col">
-                                            <h5>Student Name</h5>
-                                            <h7>ID #27</h7>
+                                            <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
+                                            <h7>ID #{this.state.student.school_student_id}</h7>
                                         </div>
                                         <div className="col">
                                         </div>
@@ -71,13 +88,13 @@ class ParentDetail extends Component {
                                         </div>
                                         <div className="col-2 me-4">
                                             <p>
-                                                School Name
+                                                {this.state.student.school_name}
                                             </p>
                                             <p>
-                                                Route Name
+                                                {this.state.route.name}
                                             </p>
                                             <p>
-                                                Route Description
+                                                {this.state.route.description}
                                             </p>
                                         </div>
                                     </div>
