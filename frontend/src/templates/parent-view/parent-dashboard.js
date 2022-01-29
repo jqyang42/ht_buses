@@ -1,12 +1,29 @@
 import React, { Component } from "react";
-import { HT_LOGO } from "../../constants";
+import { API_DOMAIN, HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { ParentDashboardTable } from "../tables/parent-dashboard-table";
+import axios from "axios";
 
 class ParentDashboard extends Component {
+    state = {
+        id: 0,
+        parent: [],
+        students: [],
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + 'dashboard?id=' + this.state.id)
+            .then(res => {
+            const parent = res.data;
+            const students = parent.students;
+            console.log(students)
+            this.setState({ parent: parent, students: students})
+        })
+    }
+
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -43,7 +60,7 @@ class ParentDashboard extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
-                                    <ParentDashboardTable />
+                                    <ParentDashboardTable data={this.state.students}/>
                                 </div>
                             </div>
                         </div>
