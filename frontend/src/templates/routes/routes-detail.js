@@ -23,8 +23,13 @@ class BusRoutesDetail extends Component {
         axios.get(API_DOMAIN + `routes/detail?id=0`)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
-            const students = route.students;
-            this.setState({ route: route, students: students });
+            
+            if (route.students == null) {
+                this.setState({ students: [] })
+            } else {
+                this.setState({ students: route.students })
+            }
+            this.setState({ route: route });
             })
     }
 

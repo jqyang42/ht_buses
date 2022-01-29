@@ -170,7 +170,7 @@ class UsersEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={USERS_DETAIL_URL}><h5>{this.state.user.name}</h5></a>
+                                            <a href={USERS_DETAIL_URL}><h5>{this.state.user.first_name} {this.state.user.last_name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -199,19 +199,19 @@ class UsersEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                    placeholder="Enter first name" required
+                                                    defaultValue={this.state.user.first_name} placeholder="Enter first name" required
                                                     onChange={this.handleFirstNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                    placeholder="Enter last name" required
+                                                    defaultValue={this.state.user.last_name} placeholder="Enter last name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
-                                                placeholder="Enter email" required
+                                                defaultValue={this.state.user.email} placeholder="Enter email" required
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
@@ -227,7 +227,7 @@ class UsersEdit extends Component {
                                                         types: 'address'
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} />
+                                                    defaultValue={this.state.user.address} onChange={this.handleAddressChange} />
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address"></input> */}
                                             </div>
                                             <div className="form-group required pb-3 w-75">
@@ -235,11 +235,13 @@ class UsersEdit extends Component {
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
+                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
+                                                    defaultChecked={this.state.user.is_staff} ></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="general" value="general"></input>
+                                                    <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
+                                                    defaultChecked={!this.state.user.is_staff}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>

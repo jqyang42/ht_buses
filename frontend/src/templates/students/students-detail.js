@@ -15,11 +15,12 @@ import { STUDENTS_EDIT_URL } from "../../constants";
 
 class StudentsDetail extends Component {
     state = {
+        id: 0,
         student : []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `students/detail?id=` + this.state.id)  // TODO: use onclick id values
             .then(response => {
             const student = response.data;
             this.setState({ student });
