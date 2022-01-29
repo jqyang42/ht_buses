@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -8,8 +10,46 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_DETAIL_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class SchoolsEdit extends Component {
+    state = {
+        school_name: '',
+        school_address: '',
+        school: []
+    }
+
+    handleSchoolNameChange = event => {
+        this.setState({ school_name: event.target.value });
+    }
+
+    handleSchoolAddressChange = event => {
+        this.setState({ school_address: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const school = {
+            school_name: this.state.school_name,
+            school_address: this.state.school_address,
+        }
+
+        axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school)  // TODO: use onclick id value
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+        .then(res => {
+        const school = res.data;
+        this.setState({ school: school });
+        })
+    }
+    
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -61,7 +101,7 @@ class SchoolsEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={SCHOOLS_DETAIL_URL}><h5>School Name</h5></a>
+                                            <a href={SCHOOLS_DETAIL_URL}><h5>{this.state.school.name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -84,17 +124,20 @@ class SchoolsEdit extends Component {
                                         <h5>Edit School</h5>
                                     </div>
                                 </div>
-                                <form>
+                                <form onSubmit={this.onSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputName1" className="control-label pb-2">Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                    value="School Name" placeholder="Enter school name" required></input>
+                                                    defaultValue={this.state.school.name} placeholder="Enter school name" required
+                                                    onChange={this.handleSchoolNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" value="School Address" placeholder="Enter school address"></input>
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                defaultValue={this.state.school.address} placeholder="Enter school address"
+                                                onChange={this.handleSchoolAddressChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
@@ -113,4 +156,9 @@ class SchoolsEdit extends Component {
     }
 }
 
-export default SchoolsEdit;
+export default (props) => (
+    <SchoolsEdit
+        {...props}
+        params={useParams()}
+    />
+);

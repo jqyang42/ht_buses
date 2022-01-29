@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { API_DOMAIN } from "../../constants";
 
 import { INDEX_URL } from "../../constants";
@@ -15,11 +16,12 @@ import { STUDENTS_EDIT_URL } from "../../constants";
 
 class StudentsDetail extends Component {
     state = {
+        id: 0,
         student : []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `students/detail?id=` + this.state.id)  // TODO: use onclick id values
             .then(response => {
             const student = response.data;
             this.setState({ student });
@@ -77,7 +79,7 @@ class StudentsDetail extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
+                                            <h5>{this.state.student.student_name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +94,7 @@ class StudentsDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                             <h5>
-                                                {this.state.student.first_name} {this.state.student.last_name}
+                                                {this.state.student.student_name}
                                             </h5>
                                             <h7>
                                                 ID #{this.state.student.student_school_id}
@@ -144,12 +146,12 @@ class StudentsDetail extends Component {
                                     <div className="col-2 me-4">
                                         <a href={SCHOOLS_DETAIL_URL}>
                                             <p>
-                                                {this.state.student.school}
+                                                {this.state.student.school_name}
                                             </p>
                                         </a>
                                         <a href={ROUTES_DETAIL_URL}>
                                             <p>
-                                                {this.state.student.route}
+                                                {this.state.student.route_name}
                                             </p>
                                         </a>
                                     </div>
@@ -163,4 +165,9 @@ class StudentsDetail extends Component {
     }
 }
 
-export default StudentsDetail;
+export default (props) => (
+    <StudentsDetail
+        {...props}
+        params={useParams()}
+    />
+);

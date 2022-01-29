@@ -22,8 +22,15 @@ class UsersCreate extends Component {
             last_name: '',
             address: '',
             is_staff: '',
+            // student_first_name: '',
+            // student_last_name: '',
+            // student_id: '',
+            // school: '',
+            // route: ''
         },
-        students: [],
+        // schools: [],
+        // routes: []
+        students: []
     }
 
     password2 = '';
@@ -40,7 +47,7 @@ class UsersCreate extends Component {
     }
 
     handleEmailChange = event => {
-        this.setState( { email: event.target.value})
+        this.setState( {email: event.target.value})
         this.validEmail = this.emailValidation() 
     }
 
@@ -52,10 +59,9 @@ class UsersCreate extends Component {
     }
 
     handlePassword2Change = event => {
-        console.log("print")
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
-        this.samePassword  = this.state.password == this.password2
+        this.samePassword  = this.state.password === this.password2
         this.validPassword = this.passwordValidation() && this.samePassword
     }
 
@@ -75,6 +81,26 @@ class UsersCreate extends Component {
         this.setState({ is_staff: event.target.value });
     }
 
+    // handleStudentFirstNameChange = event => {
+    //     this.setState( { student_first_name: event.target.value })
+    // }
+
+    // handleStudentLastNameChange = event => {
+    //     this.setState({ student_last_name: event.target.value });
+    // }
+
+    // handleStudentIDChange = event => {
+    //     this.setState({ student_id: event.target.value });
+    // }
+
+    // handleSchoolChange = event => {
+    //     this.setState({ school: event.target.value });
+    // }
+
+    // handleRouteChange = event => {
+    //     this.setState({ route: event.target.value });
+    // }
+
     handleSubmit = event => {
         if (!this.validEmail || !this.validPassword) {
             return 
@@ -87,8 +113,8 @@ class UsersCreate extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff == 'General' ? false : true,
-            is_parent: this.state.students.length != 0
+            is_staff: this.state.is_staff === 'General' ? false : true,
+            is_parent: this.state.students.length !== 0
         }
 
         console.log(user)
@@ -99,6 +125,23 @@ class UsersCreate extends Component {
                 console.log(res.data);
             })
     }
+
+    // componentDidMount() {
+    //     axios.get(API_DOMAIN + `schools`)
+    //         .then(res => {
+    //         const schools = res.data;
+    //         this.setState({ schools });
+    //     })
+    // }
+
+    // handleGetRoutes(id) {
+    //     axios.get(API_DOMAIN + `schools/detail?id=` + id)  // TODO: use onclick id values
+    //         .then(res => {
+    //             const school = res.data;
+    //             const routes = school.routes;
+    //             this.setState({ routes: routes });
+    //         })
+    // }
     
     render() {
         return (
@@ -168,7 +211,7 @@ class UsersCreate extends Component {
                                         <h5>Create New User</h5>
                                     </div>
                                 </div>
-                                <form onSubmit={this.handleSubmit} novalidate>
+                                <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div className="form-group required pb-3 w-75">
@@ -255,7 +298,8 @@ class UsersCreate extends Component {
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" placeholder="Enter student ID"></input>
+                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" 
+                                                                                placeholder="Enter student ID"></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
@@ -269,53 +313,6 @@ class UsersCreate extends Component {
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
-                                                                                    <option selected>Select a Route</option>
-                                                                                    <option value="1">One</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
-                                                                                </select>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="accordion-item">
-                                                            <h2 className="accordion-header" id="headingTwo">
-                                                                <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                                    Student 2
-                                                                </button>
-                                                            </h2>
-                                                            <div id="collapseTwo" className="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                                                <div className="accordion-body">
-                                                                    <div className="row">
-                                                                        <div className="col">
-                                                                        <div className="form-group required pb-3">
-                                                                                <label for="exampleInputFirstName2" className="control-label pb-2">First Name</label>
-                                                                                <input type="name" className="form-control pb-2" id="exampleInputFirstName2"
-                                                                                    placeholder="Enter first name" required></input>
-                                                                            </div>
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for="exampleInputLastName2" className="control-label pb-2">Last Name</label>
-                                                                                <input type="name" className="form-control pb-2" id="exampleInputLastName2"
-                                                                                    placeholder="Enter last name" required></input>
-                                                                            </div>
-                                                                            <div className="form-group pb-3">
-                                                                                <label for="exampleInputID2" className="control-label pb-2">Student ID</label>
-                                                                                <input type="id" className="form-control pb-2" id="exampleInputID2" placeholder="Enter student ID"></input>
-                                                                            </div>
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for="exampleInputSchool2" className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School">
-                                                                                    <option selected>Select a School</option>
-                                                                                    <option value="1">One</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
-                                                                                </select>
-                                                                            </div>
-                                                                            <div className="form-group pb-3">
-                                                                                <label for="exampleInputRoute2" className="control-label pb-2">Route</label>
-                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
                                                                                     <option selected>Select a Route</option>
                                                                                     <option value="1">One</option>
                                                                                     <option value="2">Two</option>
@@ -342,8 +339,8 @@ class UsersCreate extends Component {
                                     </div>
                                 </form>
                             </div>
-                            {!this.validEmail && <p>Your email is invalid</p>}
-                            {!this.passwordValidation() && <p>Your password is invalid</p>} 
+                            {!this.validEmail && <p>Please enter a valid email</p>}
+                            {!this.passwordValidation() && <p>Your password is too weak</p>} 
                             {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>

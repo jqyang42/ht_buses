@@ -1,6 +1,8 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -8,8 +10,72 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { STUDENTS_DETAIL_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class StudentsEdit extends Component {
+    state = {
+        first_name: '',
+        last_name: '',
+        student_id: '',
+        // school: '',
+        // route: ''
+        student: [],
+        // parent: [],
+    }
+
+    handleFirstNameChange = event => {
+        this.setState({ first_name: event.target.value });
+    }
+
+    handleLastNameChange = event => {
+        this.setState({ last_name: event.target.value });
+    }
+
+    handleStudentIDChange = event => {
+        this.setState({ student_id: event.target.value });
+    }
+
+    // handleSchoolChange = event => {
+    //     this.setState({ school: event.target.value });
+    // }
+
+    // handleRouteChange = event => {
+    //     this.setState({ route: event.target.value });
+    // }
+
+    // handleParentChange = event => {
+    //     this.setState({ parent: event.target.value })
+    // }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const user = {
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            student_school_id: this.state.student_id,
+            // school_name: this.state.route_name,
+            // route_name: this.state.route_name,
+            // parent: this.state.parent
+        }
+
+        console.log(user)
+
+        axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, user)
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+        .then(res => {
+        const student = res.data;
+        this.setState({ student: student });
+        })
+    }
+
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -61,7 +127,7 @@ class StudentsEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={STUDENTS_DETAIL_URL}><h5>Student Name</h5></a>
+                                            <a href={STUDENTS_DETAIL_URL}><h5>{this.state.student.student_name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -84,22 +150,26 @@ class StudentsEdit extends Component {
                                         <h5>Edit Student</h5>
                                     </div>
                                 </div>
-                                <form>
+                                <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                    value="First Name" placeholder="Enter first name" required></input>
+                                                    value="First Name" placeholder="Enter first name" required
+                                                    onChange={this.handleFirstNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                    value="Last Name" placeholder="Enter full name" required></input>
+                                                    value="Last Name" placeholder="Enter full name" required
+                                                    onChange={this.handleLastNameChange}></input>
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                <input type="id" className="form-control pb-2" id="exampleInputID1" value="Student ID" placeholder="Enter student ID"></input>
+                                                <input type="id" className="form-control pb-2" id="exampleInputID1" 
+                                                value="Student ID" placeholder="Enter student ID"
+                                                onChange={this.handleStudentIDChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
@@ -145,4 +215,9 @@ class StudentsEdit extends Component {
     }
 }
 
-export default StudentsEdit;
+export default (props) => (
+    <StudentsEdit
+        {...props}
+        params={useParams()}
+    />
+);

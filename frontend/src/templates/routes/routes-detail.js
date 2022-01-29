@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
 import RouteMap from './route-map';
 
@@ -20,11 +21,16 @@ class BusRoutesDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
-            const students = route.students;
-            this.setState({ route: route, students: students });
+            
+            if (route.students == null) {
+                this.setState({ students: [] })
+            } else {
+                this.setState({ students: route.students })
+            }
+            this.setState({ route: route });
             })
     }
 
@@ -172,4 +178,9 @@ class BusRoutesDetail extends Component {
     }
 }
 
-export default BusRoutesDetail;
+export default (props) => (
+    <BusRoutesDetail
+        {...props}
+        params={useParams()}
+    />
+);

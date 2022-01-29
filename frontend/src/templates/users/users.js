@@ -18,11 +18,11 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users?page=1`)
+        axios.get(API_DOMAIN + `users`)
             .then(response => {
             const users = response.data.users;
             this.setState({ users });
-            })
+        })
     }
 
     render() {
@@ -78,28 +78,15 @@ class Users extends Component {
                         </div>
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
-                                <div className="row">
-                                    <div className="col">
-                                        <div className="input-group w-50">
-                                            <input id="search-input" type="search" placeholder="Search" id="form1" className="form-control"></input>
-                                            <button id="search-button" type="button" className="btn btn-primary align-items-center pb-2">
-                                                <i className="bi bi-search"></i>
-                                            </button>
-                                        </div>
+                                <div>
+                                    <div className="row d-inline-flex float-end">
+                                        <Link to={USERS_CREATE_URL} class="btn btn-primary float-end w-auto me-3" role="button">
+                                            <span class="btn-text">
+                                                <i className="bi bi-person-plus-fill me-2"></i>
+                                                Create
+                                            </span>
+                                        </Link>
                                     </div>
-                                    <div className="col">
-                                        <div className="row d-inline-flex float-end">
-                                            <Link to={USERS_CREATE_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
-                                                    <i className="bi bi-person-plus-fill me-2"></i>
-                                                    Create
-                                                </span>
-                                            </Link>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-4">
                                     <UsersTable data={this.state.users} />
                                 </div>
                             </div>

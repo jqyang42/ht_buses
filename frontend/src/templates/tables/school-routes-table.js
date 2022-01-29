@@ -3,7 +3,7 @@ import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
     
-export function SchoolRoutesTable() {
+export function SchoolRoutesTable({ data }) {
     const columns = React.useMemo(
         () => [
             {
@@ -22,28 +22,7 @@ export function SchoolRoutesTable() {
         ],
         []
     )
-    
-    const data = React.useMemo(
-        () => [
-            {
-                id: '0',
-                name: 'example',
-                student_count: 'example',
-            },
-            {
-                id: '1',
-                name: 'example',
-                student_count: 'example',
-            },
-            {
-                id: '2',
-                name: 'example',
-                student_count: 'example',
-            },
-        ],
-        []
-    )
-    
+       
     const {
         getTableProps,
         getTableBodyProps,

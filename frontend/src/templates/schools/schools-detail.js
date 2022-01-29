@@ -1,6 +1,8 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import { SchoolRoutesTable } from "../tables/school-routes-table";
 
@@ -11,8 +13,57 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { ROUTES_PLANNER_URL } from "../../constants";
 import { SCHOOLS_EDIT_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class SchoolsDetail extends Component {
+    state = {
+        school: [],
+        students: [],
+        routes: [],
+        delete_school: ''
+    }
+
+    handleDeleteSchool = event => {
+        this.setState({ delete_school: event.target.value })
+    }
+
+    handleDeleteSubmit = event => {
+        if (this.state.delete_school == this.state.school.name) {
+            event.preventDefault();
+            const deleted_school = {
+                school_name: this.state.delete_school
+            }
+            axios.post(API_DOMAIN + `schools/delete`, deleted_school)
+                .then(res => {
+                    console.log(res)
+                })
+        }
+    }
+
+    componentDidMount() {
+        this.state.id = this.props.params.id
+
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+            .then(res => {
+                const school = res.data;
+                
+                if (school.students == null) {
+                    this.setState({ students: []}) 
+                } else {
+                    this.setState({ students: school.students })
+                }
+
+                if (school.routes == null) {
+                    this.setState({ routes: []})
+                } else {
+                    this.setState({ routes: school.routes })
+                }
+
+                console.log(school)
+                this.setState({ school: school });
+            })
+    }
+
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -64,7 +115,7 @@ class SchoolsDetail extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <h5>School Name</h5>
+                                            <h5>{this.state.school.name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -78,8 +129,8 @@ class SchoolsDetail extends Component {
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
-                                        <h5>School Name</h5>
-                                        <p>738 Illinois St., Lansdale, PA 19446</p>
+                                        <h5>{this.state.school.name}</h5>
+                                        <p>{this.state.school.address}</p>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
@@ -95,7 +146,7 @@ class SchoolsDetail extends Component {
                                                     Edit
                                                 </span>
                                             </Link>
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                 <i className="bi bi-trash me-2"></i>
                                                 Delete
                                             </button>
@@ -107,19 +158,20 @@ class SchoolsDetail extends Component {
                                                             <h5 className="modal-title" id="staticBackdropLabel">Delete School</h5>
                                                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
-                                                        <div className="modal-body">
-                                                            <form>
-                                                                <p>Are you sure you want to delete this school and all of its associated students and routes?</p>
-                                                                <div className="form-group required">
-                                                                    <label for="school-name" className="control-label pb-2">Type the school name to confirm.</label>
-                                                                    <input type="text" className="form-control" id="school-name" placeholder="Enter school name"></input>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
-                                                        </div>
+                                                        <form onSubmit={this.handleDeleteSubmit}>
+                                                            <div className="modal-body">
+                                                                    <p>Are you sure you want to delete this school and all of its associated students and routes?</p>
+                                                                    <div className="form-group required">
+                                                                        <label for="school-name" className="control-label pb-2">Type the school name to confirm.</label>
+                                                                        <input type="text" className="form-control" id="school-name" placeholder="Enter school name"
+                                                                        onChange={this.handleDeleteSchool}></input>
+                                                                    </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -129,32 +181,11 @@ class SchoolsDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col me-4">
                                         <h7>STUDENTS</h7>
-                                        <SchoolStudentsTable />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th>Bus Route</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
+                                        <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        <SchoolRoutesTable />
+                                        <SchoolRoutesTable data={this.state.routes}/>
                                         {/* <table className="table table-striped table-hover">
                                             <thead>
                                                 <tr>
@@ -187,4 +218,9 @@ class SchoolsDetail extends Component {
     }
 }
 
-export default SchoolsDetail;
+export default (props) => (
+    <SchoolsDetail
+        {...props}
+        params={useParams()}
+    />
+);

@@ -1,6 +1,8 @@
+import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { HT_LOGO } from "../constants";
+import PropTypes from 'prop-types';
 
 import { INDEX_URL } from "../constants";
 import { SCHOOLS_URL } from "../constants";
@@ -18,9 +20,48 @@ import { SCHOOLS_EDIT_URL } from "../constants";
 import { STUDENTS_EDIT_URL } from "../constants";
 import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
+import { API_DOMAIN } from "../constants";
 
 //class component
 class Login extends Component {
+    state = {
+        email: '',
+        password: '',
+        valid_login: false,
+        token:'',
+        message:''
+    }
+
+    handleEmailChange = event => {
+        this.setState({ email: event.target.value });
+    }
+
+    handlePasswordChange = event => {
+        this.setState({ password: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        const creds = {
+            email: this.state.email,
+            password: this.state.password
+        }
+
+        axios.post(API_DOMAIN + ``, creds)
+        .then(res => {
+            const data = res.data
+            if (data.valid_login) {
+                //for setting id, is_staff, etc. 
+            }
+            this.setState({token: data.token, message: data.message, valid_login: data.valid_login})
+            if(!this.valid_login) {
+                this.passwordField.value = '';
+            }
+            console.log(res)
+        })
+        return 
+    }    
+
     render() {
         return (
             <body className="overflow-hidden">
@@ -45,16 +86,17 @@ class Login extends Component {
                                 <div className="row">
                                     <div className="col-6">
                                         <h2 className="pb-4">Log In</h2>
-                                        <form action="" method="post">
+                                        <form action="" method="post" onSubmit={this.handleSubmit}>
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputEmail1" className="pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" name="email" id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                    placeholder="Enter email"></input>
+                                                    placeholder="Enter email" onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone else.</small>
                                             </div>
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputPassword1" className="pb-2">Password</label>
-                                                <input type="password" className="form-control pb-2" name="password" id="exampleInputPassword1" placeholder="Password"></input>
+                                                <input type="password" className="form-control pb-2" name="password" id="exampleInputPassword1" 
+                                                placeholder="Password" ref={el => this.passwordField = el} onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group form-check pb-4">
                                                 <input type="checkbox" className="form-check-input pb-2" id="exampleCheck1"></input>
@@ -65,6 +107,7 @@ class Login extends Component {
                                     </div>
                                 </div>
                             </div>
+                            {!this.state.valid_login && this.state.message}
                         </div>
                     </div>
                 </div>

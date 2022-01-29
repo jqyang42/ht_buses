@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -8,8 +10,36 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { USERS_DETAIL_URL } from "../../constants";
+import { API_DOMAIN } from "../../constants";
 
 class UsersPassword extends Component {
+    state = {
+        password: '',
+        confirm_password: ''
+    }
+   
+    handlePasswordChange = event => {
+        this.setState({ password: event.target.value });
+    }
+
+    handleConfirmPasswordChange = event => {
+        this.setState({ confirm_password: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+
+        const route = {
+            route_name: this.state.route_name,
+            route_description: this.state.route_description,
+        }
+
+        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
+            .then(res => {
+                console.log(res);
+                console.log(res.data);
+            })
+    }
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -84,7 +114,7 @@ class UsersPassword extends Component {
                                         <h5>Change Password</h5>
                                     </div>
                                 </div>
-                                <form>
+                                <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             {/* <div className="form-group required pb-3 w-75">
@@ -93,11 +123,13 @@ class UsersPassword extends Component {
                                             </div> */}
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
-                                                <input type="password" className="form-control pb-2" id="exampleInputPassword2" placeholder="Enter new password" required></input>
+                                                <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
+                                                placeholder="Enter new password" required onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group required pb-4 w-75">
                                                 <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
-                                                <input type="password" className="form-control pb-2" id="exampleInputPassword3" placeholder="Re-enter password" required></input>
+                                                <input type="password" className="form-control pb-2" id="exampleInputPassword3" 
+                                                placeholder="Re-enter password" required onChange={this.handleConfirmPasswordChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
@@ -117,4 +149,9 @@ class UsersPassword extends Component {
     }
 }
 
-export default UsersPassword;
+export default (props) => (
+    <UsersPassword
+        {...props}
+        params={useParams()}
+    />
+);

@@ -3,6 +3,7 @@ import { API_DOMAIN } from '../../constants';
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { UserStudentsTable } from '../tables/user-students-table';
 
 import { INDEX_URL } from "../../constants";
@@ -15,17 +16,49 @@ import { USERS_PASSWORD_URL } from '../../constants';
 
 class UsersDetail extends Component {
     state = {
-        users : []
+        id: '',
+        users : [],
+        students: []
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users/detail?id=2`)
-            .then(response => {
-            const users = response.data;
-            this.setState({ users });
+        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id)
+            .then(res => {
+            const users = res.data;
+            if (users.students == null) {
+                this.setState({ students: []})
+            } else {
+                this.setState({ students: users.students })
+            }
+            this.setState({ users: users });
             })
     }
+
+    handleDeleteSubmit = event => {
+        event.preventDefault();
+
+        const deleted_user = {
+            first_name: this.state.users.first_name,
+            last_name: this.state.users.last_name,
+            email: this.state.users.email
+        }
+
+        axios.post(API_DOMAIN + `users/delete`, deleted_user)
+            .then(res => {
+                console.log(res)
+            })
+        
+    }
+
     render() {
+        let UserAddress
+        
+        if (this.state.users.address != null) {
+            UserAddress = this.state.users.address
+        } else {
+            UserAddress = `-`
+        }
+
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -119,17 +152,19 @@ class UsersDetail extends Component {
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title" id="staticBackdropLabel">Delete User</h5>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            Are you sure you want to delete this user and all of its associated students?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
-                                                        </div>
+                                                        <form onSubmit={this.handleDeleteSubmit}>
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title" id="staticBackdropLabel">Delete User</h5>
+                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                Are you sure you want to delete this user and all of its associated students?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -144,46 +179,19 @@ class UsersDetail extends Component {
                                         <p className="gray-600">
                                             Address
                                         </p>
-                                        <p className="gray-600">
-                                            Password
-                                        </p>
                                     </div>
                                     <div className="col-2 me-4">
                                         <p>
-                                            Email Address
+                                            {this.state.users.email}
                                         </p>
                                         <p>
-                                            Home Address
-                                        </p>
-                                        <p>
-                                            ask;dlfahsf;alks
+                                            {UserAddress}
                                         </p>
                                     </div>
                                 </div>
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable />
-                                    {/* <table className="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Bus Route</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                                <td>Example</td>
-                                            </tr>
-                                        </tbody>
-                                    </table> */}
+                                    <UserStudentsTable data={this.state.students}/>   
                                 </div>
                             </div>
                         </div>
@@ -194,4 +202,9 @@ class UsersDetail extends Component {
     }
 }
 
-export default UsersDetail;
+export default (props) => (
+    <UsersDetail
+        {...props}
+        params={useParams()}
+    />
+);
