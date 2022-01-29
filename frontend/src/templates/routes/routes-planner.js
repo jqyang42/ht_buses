@@ -25,9 +25,11 @@ class BusRoutesPlanner extends Component {
             latLngs: [],
             school: [],
             students: [],
+            routes: [],
             create_route_name: '',
             create_school_name: '',
-            create_route_description: ''
+            create_route_description: '',
+            route_dropdown: []
         }
     }
 
@@ -42,8 +44,26 @@ class BusRoutesPlanner extends Component {
                 } else {
                     this.setState({ students: school.students })
                 }
-            })
+
+                if (school.routes == null) {
+                    this.setState({ routes: []})
+                } else {
+                    this.setState({ routes: school.routes }, () => {
+                        let routes = this.state.routes.map(route => {
+                            return {value: route.id, display: route.name}
+                        })
+                        this.setState({ route_dropdown: routes })
+                    })
+                }                                
+            })        
     }
+
+    // updateDropdown() {
+    //     let routes = this.state.routes.map(route => {
+    //         return {value: route.id, display: route.name}
+    //     })
+    //     this.setState({ route_dropdown: routes })
+    // }
 
     handleRouteNameChange = event => {
         this.setState({ create_route_name: event.target.value });
@@ -70,7 +90,10 @@ class BusRoutesPlanner extends Component {
 
         axios.post(API_DOMAIN + 'routes/create', route)
             .then(res => {
-                console.log(res)
+                this.setState({ route_dropdown: [...this.state.routes, {
+                    value: route.id,
+                    display: route.route_name
+                }]}, this.updateDropdown)
             })
     }
     
@@ -197,9 +220,12 @@ class BusRoutesPlanner extends Component {
                                             <div className="col justify-content-end">
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
                                                     <option selected>Select a Route</option>
-                                                    <option value="1">One</option>
+                                                    {this.state.route_dropdown.map(route => 
+                                                        <option value={route.value}>{route.display}</option>
+                                                        )}
+                                                    {/* <option value="1">One</option>
                                                     <option value="2">Two</option>
-                                                    <option value="3">Three</option>
+                                                    <option value="3">Three</option> */}
                                                 </select>
                                             </div>
                                             <div className="col-auto">
@@ -222,6 +248,15 @@ class BusRoutesPlanner extends Component {
         );
     }
 }
+
+function RouteSelectDropdown() { 
+    let routes = this.state.routes(route => {
+        return {value: route.id, display: route.name}
+    })
+    console.log(routes)
+    this.setState({ route_dropdown: routes })
+}
+
 export default (props) => (
     <BusRoutesPlanner
         {...props}
