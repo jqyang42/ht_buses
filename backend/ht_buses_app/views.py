@@ -132,6 +132,7 @@ def students(request):
     student_list = []
     for student in student_serializer.data:
         id = student["id"]
+        student_school_id = student["student_school_id"]
         first_name = student["first_name"]
         last_name = student["last_name"]
         parent = User.objects.get(pk=student["user_id"])
@@ -145,7 +146,7 @@ def students(request):
         route = Route.routeTables.get(pk=student["route_id"])
         route_serializer = RouteSerializer(route, many=False)
         route_name = route_serializer.data["name"]
-        student_list.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
+        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
     data["students"] = student_list
     return Response(data)
 
@@ -299,8 +300,10 @@ def route_create(request):
     try:
         school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
         description = reqBody['route_description']
-        Route.routeTables.create(name=name, school_id = school, description = description)
+        route = Route.routeTables.create(name=name, school_id = school, description = description)
+        route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"
+        data["route"] = route_serializer.data
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
