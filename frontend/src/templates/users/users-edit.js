@@ -12,6 +12,7 @@ import { ROUTES_URL } from "../../constants";
 import { USERS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
+import { emailRegex } from "../regex/input-validation";
 
 class UsersEdit extends Component {
     state = {
@@ -35,8 +36,13 @@ class UsersEdit extends Component {
 
     validEmail = false;
 
+    emailValidation = function() {
+        return (emailRegex.test(this.emailField.value))
+    }
+
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
+        this.validEmail = this.emailValidation() 
     }
 
     handlePasswordChange = event => {
