@@ -56,15 +56,10 @@ class BusRoutesEdit extends Component {
 
     handleLogout = event => {
         event.preventDefault();
-        const creds = {}
-        try {
-         creds = {
+        const creds = {
             user_id: sessionStorage.getItem('user_id')
-            }
         }
-        catch {
-            creds= {}
-        }
+
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -77,6 +72,7 @@ class BusRoutesEdit extends Component {
             sessionStorage.setItem('logged_in', false)
             console.log(sessionStorage.getItem('logged_in'))
             console.log(sessionStorage.getItem('token'))
+            window.location.reload()
         })
     }
 
@@ -139,9 +135,9 @@ class BusRoutesEdit extends Component {
                                 </li>
                             </ul>
                             <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
+                                <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                     Log Out
-                                </Link>
+                                </button> 
                             </div>
                         </div>
                     </div>

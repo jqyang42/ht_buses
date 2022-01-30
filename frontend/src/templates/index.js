@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 import { HT_LOGO } from "../constants";
 import PropTypes from 'prop-types';
 
@@ -22,8 +22,6 @@ import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
 
-axios.interceptors.request.eject()
-//class component
 class Login extends Component {
 
     state = {
@@ -50,34 +48,36 @@ class Login extends Component {
             password: this.passwordField.value
         }
           
-        const config ={
-            headers: {
-                'Access-Control-Allow-Origin': 'http://localhost:3000',
-                'Access-Control-Allow-Credentials': 'true'
-            }
-        }
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
             this.setState({message: data.message, valid_login: data.valid_login})
             sessionStorage.setItem('token', data.token)
             if (data.valid_login) {
+                this.emailField.value = ''
+                this.passwordField.value =''
                 sessionStorage.setItem('user_id', data.info.user_id)
                 sessionStorage.setItem('first_name', data.info.first_name)
                 sessionStorage.setItem('last_name', data.info.last_name)
                 sessionStorage.setItem('is_staff', data.info.is_staff)
+                const role = data.info.is_staff ? "Administrator" : "Parent"
+                sessionStorage.setItem('role', role)
                 sessionStorage.setItem('logged_in', data.valid_login)
-                res.headers['Content-Type'] = 'application/json';
                 res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
+                window.location.reload()
             } 
             else {
                 this.passwordField.value = '';
                 this.setState({password: ''})
             }
+            console.log(sessionStorage.getItem('token'))
         })
     }    
 
     render() {
+        if (JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
