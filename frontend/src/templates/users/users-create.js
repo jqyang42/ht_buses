@@ -25,6 +25,8 @@ class UsersCreate extends Component {
         user_is_staff: '',
         student_first_name: '',
         student_last_name: '',
+        student_school: '',
+        student_route: '',
         student_id: '',
         students: [],
         schools_dropdown: [],
@@ -94,8 +96,8 @@ class UsersCreate extends Component {
 
     handleSchoolChange = event => {
         const school_id = event.target.value
-
-        console.log(school_id)
+        const school_name = event.target[event.target.selectedIndex].id
+        this.setState({ student_school: school_name })
 
         axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
             .then(res => {
@@ -117,23 +119,51 @@ class UsersCreate extends Component {
         console.log(this.state.routes_dropdown)
     }
 
+    handleRouteChange = event => {
+        const route_name = event.target[event.target.selectedIndex].id
+        this.setState({ student_route : route_name})
+        console.log(route_name)
+    }
+
     handleSubmit = event => {
         if (!this.validEmail || !this.validPassword) {
             return 
         }
         event.preventDefault();
+        
+        let user_address
+        if (this.state.user_address == null) {
+            user_address = ''
+        } else {
+            user_address = this.state.user_address
+        }
 
         const user = {
             email: this.state.user_email,
             password: this.state.user_password,
             first_name: this.state.user_first_name,
             last_name: this.state.user_last_name,
-            address: this.state.user_address,
+            address: user_address,
             is_staff: this.state.user_is_staff === 'General' ? false : true,
-            is_parent: this.state.students.length !== 0
+            is_parent: true,
+            students: [{
+                first_name: this.state.student_first_name,
+                last_name: this.state.student_last_name,
+                school_name: this.state.student_school,
+                route_name: this.state.student_route,
+                student_school_id: this.state.student_id
+            }]
         }
 
+        console.log(user)
+
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
         axios.post(API_DOMAIN + `users/create`, user)
+
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -148,6 +178,7 @@ class UsersCreate extends Component {
                 return {value: school.id, display: school.name}
             })
             this.setState({ schools_dropdown: schools})
+            console.log(this.state.schools_dropdown)
         })
     }
     
@@ -263,7 +294,8 @@ class UsersCreate extends Component {
                                                     value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address"></input>
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
+                                                onChange={this.handleAddressChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange} className="form-group required pb-3 w-75">
                                                 <div>
@@ -328,16 +360,17 @@ class UsersCreate extends Component {
                                                                                 onChange={this.handleSchoolChange} required>
                                                                                     <option selected>Select a School</option>
                                                                                     {this.state.schools_dropdown.map(school => 
-                                                                                        <option value={school.value}>{school.display}</option>
+                                                                                        <option value={school.value} id={school.display}>{school.display}</option>
                                                                                     )}
                                                                                 </select>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
-                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
+                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
+                                                                                onChange={this.handleRouteChange} required>
                                                                                     <option selected>Select a Route</option>
                                                                                     {this.state.routes_dropdown.map(route => 
-                                                                                        <option value={route.value}>{route.display}</option>
+                                                                                        <option value={route.value} id={route.display}>{route.display}</option>
                                                                                     )}
                                                                                 </select>
                                                                             </div>
