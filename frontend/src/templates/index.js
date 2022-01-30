@@ -74,6 +74,7 @@ class Login extends Component {
                 this.passwordField.value = '';
                 this.setState({password: ''})
             }
+            console.log(sessionStorage.getItem('token'))
         })
     }    
 
