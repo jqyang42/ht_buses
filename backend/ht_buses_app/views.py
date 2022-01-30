@@ -613,7 +613,7 @@ def routeplanner(request):
         else:
             students_arr = {'id' : student_id, 'route_id' : student["route_id"]}
         address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"], 'students': students_arr})
-        data["addresses"] = address_arr
+        data["parents"] = address_arr
     return Response(data)
 
 @api_view(["GET"])
