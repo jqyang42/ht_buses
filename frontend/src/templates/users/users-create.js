@@ -86,24 +86,22 @@ class UsersCreate extends Component {
         student.first_name = event.target.value
         students[index] = student
         this.setState({ students: students })
-
-        console.log(students)
     }
 
     handleStudentLastNameChange = (event, student_num) => {
         const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
         let student = {...students[index]}
-        student.last_name = event.target.value
+        student.first_name = event.target.value
         students[index] = student
         this.setState({ students: students })
     }
 
     handleStudentIDChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)        
+        const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
         let student = {...students[index]}
-        student.student_school_id = event.target.value
+        student.first_name = event.target.value
         students[index] = student
         this.setState({ students: students })
     }
