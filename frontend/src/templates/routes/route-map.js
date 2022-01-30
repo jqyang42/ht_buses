@@ -2,36 +2,29 @@ import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
+import { MARKER_ICONS } from '../../constants';
 import { API_DOMAIN } from '../../constants';
 import axios from "axios";
 import Geocode from "react-geocode";
+import StudentMarker from './map-marker';
 
-const x = 50;
-const y = 50;
 const containerStyle = {
   width: '100%',
   height: '400px'
 };
-const pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
+// const pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
 
 class RouteMap extends Component {
   state = {
     clickNumber: 0,
-    icon: {
-      path: pinSVGHole,
-      fillOpacity: 1,
-      fillColor: MARKER_COLORS[0],
-      strokeWeight: 2,
-      strokeColor: "#000000",
-      scale: 2,
-    },
+    icon: MARKER_ICONS[0],
     locations: [],
     latLngs: [],
     center: {},
     markers: [],
   }
   handleClick = (marker, e) => {
-    if (this.state.clickNumber < Object.keys(MARKER_COLORS).length-1) {
+    if (this.state.clickNumber < MARKER_ICONS.length-1) {
       this.setState({
         clickNumber: this.state.clickNumber+1,
       })
@@ -40,16 +33,8 @@ class RouteMap extends Component {
         clickNumber: 0,
       })
     }
-    console.log(this.state.clickNumber)
     this.setState({
-      icon: {
-        path: pinSVGHole,
-        fillOpacity: 1,
-        fillColor: MARKER_COLORS[this.state.clickNumber],
-        strokeWeight: 2,
-        strokeColor: "#000000",
-        scale: 2,
-      }
+      icon: MARKER_ICONS[this.state.clickNumber]
     })
   }
 
@@ -109,7 +94,14 @@ class RouteMap extends Component {
           >
             <Marker position={this.state.center} icon={this.state.icon} onClick={this.handleClick} />
             {this.state.markers.map((value, index) => {
-              return <Marker key={index} position={value.position} icon={value.icon} onClick={this.handleClick} id={value.id} />
+              return <StudentMarker 
+                key={index} 
+                location={value.position} 
+                clickNumber={1} 
+                assign_mode={false} 
+                icon={value.icon} 
+                onClick={this.handleClick} 
+                id={value.id} />
             })}
           </GoogleMap>
         </LoadScript>
