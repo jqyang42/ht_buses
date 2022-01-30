@@ -65,7 +65,7 @@ class SchoolsCreate extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        axios.post(API_DOMAIN + `schools/create`, school)
+        axios.post(API_DOMAIN + `schools/create`, school, config)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
