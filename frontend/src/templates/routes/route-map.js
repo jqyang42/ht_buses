@@ -92,15 +92,15 @@ class RouteMap extends Component {
             }}
             zoom={15}
           >
-            <Marker position={this.state.center} icon={this.state.icon} onClick={this.handleClick} />
+            <Marker position={this.state.center}  />
             {this.state.markers.map((value, index) => {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 
                 clickNumber={1} 
-                assign_mode={false} 
-                icon={value.icon} 
-                onClick={this.handleClick} 
+                assignMode={false} 
+                routeID={0} 
+                active_route={0}
                 id={value.id} />
             })}
           </GoogleMap>

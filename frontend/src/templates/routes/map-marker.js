@@ -10,7 +10,7 @@ import Geocode from "react-geocode";
 class StudentMarker extends Component {
     state = {
         clickNumber: this.props.active_route,
-        icon: MARKER_ICONS[this.props.routeId],
+        icon: MARKER_ICONS[this.props.routeID],
         assignMode: this.props.assign_mode,
         location: this.props.location
     }
