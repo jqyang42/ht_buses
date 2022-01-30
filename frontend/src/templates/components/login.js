@@ -1,6 +1,9 @@
 import React from 'react';
 
 export default function Login() { 
+    if (JSON.parse(sessionStorage.getItem('logged_in'))) {
+        return <Navigate to={PARENT_DASHBOARD_URL} />
+    }
     return(
         <body className="overflow-hidden">
             <div className="container-fluid mx-0 px-0">

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
 import RouteMap from './route-map';
@@ -14,6 +14,7 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { ROUTES_EDIT_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class BusRoutesDetail extends Component {
     state = {
@@ -29,8 +30,12 @@ class BusRoutesDetail extends Component {
             user_id: sessionStorage.getItem('user_id')
         }
 
-        
-        axios.post(API_DOMAIN + `logout`, creds)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+          }
+        axios.post(API_DOMAIN + `logout`, creds, config)
         .then(res => {
             this.setState({token: '', message: res.data.message})
             sessionStorage.setItem('token', '')
@@ -48,7 +53,12 @@ class BusRoutesDetail extends Component {
 
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
             const school = route.school;
@@ -65,6 +75,12 @@ class BusRoutesDetail extends Component {
     // uppercaseSchool = text.toUpperCase()
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+          }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -125,7 +141,7 @@ class BusRoutesDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
                                     <p className="text-muted text-small">Administrator</p>
                                 </div>
                             </div>

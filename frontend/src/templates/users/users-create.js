@@ -13,6 +13,7 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 
 class UsersCreate extends Component {
@@ -113,7 +114,12 @@ class UsersCreate extends Component {
         students[student_index] = student
         this.setState({ students: students })
 
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
             .then(res => {
                 let routes_data
                 if (res.data.routes == null) {
@@ -187,12 +193,13 @@ class UsersCreate extends Component {
 
         console.log(user)
 
+
          const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        axios.post(API_DOMAIN + `users/create`, user) // TODO, config as 3rd parameter
+        axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
 
             .then(res => {
                 console.log(res);
@@ -202,7 +209,12 @@ class UsersCreate extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools`)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `schools`,  config)
             .then(res => {            
             let schools = res.data.schools.map(school => {
                 return {value: school.id, display: school.name}
@@ -218,7 +230,6 @@ class UsersCreate extends Component {
             user_id: sessionStorage.getItem('user_id')
         }
 
-        
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
@@ -237,6 +248,12 @@ class UsersCreate extends Component {
 
     
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         const { redirect } = this.state.redirect;
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
@@ -301,8 +318,8 @@ class UsersCreate extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { API_DOMAIN, HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -21,7 +21,6 @@ class ParentDashboard extends Component {
             user_id: sessionStorage.getItem('user_id')
         }
 
-        
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
@@ -40,7 +39,12 @@ class ParentDashboard extends Component {
 
 
     componentDidMount() {
-        axios.get(API_DOMAIN + 'dashboard?id=' + this.state.id)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + 'dashboard?id=' + this.state.id, config)
             .then(res => {
             const parent = res.data;
             const students = parent.students;
@@ -50,6 +54,9 @@ class ParentDashboard extends Component {
     }
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -82,8 +89,8 @@ class ParentDashboard extends Component {
                                     <h5>My Dashboard</h5>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">User Name</h6>
-                                    <p className="text-muted text-small">Parent</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

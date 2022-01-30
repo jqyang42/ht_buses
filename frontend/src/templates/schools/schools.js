@@ -12,6 +12,7 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_CREATE_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class Schools extends Component {
 
@@ -24,7 +25,11 @@ class Schools extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -44,6 +49,11 @@ class Schools extends Component {
 
 
     componentDidMount() {
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
         axios.get(API_DOMAIN + `schools`)
             .then(res => {
             const schools = res.data.schools;
@@ -52,8 +62,11 @@ class Schools extends Component {
     }
     
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in')) || !JSON.parse(sessionStorage.getItem('is_staff'))) {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -105,8 +118,8 @@ class Schools extends Component {
                                     <h5>Schools</h5>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>
