@@ -74,9 +74,13 @@ class StudentsEdit extends Component {
             parent_name: this.state.parent
         }
 
-        console.log(user)
-
-        axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, user)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, user, config)
         .then(res => {
             console.log(res);
             console.log(res.data);
@@ -85,7 +89,12 @@ class StudentsEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id)
+       const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
         .then(res => {
             const student = res.data;
             this.setState({ student: student });
@@ -126,6 +135,34 @@ class StudentsEdit extends Component {
             this.setState({ parents_dropdown: parents})
         })
     }
+
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
+    }
+
+
 
     render() {
         const { redirect } = this.state;
@@ -169,7 +206,7 @@ class StudentsEdit extends Component {
                                 </li>
                             </ul>
                             <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick = {this.handleLogout}
                                     Log Out
                                 </Link>
                             </div>

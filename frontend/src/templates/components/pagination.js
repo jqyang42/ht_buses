@@ -7,13 +7,15 @@ const TablePagination = (props) => {
             
             <div className="col table-pagesIndexing">
                 {
-                    (props.pageOptions.length == 0) ? (
+                    (props.pageOptions.length === 0) ? (
                         <p>
-                            Showing {(props.pageIndex * props.pageSize)} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |  Page {props.pageIndex} of {props.pageOptions.length}
+                            {/* Showing {(props.pageIndex * props.pageSize)} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |   */}
+                            Page {props.pageIndex} of {props.pageOptions.length}
                         </p>
                     ) : (
                         <p>
-                            Showing {(props.pageIndex * props.pageSize) + 1} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |  Page {props.pageIndex + 1} of {props.pageOptions.length}
+                            {/* Showing {(props.pageIndex * props.pageSize) + 1} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |   */}
+                            Page {props.pageIndex + 1} of {props.pageOptions.length}
                         </p>
                     )
                 }
@@ -23,7 +25,7 @@ const TablePagination = (props) => {
                 <nav className="row d-inline-flex float-end" aria-label="Students Pagination">
                     <ul className="pagination">
                     <li className="page-item">
-                        <a className="page-link" onClick={props.previousPage} disabled={!props.canPreviousPage}>
+                        <a className="page-link" href={props.nextPage} onClick={props.previousPage} disabled={!props.canPreviousPage}>
                             Previous
                         </a>
                     </li>
@@ -53,7 +55,7 @@ const TablePagination = (props) => {
                                 return <li className="page-item" key={index}><a className="page-link" onClick={props.page}>{page + 1}</a></li>
                             })} */}
                     <li className="page-item">
-                        <a className="page-link" onClick={props.nextPage} disabled={!props.canNextPage}>
+                        <a className="page-link" href={props.nextPage} onClick={props.nextPage} disabled={!props.canNextPage}>
                             Next
                         </a>
                     </li>

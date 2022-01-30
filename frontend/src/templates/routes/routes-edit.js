@@ -38,8 +38,15 @@ class BusRoutesEdit extends Component {
             route_name: this.state.route_name,
             route_description: this.state.route_description,
         }
+        
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
 
-        axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route, config)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -47,8 +54,43 @@ class BusRoutesEdit extends Component {
         this.setState({ redirect: true });
     }
 
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
+    }
+
+
+
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+      
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const route = res.data;
         this.setState({ route: route });
@@ -97,7 +139,7 @@ class BusRoutesEdit extends Component {
                                 </li>
                             </ul>
                             <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
                                     Log Out
                                 </Link>
                             </div>

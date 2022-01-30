@@ -22,7 +22,7 @@ def schools_all(request):
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def user_login(request):
-    data = {}
+    info = {}
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
@@ -32,21 +32,52 @@ def user_login(request):
         return Response({"message": "An account with this email does not exist.",  "token":'', "valid_login": False})
     if not check_password(password, user.password):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
+    #try:
+    login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
+    token = Token.objects.get_or_create(user=user)[0].key
+    info["id"] = user.id
+    info["is_staff"] = user.is_staff
+    info["email"] = user.email
+    info["first_name"] = user.first_name
+    info["last_name"] = user.last_name
+    message = "User was logged in successfully"
+    return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
+    #except: 
+        #return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
+
+# Logout API
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def user_logout(request):
     try:
-        login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
-        token = Token.objects.get_or_create(user=user)[0].key
-        data["id"] = user.id
-        data["is_staff"] = user.is_staff
-        data["email"] = user.email
-        message = "User was logged in successfully"
-        return Response({"data": data,"mesage":message, "token":token, "valid_login": True})
-    except: 
-        return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
-   
+        reqBody = json.loads(request.body)
+        user_id = User.objects.get(pk = reqBody["user_id"])
+        user_id.auth_token.delete()
+        logout(request._request)
+        return Response({"message":'User was logged out successfully'})  
+    except:
+        return Response({"message":'Unsuccessful logout'}) 
+
+
+@api_view(["POST"]) 
+def validAccess(request):
+    info = {}
+    try:
+        reqBody = json.loads(request.body)
+        session_token = reqBody['token']
+        id = reqBody['user_id']
+        user_token = User.objects.get(pk = id).auth_token
+        valid_token = user_token == session_token
+        message = "The session token is valid"
+        is_staff = User.objects.get(pk = id).is_staff 
+        return Response({"mesage":message, "valid_token": True,"is_staff":is_staff})
+    except:
+        message = "Invalid token, user is not logged in"
+        return Response({"mesage":message, "valid_token": False, "is_staff":False}, status = 401)
 
 # User Creation API
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -77,8 +108,11 @@ def create_students(request, user):
         last_name = student['last_name']
         school_id = School.schoolsTable.get(name=student["school_name"])
         student_school_id = student['student_school_id']
-        route_id = Route.routeTables.get(name=student['route_name'])
-        student_object = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+        if (student['route_name'] != None):
+            route_id = Route.routeTables.get(name=student['route_name'])
+            Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id = route_id)
+        else:
+            Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id = None)
     data["message"] = "students registered successfully"
     result = {"data" : data}
     return Response(result)
@@ -92,8 +126,15 @@ def students_detail(request):
     id = request.query_params["id"]
     student = Student.studentsTable.get(pk=id)
     student_serializer = StudentSerializer(student, many=False)
-    route = Route.routeTables.get(pk=student_serializer.data["route_id"])
-    route_serializer = RouteSerializer(route, many=False)
+    if student_serializer.data["route_id"] == None:
+        route_id = 0
+        route_name = "Unassigned"
+    else:
+        route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+        route_serializer = RouteSerializer(route, many=False)
+        route_id = route_serializer.data["id"]
+        route_name = route_serializer.data["name"]
+
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     data["user_id"] = student_serializer.data["user_id"]
@@ -104,17 +145,9 @@ def students_detail(request):
     school_arr.append({'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]})
     data["school"] = school_arr[0]
     route_arr = []
-    route_arr.append({'id' : route_serializer.data["id"], 'name' : route_serializer.data["name"]})
+    route_arr.append({'id' : route_id, 'name' : route_name})
     data["route"] = route_arr[0]
     return Response(data)
-
-# Logout API
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def user_logout(request):
-    request.user.auth_token.delete()
-    logout(request._request)
-    return Response('User Logged out successfully')  
 
 @api_view(['GET'])
 @permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
@@ -143,15 +176,19 @@ def students(request):
         school = School.schoolsTable.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
-        route = Route.routeTables.get(pk=student["route_id"])
-        route_serializer = RouteSerializer(route, many=False)
-        route_name = route_serializer.data["name"]
+        if student["route_id"] == None:
+            route = 0
+            route_name = "Unassigned"
+        else:
+            route = Route.routeTables.get(pk=student["route_id"])
+            route_serializer = RouteSerializer(route, many=False)
+            route_name = route_serializer.data["name"]
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
     data["students"] = student_list
     return Response(data)
 
 @api_view(['PUT'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated 
+@permission_classes([IsAuthenticated]) # TODO: This needs to be changed to IsAuthenticated 
 def student_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -179,7 +216,7 @@ def student_edit(request):
         raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(['POST'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # TODO: This needs to be changed to IsAuthenticated
 def student_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -227,10 +264,14 @@ def schools_detail(request):
             student_school_id = student["student_school_id"]
             first_name = student["first_name"]
             last_name = student["last_name"]
-            route_id = student["route_id"]
-            student_route = Route.routeTables.get(pk=route_id)
-            student_route_serializer = RouteSerializer(student_route, many=False)
-            route_name = student_route_serializer.data["name"]
+            if student["route_id"] == None:
+                route_id = 0
+                route_name = "Unassigned"
+            else:
+                route_id = student["route_id"]
+                student_route = Route.routeTables.get(pk=route_id)
+                student_route_serializer = RouteSerializer(student_route, many=False)
+                route_name = student_route_serializer.data["name"]
             student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': first_name, 'last_name' : last_name, 'route_name': route_name})
         if len(student_list) != 0:
             data["students"] = student_list
@@ -249,7 +290,7 @@ def schools_detail(request):
         raise ValidationError({"messsage": "School does not exist"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def school_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -261,7 +302,7 @@ def school_create(request):
     return Response(result)
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def school_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -278,7 +319,7 @@ def school_edit(request):
         raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def school_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -292,7 +333,7 @@ def school_delete(request):
         raise ValidationError({"messsage": "school could not be deleted"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -335,7 +376,7 @@ def routes_detail(request):
     return Response(data)
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def route_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -353,7 +394,7 @@ def route_edit(request):
         raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def route_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -421,7 +462,7 @@ def users(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -441,9 +482,12 @@ def users_detail(request):
                 student_school_id = student["student_school_id"]
                 student_first_name = student["first_name"]
                 student_last_name = student["last_name"]
-                route_student = Route.routeTables.get(pk=student["route_id"])
-                route_serializer = RouteSerializer(route_student, many=False)
-                route_name = route_serializer.data["name"]
+                if student["route_id"] == None:
+                    route_name = "Unassigned"
+                else:
+                    route_student = Route.routeTables.get(pk=student["route_id"])
+                    route_serializer = RouteSerializer(route_student, many=False)
+                    route_name = route_serializer.data["name"]
                 student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route_name' : route_name})
             data["students"] = student_list
         data["is_staff"] = user_serializer.data["is_staff"]
@@ -453,7 +497,7 @@ def users_detail(request):
         raise ValidationError({"message": "User does not exist"})
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # Needs to be changed to IsAuthenticated
 def user_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -504,7 +548,7 @@ def user_edit(request):
 #         return Response(result) 
     
 @api_view(["POST"])
-@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # Needs to be changed to IsAuthenticated
 def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -527,7 +571,7 @@ def user_password_edit(request):
     reqBody = json.loads(request.body)
     try:
         user_object = User.objects.get(pk = id)
-        user_object.password = reqBody['password']
+        user_object.set_password(reqBody['password'])
         user_object.save()
         data["message"] = "User password updated successfully"
         result = {"data" : data}
@@ -550,30 +594,36 @@ def routeplanner(request):
     routes_serializer = RouteSerializer(routes, many=True)
     routes_arr = []
     for route in routes_serializer.data:
-        id = route["id"]
+        route_id = route["id"]
         name = route["name"]
-        routes_arr.append({'id' : id, 'name' : name})
+        routes_arr.append({'id' : route_id, 'name' : name})
         data["routes"] = routes_arr
     students = Student.studentsTable.filter(school_id=id)
     student_serializer = StudentSerializer(students, many=True)
+    print(student_serializer.data)
+    print(id)
     students_arr = []
     address_arr = []
+    student_route_arr = {}
     for student in student_serializer.data:
-        student_route_arr = {}
         id = student["id"]
         first_name = student["first_name"]
         last_name = student["last_name"]
-        route_id = student["route_id"]
-        student_route = Route.routeTables.get(pk=route_id)
-        route_serializer = RouteSerializer(student_route, many=False)
-        route_name = route_serializer.data["name"]
-        student_route_arr["id"] = route_id
-        student_route_arr["name"] = route_name
         parent_id = student["user_id"]
         parent = User.objects.get(pk=parent_id)
         parent_serializer = UserSerializer(parent, many=False)
+        if student["route_id"] == None:
+            student_route_arr["id"] = 0
+            student_route_arr["name"] = "Unassigned"
+            students_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'parent_id' : parent_id, 'route' : student_route_arr})
+        else:
+            student_route = Route.routeTables.get(pk=student["route_id"])
+            route_serializer = RouteSerializer(student_route, many=False)
+            route_name = route_serializer.data["name"]
+            student_route_arr["id"] = student["route_id"]
+            student_route_arr["name"] = route_name
+            students_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'parent_id' : parent_id, 'route' : student_route_arr})
         address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"]})
-        students_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'parent_id' : parent_id, 'route' : student_route_arr})
         data["students"] = students_arr
         data["addresses"] = address_arr
     return Response(data)
@@ -597,9 +647,12 @@ def parent_dashboard(request):
         school = School.schoolsTable.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
-        route = Route.routeTables.get(pk=student["route_id"])
-        route_serializer = RouteSerializer(route, many=False)
-        route_name = route_serializer.data["name"]
+        if student["route_id"] == None:
+            route_name = "Unassigned"
+        else:
+            route = Route.routeTables.get(pk=student["route_id"])
+            route_serializer = RouteSerializer(route, many=False)
+            route_name = route_serializer.data["name"]
         parent_kids.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
         data["students"] = parent_kids
     return Response(data)
@@ -616,7 +669,14 @@ def parent_student_detail(request):
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     data["school_name"] = school_serializer.data["name"]
-    route = Route.routeTables.get(pk=student_serializer.data["route_id"])
-    route_serializer = RouteSerializer(route, many=False)
-    data["route"] = {'name' : route_serializer.data["name"], 'description' : route_serializer.data["description"]}
+    if ["route_id"] == None:
+        route_name = "Unassigned"
+        route_description = ""
+    else:
+        route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+        route_serializer = RouteSerializer(route, many=False)
+        route_name = route_serializer.data["name"]
+        route_description = route_serializer.data["description"]
+    data["route"] = {'name' : route_name, 'description' : route_description}
     return Response(data)
+
