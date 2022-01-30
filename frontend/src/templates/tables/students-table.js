@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export function StudentsTable( {data} ) {
     const navigate = useNavigate();
 
+    console.log(data)
     // Global filter, search from any column
 
     // function GlobalFilter({

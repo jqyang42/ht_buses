@@ -227,8 +227,6 @@ class BusRoutesPlanner extends Component {
                                                                         <select className="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
                                                                             <option>Select a School</option>
                                                                             <option selected value="1">{this.state.school.name}</option>
-                                                                            <option value="2">Two</option>
-                                                                            <option value="3">Three</option>
                                                                         </select>
                                                                     </div>
                                                                     <div className="form-group">
@@ -250,7 +248,7 @@ class BusRoutesPlanner extends Component {
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
                                                     <option selected>Select a Route</option>
                                                     {this.state.route_dropdown.map(route => 
-                                                        <option value={route.value}>{route.display}</option>
+                                                        <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
                                                 </select>
                                             </div>
