@@ -603,17 +603,23 @@ def routeplanner(request):
     print(student_serializer.data)
     print(id)
     address_arr = []
+    parent_id_arr = []
     for student in student_serializer.data:
-        student_id = student["id"]
         parent_id = student["user_id"]
         parent = User.objects.get(pk=parent_id)
-        parent_serializer = UserSerializer(parent, many=False)
-        if student["route_id"] == None:
-            students_arr = {'id' : student_id,'route_id' : 0}
-        else:
-            students_arr = {'id' : student_id, 'route_id' : student["route_id"]}
-        address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"], 'students': students_arr})
-        data["parents"] = address_arr
+        if parent_id not in parent_id_arr:
+            parent_id_arr.append(parent_id)
+            parent_serializer = UserSerializer(parent, many=False)
+            parent_student = Student.studentsTable.filter(user_id=parent_id, school_id=id)
+            parent_student_serializer = StudentSerializer(parent_student, many=True)
+            parent_student_arr = []
+            for child in parent_student_serializer.data:
+                if child["route_id"] == None:
+                    parent_student_arr.append({'id' : child["id"], 'route_id' : 0})
+                else:
+                    parent_student_arr.append({'id' : child["id"], 'route_id' : child["route_id"]})
+            address_arr.append({'id' : student["user_id"], 'address' : parent_serializer.data["address"], 'students': parent_student_arr})
+    data["parents"] = address_arr
     return Response(data)
 
 @api_view(["GET"])
