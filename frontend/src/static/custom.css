@@ -168,3 +168,7 @@ li.page-item a[disabled]:hover {
     margin-bottom: 1px;
     padding-bottom: 2px;
 }
+
+td.unassigned {
+    color: #dc3545;
+}

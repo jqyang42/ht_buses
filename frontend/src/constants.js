@@ -2,12 +2,17 @@ import HT_Logo from './static/img/HT_Logo.png';
 import sort_asc from './static/img/sort_asc.png';
 import sort_desc from './static/img/sort_desc.png';
 import sort from './static/img/sort.png';
+import {colors} from './static/colors';
+import { marker_icons } from './static/marker-index';
 
 export const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 export const HT_LOGO = HT_Logo;
 export const SORT_ASC = sort_asc;
 export const SORT_DESC = sort_desc;
 export const SORT = sort;
+
+export const MARKER_COLORS = colors;
+export const MARKER_ICONS = marker_icons;
 
 export const SITE_NAME = "Hypothetical Transportation Bus Management System";
 export const API_DOMAIN = "http://localhost:8000/"

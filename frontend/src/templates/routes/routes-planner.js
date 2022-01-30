@@ -21,18 +21,40 @@ class BusRoutesPlanner extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            locations: [],
-            center: {},
-            latLngs: [],
             school: [],
             students: [],
             routes: [],
             create_route_name: '',
             create_school_name: '',
             create_route_description: '',
-            route_dropdown: []
+            route_dropdown: [],
+            assign_mode: false
         }
     }
+
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {
+            user_id: sessionStorage.getItem('user_id')
+        }
+
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+            window.location.reload()
+        })
+    }
+
+
 
     componentDidMount() {
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
@@ -57,6 +79,13 @@ class BusRoutesPlanner extends Component {
                     })
                 }                                
             })        
+    }
+
+    handleAssignMode = event => {
+        this.setState(prevState => ({ 
+            assign_mode: !prevState.assign_mode
+        }));
+        console.log(this.state.assign_mode);
     }
 
     handleRouteNameChange = event => {
@@ -129,9 +158,9 @@ class BusRoutesPlanner extends Component {
                                 </li>
                             </ul>
                             <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                     Log Out
-                                </Link>
+                                </button> 
                             </div>
                         </div>
                     </div>
@@ -198,8 +227,6 @@ class BusRoutesPlanner extends Component {
                                                                         <select className="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
                                                                             <option>Select a School</option>
                                                                             <option selected value="1">{this.state.school.name}</option>
-                                                                            <option value="2">Two</option>
-                                                                            <option value="3">Three</option>
                                                                         </select>
                                                                     </div>
                                                                     <div className="form-group">
@@ -221,16 +248,16 @@ class BusRoutesPlanner extends Component {
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
                                                     <option selected>Select a Route</option>
                                                     {this.state.route_dropdown.map(route => 
-                                                        <option value={route.value}>{route.display}</option>
+                                                        <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
                                                 </select>
                                             </div>
                                             <div className="col-auto">
-                                                <button type="button" className="btn btn-primary">Assign</button>
+                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Assign</button>
                                             </div>
                                         </div>
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap />
+                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} />
                                         </div>
                                     </div>
                                     <div className="col">

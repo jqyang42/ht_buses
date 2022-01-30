@@ -35,6 +35,30 @@ class UsersDetail extends Component {
             })
     }
 
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {
+            user_id: sessionStorage.getItem('user_id')
+        }
+
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+            window.location.reload()
+        })
+    }
+
+
+
     handleDeleteSubmit = event => {
         event.preventDefault();
 
@@ -44,7 +68,13 @@ class UsersDetail extends Component {
             email: this.state.users.email
         }
 
-        axios.post(API_DOMAIN + `users/delete`, deleted_user)
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.post(API_DOMAIN + `users/delete`, deleted_user, config)
             .then(res => {
                 console.log(res)
             })
@@ -96,9 +126,9 @@ class UsersDetail extends Component {
                                 </li>
                             </ul>
                             <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                     Log Out
-                                </Link>
+                                </button> 
                             </div>
                         </div>
                     </div>

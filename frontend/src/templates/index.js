@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios'
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 import { HT_LOGO } from "../constants";
 import PropTypes from 'prop-types';
 
@@ -22,8 +22,8 @@ import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
 
-//class component
 class Login extends Component {
+
     state = {
         email: '',
         password: '',
@@ -40,29 +40,44 @@ class Login extends Component {
         this.setState({ password: event.target.value });
     }
 
+    
     handleSubmit = event => {
         event.preventDefault();
         const creds = {
-            email: this.state.email,
-            password: this.state.password
+            email: this.emailField.value,
+            password: this.passwordField.value
         }
-
+          
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
+            this.setState({message: data.message, valid_login: data.valid_login})
+            sessionStorage.setItem('token', data.token)
             if (data.valid_login) {
-                //for setting id, is_staff, etc. 
-            }
-            this.setState({token: data.token, message: data.message, valid_login: data.valid_login})
-            if(!this.valid_login) {
+                this.emailField.value = ''
+                this.passwordField.value =''
+                sessionStorage.setItem('user_id', data.info.user_id)
+                sessionStorage.setItem('first_name', data.info.first_name)
+                sessionStorage.setItem('last_name', data.info.last_name)
+                sessionStorage.setItem('is_staff', data.info.is_staff)
+                const role = data.info.is_staff ? "Administrator" : "Parent"
+                sessionStorage.setItem('role', role)
+                sessionStorage.setItem('logged_in', data.valid_login)
+                res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
+                window.location.reload()
+            } 
+            else {
                 this.passwordField.value = '';
+                this.setState({password: ''})
             }
-            console.log(res)
+            console.log(sessionStorage.getItem('token'))
         })
-        return 
     }    
 
     render() {
+        if (JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
@@ -90,7 +105,7 @@ class Login extends Component {
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputEmail1" className="pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" name="email" id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                    placeholder="Enter email" onChange={this.handleEmailChange}></input>
+                                                    placeholder="Enter email" ref={el => this.emailField = el}  onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone else.</small>
                                             </div>
                                             <div className="form-group pb-3">

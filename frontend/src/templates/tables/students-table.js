@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export function StudentsTable( {data} ) {
     const navigate = useNavigate();
 
+    console.log(data)
     // Global filter, search from any column
 
     // function GlobalFilter({
@@ -75,7 +76,7 @@ export function StudentsTable( {data} ) {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'ID',
+                Header: '#',
                 accessor: d => `${d.id}`, // accessor is the "key" in the data
                 id: 'id'
             },
@@ -83,6 +84,10 @@ export function StudentsTable( {data} ) {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name'
+            },
+            {
+                Header: 'Student ID',
+                acccessor: 'student_school_id'
             },
             {
                 Header: 'School',
@@ -93,7 +98,8 @@ export function StudentsTable( {data} ) {
                 Header: 'Route',
                 accessor: 'route_name',
                 disableSortBy: true,
-                disableFilter: true
+                disableFilter: true,
+                className: 'unassigned'
             },            
             {
                 Header: 'Parent Name',
@@ -219,9 +225,9 @@ export function StudentsTable( {data} ) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
+                    <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id), console.log(row.original.route_name)}>
                         {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                            return <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )
