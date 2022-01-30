@@ -103,8 +103,8 @@ class Students extends Component {
                                     <h5>Students</h5>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0"> {sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')} </h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

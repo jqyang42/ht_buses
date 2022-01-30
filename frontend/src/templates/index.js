@@ -22,8 +22,6 @@ import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
 
-axios.interceptors.request.eject()
-//class component
 class Login extends Component {
 
     state = {
@@ -62,10 +60,14 @@ class Login extends Component {
             this.setState({message: data.message, valid_login: data.valid_login})
             sessionStorage.setItem('token', data.token)
             if (data.valid_login) {
+                this.emailField.value = ''
+                this.passwordField.value =''
                 sessionStorage.setItem('user_id', data.info.user_id)
                 sessionStorage.setItem('first_name', data.info.first_name)
                 sessionStorage.setItem('last_name', data.info.last_name)
                 sessionStorage.setItem('is_staff', data.info.is_staff)
+                const role = data.info.is_staff ? "Administrator" : "Parent"
+                sessionStorage.setItem('role', role)
                 sessionStorage.setItem('logged_in', data.valid_login)
                 res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
                 window.location.reload()

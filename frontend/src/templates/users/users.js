@@ -12,7 +12,6 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { USERS_CREATE_URL } from "../../constants";
-import RouteChange from './nav'
 
 
 
@@ -43,6 +42,7 @@ class Users extends Component {
             sessionStorage.setItem('last_name', '')
             sessionStorage.setItem('is_staff', false)
             sessionStorage.setItem('logged_in', false)
+            sessionStorage.setItem('role',"None")
             console.log(sessionStorage.getItem('logged_in'))
             console.log(sessionStorage.getItem('token'))
             window.location.reload()
@@ -104,8 +104,8 @@ class Users extends Component {
                                     <h5>Manage Users</h5>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0"> {sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')} </h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>
