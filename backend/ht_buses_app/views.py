@@ -600,8 +600,6 @@ def routeplanner(request):
         data["routes"] = routes_arr
     students = Student.studentsTable.filter(school_id=id)
     student_serializer = StudentSerializer(students, many=True)
-    print(student_serializer.data)
-    print(id)
     address_arr = []
     parent_id_arr = []
     for student in student_serializer.data:
