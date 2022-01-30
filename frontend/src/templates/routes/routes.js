@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { RoutesTable } from "../tables/routes-table";
 
@@ -20,15 +20,10 @@ class BusRoutes extends Component {
 
     handleLogout = event => {
         event.preventDefault();
-        const creds = {}
-        try {
-         creds = {
+        const creds = {
             user_id: sessionStorage.getItem('user_id')
-            }
         }
-        catch {
-            creds= {}
-        }
+
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -41,6 +36,7 @@ class BusRoutes extends Component {
             sessionStorage.setItem('logged_in', false)
             console.log(sessionStorage.getItem('logged_in'))
             console.log(sessionStorage.getItem('token'))
+            window.location.reload()
         })
     }
 
@@ -56,6 +52,9 @@ class BusRoutes extends Component {
     }
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in')) || !JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -92,9 +91,9 @@ class BusRoutes extends Component {
                                 </li>
                             </ul>
                             <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
+                                <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                     Log Out
-                                </Link>
+                                </button> 
                             </div>
                         </div>
                     </div>

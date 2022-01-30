@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 import { HT_LOGO } from "../constants";
 import PropTypes from 'prop-types';
 
@@ -52,7 +52,7 @@ class Login extends Component {
           
         const config ={
             headers: {
-                'Access-Control-Allow-Origin': 'http://localhost:3000',
+                'Access-Control-Allow-Origin': ['http://127.0.0.1:3000', 'http://127.0.0.1:8000'],
                 'Access-Control-Allow-Credentials': 'true'
             }
         }
@@ -67,8 +67,8 @@ class Login extends Component {
                 sessionStorage.setItem('last_name', data.info.last_name)
                 sessionStorage.setItem('is_staff', data.info.is_staff)
                 sessionStorage.setItem('logged_in', data.valid_login)
-                res.headers['Content-Type'] = 'application/json';
                 res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
+                window.location.reload()
             } 
             else {
                 this.passwordField.value = '';
@@ -79,6 +79,9 @@ class Login extends Component {
     }    
 
     render() {
+        if (JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
