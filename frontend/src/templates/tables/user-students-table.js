@@ -20,6 +20,7 @@ export function UserStudentsTable({ data }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
+                className: 'unassigned'
             },
         ],
         []
@@ -101,7 +102,7 @@ export function UserStudentsTable({ data }) {
                     // Apply the row props
                     <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
                         {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        return <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )
