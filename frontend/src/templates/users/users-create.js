@@ -23,12 +23,13 @@ class UsersCreate extends Component {
         user_last_name: '',
         user_address: '',
         user_is_staff: '',
-        student_first_name: '',
-        student_last_name: '',
-        student_school: '',
-        student_route: '',
-        student_id: '',
-        added_students: [],
+        // student_first_name: '',
+        // student_last_name: '',
+        // student_school: '',
+        // student_route: '',
+        // student_id: '',
+        added_students_list: [],
+        students: [],
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
@@ -83,24 +84,39 @@ class UsersCreate extends Component {
         this.setState({ user_is_staff: type });
     }
 
-    handleStudentFirstNameChange = event => {
-        this.setState( { student_first_name: event.target.value })
+    handleStudentFirstNameChange = (event, student_index) => {
+        let students = [...this.state.students]
+        let student = {...students[student_index]}
+        student.first_name = event.target.value
+        students[student_index] = student
+        this.setState({ students: students })
     }
 
-    handleStudentLastNameChange = event => {
-        this.setState({ student_last_name: event.target.value });
+    handleStudentLastNameChange = (event, student_index) => {
+        let students = [...this.state.students]
+        let student = {...students[student_index]}
+        student.last_name = event.target.value
+        students[student_index] = student
+        this.setState({ students: students })
     }
 
-    handleStudentIDChange = event => {
-        this.setState({ student_id: event.target.value });
+    handleStudentIDChange = (event, student_index) => {
+        let students = [...this.state.students]
+        let student = {...students[student_index]}
+        student.student_school_id = event.target.value
+        students[student_index] = student
+        this.setState({ students: students })
     }
 
-    handleSchoolChange = event => {
-        event.preventDefault()
-
+    handleSchoolChange = (event, student_index) => {
         const school_id = event.target.value
         const school_name = event.target[event.target.selectedIndex].id
-        this.setState({ student_school: school_name })
+
+        let students = [...this.state.students]
+        let student = {...students[student_index]}
+        student.school_name = school_name
+        students[student_index] = student
+        this.setState({ students: students })
 
         axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
             .then(res => {
@@ -116,23 +132,31 @@ class UsersCreate extends Component {
                         display: route.name
                     }
                 })
-                console.log(routes)
                 this.setState({ routes_dropdown: routes })
             })
-        console.log(this.state.routes_dropdown)
     }
 
-    handleRouteChange = event => {
-        event.preventDefault()
-
+    handleRouteChange = (event, student_index) => {
         const route_name = event.target[event.target.selectedIndex].id
-        this.setState({ student_route : route_name})
-        console.log(route_name)
+
+        let students = [...this.state.students]
+        let student = {...students[student_index]}
+        student.route_name = route_name
+        students[student_index] = student
+        this.setState({ students: students })
     }
 
     handleAddStudent = () => {
-        this.setState(({ added_students: [...this.state.added_students, this.state.added_students.length + 1] }))
-        console.log(this.state.added_students)
+        this.setState({ added_students_list: [...this.state.added_students_list, this.state.added_students_list.length] })
+        const student_field = {
+            first_name: '',
+            last_name: '',
+            school_name: '',
+            route_name: null,   //TODO: replicate?
+            student_school_id: ''
+        }
+        this.setState({ students: [...this.state.students, student_field] })
+        console.log(this.state.students)
     }
 
     handleSubmit = event => {
@@ -162,14 +186,8 @@ class UsersCreate extends Component {
             last_name: this.state.user_last_name,
             address: user_address,
             is_staff: this.state.user_is_staff === 'general' ? false : true,
-            is_parent: false,
-            students: [{
-                first_name: this.state.student_first_name,
-                last_name: this.state.student_last_name,
-                school_name: this.state.student_school,
-                route_name: this.state.student_route,
-                student_school_id: school_id
-            }]
+            is_parent: this.state.students.length !== 0,
+            students: this.state.students
         }
 
         console.log(user)
@@ -345,11 +363,11 @@ class UsersCreate extends Component {
                                                     <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
                                                         <i className="bi bi-plus-circle me-2"></i>
                                                     Students</a>
-                                                    {this.state.added_students.map(count => 
+                                                    {this.state.added_students_list.map(count => 
                                                         <div className="accordion-item">
                                                             <h2 className="accordion-header" id={"heading" + count}>
                                                                 <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={"#collapse" + count} aria-expanded="true" aria-controls={"collapseOne" + count}>
-                                                                    Student {count}
+                                                                    Student {count + 1}
                                                                 </button>
                                                             </h2>
                                                             <div id={"collapse" + count} className="accordion-collapse collapse show" aria-labelledby={"heading" + count} data-bs-parent="#accordionExample">
@@ -359,22 +377,22 @@ class UsersCreate extends Component {
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputFirstName" + count} className="control-label pb-2">First Name</label>
                                                                                 <input type="name" className="form-control pb-2" id={"exampleInputFirstName" + count}
-                                                                                    placeholder="Enter first name" required onChange={this.handleStudentFirstNameChange}></input>
+                                                                                    placeholder="Enter first name" required onChange={(e) => this.handleStudentFirstNameChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputLastName" + count} className="control-label pb-2">Last Name</label>
                                                                                 <input type="name" className="form-control pb-2" id={"exampleInputLastName" + count}
-                                                                                    placeholder="Enter last name" required onChange={this.handleStudentLastNameChange}></input>
+                                                                                    placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for={"exampleInputID" + count} className="control-label pb-2">Student ID</label>
                                                                                 <input type="id" className="form-control pb-2" id={"exampleInputID" + count} 
-                                                                                placeholder="Enter student ID" onChange={this.handleStudentIDChange}></input>
+                                                                                placeholder="Enter student ID" onChange={(e) => this.handleStudentIDChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
                                                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School" 
-                                                                                onChange={this.handleSchoolChange} required>
+                                                                                onChange={(e) => this.handleSchoolChange(e, count)} required>
                                                                                     <option selected>Select a School</option>
                                                                                     {this.state.schools_dropdown.map(school => 
                                                                                         <option value={school.value} id={school.display}>{school.display}</option>
@@ -384,7 +402,7 @@ class UsersCreate extends Component {
                                                                             <div className="form-group pb-3">
                                                                                 <label for={"exampleInputRoute" + count} className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
-                                                                                onChange={this.handleRouteChange} required>
+                                                                                onChange={(e) => this.handleRouteChange(e, count)} required>
                                                                                     <option selected>Select a Route</option>
                                                                                     {this.state.routes_dropdown.map(route => 
                                                                                         <option value={route.value} id={route.display}>{route.display}</option>
