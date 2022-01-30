@@ -155,8 +155,8 @@ class UsersEdit extends Component {
             password: this.state.password,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
-            // address: this.state.address,
-            address: '2625 Solano Avenue Hollywood, FL 33024',
+            address: this.state.address,
+            // address: '2625 Solano Avenue Hollywood, FL 33024',
             is_staff: this.state.is_staff == 'General' ? false : true,
             is_parent: this.state.students.length != 0,
             students: this.state.students
@@ -331,16 +331,20 @@ class UsersEdit extends Component {
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                {/* Uses autocomplete API, only uncomment when needed to */}
                                                 {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
-                                                        console.log(place);
+                                                        this.setState({
+                                                            address: place.formatted_address
+                                                        })
                                                     }}
                                                     options={{
                                                         types: 'address'
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    defaultValue={this.state.user.address} onChange={this.handleAddressChange} /> */}
+                                                    value={this.state.address}
+                                                    onChange={this.handleAddressChange} /> */}
                                                 <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
