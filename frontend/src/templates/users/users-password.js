@@ -54,6 +54,8 @@ class UsersPassword extends Component {
 
         const password = {
             password: this.state.password
+        }
+        
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
