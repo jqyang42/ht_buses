@@ -167,15 +167,19 @@ class SchoolsCreate extends Component {
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label className="control-label pb-2">Address</label>
+                                                {/* Uses autocomplete API, only uncomment when needed to */}
                                                 {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
-                                                        console.log(place);
+                                                        this.setState({
+                                                            school_address: place.formatted_address
+                                                        })
                                                     }}
                                                     options={{
                                                         types: 'address'
                                                     }}
-                                                    placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                    placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
+                                                    value={this.state.school_address} 
                                                     onChange={this.handleSchoolAddressChange} /> */}
                                                 <input type="address" className="form-control pb-2" id="exampleInputAddress1"
                                                     placeholder="Enter school address"

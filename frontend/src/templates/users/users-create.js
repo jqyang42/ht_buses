@@ -349,9 +349,15 @@ class UsersCreate extends Component {
                                                 placeholder="Enter email" required ref={el => this.emailField = el} onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
+                                                {(!this.validEmail && this.state.user_email !== "") ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Please enter a valid email
+                                                    </div>) : ""
+                                                }
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                {/* Uses autocomplete API, only uncomment when needed to */}
                                                 {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
@@ -385,21 +391,42 @@ class UsersCreate extends Component {
                                                 <label for="exampleInputPassword1" className="control-label pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword1" 
                                                 placeholder="Password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
+                                                {(!this.passwordValidation() && this.state.user_password !== "") ? 
+                                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
+                                                        Your password is too weak. Password must contain at least 8 characters, including a combination of uppercase letters, lowercase letters, and numbers.
+                                                    </div>) : ""
+                                                }
                                             </div>
-                                            <div className="form-group required pb-4 w-75">
+                                            <div className="form-group required pb-2 w-75">
                                                 <label for="exampleInputPassword2" className="control-label pb-2">Confirm Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" placeholder="Password" onChange={this.handlePassword2Change} ref={el => this.password2Field = el} required></input>
+                                                {(!this.samePassword && this.password2 !== "") ? (this.state.user_password !== "" ? 
+                                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
+                                                        Password confirmation failed
+                                                    </div>) : 
+                                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
+                                                        Please type in your new password before confirming
+                                                    </div>)
+                                                ) : ""
+                                                }
                                             </div>
                                         </div>
                                         <div className="col mt-2">
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
-                                                <button type="add student test" className="btn btn-primary w-auto justify-content-end" onClick={this.handleAddStudent}>Create</button>
+                                                {/* <button type="add student test" className="btn w-auto justify-content-end" onClick={this.handleAddStudent}>
+                                                    <i className="bi bi-plus-circle me-2"></i>
+                                                    Add a student
+                                                </button> */}
                                                 <div>
-                                                    <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
+                                                    {/* <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
                                                         <i className="bi bi-plus-circle me-2"></i>
                                                     Students
-                                                    </a>
+                                                    </a> */}
+                                                    <button type="add student test" className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
+                                                        <i className="bi bi-plus-circle me-2"></i>
+                                                        Add a student
+                                                    </button>
                                                     {this.state.added_students_list.map(count => 
                                                         <div className="accordion-item">
                                                             <h2 className="accordion-header" id={"heading" + count}>
@@ -446,6 +473,9 @@ class UsersCreate extends Component {
                                                                                     )}
                                                                                 </select>
                                                                             </div>
+                                                                            <div className="row justify-content-start mt-1 ms-0 mb-2">
+                                                                                <button type="button" className="btn btn-danger w-auto justify-content-end">Delete</button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -466,9 +496,6 @@ class UsersCreate extends Component {
                                     </div>
                                 </form>
                             </div>
-                            {!this.validEmail && <p>Please enter a valid email</p>}
-                            {!this.passwordValidation() && <p>Your password is too weak</p>} 
-                            {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>
                 </div> 

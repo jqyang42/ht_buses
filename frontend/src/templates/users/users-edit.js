@@ -162,8 +162,8 @@ class UsersEdit extends Component {
             password: this.state.password,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
-            // address: this.state.address,
-            address: '2625 Solano Avenue Hollywood, FL 33024',
+            address: this.state.address,
+            // address: '2625 Solano Avenue Hollywood, FL 33024',
             is_staff: this.state.is_staff == 'General' ? false : true,
             is_parent: this.state.students.length != 0,
             students: this.state.students
@@ -341,19 +341,28 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
+                                                {(!this.validEmail && this.state.user.email !== "") ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Please enter a valid email
+                                                    </div>) : ""
+                                                }
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                {/* Uses autocomplete API, only uncomment when needed to */}
                                                 {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
-                                                        console.log(place);
+                                                        this.setState({
+                                                            address: place.formatted_address
+                                                        })
                                                     }}
                                                     options={{
                                                         types: 'address'
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    defaultValue={this.state.user.address} onChange={this.handleAddressChange} /> */}
+                                                    value={this.state.address}
+                                                    onChange={this.handleAddressChange} /> */}
                                                 <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
@@ -375,11 +384,12 @@ class UsersEdit extends Component {
                                         <div className="col mt-2">
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
-                                                <button type="add student test" className="btn btn-primary w-auto justify-content-end" onClick={this.handleAddStudent}>Create</button>
+                                                {/* <button type="add student test" className="btn btn-primary w-auto justify-content-end" onClick={this.handleAddStudent}>Create</button> */}
                                                 <div>
-                                                    <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
+                                                    <button type="add student test" className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
                                                         <i className="bi bi-plus-circle me-2"></i>
-                                                        Students</a>
+                                                        Add a student
+                                                    </button>
 
                                                         {this.state.added_students_list.map(count => 
                                                         <div className="accordion-item">
@@ -427,6 +437,9 @@ class UsersEdit extends Component {
                                                                                     )}
                                                                                 </select>
                                                                             </div>
+                                                                            <div className="row justify-content-start mt-1 ms-0 mb-2">
+                                                                                <button type="button" className="btn btn-danger w-auto justify-content-end">Delete</button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -443,7 +456,6 @@ class UsersEdit extends Component {
                                     </div>
                                 </form>
                             </div>
-                            {!this.validEmail && <p>Please enter a valid email</p>}
                         </div>
                     </div>
                 </div>

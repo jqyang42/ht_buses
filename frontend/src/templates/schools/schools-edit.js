@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Navigate } from "react-router";
+import Autocomplete from "react-google-autocomplete";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -13,6 +14,8 @@ import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { GOOGLE_API_KEY } from "../../constants";
+
 class SchoolsEdit extends Component {
     state = {
         school_name: '',
@@ -187,6 +190,20 @@ class SchoolsEdit extends Component {
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                {/* Uses autocomplete API, only uncomment when needed to */}
+                                                {/* <Autocomplete
+                                                    apiKey={GOOGLE_API_KEY}
+                                                    onPlaceSelected={(place) => {
+                                                        this.setState({
+                                                            school_address: place.formatted_address
+                                                        })
+                                                    }}
+                                                    options={{
+                                                        types: 'address'
+                                                    }}
+                                                    placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
+                                                    value={this.state.school_address} 
+                                                    onChange={this.handleSchoolAddressChange} /> */}
                                                 <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
                                                 defaultValue={this.state.school.address} placeholder="Enter school address"
                                                 onChange={this.handleSchoolAddressChange}></input>
