@@ -100,7 +100,14 @@ class Login extends Component {
                             <div className="container mt-4 mx-2">
                                 <div className="row">
                                     <div className="col-6">
-                                        <h2 className="pb-4">Log In</h2>
+                                        <h2 className="pb-3">Log In</h2>
+                                        {(!this.state.valid_login && this.state.message !== "") ? 
+                                            (<div>
+                                                <div class="alert alert-danger mb-4" role="alert">
+                                                    {this.state.message}
+                                                </div>
+                                            </div>) : ""
+                                        }
                                         <form action="" method="post" onSubmit={this.handleSubmit}>
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputEmail1" className="pb-2">Email</label>
@@ -122,7 +129,6 @@ class Login extends Component {
                                     </div>
                                 </div>
                             </div>
-                            {!this.state.valid_login && this.state.message}
                         </div>
                     </div>
                 </div>

@@ -87,7 +87,8 @@ export function StudentsTable( {data} ) {
             },
             {
                 Header: 'Student ID',
-                acccessor: 'student_school_id'
+                accessor: 'student_school_id',
+                id: 'student_school_id'
             },
             {
                 Header: 'School',
@@ -225,8 +226,10 @@ export function StudentsTable( {data} ) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id), console.log(row.original.route_name)}>
+                    <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
                         {row.cells.map(cell => {
+                            console.log(columns)
+                            console.log(row.original)
                             return <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td>
                         })}
                     </tr>
