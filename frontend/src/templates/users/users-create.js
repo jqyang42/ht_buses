@@ -79,7 +79,8 @@ class UsersCreate extends Component {
     }
 
     handleIsStaffChange = event => {
-        this.setState({ user_is_staff: event.target.value });
+        const type = event.target.value
+        this.setState({ user_is_staff: type });
     }
 
     handleStudentFirstNameChange = event => {
@@ -132,10 +133,17 @@ class UsersCreate extends Component {
         event.preventDefault();
         
         let user_address
-        if (this.state.user_address == null) {
+        if (this.state.user_address === null) {
             user_address = ''
         } else {
             user_address = this.state.user_address
+        }
+
+        let school_id
+        if (this.state.student_id === '') {
+            school_id = null
+        } else {
+            school_id = this.state.student_id
         }
 
         const user = {
@@ -144,14 +152,14 @@ class UsersCreate extends Component {
             first_name: this.state.user_first_name,
             last_name: this.state.user_last_name,
             address: user_address,
-            is_staff: this.state.user_is_staff === 'General' ? false : true,
-            is_parent: true,
+            is_staff: this.state.user_is_staff === 'general' ? false : true,
+            is_parent: false,
             students: [{
                 first_name: this.state.student_first_name,
                 last_name: this.state.student_last_name,
                 school_name: this.state.student_school,
                 route_name: this.state.student_route,
-                student_school_id: this.state.student_id
+                student_school_id: school_id
             }]
         }
 
@@ -297,7 +305,7 @@ class UsersCreate extends Component {
                                                 <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
                                                 onChange={this.handleAddressChange}></input>
                                             </div>
-                                            <div onChange={this.handleIsStaffChange} className="form-group required pb-3 w-75">
+                                            <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
