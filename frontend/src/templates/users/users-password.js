@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
-import { Navigate } from "react-router";
+import { Link , Navigate} from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { passwordRegex } from "../regex/input-validation";
@@ -14,6 +13,7 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { USERS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class UsersPassword extends Component {
     state = {
@@ -85,8 +85,7 @@ class UsersPassword extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        
-
+    
         axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
             .then(res => {
                 console.log(res);
@@ -96,6 +95,12 @@ class UsersPassword extends Component {
     }
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         const { redirect } = this.state;
         const redirect_url = USERS_URL + '/' + this.props.params.id;
         if (redirect) {
@@ -167,8 +172,8 @@ class UsersPassword extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

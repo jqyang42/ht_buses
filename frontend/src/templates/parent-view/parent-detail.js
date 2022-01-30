@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { API_DOMAIN, HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
@@ -15,7 +15,12 @@ class ParentDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id, config)
             .then(res => {
                 const student = res.data
                 const route = student.route
@@ -29,8 +34,12 @@ class ParentDetail extends Component {
             user_id: sessionStorage.getItem('user_id')
         }
 
-        
-        axios.post(API_DOMAIN + `logout`, creds)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.post(API_DOMAIN + `logout`, creds, config)
         .then(res => {
             this.setState({token: '', message: res.data.message})
             sessionStorage.setItem('token', '')
@@ -48,7 +57,9 @@ class ParentDetail extends Component {
 
 
     render() {
-
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
@@ -92,8 +103,8 @@ class ParentDetail extends Component {
                                         </div>
                                     </div>
                                     <div className="col-md-auto mx-2 py-0 mr-4">
-                                        <h6 className="font-weight-bold mb-0">User Name</h6>
-                                        <p className="text-muted text-small">General</p>
+                                        <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                        <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                     </div>
                                 </div>
                             </div>

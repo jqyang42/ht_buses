@@ -11,7 +11,8 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { USERS_CREATE_URL } from "../../constants";
+import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+
 
 
 
@@ -21,7 +22,12 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users`)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `users`, config)
             .then(response => {
             const users = response.data.users;
             this.setState({ users });
@@ -32,7 +38,6 @@ class Users extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-        console.log("here")
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
@@ -51,8 +56,11 @@ class Users extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in')) || !JSON.parse(sessionStorage.getItem('is_staff'))) {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

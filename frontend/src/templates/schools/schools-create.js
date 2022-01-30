@@ -1,9 +1,8 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link , Navigate} from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
-import { Navigate } from "react-router";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -13,6 +12,7 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class SchoolsCreate extends Component {
     state = {
@@ -60,7 +60,11 @@ class SchoolsCreate extends Component {
             school_name: this.state.school_name,
             school_address: this.state.school_address
         }
-
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
         axios.post(API_DOMAIN + `schools/create`, school)
             .then(res => {
                 console.log(res);
@@ -70,6 +74,12 @@ class SchoolsCreate extends Component {
     }
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={SCHOOLS_URL}/>;
@@ -134,8 +144,8 @@ class SchoolsCreate extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

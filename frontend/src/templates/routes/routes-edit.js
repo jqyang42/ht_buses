@@ -14,6 +14,7 @@ import { ROUTES_URL } from "../../constants";
 import { ROUTES_DETAIL_URL } from "../../constants";
 import { ROUTES_PLANNER_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class BusRoutesEdit extends Component {
     state = {
@@ -59,7 +60,6 @@ class BusRoutesEdit extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -94,6 +94,12 @@ class BusRoutesEdit extends Component {
     }
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         const { redirect } = this.state;
         const redirect_url = ROUTES_URL + '/' + this.props.params.id;
         if (redirect) {
@@ -166,8 +172,8 @@ class BusRoutesEdit extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

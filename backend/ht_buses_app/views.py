@@ -437,7 +437,7 @@ def routes(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def users(request):
     data = {}
     users = User.objects.all()
@@ -463,7 +463,7 @@ def users(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -498,7 +498,7 @@ def users_detail(request):
         raise ValidationError({"message": "User does not exist"})
 
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def user_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -549,7 +549,7 @@ def user_edit(request):
 #         return Response(result) 
     
 @api_view(["POST"])
-@permission_classes([IsAdminUser]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -565,7 +565,7 @@ def user_delete(request):
         return Response(result) 
 
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def user_password_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -583,7 +583,7 @@ def user_password_edit(request):
         return Response(result)    
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
@@ -630,7 +630,7 @@ def routeplanner(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) 
 def parent_dashboard(request):
     data = {}
     id = request.query_params["id"] # need id of parent
@@ -659,7 +659,7 @@ def parent_dashboard(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) 
 def parent_student_detail(request):
     data = {}
     id = request.query_params["id"]

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
@@ -16,6 +16,7 @@ import { USERS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
 import { emailRegex } from "../regex/input-validation";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class UsersEdit extends Component {
     state = {
@@ -100,7 +101,13 @@ class UsersEdit extends Component {
         students[student_index] = student
         this.setState({ students: students })
 
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
             .then(res => {
                 let routes_data
                 if (res.data.routes == null) {
@@ -179,13 +186,18 @@ class UsersEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
         this.setState({ user: user });
         })
 
-        axios.get(API_DOMAIN + `schools`)
+        axios.get(API_DOMAIN + `schools`, config)
             .then(res => {            
             let schools = res.data.schools.map(school => {
                 return {value: school.id, display: school.name}
@@ -218,6 +230,12 @@ class UsersEdit extends Component {
 
 
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         const { redirect } = this.state;
         const redirect_url = USERS_URL + '/' + this.props.params.id;
                 if (redirect) {
@@ -289,8 +307,8 @@ class UsersEdit extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

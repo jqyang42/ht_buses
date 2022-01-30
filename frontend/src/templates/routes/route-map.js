@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
 import { MARKER_ICONS } from '../../constants';
@@ -7,6 +8,7 @@ import { API_DOMAIN } from '../../constants';
 import axios from "axios";
 import Geocode from "react-geocode";
 import StudentMarker from './map-marker';
+import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
 
 const containerStyle = {
   width: '100%',
@@ -26,7 +28,12 @@ class RouteMap extends Component {
   }
 
   componentDidMount() {
-    axios.get(API_DOMAIN + `routeplanner?id=4`)
+    const config = {
+      headers: {
+        Authorization: `Token ${sessionStorage.getItem('token')}`
+      }
+    }
+    axios.get(API_DOMAIN + `routeplanner?id=4`, config)
       .then(res => {
         const locations = res.data;
         this.setState({ locations });
@@ -68,6 +75,12 @@ class RouteMap extends Component {
   //   this.setState({assignMode: this.props.assign_mode});
   // }
   render() {
+    if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+      return <Navigate to={LOGIN_URL} />
+    }
+    else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+      return <Navigate to={PARENT_DASHBOARD_URL} />
+    }
     return (
       <div className='w-100 h-100'>
         <LoadScript
