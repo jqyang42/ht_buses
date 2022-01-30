@@ -19,6 +19,7 @@ class BusRoutesDetail extends Component {
     state = {
         route : [],
         students : [],
+        school : [],
         uppercaseSchool : ''
     }
 
@@ -26,13 +27,14 @@ class BusRoutesDetail extends Component {
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
+            const school = route.school;
             
             if (route.students == null) {
                 this.setState({ students: [] })
             } else {
                 this.setState({ students: route.students })
             }
-            this.setState({ route: route });
+            this.setState({ route: route, school: school, uppercaseSchool: school.name.toUpperCase() });
             })
     }
 
@@ -109,9 +111,7 @@ class BusRoutesDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.route.name}</h5>
-                                        {/* <a href={"/schools/" + this.state.school.id}> */}
-                                            <h7>{this.state.route.school_name}</h7>
-                                        {/* </a> */}
+                                        <h7><a href={"/schools/" + this.state.school.id}>{this.state.uppercaseSchool}</a></h7>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
@@ -149,7 +149,7 @@ class BusRoutesDetail extends Component {
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
-                                        <div className="bg-gray rounded mt-3">
+                                        <div className="bg-gray rounded mb-4">
                                             <RouteMap />
                                         </div>
                                         <h6>Description</h6>

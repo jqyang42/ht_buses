@@ -9,11 +9,13 @@ const TablePagination = (props) => {
                 {
                     (props.pageOptions.length == 0) ? (
                         <p>
-                            Showing {(props.pageIndex * props.pageSize)} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |  Page {props.pageIndex} of {props.pageOptions.length}
+                            {/* Showing {(props.pageIndex * props.pageSize)} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |   */}
+                            Page {props.pageIndex} of {props.pageOptions.length}
                         </p>
                     ) : (
                         <p>
-                            Showing {(props.pageIndex * props.pageSize) + 1} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |  Page {props.pageIndex + 1} of {props.pageOptions.length}
+                            {/* Showing {(props.pageIndex * props.pageSize) + 1} to {((props.pageIndex) * props.pageSize) + props.page.length} out of {props.rows} entries  |   */}
+                            Page {props.pageIndex + 1} of {props.pageOptions.length}
                         </p>
                     )
                 }
