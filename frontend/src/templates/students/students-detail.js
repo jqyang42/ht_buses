@@ -158,11 +158,16 @@ class StudentsDetail extends Component {
                                                 {this.state.school.name}
                                             </p>
                                         </a>
-                                        <a href={"/routes/" + this.state.route.id}>
+                                        {(this.state.route.name === "Unassigned") ?
                                             <p>
                                                 {this.state.route.name}
-                                            </p>
-                                        </a>
+                                            </p> :
+                                            <a href={"/routes/" + this.state.route.id}>
+                                                <p>
+                                                    {this.state.route.name}
+                                                </p>
+                                            </a>
+                                        }
                                     </div>
                                 </div>
                             </div>
