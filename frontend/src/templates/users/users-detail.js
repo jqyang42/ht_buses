@@ -47,7 +47,13 @@ class UsersDetail extends Component {
             email: this.state.users.email
         }
 
-        axios.post(API_DOMAIN + `users/delete`, deleted_user)
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.post(API_DOMAIN + `users/delete`, deleted_user, config)
             .then(res => {
                 console.log(res)
             })

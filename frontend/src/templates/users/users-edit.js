@@ -92,7 +92,13 @@ class UsersEdit extends Component {
 
         console.log(user)
 
-        axios.put(API_DOMAIN + `users/edit`, user)
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.put(API_DOMAIN + `users/edit`, user, config)
             .then(res => {
                 console.log(res);
                 console.log(res.data);

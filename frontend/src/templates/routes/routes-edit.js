@@ -35,7 +35,15 @@ class BusRoutesEdit extends Component {
             route_description: this.state.route_description,
         }
 
-        axios.put(API_DOMAIN + `routes/edit?id=0`, route)  // TODO: use onclick id value
+
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+
+        axios.put(API_DOMAIN + `routes/edit?id=0`, route, config)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);

@@ -59,7 +59,6 @@ class UsersCreate extends Component {
     }
 
     handlePassword2Change = event => {
-        console.log("print")
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
         this.samePassword  = this.state.password == this.password2
@@ -118,9 +117,13 @@ class UsersCreate extends Component {
             is_parent: this.state.students.length != 0
         }
 
-        console.log(user)
-
-        axios.post(API_DOMAIN + `users/create`, user)
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.post(API_DOMAIN + `users/create`, config)
             .then(res => {
                 console.log(res);
                 console.log(res.data);

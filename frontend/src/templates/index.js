@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios'
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { HT_LOGO } from "../constants";
@@ -22,12 +22,15 @@ import { USERS_EDIT_URL } from "../constants";
 import { ROUTES_EDIT_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
 
+axios.interceptors.request.eject()
 //class component
 class Login extends Component {
+
     state = {
         email: '',
         password: '',
-        token: ''
+        valid_login: false,
+        message:''
     }
 
     handleEmailChange = event => {
@@ -40,18 +43,36 @@ class Login extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-
         const creds = {
-            email: this.state.email,
-            password: this.state.password
-        }
+            email: this.emailField.value,
+            password: this.passwordField.value
 
-        axios.post(API_DOMAIN + `login`, creds)
-            .then(res => {
-                const token = res.token;
-                console.log(res.data.message);
-                this.setState({ token })
-            })
+        }
+        const config ={
+            headers: {
+                'Access-Control-Allow-Origin': 'http://localhost:3000',
+                'Access-Control-Allow-Credentials': 'true'
+            }
+        }
+        axios.post(API_DOMAIN + ``, creds)
+        .then(res => {
+            const data = res.data
+            this.setState({message: data.message, valid_login: data.valid_login})
+            sessionStorage.setItem('token', data.token)
+            if (data.valid_login) {
+                sessionStorage.setItem('user_id', data.info.user_id)
+                sessionStorage.setItem('first_name', data.info.first_name)
+                sessionStorage.setItem('last_name', data.info.last_name)
+                sessionStorage.setItem('is_staff', data.info.is_staff)
+                sessionStorage.setItem('logged_in', data.valid_login)
+                res.headers['Content-Type'] = 'application/json';
+                res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
+            } 
+            else {
+                this.passwordField.value = '';
+                this.setState({password: ''})
+            }
+        })
     }    
 
     render() {
@@ -82,13 +103,13 @@ class Login extends Component {
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputEmail1" className="pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" name="email" id="exampleInputEmail1" aria-describedby="emailHelp"
-                                                    placeholder="Enter email" onChange={this.handleEmailChange}></input>
+                                                    placeholder="Enter email" ref={el => this.emailField = el}  onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone else.</small>
                                             </div>
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputPassword1" className="pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2" name="password" id="exampleInputPassword1" 
-                                                placeholder="Password" onChange={this.handlePasswordChange}></input>
+                                                placeholder="Password" ref={el => this.passwordField = el} onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group form-check pb-4">
                                                 <input type="checkbox" className="form-check-input pb-2" id="exampleCheck1"></input>
@@ -99,6 +120,7 @@ class Login extends Component {
                                     </div>
                                 </div>
                             </div>
+                            {!this.state.valid_login && this.state.message}
                         </div>
                     </div>
                 </div>

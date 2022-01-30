@@ -58,9 +58,14 @@ class StudentsEdit extends Component {
             // parent: this.state.parent
         }
 
-        console.log(user)
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
 
-        axios.put(API_DOMAIN + `students/edit?id=0`, user)
+        axios.put(API_DOMAIN + `students/edit?id=0`, user, config)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -68,7 +73,15 @@ class StudentsEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=0`)  // TODO: use onclick id values
+
+
+        let config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.get(API_DOMAIN + `students/detail?id=0`, config)  // TODO: use onclick id values
         .then(res => {
         const student = res.data;
         this.setState({ student: student });
