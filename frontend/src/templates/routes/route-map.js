@@ -1,23 +1,30 @@
 import React, { Component } from 'react'
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import { GOOGLE_API_KEY, API_DOMAIN } from '../../constants';
+import { GOOGLE_API_KEY } from '../../constants';
+import { MARKER_COLORS } from '../../constants';
+import { MARKER_ICONS } from '../../constants';
+import { API_DOMAIN } from '../../constants';
 import axios from "axios";
 import Geocode from "react-geocode";
+import StudentMarker from './map-marker';
 
 const containerStyle = {
   width: '100%',
   height: '400px'
 };
+// const pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
 
 class RouteMap extends Component {
   state = {
-    icon: "https://www.google.com/mapfiles/marker.png",
+    clickNumber: 0,
+    icon: MARKER_ICONS[0],
     locations: [],
     latLngs: [],
     center: {},
     markers: [],
-    isMarkerShown: false
+    // assignMode: this.props.assignMode
   }
+
   componentDidMount() {
     axios.get(API_DOMAIN + `routeplanner?id=4`)
       .then(res => {
@@ -46,8 +53,6 @@ class RouteMap extends Component {
                     lat: lat,
                     lng: lng
                   },
-                  icon: this.state.icon,
-                  onClick: this.handleClicks,
                   id: address.parent_id
                 }]
               }))
@@ -59,6 +64,9 @@ class RouteMap extends Component {
         })
       })
   }
+  // componentDidUpdate(prevProps) {
+  //   this.setState({assignMode: this.props.assign_mode});
+  // }
   render() {
     return (
       <div className='w-100 h-100'>
@@ -73,9 +81,15 @@ class RouteMap extends Component {
             }}
             zoom={15}
           >
-            <Marker position={this.state.center} icon={this.state.icon} onClick={this.handleClicks} />
+            <Marker position={this.state.center}  />
             {this.state.markers.map((value, index) => {
-              return <Marker position={value.position} icon={value.icon} onClick={value.onClick} id={value.id} />
+              return <StudentMarker 
+                key={index} 
+                location={value.position} 
+                assignMode={this.props.assign_mode} 
+                routeID={1} 
+                active_route={3}
+                id={value.id} />
             })}
           </GoogleMap>
         </LoadScript>
