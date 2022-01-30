@@ -2,8 +2,11 @@ import React, { Component, useMemo } from "react";
 import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
+import { useNavigate } from 'react-router-dom';
     
 export function UserStudentsTable({ data }) {
+    const navigate = useNavigate();
+
     const columns = React.useMemo(
         () => [
             {
@@ -17,6 +20,7 @@ export function UserStudentsTable({ data }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
+                className: 'unassigned'
             },
         ],
         []
@@ -96,9 +100,9 @@ export function UserStudentsTable({ data }) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
                         {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        return <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )

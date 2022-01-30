@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { API_DOMAIN } from "../../constants";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from '../../constants';
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -16,15 +17,45 @@ import { STUDENTS_EDIT_URL } from "../../constants";
 
 class StudentsDetail extends Component {
     state = {
-        id: 0,
-        student : []
+        student: [],
+        route: [],
+        school: []
+    }
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
     }
 
+
+
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=` + this.state.id)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(response => {
             const student = response.data;
-            this.setState({ student });
+            const route = student.route;
+            const school = student.school;
+            this.setState({ student: student, route: route, school: school });
             })
     }
 
@@ -64,6 +95,11 @@ class StudentsDetail extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -79,7 +115,7 @@ class StudentsDetail extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <h5>{this.state.student.student_name}</h5>
+                                            <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
                                         </div>
                                     </div>
                                 </div>
@@ -94,7 +130,7 @@ class StudentsDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                             <h5>
-                                                {this.state.student.student_name}
+                                            {this.state.student.first_name} {this.state.student.last_name}
                                             </h5>
                                             <h7>
                                                 ID #{this.state.student.student_school_id}
@@ -144,16 +180,21 @@ class StudentsDetail extends Component {
                                         </p>
                                     </div>
                                     <div className="col-2 me-4">
-                                        <a href={SCHOOLS_DETAIL_URL}>
+                                        <a href={"/schools/" + this.state.school.id}>
                                             <p>
-                                                {this.state.student.school_name}
+                                                {this.state.school.name}
                                             </p>
                                         </a>
-                                        <a href={ROUTES_DETAIL_URL}>
+                                        {(this.state.route.name === "Unassigned") ?
                                             <p>
-                                                {this.state.student.route_name}
-                                            </p>
-                                        </a>
+                                                {this.state.route.name}
+                                            </p> :
+                                            <a href={"/routes/" + this.state.route.id}>
+                                                <p>
+                                                    {this.state.route.name}
+                                                </p>
+                                            </a>
+                                        }
                                     </div>
                                 </div>
                             </div>

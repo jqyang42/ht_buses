@@ -194,7 +194,7 @@ export function RoutesTable({ data }) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()} onClick={() => navigate("/schools/" + row.original.id)}>
+                    <tr {...row.getRowProps()} onClick={() => navigate("/routes/" + row.original.id)}>
                         {row.cells.map(cell => {
                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}

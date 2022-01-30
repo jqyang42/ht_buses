@@ -7,6 +7,7 @@ import { RouteStudentsTable } from "../tables/route-students-table";
 import RouteMap from './route-map';
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -17,22 +18,55 @@ import { API_DOMAIN } from "../../constants";
 class BusRoutesDetail extends Component {
     state = {
         route : [],
-        students : []
+        students : [],
+        school : [],
+        uppercaseSchool : ''
     }
+
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
+    }
+
+
 
     componentDidMount() {
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
+            const school = route.school;
             
             if (route.students == null) {
                 this.setState({ students: [] })
             } else {
                 this.setState({ students: route.students })
             }
-            this.setState({ route: route });
+            this.setState({ route: route, school: school, uppercaseSchool: school.name.toUpperCase() });
             })
     }
+
+    // uppercaseSchool = text.toUpperCase()
 
     render() {
         return (
@@ -70,6 +104,11 @@ class BusRoutesDetail extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -100,7 +139,7 @@ class BusRoutesDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.route.name}</h5>
-                                        <h7>{this.state.route.school_name}</h7>
+                                        <h7><a href={"/schools/" + this.state.school.id}>{this.state.uppercaseSchool}</a></h7>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
@@ -138,7 +177,7 @@ class BusRoutesDetail extends Component {
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
-                                        <div className="bg-gray rounded mt-3">
+                                        <div className="bg-gray rounded mb-4">
                                             <RouteMap />
                                         </div>
                                         <h6>Description</h6>
@@ -149,24 +188,6 @@ class BusRoutesDetail extends Component {
                                     <div className="col">
                                         <h7>STUDENTS</h7>
                                         <RouteStudentsTable data={this.state.students} />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
                                     </div>
                                 </div>
                             </div>

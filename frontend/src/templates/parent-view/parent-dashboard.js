@@ -3,6 +3,7 @@ import { API_DOMAIN, HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { ParentDashboardTable } from "../tables/parent-dashboard-table";
 import axios from "axios";
@@ -13,6 +14,34 @@ class ParentDashboard extends Component {
         parent: [],
         students: [],
     }
+
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
+    }
+
+
 
     componentDidMount() {
         axios.get(API_DOMAIN + 'dashboard?id=' + this.state.id)
@@ -42,6 +71,11 @@ class ParentDashboard extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 

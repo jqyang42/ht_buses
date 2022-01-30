@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { HT_LOGO } from '../../constants';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
@@ -9,6 +9,7 @@ import Geocode from "react-geocode";
 import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -32,6 +33,34 @@ class BusRoutesPlanner extends Component {
             route_dropdown: []
         }
     }
+
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
+    }
+
+
 
     componentDidMount() {
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
@@ -127,6 +156,11 @@ class BusRoutesPlanner extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 

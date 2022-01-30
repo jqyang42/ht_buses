@@ -7,6 +7,7 @@ import Autocomplete from "react-google-autocomplete";
 import { emailRegex, passwordRegex } from "../regex/input-validation";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -131,8 +132,13 @@ class UsersCreate extends Component {
             is_staff: this.state.user_is_staff === 'General' ? false : true,
             is_parent: this.state.students.length !== 0
         }
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.post(API_DOMAIN + `users/create`, user, config)
 
-        axios.post(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -149,6 +155,34 @@ class UsersCreate extends Component {
             this.setState({ schools_dropdown: schools})
         })
     }
+
+    handleLogout = event => {
+        event.preventDefault();
+        const creds = {}
+        try {
+         creds = {
+            user_id: sessionStorage.getItem('user_id')
+            }
+        }
+        catch {
+            creds= {}
+        }
+        
+        axios.post(API_DOMAIN + `logout`, creds)
+        .then(res => {
+            this.setState({token: '', message: res.data.message})
+            sessionStorage.setItem('token', '')
+            sessionStorage.setItem('user_id', '')
+            sessionStorage.setItem('first_name', '')
+            sessionStorage.setItem('last_name', '')
+            sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('logged_in', false)
+            console.log(sessionStorage.getItem('logged_in'))
+            console.log(sessionStorage.getItem('token'))
+        })
+    }
+
+
     
     render() {
         const { redirect } = this.state;
@@ -190,6 +224,11 @@ class UsersCreate extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button"> onClick={this.handleLogout}
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
