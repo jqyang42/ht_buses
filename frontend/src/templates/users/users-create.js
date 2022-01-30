@@ -93,7 +93,7 @@ class UsersCreate extends Component {
         const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
         let student = {...students[index]}
-        student.first_name = event.target.value
+        student.last_name = event.target.value
         students[index] = student
         this.setState({ students: students })
     }
@@ -102,7 +102,7 @@ class UsersCreate extends Component {
         const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
         let student = {...students[index]}
-        student.first_name = event.target.value
+        student.student_school_id = event.target.value
         students[index] = student
         this.setState({ students: students })
     }
