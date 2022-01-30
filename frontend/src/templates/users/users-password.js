@@ -190,11 +190,25 @@ class UsersPassword extends Component {
                                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
                                                 placeholder="Enter new password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
+                                                {(!this.passwordValidation() && this.state.password !== "") ? 
+                                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
+                                                        Your password is too weak. Password must contain at least 8 characters, including a combination of uppercase letters, lowercase letters, and numbers.
+                                                    </div>) : ""
+                                                }
                                             </div>
-                                            <div className="form-group required pb-4 w-75">
+                                            <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword3" 
                                                 placeholder="Re-enter password" required ref={el => this.password2Field = el} onChange={this.handleConfirmPasswordChange}></input>
+                                                {(!this.samePassword && this.password2 !== "") ? (this.state.password !== "" ? 
+                                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
+                                                        Password confirmation failed
+                                                    </div>) : 
+                                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
+                                                        Please type in your new password before confirming
+                                                    </div>)
+                                                ) : ""
+                                                }
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
@@ -206,8 +220,6 @@ class UsersPassword extends Component {
                                     </div>
                                 </form>
                             </div>
-                            {!this.passwordValidation() && <p>Your password is invalid</p>} 
-                            {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>
                 </div>
