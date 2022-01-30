@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -15,7 +18,8 @@ class SchoolsEdit extends Component {
     state = {
         school_name: '',
         school_address: '',
-        school: []
+        school: [],
+        redirect: false,
     }
 
     handleSchoolNameChange = event => {
@@ -34,15 +38,16 @@ class SchoolsEdit extends Component {
             school_address: this.state.school_address,
         }
 
-        axios.put(API_DOMAIN + `schools/edit?id=0`, school)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
         .then(res => {
         const school = res.data;
         this.setState({ school: school });
@@ -50,6 +55,11 @@ class SchoolsEdit extends Component {
     }
     
     render() {
+        const { redirect } = this.state;
+        const redirect_url = SCHOOLS_URL + '/' + this.props.params.id;
+        if (redirect) {
+            return <Navigate to={redirect_url}/>;  // TODO: use onclick id values
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -85,6 +95,11 @@ class SchoolsEdit extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -123,7 +138,7 @@ class SchoolsEdit extends Component {
                                         <h5>Edit School</h5>
                                     </div>
                                 </div>
-                                <form onSubmit={this.onSubmit}>
+                                <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div className="form-group required pb-3 w-75">
@@ -155,4 +170,9 @@ class SchoolsEdit extends Component {
     }
 }
 
-export default SchoolsEdit;
+export default (props) => (
+    <SchoolsEdit
+        {...props}
+        params={useParams()}
+    />
+);

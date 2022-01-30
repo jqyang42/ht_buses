@@ -30,6 +30,7 @@ class Login extends Component {
         email: '',
         password: '',
         valid_login: false,
+        token:'',
         message:''
     }
 
@@ -46,8 +47,8 @@ class Login extends Component {
         const creds = {
             email: this.emailField.value,
             password: this.passwordField.value
-
         }
+          
         const config ={
             headers: {
                 'Access-Control-Allow-Origin': 'http://localhost:3000',

@@ -2,10 +2,12 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO, GOOGLE_API_KEY } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import { emailRegex, passwordRegex } from "../regex/input-validation";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -15,22 +17,19 @@ import { API_DOMAIN } from "../../constants";
 
 class UsersCreate extends Component {
     state = {
-        user: {
-            email: '',
-            password: '',
-            first_name: '',
-            last_name: '',
-            address: '',
-            is_staff: '',
-            // student_first_name: '',
-            // student_last_name: '',
-            // student_id: '',
-            // school: '',
-            // route: ''
-        },
-        // schools: [],
-        // routes: []
-        students: []
+        user_email: '',
+        user_password: '',
+        user_first_name: '',
+        user_last_name: '',
+        user_address: '',
+        user_is_staff: '',
+        student_first_name: '',
+        student_last_name: '',
+        student_id: '',
+        students: [],
+        schools_dropdown: [],
+        routes_dropdown: [],
+        redirect: false,
     }
 
     password2 = '';
@@ -43,11 +42,11 @@ class UsersCreate extends Component {
     }
     
     passwordValidation = function() {
-        return (passwordRegex.test(this.state.password))
+        return (passwordRegex.test(this.state.user_password))
     }
 
     handleEmailChange = event => {
-        this.setState( { email: event.target.value})
+        this.setState( {user_email: event.target.value})
         this.validEmail = this.emailValidation() 
     }
 
@@ -55,51 +54,68 @@ class UsersCreate extends Component {
         this.password2 = '';
         this.password2Field.value = '';
         this.samePassword = false;
-        this.setState({ password: event.target.value});
+        this.setState({ user_password: event.target.value});
     }
 
     handlePassword2Change = event => {
         this.password2 = event.target.value;
-        this.setState({ password: this.password1Field.value});
-        this.samePassword  = this.state.password == this.password2
+        this.setState({ user_password: this.password1Field.value});
+        this.samePassword  = this.state.user_password === this.password2
         this.validPassword = this.passwordValidation() && this.samePassword
     }
 
     handleFirstNameChange = event => {
-        this.setState({ first_name: event.target.value });
+        this.setState({ user_first_name: event.target.value });
     }
 
     handleLastNameChange = event => {
-        this.setState({ last_name: event.target.value });
+        this.setState({ user_last_name: event.target.value });
     }
 
     handleAddressChange = event => {
-        this.setState({ address: event.target.value });
+        this.setState({ user_address: event.target.value });
     }
 
     handleIsStaffChange = event => {
-        this.setState({ is_staff: event.target.value });
+        this.setState({ user_is_staff: event.target.value });
     }
 
-    // handleStudentFirstNameChange = event => {
-    //     this.setState( { student_first_name: event.target.value })
-    // }
+    handleStudentFirstNameChange = event => {
+        this.setState( { student_first_name: event.target.value })
+    }
 
-    // handleStudentLastNameChange = event => {
-    //     this.setState({ student_last_name: event.target.value });
-    // }
+    handleStudentLastNameChange = event => {
+        this.setState({ student_last_name: event.target.value });
+    }
 
-    // handleStudentIDChange = event => {
-    //     this.setState({ student_id: event.target.value });
-    // }
+    handleStudentIDChange = event => {
+        this.setState({ student_id: event.target.value });
+    }
 
-    // handleSchoolChange = event => {
-    //     this.setState({ school: event.target.value });
-    // }
+    handleSchoolChange = event => {
+        const school_id = event.target.value
 
-    // handleRouteChange = event => {
-    //     this.setState({ route: event.target.value });
-    // }
+        console.log(school_id)
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+            .then(res => {
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                console.log(routes)
+                this.setState({ routes_dropdown: routes })
+            })
+        console.log(this.state.routes_dropdown)
+    }
 
     handleSubmit = event => {
         if (!this.validEmail || !this.validPassword) {
@@ -108,46 +124,43 @@ class UsersCreate extends Component {
         event.preventDefault();
 
         const user = {
-            email: this.state.email,
-            password: this.state.password,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            address: this.state.address,
-            is_staff: this.state.is_staff == 'General' ? false : true,
-            is_parent: this.state.students.length != 0
+            email: this.state.user_email,
+            password: this.state.user_password,
+            first_name: this.state.user_first_name,
+            last_name: this.state.user_last_name,
+            address: this.state.user_address,
+            is_staff: this.state.user_is_staff === 'General' ? false : true,
+            is_parent: this.state.students.length !== 0
         }
-
-        let config = {
+         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        
-        axios.post(API_DOMAIN + `users/create`, config)
+        axios.post(API_DOMAIN + `users/create`, user, config)
+
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
 
-    // componentDidMount() {
-    //     axios.get(API_DOMAIN + `schools`)
-    //         .then(res => {
-    //         const schools = res.data;
-    //         this.setState({ schools });
-    //     })
-    // }
-
-    // handleGetRoutes(id) {
-    //     axios.get(API_DOMAIN + `schools/detail?id=` + id)  // TODO: use onclick id values
-    //         .then(res => {
-    //             const school = res.data;
-    //             const routes = school.routes;
-    //             this.setState({ routes: routes });
-    //         })
-    // }
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools`)
+            .then(res => {            
+            let schools = res.data.schools.map(school => {
+                return {value: school.id, display: school.name}
+            })
+            this.setState({ schools_dropdown: schools})
+        })
+    }
     
     render() {
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={USERS_URL}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -183,6 +196,11 @@ class UsersCreate extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -237,16 +255,20 @@ class UsersCreate extends Component {
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                <Autocomplete
+                                                {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
-                                                        console.log(place);
+                                                        this.setState({
+                                                            user_address: place.formatted_address
+                                                        })
                                                     }}
                                                     options={{
                                                         types: 'address'
                                                     }}
+                                                    value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} />
+                                                    onChange={this.handleAddressChange} /> */}
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address"></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange} className="form-group required pb-3 w-75">
                                                 <div>
@@ -293,34 +315,35 @@ class UsersCreate extends Component {
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                                                    placeholder="Enter first name" required></input>
+                                                                                    placeholder="Enter first name" required onChange={this.handleStudentFirstNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                                                    placeholder="Enter last name" required></input>
+                                                                                    placeholder="Enter last name" required onChange={this.handleStudentLastNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
                                                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
-                                                                                placeholder="Enter student ID"></input>
+                                                                                placeholder="Enter student ID" onChange={this.handleStudentIDChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
+                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" 
+                                                                                onChange={this.handleSchoolChange} required>
                                                                                     <option selected>Select a School</option>
-                                                                                    <option value="1">One</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.schools_dropdown.map(school => 
+                                                                                        <option value={school.value}>{school.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
                                                                                     <option selected>Select a Route</option>
-                                                                                    <option value="1">One</option>
-                                                                                    <option value="2">Two</option>
-                                                                                    <option value="3">Three</option>
+                                                                                    {this.state.routes_dropdown.map(route => 
+                                                                                        <option value={route.value}>{route.display}</option>
+                                                                                    )}
                                                                                 </select>
                                                                             </div>
                                                                         </div>
@@ -334,8 +357,8 @@ class UsersCreate extends Component {
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
-                                        <Link to={USERS_URL} class="btn btn-secondary w-auto me-3 justify-content-end" role="button">
-                                            <span class="btn-text">
+                                        <Link to={USERS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                            <span className="btn-text">
                                                 Cancel
                                             </span>
                                         </Link>
@@ -343,8 +366,8 @@ class UsersCreate extends Component {
                                     </div>
                                 </form>
                             </div>
-                            {!this.validEmail && <p>Your email is invalid</p>}
-                            {!this.passwordValidation() && <p>Your password is invalid</p>} 
+                            {!this.validEmail && <p>Please enter a valid email</p>}
+                            {!this.passwordValidation() && <p>Your password is too weak</p>} 
                             {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>

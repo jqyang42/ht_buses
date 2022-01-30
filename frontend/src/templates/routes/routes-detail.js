@@ -2,10 +2,12 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
 import RouteMap from './route-map';
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -20,11 +22,17 @@ class BusRoutesDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes/detail?id=0`)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
-            const students = route.students;
-            this.setState({ route: route, students: students });
+            console.log(route)
+            if (route.students == null) {
+                this.setState({ students: [] })
+            } else {
+                this.setState({ students: route.students })
+            }
+            console.log(this.state.students)
+            this.setState({ route: route });
             })
     }
 
@@ -64,6 +72,11 @@ class BusRoutesDetail extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -98,8 +111,8 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={ROUTES_EDIT_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
+                                            <Link to={ROUTES_EDIT_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit
                                                 </span>
@@ -120,7 +133,7 @@ class BusRoutesDetail extends Component {
                                                             Are you sure you want to delete this bus route?
                                                             Note: All associated students will revert to having no bus route.
                                                         </div>
-                                                        <div class="modal-footer">
+                                                        <div className="modal-footer">
                                                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                             <button type="button" className="btn btn-danger">Delete</button>
                                                         </div>
@@ -143,24 +156,6 @@ class BusRoutesDetail extends Component {
                                     <div className="col">
                                         <h7>STUDENTS</h7>
                                         <RouteStudentsTable data={this.state.students} />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
                                     </div>
                                 </div>
                             </div>
@@ -172,4 +167,9 @@ class BusRoutesDetail extends Component {
     }
 }
 
-export default BusRoutesDetail;
+export default (props) => (
+    <BusRoutesDetail
+        {...props}
+        params={useParams()}
+    />
+);

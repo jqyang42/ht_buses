@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { passwordRegex } from "../regex/input-validation";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -15,7 +18,8 @@ import { API_DOMAIN } from "../../constants";
 class UsersPassword extends Component {
     state = {
         password: '',
-        confirm_password: ''
+        confirm_password: '',
+        redirect: false,
     }
 
     password2 = '';
@@ -48,20 +52,29 @@ class UsersPassword extends Component {
         }
         event.preventDefault();
 
-        let config = {
+        const password = {
+            password: this.state.password
+        const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
         
 
-        axios.put(API_DOMAIN + `users/password-edit`, this.state, config)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
+        this.setState({ redirect: true });
     }
+
     render() {
+        const { redirect } = this.state;
+        const redirect_url = USERS_URL + '/' + this.props.params.id;
+        if (redirect) {
+            return <Navigate to={redirect_url}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -97,6 +110,11 @@ class UsersPassword extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -172,4 +190,9 @@ class UsersPassword extends Component {
     }
 }
 
-export default UsersPassword;
+export default (props) => (
+    <UsersPassword
+        {...props}
+        params={useParams()}
+    />
+);

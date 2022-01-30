@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { HT_LOGO } from '../../constants';
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
@@ -9,6 +9,7 @@ import Geocode from "react-geocode";
 import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -22,9 +23,75 @@ class BusRoutesPlanner extends Component {
         this.state = {
             locations: [],
             center: {},
-            latLngs: []
+            latLngs: [],
+            school: [],
+            students: [],
+            routes: [],
+            create_route_name: '',
+            create_school_name: '',
+            create_route_description: '',
+            route_dropdown: []
         }
     }
+
+    componentDidMount() {
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+            .then(res => {
+                const school = res.data;
+                this.setState({ school: school });
+                
+                if (school.students == null) {
+                    this.setState({ students: []}) 
+                } else {
+                    this.setState({ students: school.students })
+                }
+
+                if (school.routes == null) {
+                    this.setState({ routes: []})
+                } else {
+                    this.setState({ routes: school.routes }, () => {
+                        let routes = this.state.routes.map(route => {
+                            return {value: route.id, display: route.name}
+                        })
+                        this.setState({ route_dropdown: routes })
+                    })
+                }                                
+            })        
+    }
+
+    handleRouteNameChange = event => {
+        this.setState({ create_route_name: event.target.value });
+    }
+
+    // handleSchoolNameChange = event => {
+    //     this.setState({ create: { school_name: event.target.value }});
+    // }
+
+    handleRouteDescriptionChange = event => {
+        this.setState({ create_route_description: event.target.value });
+    }
+
+    handleRouteCreateSubmit = event => {
+        event.preventDefault();
+
+        const route = {
+            route_name: this.state.create_route_name,
+            school_name: this.state.school.name,
+            route_description: this.state.create_route_description
+        }
+        
+        console.log(route)
+
+        axios.post(API_DOMAIN + 'routes/create', route)
+            .then(res => {
+                // TODO: UPDATE WITH RES
+                this.setState({ route_dropdown: [...this.state.routes, {
+                    value: route.id,
+                    display: route.route_name
+                }]}, this.updateDropdown)
+            })
+    }
+    
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -61,6 +128,11 @@ class BusRoutesPlanner extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -76,7 +148,7 @@ class BusRoutesPlanner extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={SCHOOLS_DETAIL_URL}><h5>School Name</h5></a>
+                                            <a href={SCHOOLS_DETAIL_URL}><h5>{this.state.school.name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -95,8 +167,8 @@ class BusRoutesPlanner extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
-                                    <h5>School Name</h5>
-                                    <p>738 Illinois St., Lansdale, PA 19446</p>
+                                    <h5>{this.state.school.name}</h5>
+                                    <p>{this.state.school.address}</p>
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
@@ -114,31 +186,32 @@ class BusRoutesPlanner extends Component {
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Add Route</h5>
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <div className="modal-body">
-                                                                <form>
+                                                            <form onSubmit={this.handleRouteCreateSubmit}>
+                                                                <div className="modal-body">
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-name" className="control-label pb-2">Name</label>
-                                                                        <input type="name" className="form-control" id="route-name" placeholder="Enter route name"></input>
+                                                                        <input type="name" className="form-control" id="route-name" required
+                                                                        placeholder="Enter route name" onChange={this.handleRouteNameChange}></input>
                                                                     </div>
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-school" className="control-label pb-2">School</label>
-                                                                        <select class="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
+                                                                        <select className="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
                                                                             <option>Select a School</option>
-                                                                            <option selected value="1">School Name (auto-filled)</option>
+                                                                            <option selected value="1">{this.state.school.name}</option>
                                                                             <option value="2">Two</option>
                                                                             <option value="3">Three</option>
                                                                         </select>
                                                                     </div>
-                                                                    <div class="form-group">
-                                                                        <label for="route-description" class="control-label pb-2">Description</label>
-                                                                        <textarea type="description" class="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description"></textarea>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="button" className="btn btn-primary">Create</button>
-                                                            </div>
+                                                                    <div className="form-group">
+                                                                        <label for="route-description" className="control-label pb-2">Description</label>
+                                                                        <textarea type="description" className="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description" onChange={this.handleRouteDescriptionChange}></textarea>
+                                                                    </div>   
+                                                                </div>
+                                                                <div className="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="submit" className="btn btn-primary">Create</button>
+                                                                </div>
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -147,9 +220,9 @@ class BusRoutesPlanner extends Component {
                                             <div className="col justify-content-end">
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
                                                     <option selected>Select a Route</option>
-                                                    <option value="1">One</option>
-                                                    <option value="2">Two</option>
-                                                    <option value="3">Three</option>
+                                                    {this.state.route_dropdown.map(route => 
+                                                        <option value={route.value}>{route.display}</option>
+                                                    )}
                                                 </select>
                                             </div>
                                             <div className="col-auto">
@@ -161,7 +234,7 @@ class BusRoutesPlanner extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <SchoolStudentsTable />
+                                        <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                 </div>
                             </div>
@@ -173,4 +246,18 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-export default BusRoutesPlanner;
+function RouteSelectDropdown() { 
+    let routes = this.state.routes(route => {
+        return {value: route.id, display: route.name}
+    })
+    console.log(routes)
+    this.setState({ route_dropdown: routes })
+}
+
+export default (props) => (
+    <BusRoutesPlanner
+        {...props}
+        params={useParams()}
+    />
+);
+// export default BusRoutesPlanner;

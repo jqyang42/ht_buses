@@ -2,10 +2,12 @@ import axios from "axios";
 import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import { SchoolRoutesTable } from "../tables/school-routes-table";
 
 import { INDEX_URL } from "../../constants";
+import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -16,7 +18,6 @@ import { API_DOMAIN } from "../../constants";
 
 class SchoolsDetail extends Component {
     state = {
-        id: 7,
         school: [],
         students: [],
         routes: [],
@@ -41,31 +42,23 @@ class SchoolsDetail extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=` + this.state.id)  // TODO: use onclick id values
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
-                const students = school.students;
-                const routes = school.routes;
                 
-                if (students == null) {
-                    this.setState({ students: [{
-                        student_school_id: '-',
-                        name: '-',
-                        route_name: '-'
-                    }]}) 
+                if (school.students == null) {
+                    this.setState({ students: []}) 
                 } else {
-                    this.setState({ students: students })
+                    this.setState({ students: school.students })
                 }
 
-                if (routes == null) {
-                    this.setState({ routes: [{
-                        id: '-',
-                        name: '-',
-                        student_count: '-'
-                    }]})
+                if (school.routes == null) {
+                    this.setState({ routes: []})
                 } else {
-                    this.setState({ routes: routes })
+                    this.setState({ routes: school.routes })
                 }
+
+                console.log(school)
                 this.setState({ school: school });
             })
     }
@@ -106,6 +99,11 @@ class SchoolsDetail extends Component {
                                     </a>
                                 </li>
                             </ul>
+                            <div className="w-100 px-auto pb-1 d-flex justify-content-around">
+                                <Link to={LOGIN_URL} className="btn btn-primary w-75 mb-4 mx-auto" role="button">
+                                    Log Out
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
@@ -140,14 +138,14 @@ class SchoolsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={ROUTES_PLANNER_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
+                                            <Link to={ROUTES_PLANNER_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
                                                     Route Planner
                                                 </span>
                                             </Link>
-                                            <Link to={SCHOOLS_EDIT_URL} class="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span class="btn-text">
+                                            <Link to={SCHOOLS_EDIT_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit
                                                 </span>
@@ -173,7 +171,7 @@ class SchoolsDetail extends Component {
                                                                         onChange={this.handleDeleteSchool}></input>
                                                                     </div>
                                                             </div>
-                                                            <div class="modal-footer">
+                                                            <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="submit" className="btn btn-danger">Delete</button>
                                                             </div>
@@ -224,4 +222,9 @@ class SchoolsDetail extends Component {
     }
 }
 
-export default SchoolsDetail;
+export default (props) => (
+    <SchoolsDetail
+        {...props}
+        params={useParams()}
+    />
+);

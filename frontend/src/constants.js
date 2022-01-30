@@ -14,26 +14,27 @@ export const API_DOMAIN = "http://localhost:8000/"
 
 // Link URLs
 export const INDEX_URL = "/";
+export const LOGIN_URL = "/login";
 
 export const SCHOOLS_URL = "/schools";
 export const STUDENTS_URL = "/students";
 export const USERS_URL = "/users";
 export const ROUTES_URL = "/routes";
 
-export const SCHOOLS_DETAIL_URL = "/schools-detail";
-export const STUDENTS_DETAIL_URL = "/students-detail";
-export const USERS_DETAIL_URL = "/users-detail";
-export const ROUTES_DETAIL_URL = "/routes-detail";
+export const SCHOOLS_DETAIL_URL = "/schools/:id";
+export const STUDENTS_DETAIL_URL = "/students/:id";
+export const USERS_DETAIL_URL = "/users/:id";
+export const ROUTES_DETAIL_URL = "/routes/:id";
 
 export const SCHOOLS_CREATE_URL = "/schools/create";
 export const USERS_CREATE_URL = "/users/create";
-export const ROUTES_PLANNER_URL = "/schools/routes-planner";
+export const ROUTES_PLANNER_URL = "/schools/:id/routes-planner";
 
-export const SCHOOLS_EDIT_URL = "/schools-edit";
-export const STUDENTS_EDIT_URL = "/students-edit";
-export const USERS_EDIT_URL = "/users-edit";
-export const USERS_PASSWORD_URL = "/users-change-password";
-export const ROUTES_EDIT_URL = "/routes-edit";
+export const SCHOOLS_EDIT_URL = "/schools/:id/edit";
+export const STUDENTS_EDIT_URL = "/students/:id/edit";
+export const USERS_EDIT_URL = "/users/:id/edit";
+export const USERS_PASSWORD_URL = "/users/:id/change-password";
+export const ROUTES_EDIT_URL = "/routes/:id/edit";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
-export const PARENT_DETAIL_URL = "/dashboard/detail";
+export const PARENT_DETAIL_URL = "/dashboard/:id";
