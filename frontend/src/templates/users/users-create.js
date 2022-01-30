@@ -79,38 +79,44 @@ class UsersCreate extends Component {
         this.setState({ user_is_staff: type });
     }
 
-    handleStudentFirstNameChange = (event, student_index) => {
+    handleStudentFirstNameChange = (event, student_num) => {
+        const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
-        let student = {...students[student_index]}
+        let student = {...students[index]}
         student.first_name = event.target.value
-        students[student_index] = student
+        students[index] = student
         this.setState({ students: students })
+
+        console.log(students)
     }
 
-    handleStudentLastNameChange = (event, student_index) => {
+    handleStudentLastNameChange = (event, student_num) => {
+        const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
-        let student = {...students[student_index]}
+        let student = {...students[index]}
         student.last_name = event.target.value
-        students[student_index] = student
+        students[index] = student
         this.setState({ students: students })
     }
 
-    handleStudentIDChange = (event, student_index) => {
+    handleStudentIDChange = (event, student_num) => {
+        const index = this.state.added_students_list.indexOf(student_num)        
         let students = [...this.state.students]
-        let student = {...students[student_index]}
+        let student = {...students[index]}
         student.student_school_id = event.target.value
-        students[student_index] = student
+        students[index] = student
         this.setState({ students: students })
     }
 
-    handleSchoolChange = (event, student_index) => {
+    handleSchoolChange = (event, student_num) => {
         const school_id = event.target.value
         const school_name = event.target[event.target.selectedIndex].id
-
+        
+        const index = this.state.added_students_list.indexOf(student_num)        
         let students = [...this.state.students]
-        let student = {...students[student_index]}
+        let student = {...students[index]}
         student.school_name = school_name
-        students[student_index] = student
+        students[index] = student
         this.setState({ students: students })
 
         axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
@@ -131,18 +137,29 @@ class UsersCreate extends Component {
             })
     }
 
-    handleRouteChange = (event, student_index) => {
+    handleRouteChange = (event, student_num) => {
         const route_name = event.target[event.target.selectedIndex].id
 
+        const index = this.state.added_students_list.indexOf(student_num)        
         let students = [...this.state.students]
-        let student = {...students[student_index]}
+        let student = {...students[index]}
         student.route_name = route_name
-        students[student_index] = student
+        students[index] = student
         this.setState({ students: students })
     }
 
-    handleAddStudent = () => {
-        this.setState({ added_students_list: [...this.state.added_students_list, this.state.added_students_list.length] })
+    handleAddStudent = () => {      
+        let last_element_index
+        let new_list
+        if (this.state.added_students_list.length === 0) {
+            new_list =  [...this.state.added_students_list, 0]
+        } else {
+            last_element_index = this.state.added_students_list.length - 1
+            new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
+        }
+        // console.log(new_list)
+        this.setState({ added_students_list: new_list })
+        
         const student_field = {
             first_name: '',
             last_name: '',
@@ -151,7 +168,30 @@ class UsersCreate extends Component {
             student_school_id: ''
         }
         this.setState({ students: [...this.state.students, student_field] })
+    }
+
+    handleDeleteStudent = (student_num) => {
+        console.log(student_num)
+
+        // console.log(this.state.added_students_list)        
+        const new_list = this.state.added_students_list
+        const index = new_list.indexOf(student_num)
+        // console.log(new_list)
+        // console.log(new_list[index])
+        new_list.splice(index, 1)
+        // console.log(new_list)
+        this.setState({ added_students_list: new_list })
+
         console.log(this.state.students)
+        const new_students = this.state.students
+        console.log(new_students)
+        console.log(new_students[index])
+        new_students.splice(index, 1)
+        console.log(new_students)
+        this.setState({ students: new_students })
+
+        // console.log(this.state.added_students_list)
+        // console.log(dthis.state.students)
     }
 
     handleSubmit = event => {
@@ -217,7 +257,6 @@ class UsersCreate extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -456,7 +495,7 @@ class UsersCreate extends Component {
                                                                                 </select>
                                                                             </div>
                                                                             <div className="row justify-content-start mt-1 ms-0 mb-2">
-                                                                                <button type="button" className="btn btn-danger w-auto justify-content-end">Delete</button>
+                                                                                <button type="button" className="btn btn-danger w-auto justify-content-end" onClick={(e) =>this.handleDeleteStudent(count)}>Delete</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
