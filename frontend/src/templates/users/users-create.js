@@ -23,11 +23,6 @@ class UsersCreate extends Component {
         user_last_name: '',
         user_address: '',
         user_is_staff: '',
-        // student_first_name: '',
-        // student_last_name: '',
-        // student_school: '',
-        // student_route: '',
-        // student_id: '',
         added_students_list: [],
         students: [],
         schools_dropdown: [],
@@ -362,7 +357,8 @@ class UsersCreate extends Component {
                                                 <div>
                                                     <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
                                                         <i className="bi bi-plus-circle me-2"></i>
-                                                    Students</a>
+                                                    Students
+                                                    </a>
                                                     {this.state.added_students_list.map(count => 
                                                         <div className="accordion-item">
                                                             <h2 className="accordion-header" id={"heading" + count}>
