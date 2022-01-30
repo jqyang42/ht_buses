@@ -22,20 +22,7 @@ class RouteMap extends Component {
     latLngs: [],
     center: {},
     markers: [],
-  }
-  handleClick = (marker, e) => {
-    if (this.state.clickNumber < MARKER_ICONS.length-1) {
-      this.setState({
-        clickNumber: this.state.clickNumber+1,
-      })
-    } else {
-      this.setState({
-        clickNumber: 0,
-      })
-    }
-    this.setState({
-      icon: MARKER_ICONS[this.state.clickNumber]
-    })
+    // assignMode: this.props.assignMode
   }
 
   componentDidMount() {
@@ -66,7 +53,6 @@ class RouteMap extends Component {
                     lat: lat,
                     lng: lng
                   },
-                  icon: this.state.icon,
                   id: address.parent_id
                 }]
               }))
@@ -78,6 +64,9 @@ class RouteMap extends Component {
         })
       })
   }
+  // componentDidUpdate(prevProps) {
+  //   this.setState({assignMode: this.props.assign_mode});
+  // }
   render() {
     return (
       <div className='w-100 h-100'>
@@ -97,10 +86,9 @@ class RouteMap extends Component {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 
-                clickNumber={1} 
-                assignMode={false} 
-                routeID={0} 
-                active_route={0}
+                assignMode={this.props.assign_mode} 
+                routeID={1} 
+                active_route={3}
                 id={value.id} />
             })}
           </GoogleMap>

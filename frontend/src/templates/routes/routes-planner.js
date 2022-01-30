@@ -21,16 +21,14 @@ class BusRoutesPlanner extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            locations: [],
-            center: {},
-            latLngs: [],
             school: [],
             students: [],
             routes: [],
             create_route_name: '',
             create_school_name: '',
             create_route_description: '',
-            route_dropdown: []
+            route_dropdown: [],
+            assign_mode: false
         }
     }
 
@@ -85,6 +83,13 @@ class BusRoutesPlanner extends Component {
                     })
                 }                                
             })        
+    }
+
+    handleAssignMode = event => {
+        this.setState(prevState => ({ 
+            assign_mode: !prevState.assign_mode
+        }));
+        console.log(this.state.assign_mode);
     }
 
     handleRouteNameChange = event => {
@@ -254,11 +259,11 @@ class BusRoutesPlanner extends Component {
                                                 </select>
                                             </div>
                                             <div className="col-auto">
-                                                <button type="button" className="btn btn-primary">Assign</button>
+                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Assign</button>
                                             </div>
                                         </div>
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap />
+                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} />
                                         </div>
                                     </div>
                                     <div className="col">

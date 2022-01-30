@@ -11,26 +11,27 @@ class StudentMarker extends Component {
     state = {
         clickNumber: this.props.active_route,
         icon: MARKER_ICONS[this.props.routeID],
-        assignMode: this.props.assign_mode,
-        location: this.props.location
+        assignMode: this.props.assignMode,
+        location: this.props.location,
+        id: this.props.id
+
     }
+    // componentDidUpdate(prevProps, prevState) {
+    //   if(prevProps.value.assignMode !== this.props.assignMode) {
+    //     this.setState({assignMode: this.props.assignMode});
+    //   }
+    // }
     handleClick = (e) => {
-      if (this.state.clickNumber < MARKER_ICONS.length-1) {
+      console.log(this.state.assignMode)
+      if (this.state.assignMode){
         this.setState({
-          clickNumber: this.state.clickNumber+1,
-        })
-      } else {
-        this.setState({
-          clickNumber: 0,
+          icon: MARKER_ICONS[this.state.clickNumber]
         })
       }
-      this.setState({
-        icon: MARKER_ICONS[this.state.clickNumber]
-      })
-  }
+    }
   render () {
     return (
-      <Marker position={this.state.location} icon={this.state.icon} onClick={this.handleClick} />
+      <Marker position={this.state.location} icon={this.state.icon} onClick={this.handleClick} id={this.state.id} key={this.state.id}/>
     )
   }
 }
