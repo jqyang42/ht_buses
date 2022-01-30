@@ -335,6 +335,7 @@ class UsersCreate extends Component {
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                {/* Uses autocomplete API, only uncomment when needed to */}
                                                 {/* <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
