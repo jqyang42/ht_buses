@@ -2,8 +2,11 @@ import React, { Component, useMemo } from "react";
 import { useTable, useSortBy, usePagination, setSortBy } from 'react-table';
 import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
+import { useNavigate } from 'react-router-dom';
     
 export function RouteStudentsTable({ data }) {
+    const navigate = useNavigate();
+
     const columns = React.useMemo(
         () => [
             {
@@ -92,7 +95,7 @@ export function RouteStudentsTable({ data }) {
                     prepareRow(row)
                     return (
                     // Apply the row props
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
                         {row.cells.map(cell => {
                         return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}

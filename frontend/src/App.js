@@ -36,6 +36,7 @@ import BusRoutesEdit from "./templates/routes/routes-edit";
 // import BusRoutesDelete from "./templates/routes-delete";
 
 import { INDEX_URL } from "./constants";
+import { LOGIN_URL } from "./constants";
 import { SCHOOLS_URL } from "./constants";
 import { STUDENTS_URL } from "./constants";
 import { USERS_URL } from "./constants";
@@ -60,7 +61,8 @@ class App extends Component {
     return (
       <div>
         <Routes>
-          <Route path={INDEX_URL} element={<Login />} />
+          <Route path={INDEX_URL} element={<Login />} /> {/* TODO: change to redirect to LOGIN_URL if not authenticated, STUDENTS_URL if admin, and PARENT_DASHBOARD_URL if parent */}
+          <Route path={LOGIN_URL} element={<Login />} />
           <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
           <Route path={PARENT_DETAIL_URL} element={<ParentDetail />} />
 
