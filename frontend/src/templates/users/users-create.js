@@ -28,7 +28,7 @@ class UsersCreate extends Component {
         student_school: '',
         student_route: '',
         student_id: '',
-        students: [],
+        added_students: [],
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
@@ -96,6 +96,8 @@ class UsersCreate extends Component {
     }
 
     handleSchoolChange = event => {
+        event.preventDefault()
+
         const school_id = event.target.value
         const school_name = event.target[event.target.selectedIndex].id
         this.setState({ student_school: school_name })
@@ -121,9 +123,16 @@ class UsersCreate extends Component {
     }
 
     handleRouteChange = event => {
+        event.preventDefault()
+
         const route_name = event.target[event.target.selectedIndex].id
         this.setState({ student_route : route_name})
         console.log(route_name)
+    }
+
+    handleAddStudent = () => {
+        this.setState(({ added_students: [...this.state.added_students, this.state.added_students.length + 1] }))
+        console.log(this.state.added_students)
     }
 
     handleSubmit = event => {
@@ -170,7 +179,7 @@ class UsersCreate extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        axios.post(API_DOMAIN + `users/create`, user)
+        axios.post(API_DOMAIN + `users/create`, user) // TODO, config as 3rd parameter
 
             .then(res => {
                 console.log(res);
@@ -324,46 +333,46 @@ class UsersCreate extends Component {
                                                 placeholder="Password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group required pb-4 w-75">
-                                                <label for="exampleInputPassword1" className="control-label pb-2">Confirm Password</label>
-                                                <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Password" onChange={this.handlePassword2Change} ref={el => this.password2Field = el} required></input>
+                                                <label for="exampleInputPassword2" className="control-label pb-2">Confirm Password</label>
+                                                <input type="password" className="form-control pb-2" id="exampleInputPassword2" placeholder="Password" onChange={this.handlePassword2Change} ref={el => this.password2Field = el} required></input>
                                             </div>
                                         </div>
                                         <div className="col mt-2">
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
+                                                <button type="add student test" className="btn btn-primary w-auto justify-content-end" onClick={this.handleAddStudent}>Create</button>
                                                 <div>
                                                     <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
                                                         <i className="bi bi-plus-circle me-2"></i>
-                                                        Add a Student</a>
-
-                                                    <div className="collapse accordion mt-4" id="accordionExample">
+                                                    Students</a>
+                                                    {this.state.added_students.map(count => 
                                                         <div className="accordion-item">
-                                                            <h2 className="accordion-header" id="headingOne">
-                                                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                                    Student 1
+                                                            <h2 className="accordion-header" id={"heading" + count}>
+                                                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={"#collapse" + count} aria-expanded="true" aria-controls={"collapseOne" + count}>
+                                                                    Student {count}
                                                                 </button>
                                                             </h2>
-                                                            <div id="collapseOne" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                            <div id={"collapse" + count} className="accordion-collapse collapse show" aria-labelledby={"heading" + count} data-bs-parent="#accordionExample">
                                                                 <div className="accordion-body">
                                                                     <div className="row">
                                                                         <div className="col">
                                                                             <div className="form-group required pb-3">
-                                                                                <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
-                                                                                <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
+                                                                                <label for={"exampleInputFirstName" + count} className="control-label pb-2">First Name</label>
+                                                                                <input type="name" className="form-control pb-2" id={"exampleInputFirstName" + count}
                                                                                     placeholder="Enter first name" required onChange={this.handleStudentFirstNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
-                                                                                <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
-                                                                                <input type="name" className="form-control pb-2" id="exampleInputLastName1"
+                                                                                <label for={"exampleInputLastName" + count} className="control-label pb-2">Last Name</label>
+                                                                                <input type="name" className="form-control pb-2" id={"exampleInputLastName" + count}
                                                                                     placeholder="Enter last name" required onChange={this.handleStudentLastNameChange}></input>
                                                                             </div>
                                                                             <div className="form-group pb-3">
-                                                                                <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
-                                                                                <input type="id" className="form-control pb-2" id="exampleInputID1" 
+                                                                                <label for={"exampleInputID" + count} className="control-label pb-2">Student ID</label>
+                                                                                <input type="id" className="form-control pb-2" id={"exampleInputID" + count} 
                                                                                 placeholder="Enter student ID" onChange={this.handleStudentIDChange}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
-                                                                                <label for="exampleInputSchool1" className="control-label pb-2">School</label>
+                                                                                <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
                                                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School" 
                                                                                 onChange={this.handleSchoolChange} required>
                                                                                     <option selected>Select a School</option>
@@ -373,7 +382,7 @@ class UsersCreate extends Component {
                                                                                 </select>
                                                                             </div>
                                                                             <div className="form-group pb-3">
-                                                                                <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
+                                                                                <label for={"exampleInputRoute" + count} className="control-label pb-2">Route</label>
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
                                                                                 onChange={this.handleRouteChange} required>
                                                                                     <option selected>Select a Route</option>
@@ -387,7 +396,7 @@ class UsersCreate extends Component {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
