@@ -602,29 +602,17 @@ def routeplanner(request):
     student_serializer = StudentSerializer(students, many=True)
     print(student_serializer.data)
     print(id)
-    students_arr = []
     address_arr = []
-    student_route_arr = {}
     for student in student_serializer.data:
-        id = student["id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
+        student_id = student["id"]
         parent_id = student["user_id"]
         parent = User.objects.get(pk=parent_id)
         parent_serializer = UserSerializer(parent, many=False)
         if student["route_id"] == None:
-            student_route_arr["id"] = 0
-            student_route_arr["name"] = "Unassigned"
-            students_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'parent_id' : parent_id, 'route' : student_route_arr})
+            students_arr = {'id' : student_id,'route_id' : 0}
         else:
-            student_route = Route.routeTables.get(pk=student["route_id"])
-            route_serializer = RouteSerializer(student_route, many=False)
-            route_name = route_serializer.data["name"]
-            student_route_arr["id"] = student["route_id"]
-            student_route_arr["name"] = route_name
-            students_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'parent_id' : parent_id, 'route' : student_route_arr})
-        address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"]})
-        data["students"] = students_arr
+            students_arr = {'id' : student_id, 'route_id' : student["route_id"]}
+        address_arr.append({'parent_id' : student["user_id"], 'address' : parent_serializer.data["address"], 'students': students_arr})
         data["addresses"] = address_arr
     return Response(data)
 
