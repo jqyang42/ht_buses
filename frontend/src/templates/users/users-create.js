@@ -132,8 +132,13 @@ class UsersCreate extends Component {
             is_staff: this.state.user_is_staff === 'General' ? false : true,
             is_parent: this.state.students.length !== 0
         }
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.post(API_DOMAIN + `users/create`, user, config)
 
-        axios.post(API_DOMAIN + `users/create`, user)
             .then(res => {
                 console.log(res);
                 console.log(res.data);

@@ -38,8 +38,15 @@ class BusRoutesEdit extends Component {
             route_name: this.state.route_name,
             route_description: this.state.route_description,
         }
+        
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
 
-        axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route, config)  // TODO: use onclick id value
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -48,7 +55,14 @@ class BusRoutesEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+      
+         const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const route = res.data;
         this.setState({ route: route });
