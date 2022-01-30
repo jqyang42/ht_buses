@@ -11,6 +11,7 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class Students extends Component {
     state = {
@@ -42,7 +43,12 @@ class Students extends Component {
 
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students`)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `students`, config)
             .then(res => {
             const students = res.data.students;
             this.setState({ students });
@@ -50,8 +56,11 @@ class Students extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in')) || !JSON.parse(sessionStorage.getItem('is_staff'))) {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

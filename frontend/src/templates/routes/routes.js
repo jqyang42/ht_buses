@@ -12,6 +12,7 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class BusRoutes extends Component {
     state = {
@@ -43,7 +44,12 @@ class BusRoutes extends Component {
 
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `routes`)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `routes`, config)
             .then(res => {
             const routes = res.data.routes
             this.setState({ routes }
@@ -52,8 +58,11 @@ class BusRoutes extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in')) || !JSON.parse(sessionStorage.getItem('is_staff'))) {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -105,8 +114,8 @@ class BusRoutes extends Component {
                                     <h5>Bus Routes</h5>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

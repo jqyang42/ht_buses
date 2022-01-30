@@ -5,6 +5,7 @@ import { useParams, Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
+import { Navigate } from "react-router-dom";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
@@ -15,6 +16,7 @@ import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { SCHOOLS_DETAIL_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
@@ -38,7 +40,6 @@ class BusRoutesPlanner extends Component {
             user_id: sessionStorage.getItem('user_id')
         }
 
-        
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
@@ -57,7 +58,12 @@ class BusRoutesPlanner extends Component {
 
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id)  // TODO: use onclick id values
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
                 this.setState({ school: school });
@@ -111,7 +117,13 @@ class BusRoutesPlanner extends Component {
         
         console.log(route)
 
-        axios.post(API_DOMAIN + 'routes/create', route)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.post(API_DOMAIN + 'routes/create', route, config)
             .then(res => {
                 // TODO: UPDATE WITH RES
                 this.setState({ route_dropdown: [...this.state.routes, {
@@ -122,6 +134,12 @@ class BusRoutesPlanner extends Component {
     }
     
     render() {
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
+        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -188,8 +206,8 @@ class BusRoutesPlanner extends Component {
                                     </div>
                                 </div>
                                 <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">Admin Name</h6>
-                                    <p className="text-muted text-small">Administrator</p>
+                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
+                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
                                 </div>
                             </div>
                         </div>

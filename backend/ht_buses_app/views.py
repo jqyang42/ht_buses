@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
@@ -13,7 +13,7 @@ from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, U
 
 # TESTER METHOD FOR FRONTEND PAGINATION
 @api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticate[d
 def schools_all(request):
     schools = School.schoolsTable.all()
     school_serializer = SchoolSerializer(schools, many=True)
@@ -77,7 +77,7 @@ def validAccess(request):
 
 # User Creation API
 @api_view(["POST"])
-@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -99,6 +99,7 @@ def user_create(request):
     return Response(result)
 
 # Student Create
+@permission_classes([IsAdminUser])
 def create_students(request, user):
     data = {}
     reqBody = json.loads(request.body)
@@ -120,7 +121,7 @@ def create_students(request, user):
 
 # Students Detail API
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def students_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -150,7 +151,7 @@ def students_detail(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def students(request):
     data = {}
     # COMMENTED OUT CODE FOR PAGINATION
@@ -188,7 +189,7 @@ def students(request):
     return Response(data)
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated]) # TODO: This needs to be changed to IsAuthenticated 
+@permission_classes([IsAdminUser])
 def student_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -216,7 +217,7 @@ def student_edit(request):
         raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def student_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -230,7 +231,7 @@ def student_delete(request):
         raise ValidationError({"messsage": "student could not be deleted"})
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def schools(request):
     data = {}
     schools = School.schoolsTable.all()
@@ -245,7 +246,7 @@ def schools(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def schools_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -290,7 +291,7 @@ def schools_detail(request):
         raise ValidationError({"messsage": "School does not exist"})
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAdminUser]) 
 def school_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -302,7 +303,7 @@ def school_create(request):
     return Response(result)
 
 @api_view(["PUT"])
-@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAdminUser])
 def school_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -319,7 +320,7 @@ def school_edit(request):
         raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAdminUser])
 def school_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -333,7 +334,7 @@ def school_delete(request):
         raise ValidationError({"messsage": "school could not be deleted"})
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAdminUser])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -351,7 +352,7 @@ def route_create(request):
         raise ValidationError({"message": "route could not be created"})
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def routes_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -376,7 +377,7 @@ def routes_detail(request):
     return Response(data)
 
 @api_view(["PUT"])
-@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAdminUser]) 
 def route_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -394,7 +395,7 @@ def route_edit(request):
         raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAdminUser]) 
 def route_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -408,7 +409,7 @@ def route_delete(request):
         raise ValidationError({"messsage": "Route could not be deleted"})
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def routes(request):
     data = {}
     routes_filter = []
@@ -436,7 +437,7 @@ def routes(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def users(request):
     data = {}
     users = User.objects.all()
@@ -462,7 +463,7 @@ def users(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -497,7 +498,7 @@ def users_detail(request):
         raise ValidationError({"message": "User does not exist"})
 
 @api_view(["PUT"])
-@permission_classes([IsAuthenticated]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def user_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -548,7 +549,7 @@ def user_edit(request):
 #         return Response(result) 
     
 @api_view(["POST"])
-@permission_classes([IsAuthenticated]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -564,7 +565,7 @@ def user_delete(request):
         return Response(result) 
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser]) 
 def user_password_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -582,7 +583,7 @@ def user_password_edit(request):
         return Response(result)    
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAdminUser])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
@@ -621,7 +622,7 @@ def routeplanner(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) 
 def parent_dashboard(request):
     data = {}
     id = request.query_params["id"] # need id of parent
@@ -648,8 +649,9 @@ def parent_dashboard(request):
         parent_kids.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
         data["students"] = parent_kids
     return Response(data)
+
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) 
 def parent_student_detail(request):
     data = {}
     id = request.query_params["id"]
