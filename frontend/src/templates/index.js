@@ -48,12 +48,6 @@ class Login extends Component {
             password: this.passwordField.value
         }
           
-        const config ={
-            headers: {
-                'Access-Control-Allow-Origin': ['http://127.0.0.1:3000', 'http://127.0.0.1:8000'],
-                'Access-Control-Allow-Credentials': 'true'
-            }
-        }
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
