@@ -44,7 +44,13 @@ class StudentsEdit extends Component {
     handleSchoolChange = event => {
         const school_id = event.target.value
 
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
         .then(res => {
             let routes_data
             if (res.data.routes == null) {
