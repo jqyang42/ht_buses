@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { passwordRegex } from "../regex/input-validation";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -20,30 +21,56 @@ class UsersPassword extends Component {
         confirm_password: '',
         redirect: false,
     }
-   
-    handlePasswordChange = event => {
-        this.setState({ password: event.target.value });
+
+    password2 = '';
+    validEmail = false;
+    validPassword = false;
+    samePassword = false;
+    
+    passwordValidation = function() {
+        return (passwordRegex.test(this.state.password))
     }
 
+    handlePasswordChange = event => {
+        this.password2 = '';
+        this.password2Field.value = '';
+        this.samePassword = false;
+        this.setState({ password: event.target.value});
+    }
+    
     handleConfirmPasswordChange = event => {
         this.setState({ confirm_password: event.target.value });
+        this.password2 = event.target.value;
+        this.setState({ password: this.password1Field.value});
+        this.samePassword  = this.state.password == this.password2
+        this.validPassword = this.passwordValidation() && this.samePassword
     }
 
     handleSubmit = event => {
+        if (!this.validPassword) {
+            return 
+        }
         event.preventDefault();
 
-        const route = {
-            route_name: this.state.route_name,
-            route_description: this.state.route_description,
+        const password = {
+            password: this.state.password
         }
+        
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
 
-        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
         this.setState({ redirect: true });
     }
+
     render() {
         const { redirect } = this.state;
         const redirect_url = USERS_URL + '/' + this.props.params.id;
@@ -138,12 +165,12 @@ class UsersPassword extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
-                                                placeholder="Enter new password" required onChange={this.handlePasswordChange}></input>
+                                                placeholder="Enter new password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
                                             </div>
                                             <div className="form-group required pb-4 w-75">
                                                 <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword3" 
-                                                placeholder="Re-enter password" required onChange={this.handleConfirmPasswordChange}></input>
+                                                placeholder="Re-enter password" required ref={el => this.password2Field = el} onChange={this.handleConfirmPasswordChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
@@ -155,6 +182,8 @@ class UsersPassword extends Component {
                                     </div>
                                 </form>
                             </div>
+                            {!this.passwordValidation() && <p>Your password is invalid</p>} 
+                            {!this.samePassword && <p>Password confirmation failed</p>} 
                         </div>
                     </div>
                 </div>

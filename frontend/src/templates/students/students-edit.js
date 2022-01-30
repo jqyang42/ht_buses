@@ -74,9 +74,13 @@ class StudentsEdit extends Component {
             parent_name: this.state.parent
         }
 
-        console.log(user)
-
-        axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, user)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, user, config)
         .then(res => {
             console.log(res);
             console.log(res.data);
@@ -85,7 +89,12 @@ class StudentsEdit extends Component {
     }
 
     componentDidMount() {
-        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id)
+       const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
         .then(res => {
             const student = res.data;
             this.setState({ student: student });

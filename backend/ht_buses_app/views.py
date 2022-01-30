@@ -22,7 +22,7 @@ def schools_all(request):
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
 def user_login(request):
-    data = {}
+    info = {}
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
@@ -38,15 +38,46 @@ def user_login(request):
         data["id"] = user.id
         data["is_staff"] = user.is_staff
         data["email"] = user.email
+        data["first_name"] = user.first_name
+        data["last_name"] = user.last_name
         message = "User was logged in successfully"
         return Response({"data": data,"mesage":message, "token":token, "valid_login": True})
     except: 
         return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
-   
+
+# Logout API
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def user_logout(request):
+    try:
+        reqBody = json.loads(request.body)
+        user_id = User.objects.get(pk = reqBody["user_id"])
+        user_id.auth_token.delete()
+        logout(request._request)
+        return Response({"message":'User was logged out successfully'})  
+    except:
+        return Response({"message":'Unsuccessful logout'}) 
+
+
+@api_view(["POST"]) 
+def validAccess(request):
+    info = {}
+    try:
+        reqBody = json.loads(request.body)
+        session_token = reqBody['token']
+        id = reqBody['user_id']
+        user_token = User.objects.get(pk = id).auth_token
+        valid_token = user_token == session_token
+        message = "The session token is valid"
+        is_staff = User.objects.get(pk = id).is_staff 
+        return Response({"mesage":message, "valid_token": True,"is_staff":is_staff})
+    except:
+        message = "Invalid token, user is not logged in"
+        return Response({"mesage":message, "valid_token": False, "is_staff":False}, status = 401)
 
 # User Creation API
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -118,14 +149,6 @@ def students_detail(request):
     data["route"] = route_arr[0]
     return Response(data)
 
-# Logout API
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def user_logout(request):
-    request.user.auth_token.delete()
-    logout(request._request)
-    return Response('User Logged out successfully')  
-
 @api_view(['GET'])
 @permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
 def students(request):
@@ -165,7 +188,7 @@ def students(request):
     return Response(data)
 
 @api_view(['PUT'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated 
+@permission_classes([IsAuthenticated]) # TODO: This needs to be changed to IsAuthenticated 
 def student_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -193,7 +216,7 @@ def student_edit(request):
         raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(['POST'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # TODO: This needs to be changed to IsAuthenticated
 def student_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -267,7 +290,7 @@ def schools_detail(request):
         raise ValidationError({"messsage": "School does not exist"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def school_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -279,7 +302,7 @@ def school_create(request):
     return Response(result)
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def school_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -296,7 +319,7 @@ def school_edit(request):
         raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def school_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -310,7 +333,7 @@ def school_delete(request):
         raise ValidationError({"messsage": "school could not be deleted"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -353,7 +376,7 @@ def routes_detail(request):
     return Response(data)
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def route_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -371,7 +394,7 @@ def route_edit(request):
         raise ValidationError({"messsage": "invalid options were chosen"})
 
 @api_view(["POST"])
-@permission_classes([AllowAny]) # TODO: change to IsAuthenticated once connected
+@permission_classes([IsAuthenticated]) # TODO: change to IsAuthenticated once connected
 def route_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -439,7 +462,7 @@ def users(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([AllowAny]) # TODO: Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # TODO: Needs to be changed to IsAuthenticated
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -474,7 +497,7 @@ def users_detail(request):
         raise ValidationError({"message": "User does not exist"})
 
 @api_view(["PUT"])
-@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # Needs to be changed to IsAuthenticated
 def user_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -525,7 +548,7 @@ def user_edit(request):
 #         return Response(result) 
     
 @api_view(["POST"])
-@permission_classes([AllowAny]) # Needs to be changed to IsAuthenticated
+@permission_classes([IsAuthenticated]) # Needs to be changed to IsAuthenticated
 def user_delete(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -548,7 +571,7 @@ def user_password_edit(request):
     reqBody = json.loads(request.body)
     try:
         user_object = User.objects.get(pk = id)
-        user_object.password = reqBody['password']
+        user_object.set_password(reqBody['password'])
         user_object.save()
         data["message"] = "User password updated successfully"
         result = {"data" : data}
@@ -656,3 +679,4 @@ def parent_student_detail(request):
         route_description = route_serializer.data["description"]
     data["route"] = {'name' : route_name, 'description' : route_description}
     return Response(data)
+

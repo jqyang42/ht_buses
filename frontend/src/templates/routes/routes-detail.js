@@ -160,24 +160,6 @@ class BusRoutesDetail extends Component {
                                     <div className="col">
                                         <h7>STUDENTS</h7>
                                         <RouteStudentsTable data={this.state.students} />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
                                     </div>
                                 </div>
                             </div>
