@@ -75,7 +75,7 @@ export function StudentsTable( {data} ) {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'ID',
+                Header: '#',
                 accessor: d => `${d.id}`, // accessor is the "key" in the data
                 id: 'id'
             },
@@ -83,6 +83,10 @@ export function StudentsTable( {data} ) {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name'
+            },
+            {
+                Header: 'Student ID',
+                acccessor: 'student_school_id'
             },
             {
                 Header: 'School',

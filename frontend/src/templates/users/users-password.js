@@ -32,18 +32,18 @@ class UsersPassword extends Component {
     handleSubmit = event => {
         event.preventDefault();
 
-        const route = {
-            route_name: this.state.route_name,
-            route_description: this.state.route_description,
+        const password = {
+            password: this.state.password
         }
 
-        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, route)  // TODO: use onclick id value
+        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password) 
             .then(res => {
                 console.log(res);
                 console.log(res.data);
             })
         this.setState({ redirect: true });
     }
+
     render() {
         const { redirect } = this.state;
         const redirect_url = USERS_URL + '/' + this.props.params.id;

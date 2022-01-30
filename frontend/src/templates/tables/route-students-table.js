@@ -15,7 +15,7 @@ export function RouteStudentsTable({ data }) {
             },
             {
                 Header: 'Name',
-                accessor: 'name',
+                accessor: d => `${d.first_name} ${d.last_name}`,
             }
         ],
         []

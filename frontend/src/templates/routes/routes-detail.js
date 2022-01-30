@@ -25,12 +25,13 @@ class BusRoutesDetail extends Component {
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
-            
+            console.log(route)
             if (route.students == null) {
                 this.setState({ students: [] })
             } else {
                 this.setState({ students: route.students })
             }
+            console.log(this.state.students)
             this.setState({ route: route });
             })
     }
@@ -155,24 +156,6 @@ class BusRoutesDetail extends Component {
                                     <div className="col">
                                         <h7>STUDENTS</h7>
                                         <RouteStudentsTable data={this.state.students} />
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
                                     </div>
                                 </div>
                             </div>
