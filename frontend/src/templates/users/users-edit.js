@@ -33,13 +33,15 @@ class UsersEdit extends Component {
     }
 
     validEmail = false;
+    email = ''
 
     emailValidation = function() {
-        return (emailRegex.test(this.emailField.value))
+        return (emailRegex.test(this.email))
     }
 
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
+        this.email = this.emailField.value
         this.validEmail = this.emailValidation() 
     }
 
@@ -192,7 +194,7 @@ class UsersEdit extends Component {
         event.preventDefault();
 
         const user = {
-            email: this.state.email,
+            email: this.email,
             password: this.state.password,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
@@ -224,9 +226,11 @@ class UsersEdit extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
+        this.email = user.email
         this.setState({ user: user });
         })
 
@@ -374,7 +378,7 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                {(!this.validEmail && this.state.user.email !== "") ? 
+                                                {(!this.emailValidation()) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
