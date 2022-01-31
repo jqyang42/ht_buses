@@ -63,7 +63,7 @@ class RouteMap extends Component {
         Authorization: `Token ${sessionStorage.getItem('token')}`
       }
     }
-    axios.get(API_DOMAIN + `routeplanner?id=4`, config)
+    axios.get(API_DOMAIN + `routeplanner?id=` + this.props.school , config)
       .then(res => {
         const locations = res.data;
         this.setState({ locations });
@@ -86,6 +86,7 @@ class RouteMap extends Component {
           })
           Geocode.fromAddress(parent.address).then(
             (response) => {
+              console.log(response)
               const lat = parseFloat(response.results[0].geometry.location.lat);
               const lng = parseFloat(response.results[0].geometry.location.lng);
               this.setState(prevState => ({
