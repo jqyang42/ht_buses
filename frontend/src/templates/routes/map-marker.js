@@ -10,11 +10,12 @@ import Geocode from "react-geocode";
 
 class StudentMarker extends Component {
     state = {
-        clickNumber: this.props.active_route,
+        currentRoute: this.props.routeID,
         icon: MARKER_ICONS[this.props.routeID],
         assignMode: this.props.assignMode,
         location: this.props.location,
-        id: this.props.id
+        id: this.props.id,
+        updated: false,
 
     }
     // componentDidUpdate(prevProps, prevState) {
@@ -26,13 +27,18 @@ class StudentMarker extends Component {
       console.log(this.state.assignMode)
       if (this.state.assignMode){
         this.setState({
-          icon: MARKER_ICONS[this.state.clickNumber]
+          icon: MARKER_ICONS[this.props.active_route],
+          currentRoute: this.props.active_route
         })
+        if (this.props.onChange && !this.state.updated) {
+          this.props.onChange(this.state.currentRoute, this.props.studentIDs)
+          this.setState({updated: true})
+        }
       }
     }
   render () {
     return (
-      <Marker position={this.state.location} icon={this.state.icon} onClick={this.handleClick} id={this.state.id} key={this.state.id}/>
+      <Marker position={this.state.location} className={this.state.currentRoute} icon={this.state.icon} onClick={this.handleClick} id={this.state.id} key={this.state.id}/>
     )
   }
 }

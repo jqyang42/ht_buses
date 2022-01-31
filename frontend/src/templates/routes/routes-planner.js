@@ -133,6 +133,22 @@ class BusRoutesPlanner extends Component {
             })
     }
     
+    students = [];
+
+    handleRouteIDChange = (students) => {
+      this.students = students
+      console.log(this.students)
+    }
+
+    handleRouteAssignSubmit = event => {
+        axios.put(API_DOMAIN + 'routeplanner/edit', this.students)
+        .then(res => {
+            console.log(res.data);
+            this.students = [];
+            this.state.assign_mode = false;
+        })
+    }
+
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -305,7 +321,7 @@ class BusRoutesPlanner extends Component {
                                                     {/* TODO: Change onClick handler to dismiss */}
                                                     <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleAssignMode}>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}>
                                                         Save
                                                     </button>
                                                 </div>
@@ -314,7 +330,7 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} />
+                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} onChange={this.handleRouteIDChange}/>
                                         </div>
                                     </div>
                                     <div className="col">
