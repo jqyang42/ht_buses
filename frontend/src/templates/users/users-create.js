@@ -212,22 +212,22 @@ class UsersCreate extends Component {
 
     handleSubmit = event => {
         let user_address
-        let lat;
-        let lng;
+        let lat = 0;
+        let lng = 0;
+        let valid_address = true;
         if (this.state.user_address === null) {
             user_address = ''
         } else {
-            user_address = this.state.user_address
+            user_address = this.state.user_address;
+            Geocode.fromAddress(this.state.user_address).then(
+                (response) => {
+                    console.log(response)
+                    lat = parseFloat(response.results[0].geometry.location.lat);
+                    lng = parseFloat(response.results[0].geometry.location.lng);
+                    valid_address = response.status == 'OK'
+                }
+            )
         }
-        let valid_address;
-        Geocode.fromAddress(this.state.address).then(
-            (response) => {
-                console.log(response)
-                lat = parseFloat(response.results[0].geometry.location.lat);
-                lng = parseFloat(response.results[0].geometry.location.lng);
-                valid_address = response.status == 'OK'
-            }
-        )
         if (!this.validEmail || !this.validPassword || !valid_address) {
             return 
         }
