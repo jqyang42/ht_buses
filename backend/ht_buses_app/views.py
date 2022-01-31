@@ -356,7 +356,7 @@ def route_create(request):
         raise ValidationError({"message": "route could not be created"})
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routes_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -419,7 +419,7 @@ def route_delete(request):
         raise ValidationError({"messsage": "Route could not be deleted"})
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routes(request):
     data = {}
     routes_filter = []
@@ -448,7 +448,7 @@ def routes(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def users(request):
     data = {}
     users = User.objects.all()
@@ -482,7 +482,7 @@ def users(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -548,40 +548,13 @@ def user_edit(request):
     result = {"data" : data}
     return Response(result)
 
-<<<<<<< HEAD
-def edit_or_create_student(student_info,id=None):
-=======
 def create_student(student_info, id=None):
->>>>>>> 9d092a6b01e7bc4cdbd37cb15a8e2ca6d4882a6b
     data = {}
     first_name = student_info['first_name']
     last_name = student_info['last_name']
     student_school_id = student_info['student_school_id']
     try:
         user_id = User.objects.get(pk = id)
-<<<<<<< HEAD
-        route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
-        school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
-
-    except BaseException as e:
-        raise ValidationError({"messsage": "Invalid options were chosen"})
-    try: 
-        student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
-        student_object.first_name = first_name
-        student_object.last_name = last_name
-        student_object.school_id = school_id
-        student_object.student_school_id = student_school_id
-        student_object.route_id = route_id
-        student_object.save()
-        data["message"] = "student updated successfully"
-        result = {"data" : data}
-        return Response(result) 
-    except: 
-        Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
-        data["message"] = "student created successfully"
-        result = {"data" : data}
-        return Response(result) 
-=======
         school_id = School.schoolsTable.get(id =student_info['school_id'])
     except :
         data["message"] = "Invalid options were chosen. Student information update was unsuccessful"
@@ -597,7 +570,6 @@ def create_student(student_info, id=None):
     data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user_id.id}
     result = {"data" : data}
     return Response(result) 
->>>>>>> 9d092a6b01e7bc4cdbd37cb15a8e2ca6d4882a6b
     
 @api_view(["POST"])
 @permission_classes([IsAdminUser]) 
@@ -634,7 +606,7 @@ def user_password_edit(request):
         return Response(result)    
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
