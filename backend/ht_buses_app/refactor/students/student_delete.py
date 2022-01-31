@@ -12,9 +12,9 @@ from django.core.exceptions import ValidationError
 @permission_classes([IsAdminUser])
 def student_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        student_object =  Student.studentsTable.filter(student_school_id = reqBody['student_school_id'])[0]
+        student_object =  Student.studentsTable.get(pk=id)
         student_object.delete()
         data["message"] = "student successfully deleted"
         result = {"data" : data}
