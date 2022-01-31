@@ -211,12 +211,13 @@ class UsersCreate extends Component {
             user_address = this.state.user_address
         }
 
-        let school_id
-        if (this.state.student_id === '') {
-            school_id = null
-        } else {
-            school_id = this.state.student_id
-        }
+        // TODO delete if unnecessary
+        // let school_id
+        // if (this.state.student_id === '') {
+        //     school_id = null
+        // } else {
+        //     school_id = this.state.student_id
+        // }
 
         const user = {
             email: this.state.user_email,
@@ -238,10 +239,14 @@ class UsersCreate extends Component {
             }
         }
         axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
-
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'User created successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1      // TODO ERROR
+                }
             })
         this.setState({ redirect: true });
     }
