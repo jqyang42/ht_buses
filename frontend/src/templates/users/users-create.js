@@ -72,9 +72,9 @@ class UsersCreate extends Component {
         this.setState({ user_last_name: event.target.value });
     }
 
-    handleAutocompleteSelection = (event, place) => {
-        this.setState({ user_address: event.target.value });
-        Geocode.fromAddress(this.state.user_address).then(
+    handleAutocompleteSelection = (place) => {
+        this.setState({ user_address: place.formatted_address});
+        Geocode.fromAddress(place.formatted_address).then(
             (response) => {
                 console.log(response)
                 const lat = parseFloat(response.results[0].geometry.location.lat);
@@ -211,18 +211,27 @@ class UsersCreate extends Component {
     }
 
     handleSubmit = event => {
-        
-        if (!this.validEmail || !this.validPassword) {
-            return 
-        }
-        event.preventDefault();
-        
         let user_address
+        let lat;
+        let lng;
         if (this.state.user_address === null) {
             user_address = ''
         } else {
             user_address = this.state.user_address
         }
+        let valid_address;
+        Geocode.fromAddress(this.state.address).then(
+            (response) => {
+                console.log(response)
+                lat = parseFloat(response.results[0].geometry.location.lat);
+                lng = parseFloat(response.results[0].geometry.location.lng);
+                valid_address = response.status == 'OK'
+            }
+        )
+        if (!this.validEmail || !this.validPassword || !valid_address) {
+            return 
+        }
+        event.preventDefault();
 
         let school_id
         if (this.state.student_id === '') {
