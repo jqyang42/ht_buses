@@ -1,10 +1,10 @@
 from django.urls import path
-from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete
-from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view
-from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
-from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
-from . views.auth import auth_valid, login, logout
-from . views.parents import parent_dashboard, parent_student_detail
+from . refactor.students import students_view, student_detail, student_route_edit, student_edit, student_delete
+from . refactor.schools import school_create, school_delete, school_detail, school_edit, schools_view
+from . refactor.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
+from . refactor.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
+from . refactor.auth import auth_valid, login, logout
+from . refactor.parents import parent_dashboard, parent_student_detail
 
 urlpatterns = [
     path('students', students_view.students, name='students'),

@@ -1,7 +1,7 @@
 import json
 from rest_framework.test import APIClient, APITestCase
 from django.core.exceptions import ValidationError
-from ..models import UserManager, School, Route, User, Student
+from ...models import UserManager, School, Route, User, Student
 
 
 class Test_students(APITestCase):

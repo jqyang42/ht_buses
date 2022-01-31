@@ -1,6 +1,5 @@
 from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User, UserManager
-from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import api_view, permission_classes
@@ -204,13 +203,13 @@ def student_edit(request):
     except BaseException as e:
         raise ValidationError({"messsage": "invalid options were chosen"})
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAdminUser])
 def student_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        student_object =  Student.studentsTable.filter(student_school_id = reqBody['student_school_id'])[0]
+        student_object =  Student.studentsTable.get(pk=id)
         student_object.delete()
         data["message"] = "student successfully deleted"
         result = {"data" : data}
@@ -307,13 +306,13 @@ def school_edit(request):
     except BaseException as e:
         raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
 
-@api_view(["POST"])
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def school_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        school_object =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
+        school_object =  School.schoolsTable.get(pk=id)
         school_object.delete()
         data["message"] = "school successfully deleted"
         result = {"data" : data}
@@ -382,13 +381,13 @@ def route_edit(request):
     except BaseException as e:
         raise ValidationError({"messsage": "invalid options were chosen"})
 
-@api_view(["POST"])
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser]) 
 def route_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        route_object =  Route.routeTables.filter(name = reqBody['route_name'])[0]
+        route_object =  Route.routeTables.get(pk=id)
         route_object.delete()
         data["message"] = "route successfully deleted"
         result = {"data" : data}
@@ -541,9 +540,9 @@ def user_edit(request):
 @permission_classes([IsAdminUser]) 
 def user_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        user_object =  User.objects.filter(first_name = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])
+        user_object =  User.objects.get(pk=id)
         user_object.delete()
         data["message"] = "user successfully deleted"
         result = {"data" : data}

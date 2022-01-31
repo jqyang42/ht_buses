@@ -1,7 +1,7 @@
 import json
 from rest_framework.test import APIClient, APITestCase
 from django.core.exceptions import ValidationError
-from .test_user_create import Test_user_create
+from ..users.test_user_create import Test_user_create
 
 class Test_user_login(APITestCase):
     endpoint = '/login'

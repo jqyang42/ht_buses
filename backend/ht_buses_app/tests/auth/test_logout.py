@@ -1,10 +1,10 @@
 import json
 from rest_framework.test import APIClient, APITestCase, APIRequestFactory
 from django.core.exceptions import ValidationError
-from .test_user_create import Test_user_create
+from ..users.test_user_create import Test_user_create
 from .test_login import Test_user_login
 from rest_framework.test import force_authenticate
-from ..models import User
+from ...models import User
 
 class Test_user_logout(APITestCase):
     logout_endpoint = '/logout'
