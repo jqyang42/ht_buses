@@ -6,9 +6,9 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 from django.core.exceptions import ValidationError
 
-# Student DELTE API
+# Student DELETE API
 @permission_classes([IsAdminUser])
-@api_view(['DELETE'])
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def student_delete(request):
     data = {}
