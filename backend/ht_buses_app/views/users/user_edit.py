@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
-from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 
 @csrf_exempt
@@ -13,7 +12,7 @@ def user_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    user_object = User.objects.get(pk = id)
+    user_object = User.objects.get(pk=id)
     user_object.email = reqBody['email']
     user_object.first_name = reqBody['first_name']
     user_object.last_name = reqBody['last_name']
