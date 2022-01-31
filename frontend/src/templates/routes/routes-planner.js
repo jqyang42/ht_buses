@@ -151,11 +151,13 @@ class BusRoutesPlanner extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        this.setState({
+            assign_mode: false
+        })
         axios.put(API_DOMAIN + 'routeplanner/edit', this.students, config)
         .then(res => {
             console.log(res.data);
             this.students = [];
-            this.state.assign_mode = false;
         })
     }
 
