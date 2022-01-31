@@ -432,7 +432,8 @@ def routes(request):
         route_students = Student.studentsTable.filter(route_id=id)
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
-        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_name, 'student_count': student_count})
+        school_obj = {'id' : route["school_id"], 'name': school_name}
+        routes_filter.append({'id' : id, 'name' : name, 'school': school_obj, 'student_count': student_count})
     data["routes"] = routes_filter
     return Response(data)
 
@@ -673,4 +674,26 @@ def parent_student_detail(request):
         route_description = route_serializer.data["description"]
     data["route"] = {'name' : route_name, 'description' : route_description}
     return Response(data)
+
+# Student Route PUT API
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def student_route_edit(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    try:
+        for student in reqBody["students"]:
+            student_id = student["id"]
+            route_id = student["route_id"]
+            student_obj = Student.studentsTable.get(pk=student_id)
+            if route_id == 0:
+                student_obj.route_id = None
+            else:
+                 student_obj.route_id = Route.routeTables.get(pk=student["route_id"])
+            student_obj.save()
+        data["message"] = "Student's route information was successfully updated"
+        result = {"data": data}
+        return Response(result)
+    except BaseException as e:
+        raise ValidationError({"message" : "student was not added/removed to route"})
 

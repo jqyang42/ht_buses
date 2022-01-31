@@ -199,7 +199,6 @@ class UsersEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            // address: '2625 Solano Avenue Hollywood, FL 33024',
             is_staff: this.state.is_staff == 'General' ? false : true,
             is_parent: this.state.students.length != 0,
             students: this.state.students
