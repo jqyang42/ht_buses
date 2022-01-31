@@ -75,8 +75,11 @@ class Login extends Component {
     }    
 
     render() {
-        if (JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (JSON.parse(sessionStorage.getItem('logged_in')) && JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
+        }
+        else if (JSON.parse(sessionStorage.getItem('logged_in')) && !JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
             <body className="overflow-hidden">

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENTS_URL } from "../../constants";
 import axios from "axios";
 
 class ParentDetail extends Component {
@@ -20,6 +20,7 @@ class ParentDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        console.log(config)
         axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id, config)
             .then(res => {
                 const student = res.data
@@ -59,6 +60,9 @@ class ParentDetail extends Component {
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={STUDENTS_URL} />
         }
         return (
             <body className="overflow-hidden">

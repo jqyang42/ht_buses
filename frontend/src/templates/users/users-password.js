@@ -25,6 +25,7 @@ class UsersPassword extends Component {
     validEmail = false;
     validPassword = false;
     samePassword = false;
+    edit_success = 0;
     
     passwordValidation = function() {
         return (passwordRegex.test(this.state.password))
@@ -50,7 +51,6 @@ class UsersPassword extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -67,10 +67,10 @@ class UsersPassword extends Component {
         })
     }
 
-
-
     handleSubmit = event => {
-        if (!this.validPassword) {
+        if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
+            this.edit_success = -1  //TODO ERROR: use edit_success???? tricky timing when redirect is true
+            console.log(this.state)
             return 
         }
         event.preventDefault();
@@ -87,8 +87,11 @@ class UsersPassword extends Component {
     
         axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'User password updated successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                }
             })
         this.setState({ redirect: true });
     }
