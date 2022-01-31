@@ -21,6 +21,8 @@ class BusRoutesEdit extends Component {
         route: [],
         redirect: false,
     }
+    // 0 = not submitted, 1 = success, -1 = failure
+    edit_success = 0
 
     handleRouteNameChange = event => {
         this.setState({ route_name: event.target.value });
@@ -48,8 +50,13 @@ class BusRoutesEdit extends Component {
 
         axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route, config)  // TODO: use onclick id value
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'route updated successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1      // TODO ERROR
+                }
             })
         this.setState({ redirect: true });
     }

@@ -93,7 +93,7 @@ class UsersPassword extends Component {
                     console.log(this.edit_success)
                 }
             })
-        // this.setState({ redirect: true });
+        this.setState({ redirect: true });
     }
 
     render() {
