@@ -20,6 +20,11 @@ class ParentDashboard extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
 
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
