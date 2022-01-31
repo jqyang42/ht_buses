@@ -55,10 +55,26 @@ class SchoolsCreate extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-
+        let lat = 0;
+        let lng = 0;
+        let valid_address = true;
+        Geocode.fromAddress(this.state.school_address).then(
+            (response) => {
+                console.log(response)
+                lat = parseFloat(response.results[0].geometry.location.lat);
+                lng = parseFloat(response.results[0].geometry.location.lng);
+                valid_address = response.status == 'OK'
+            }
+        )
+        if (!valid_address ) {
+            console.log('address not valid')
+            return 
+        }
         const school = {
             school_name: this.state.school_name,
-            school_address: this.state.school_address
+            school_address: this.state.school_address,
+            lat: lat,
+            lng: lng,
         }
         const config = {
             headers: {

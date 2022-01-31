@@ -187,7 +187,25 @@ class UsersEdit extends Component {
     }
 
     handleSubmit = event => {
-        if (!this.validEmail) {
+        let user_address
+        let lat = 0;
+        let lng = 0;
+        let valid_address = true;
+        if (this.state.user_address === null) {
+            user_address = ''
+        } else {
+            user_address = this.state.user_address;
+            Geocode.fromAddress(this.state.user_address).then(
+                (response) => {
+                    console.log(response)
+                    lat = parseFloat(response.results[0].geometry.location.lat);
+                    lng = parseFloat(response.results[0].geometry.location.lng);
+                    valid_address = response.status == 'OK'
+                }
+            )
+        }
+        if (!this.validEmail || !valid_address ) {
+            console.log('address not valid')
             return 
         }
 
@@ -201,7 +219,9 @@ class UsersEdit extends Component {
             address: this.state.address,
             is_staff: this.state.is_staff == 'General' ? false : true,
             is_parent: this.state.students.length != 0,
-            students: this.state.students
+            students: this.state.students,
+            lat: lat,
+            lng: lng,
         }
 
         console.log(user)

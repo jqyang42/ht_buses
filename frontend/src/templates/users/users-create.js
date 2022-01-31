@@ -72,17 +72,6 @@ class UsersCreate extends Component {
         this.setState({ user_last_name: event.target.value });
     }
 
-    handleAutocompleteSelection = (place) => {
-        this.setState({ user_address: place.formatted_address});
-        Geocode.fromAddress(place.formatted_address).then(
-            (response) => {
-                console.log(response)
-                const lat = parseFloat(response.results[0].geometry.location.lat);
-                const lng = parseFloat(response.results[0].geometry.location.lng);
-            }
-        )
-    }
-
     handleAddressChange = event => {
         this.setState({ user_address: event.target.value });
     }
@@ -229,6 +218,7 @@ class UsersCreate extends Component {
             )
         }
         if (!this.validEmail || !this.validPassword || !valid_address) {
+            console.log('address not valid')
             return 
         }
         event.preventDefault();
@@ -248,7 +238,9 @@ class UsersCreate extends Component {
             address: user_address,
             is_staff: this.state.user_is_staff === 'general' ? false : true,
             is_parent: this.state.students.length !== 0,
-            students: this.state.students
+            students: this.state.students,
+            lat: lat,
+            lng: lng,
         }
 
         console.log(user)
