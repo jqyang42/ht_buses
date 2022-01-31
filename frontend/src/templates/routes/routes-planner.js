@@ -132,15 +132,20 @@ class BusRoutesPlanner extends Component {
             })
     }
     
-    students = [];
+    students = {"students":[]};
 
     handleRouteIDChange = (students) => {
-      this.students = students
+      this.students["students"] = students
       console.log(this.students)
     }
 
     handleRouteAssignSubmit = event => {
-        axios.put(API_DOMAIN + 'routeplanner/edit', this.students)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.put(API_DOMAIN + 'routeplanner/edit', this.students, config)
         .then(res => {
             console.log(res.data);
             this.students = [];

@@ -12,7 +12,6 @@ class StudentMarker extends Component {
     state = {
         currentRoute: this.props.routeID,
         icon: MARKER_ICONS[this.props.routeID],
-        assignMode: this.props.assignMode,
         location: this.props.location,
         id: this.props.id,
         updated: false,
@@ -24,8 +23,8 @@ class StudentMarker extends Component {
     //   }
     // }
     handleClick = (e) => {
-      console.log(this.state.assignMode)
-      if (this.state.assignMode){
+      console.log(this.props.assignMode)
+      if (this.props.assignMode){
         this.setState({
           icon: MARKER_ICONS[this.props.active_route],
           currentRoute: this.props.active_route
