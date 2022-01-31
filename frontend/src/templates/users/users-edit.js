@@ -32,6 +32,7 @@ class UsersEdit extends Component {
         redirect: false,
     }
 
+    edit_success = 0;
     validEmail = false;
     email = ''
 
@@ -222,8 +223,13 @@ class UsersEdit extends Component {
 
         axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'User and associated students updated successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1      // TODO ERROR
+                }
             })
         this.setState({ redirect: true });
     }
@@ -240,12 +246,12 @@ class UsersEdit extends Component {
         const user = res.data;
         this.email = user.email
 
-        let init_students
-        if (user.students == null) {
-            init_students = []
-        } else {
-            init_students = user.students
-        }
+        // let init_students
+        // if (user.students == null) {
+        //     init_students = []
+        // } else {
+        //     init_students = user.students
+        // }
         this.setState({ 
             user: user,
             first_name: user.first_name,
@@ -253,7 +259,7 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
-            students: init_students
+            // students: init_students
         });
         })
 
