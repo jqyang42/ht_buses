@@ -1,12 +1,12 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 # Students GET API: All Students for Admin
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def students(request):
     data = {}
     # COMMENTED OUT CODE FOR PAGINATION

@@ -33,15 +33,13 @@ class UsersEdit extends Component {
     }
 
     validEmail = false;
-    email = ''
 
     emailValidation = function() {
-        return (emailRegex.test(this.email))
+        return (emailRegex.test(this.emailField.value))
     }
 
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
-        this.email = this.emailField.value
         this.validEmail = this.emailValidation() 
     }
 
@@ -194,11 +192,12 @@ class UsersEdit extends Component {
         event.preventDefault();
 
         const user = {
-            email: this.email,
+            email: this.state.email,
             password: this.state.password,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
+            // address: '2625 Solano Avenue Hollywood, FL 33024',
             is_staff: this.state.is_staff == 'General' ? false : true,
             is_parent: this.state.students.length != 0,
             students: this.state.students
@@ -226,11 +225,9 @@ class UsersEdit extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
-        this.email = user.email
         this.setState({ user: user });
         })
 
@@ -378,7 +375,7 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                {(!this.emailValidation()) ? 
+                                                {(!this.validEmail && this.state.user.email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
@@ -400,7 +397,7 @@ class UsersEdit extends Component {
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     value={this.state.address}
                                                     onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.user.address} onChange={this.handleAddressChange}></input>
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
