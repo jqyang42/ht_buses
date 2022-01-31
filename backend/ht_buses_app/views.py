@@ -75,10 +75,12 @@ def user_create(request):
     address = reqBody['address']
     is_staff = reqBody['is_staff']
     is_parent = reqBody['is_parent']
+    lat = reqBody['lat']
+    long = reqBody['long']
     if is_staff: 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address)
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, long=long)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=long)
     if is_parent:
         create_students(request, user)
     data["message"] = "User created successfully"
@@ -284,7 +286,9 @@ def school_create(request):
     reqBody = json.loads(request.body)
     name = reqBody['school_name']
     address = reqBody['school_address']
-    School.schoolsTable.create(name=name, address = address)
+    lat = reqBody['lat']
+    long = reqBody['long']
+    School.schoolsTable.create(name=name, address=address, lat=lat, long=long)
     data["message"] = "school created successfully"
     result = {"data" : data}
     return Response(result)
@@ -299,6 +303,8 @@ def school_edit(request):
         school_object =  School.schoolsTable.filter(pk = id)
         school_object.name = reqBody['school_name']
         school_object.address = reqBody['school_address']
+        school_object.lat = reqBody['lat']
+        school_object.long = reqBody['long']
         school_object.save()
         data["message"] = "school information updated successfully"
         result = {"data" : data}
@@ -372,7 +378,6 @@ def route_edit(request):
     try:
         route_object =  Route.routeTables.get(pk=id)
         route_object.name = reqBody['route_name']
-        # route_object.school_id =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
         route_object.description = reqBody['route_description']
         route_object.save()
         data["message"] = "route updated successfully"
@@ -446,12 +451,20 @@ def users(request):
         is_staff = user["is_staff"]
         is_parent = user["is_parent"]
         address = user["address"]
-        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address})
+        if user["lat"] == None:
+            lat = 0
+        else:
+            lat = user["lat"]
+        if user["long"] == None:
+            long = 0
+        else:
+            long = user["long"]
+        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address, 'lat' : lat, 'long': long})
     data["users"] = users_arr
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -461,8 +474,17 @@ def users_detail(request):
         data["first_name"] = user_serializer.data["first_name"]
         data["last_name"] = user_serializer.data["last_name"]
         data["email"] = user_serializer.data["email"]
-        if user_serializer.data["is_parent"] == True:
+        if user_serializer.data["address"] != "":
             data["address"] = user_serializer.data["address"]
+            if user_serializer.data["lat"] == None:
+                data["lat"] = 0
+            else:
+                data["lat"] = user_serializer.data["lat"]
+            if  user_serializer.data["long"] == None:
+                data["long"] = 0
+            else:
+                data["long"] = user_serializer.data["long"]
+        if user_serializer.data["is_parent"] == True:
             students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
             student_list = []
@@ -493,10 +515,11 @@ def user_edit(request):
     reqBody = json.loads(request.body)
     user_object = User.objects.get(pk = id)
     user_object.email = reqBody['email']
-    #user_object.password = reqBody['password']
     user_object.first_name = reqBody['first_name']
     user_object.last_name = reqBody['last_name']
     user_object.address = reqBody['address']
+    user_object.lat = reqBody['lat']
+    user_object.long = reqBody['long']
     user_object.is_parent = reqBody['is_parent']
     user_object.is_staff = reqBody['is_staff']
     user_object.save()
@@ -507,34 +530,34 @@ def user_edit(request):
     result = {"data" : data}
     return Response(result)
 
-# def edit_or_create_student(student_info,id=None):
-#     data = {}
-#     first_name = student_info['first_name']
-#     last_name = student_info['last_name']
-#     student_school_id = student_info['student_school_id']
-#     try:
-#         user_id = User.objects.get(pk = id)
-#         route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
-#         school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
+def edit_or_create_student(student_info,id=None):
+    data = {}
+    first_name = student_info['first_name']
+    last_name = student_info['last_name']
+    student_school_id = student_info['student_school_id']
+    try:
+        user_id = User.objects.get(pk = id)
+        route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
+        school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
 
-#     except BaseException as e:
-#         raise ValidationError({"messsage": "Invalid options were chosen"})
-#     try: 
-#         student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
-#         student_object.first_name = first_name
-#         student_object.last_name = last_name
-#         student_object.school_id = school_id
-#         student_object.student_school_id = student_school_id
-#         student_object.route_id = route_id
-#         student_object.save()
-#         data["message"] = "student updated successfully"
-#         result = {"data" : data}
-#         return Response(result) 
-#     except: 
-#         Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
-#         data["message"] = "student created successfully"
-#         result = {"data" : data}
-#         return Response(result) 
+    except BaseException as e:
+        raise ValidationError({"messsage": "Invalid options were chosen"})
+    try: 
+        student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
+        student_object.first_name = first_name
+        student_object.last_name = last_name
+        student_object.school_id = school_id
+        student_object.student_school_id = student_school_id
+        student_object.route_id = route_id
+        student_object.save()
+        data["message"] = "student updated successfully"
+        result = {"data" : data}
+        return Response(result) 
+    except: 
+        Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+        data["message"] = "student created successfully"
+        result = {"data" : data}
+        return Response(result) 
     
 @api_view(["POST"])
 @permission_classes([IsAdminUser]) 
