@@ -1,14 +1,5 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from . import views
-
-"""
-routes = DefaultRouter(trailing_slash=False)
-
-routes.register(r'signup', RegistrationViewSet, basename='auth-register')
-routes.register(r'refresh', RefreshViewSet, basename='auth-refresh')
-routes.register(r'', LoginViewSet, basename='auth-login')
-"""
 
 urlpatterns = [
     path('students', views.students, name='students'),
