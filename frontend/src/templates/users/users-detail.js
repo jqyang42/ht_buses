@@ -184,12 +184,69 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link>
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#addModal">
+                                                <i className="bi bi-person-plus me-2"></i>
+                                                Add Student
+                                            </button>
+
+                                            <div className="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                                                <div className="modal-dialog modal-dialog-centered">
+                                                    <div className="modal-content">
+                                                        <form> {/* TODO: add onClick handler */}
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title" id="staticBackdropLabel">Create New Student</h5>
+                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                <div className="form-group required pb-3">
+                                                                    <label for={"exampleInputFirstName"} className="control-label pb-2">First Name</label>
+                                                                    <input type="name" className="form-control pb-2" id={"exampleInputFirstName"}
+                                                                        placeholder="Enter first name" required></input>
+                                                                </div>
+                                                                <div className="form-group required pb-3">
+                                                                    <label for={"exampleInputLastName"} className="control-label pb-2">Last Name</label>
+                                                                    <input type="name" className="form-control pb-2" id={"exampleInputLastName"}
+                                                                        placeholder="Enter last name" required></input>
+                                                                </div>
+                                                                <div className="form-group pb-3">
+                                                                    <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
+                                                                    <input type="id" className="form-control pb-2" id={"exampleInputID"} 
+                                                                    placeholder="Enter student ID"></input>
+                                                                </div>
+                                                                {/* <div className="form-group required pb-3">
+                                                                    <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
+                                                                    <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
+                                                                        <option selected>Select a School</option>
+                                                                        {this.state.schools_dropdown.map(school => 
+                                                                            <option value={school.value} id={school.display}>{school.display}</option>
+                                                                        )}
+                                                                    </select>
+                                                                </div> */}
+                                                                {/* <div className="form-group pb-3">
+                                                                    <label for={"exampleInputRoute"} className="control-label pb-2">Route</label>
+                                                                    <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
+                                                                        <option selected>Select a Route</option>
+                                                                        {this.state.routes_dropdown.map(route => 
+                                                                            <option value={route.value} id={route.display}>{route.display}</option>
+                                                                        )}
+                                                                    </select>
+                                                                </div> */}
+                                                            </div>
+                                                            <div className="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-primary">Create</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <Link to={"/users/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit
                                                 </span>
                                             </Link>
+
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                 <i className="bi bi-trash me-2"></i>
                                                 Delete
