@@ -36,7 +36,6 @@ const hidePOIs = [{
 
 class RouteMap extends Component {
   state = {
-    icon: MARKER_ICONS[0],
     locations: [],
     latLngs: [],
     center: {},
@@ -57,57 +56,57 @@ class RouteMap extends Component {
     }
   }
 
-  componentDidMount() {
-    const config = {
-      headers: {
-        Authorization: `Token ${sessionStorage.getItem('token')}`
-      }
-    }
-    axios.get(API_DOMAIN + `routeplanner?id=` + this.props.school , config)
-      .then(res => {
-        const locations = res.data;
-        this.setState({ locations });
-        Geocode.fromAddress(locations.address).then(
-          (response) => {
-            const lat = parseFloat(response.results[0].geometry.location.lat);
-            const lng = parseFloat(response.results[0].geometry.location.lng);
-            this.setState({
-              center: { lat: lat, lng: lng }
-            })
-          },
-          (error) => {
-            console.error(error);
-          }
-        )
-        locations.parents.map((parent, index) => {
-          const studentIDs = []
-          parent.students.map((student, index) => {
-              studentIDs.push(student.id);
-          })
-          Geocode.fromAddress(parent.address).then(
-            (response) => {
-              console.log(response)
-              const lat = parseFloat(response.results[0].geometry.location.lat);
-              const lng = parseFloat(response.results[0].geometry.location.lng);
-              this.setState(prevState => ({
-                markers: [...prevState.markers, {
-                  position: {
-                    lat: lat,
-                    lng: lng
-                  },
-                  id: parent.parent_id,
-                  studentIDs: studentIDs,
-                  routeID: parent.students[0].route_id //TODO: change markers to create per student
-                }]
-              }))
-            },
-            (error) => {
-              console.error(error);
-            }
-          );
-        })
-      })
-  }
+  // componentDidMount() {
+  //   const config = {
+  //     headers: {
+  //       Authorization: `Token ${sessionStorage.getItem('token')}`
+  //     }
+  //   }
+  //   axios.get(API_DOMAIN + `routeplanner?id=` + this.props.school , config)
+  //     .then(res => {
+  //       const locations = res.data;
+  //       this.setState({ locations });
+  //       Geocode.fromAddress(locations.address).then(
+  //         (response) => {
+  //           const lat = parseFloat(response.results[0].geometry.location.lat);
+  //           const lng = parseFloat(response.results[0].geometry.location.lng);
+  //           this.setState({
+  //             center: { lat: lat, lng: lng }
+  //           })
+  //         },
+  //         (error) => {
+  //           console.error(error);
+  //         }
+  //       )
+  //       locations.parents.map((parent, index) => {
+  //         const studentIDs = []
+  //         parent.students.map((student, index) => {
+  //             studentIDs.push(student.id);
+  //         })
+  //         Geocode.fromAddress(parent.address).then(
+  //           (response) => {
+  //             console.log(response)
+  //             const lat = parseFloat(response.results[0].geometry.location.lat);
+  //             const lng = parseFloat(response.results[0].geometry.location.lng);
+  //             this.setState(prevState => ({
+  //               markers: [...prevState.markers, {
+  //                 position: {
+  //                   lat: lat,
+  //                   lng: lng
+  //                 },
+  //                 id: parent.parent_id,
+  //                 studentIDs: studentIDs,
+  //                 routeID: parent.students[0].route_id //TODO: change markers to create per student
+  //               }]
+  //             }))
+  //           },
+  //           (error) => {
+  //             console.error(error);
+  //           }
+  //         );
+  //       })
+  //     })
+  // }
 
   render() {
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -124,16 +123,16 @@ class RouteMap extends Component {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={{
-              lat: parseFloat(this.state.center.lat),
-              lng: parseFloat(this.state.center.lng)
+              lat: parseFloat(this.props.center.lat),
+              lng: parseFloat(this.props.center.lng)
             }}
             options={{
               styles: hidePOIs
             }}
             zoom={15}
           >
-            <Marker position={this.state.center}  />
-            {this.state.markers.map((value, index) => {
+            <Marker position={this.props.center}  />
+            {this.props.markers?.map((value, index) => {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 

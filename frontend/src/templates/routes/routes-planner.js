@@ -29,6 +29,9 @@ class BusRoutesPlanner extends Component {
             create_school_name: '',
             create_route_description: '',
             route_dropdown: [],
+            center: {},
+            locations: [],
+            markers: [],
             assign_mode: false,
             active_route: 0
         }
@@ -63,6 +66,55 @@ class BusRoutesPlanner extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        this.handleTableGet(config);       
+        axios.get(API_DOMAIN + `routeplanner?id=` + this.props.params.id , config)
+            .then(res => {
+              const locations = res.data;
+              this.setState({ locations });
+              console.log(locations)
+              Geocode.fromAddress(locations.address).then(
+                (response) => {
+                  const lat = parseFloat(response.results[0].geometry.location.lat);
+                  const lng = parseFloat(response.results[0].geometry.location.lng);
+                  this.setState({
+                    center: { lat: lat, lng: lng }
+                  })
+                },
+                (error) => {
+                  console.error(error);
+                }
+              )
+              locations.parents.map((parent, index) => {
+                const studentIDs = []
+                parent.students.map((student, index) => {
+                    studentIDs.push(student.id);
+                })
+                Geocode.fromAddress(parent.address).then(
+                  (response) => {
+                    console.log(response)
+                    const lat = parseFloat(response.results[0].geometry.location.lat);
+                    const lng = parseFloat(response.results[0].geometry.location.lng);
+                    this.setState(prevState => ({
+                      markers: [...prevState.markers, {
+                        position: {
+                          lat: lat,
+                          lng: lng
+                        },
+                        id: parent.parent_id,
+                        studentIDs: studentIDs,
+                        routeID: parent.students[0].route_id //TODO: change markers to create per student
+                      }]
+                    }))
+                  },
+                  (error) => {
+                    console.error(error);
+                  }
+                );
+              })
+            })
+    }
+
+    handleTableGet = config => {
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
@@ -158,7 +210,7 @@ class BusRoutesPlanner extends Component {
         .then(res => {
             console.log(res.data);
             this.students = [];
-        })
+        }).then(this.handleTableGet(config))
     }
 
     render() {
@@ -362,7 +414,13 @@ class BusRoutesPlanner extends Component {
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3">
                                             <RouteMap school={this.props.params.id} 
-                                            assign_mode={this.state.assign_mode} key={this.state.assign_mode} active_route={this.state.active_route} onChange={this.handleRouteIDChange}/>
+                                            assign_mode={this.state.assign_mode} 
+                                            key={this.state.assign_mode} 
+                                            active_route={this.state.active_route} 
+                                            center={this.state.center}
+                                            locations={this.state.locations}
+                                            markers={this.state.markers}
+                                            onChange={this.handleRouteIDChange}/>
                                         </div>
                                     </div>
                                     <div className="col">
