@@ -27,7 +27,6 @@ urlpatterns = [
     path('', views.user_login, name="index"),
     path('students/delete', views.student_delete, name = "delete_student"),
     path('students/edit', views.student_edit, name = "edit_student"),
-    path('schools/all', views.schools_all, name='schools_all'),
     path('dashboard', views.parent_dashboard, name= "parent_dashboard"),
     path('dashboard/students/detail',views.parent_student_detail, name = "parent_student_detail"),
     path('routeplanner/edit', views.student_route_edit, name='studnet_route_edit')
