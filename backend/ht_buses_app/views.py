@@ -75,10 +75,12 @@ def user_create(request):
     address = reqBody['address']
     is_staff = reqBody['is_staff']
     is_parent = reqBody['is_parent']
+    lat = reqBody['lat']
+    long = reqBody['long']
     if is_staff: 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address)
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, long=long)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=long)
     if is_parent:
         for student in reqBody["students"]:
             create_student(student, user.id)
@@ -87,7 +89,7 @@ def user_create(request):
     return Response(result)
 
 
-""" # Student Create
+# Student Create
 @permission_classes([IsAdminUser])
 def create_students(request, user):
     data = {}
@@ -105,7 +107,7 @@ def create_students(request, user):
             Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id = None)
     data["message"] = "students registered successfully"
     result = {"data" : data}
-    return Response(result) """
+    return Response(result)
  
 
 # Students Detail API
@@ -295,7 +297,9 @@ def school_create(request):
     reqBody = json.loads(request.body)
     name = reqBody['school_name']
     address = reqBody['school_address']
-    School.schoolsTable.create(name=name, address = address)
+    lat = reqBody['lat']
+    long = reqBody['long']
+    School.schoolsTable.create(name=name, address=address, lat=lat, long=long)
     data["message"] = "school created successfully"
     result = {"data" : data}
     return Response(result)
@@ -310,6 +314,8 @@ def school_edit(request):
         school_object =  School.schoolsTable.filter(pk = id)
         school_object.name = reqBody['school_name']
         school_object.address = reqBody['school_address']
+        school_object.lat = reqBody['lat']
+        school_object.long = reqBody['long']
         school_object.save()
         data["message"] = "school information updated successfully"
         result = {"data" : data}
@@ -361,17 +367,24 @@ def routes_detail(request):
     students = Student.studentsTable.filter(route_id=id)
     students_serializer = StudentSerializer(students, many=True)
     data["name"] = route_serializer.data["name"]
-    data["school"] = {'id' : route_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
+    data["school"] = {'id' : route_serializer.data["school_id"], 'name' : school_serializer.data["name"], 'lat' : school_serializer.data["lat"], 'long': school_serializer.data["long"]}
     data["description"] = route_serializer.data["description"]
-    student_list = []
+    parent_id_arr = []
+    parent_student_arr = []
+    address_arr = []
     for student in students_serializer.data:
-        student_id = student["id"]
-        student_school_id = student["student_school_id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
-        student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': first_name, 'last_name' : last_name})
-    if len(student_list) != 0:
-        data["students"] = student_list
+        parent_id = student["user_id"]
+        parent = User.objects.get(pk=parent_id)
+        if parent_id not in parent_id_arr:
+            parent_id_arr.append(parent_id)
+            parent_serializer = UserSerializer(parent, many=False)
+            parent_student = Student.studentsTable.filter(user_id=parent_id, route_id=id)
+            parent_student_serializer = StudentSerializer(parent_student, many=True)
+            for child in parent_student_serializer.data:
+                parent_student_arr.append({'id' : child["id"], 'student_school_id': child["student_school_id"], 'first_name': child["first_name"], 'last_name' : child["last_name"]})
+            address_arr.append({'id' : parent_id, 'address' : parent_serializer.data["address"], 'lat': parent_serializer.data["lat"], 'long': parent_serializer.data["long"], 'students': parent_student_arr})
+    if len(address_arr) != 0:
+        data["parents"] = address_arr
     return Response(data)
 
 @api_view(["PUT"])
@@ -383,7 +396,6 @@ def route_edit(request):
     try:
         route_object =  Route.routeTables.get(pk=id)
         route_object.name = reqBody['route_name']
-        # route_object.school_id =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
         route_object.description = reqBody['route_description']
         route_object.save()
         data["message"] = "route updated successfully"
@@ -436,7 +448,7 @@ def routes(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def users(request):
     data = {}
     users = User.objects.all()
@@ -457,7 +469,15 @@ def users(request):
         is_staff = user["is_staff"]
         is_parent = user["is_parent"]
         address = user["address"]
-        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address})
+        if user["lat"] == None:
+            lat = 0
+        else:
+            lat = user["lat"]
+        if user["long"] == None:
+            long = 0
+        else:
+            long = user["long"]
+        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'address' : address, 'lat' : lat, 'long': long})
     data["users"] = users_arr
     return Response(data)
 
@@ -472,8 +492,17 @@ def users_detail(request):
         data["first_name"] = user_serializer.data["first_name"]
         data["last_name"] = user_serializer.data["last_name"]
         data["email"] = user_serializer.data["email"]
-        if user_serializer.data["is_parent"] == True:
+        if user_serializer.data["address"] != "":
             data["address"] = user_serializer.data["address"]
+            if user_serializer.data["lat"] == None:
+                data["lat"] = 0
+            else:
+                data["lat"] = user_serializer.data["lat"]
+            if  user_serializer.data["long"] == None:
+                data["long"] = 0
+            else:
+                data["long"] = user_serializer.data["long"]
+        if user_serializer.data["is_parent"] == True:
             students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
             student_list = []
@@ -507,6 +536,8 @@ def user_edit(request):
     user_object.first_name = reqBody['first_name']
     user_object.last_name = reqBody['last_name']
     user_object.address = reqBody['address']
+    user_object.lat = reqBody['lat']
+    user_object.long = reqBody['long']
     user_object.is_parent = reqBody['is_parent']
     user_object.is_staff = reqBody['is_staff']
     user_object.save()
@@ -583,6 +614,8 @@ def routeplanner(request):
     school_serializer = SchoolSerializer(school, many=False)
     data["name"] = school_serializer.data["name"]
     data["address"] = school_serializer.data["address"]
+    data["lat"] = school_serializer.data["lat"]
+    data["long"] = school_serializer.data["long"]
     routes = Route.routeTables.filter(school_id=id)
     routes_serializer = RouteSerializer(routes, many=True)
     routes_arr = []
@@ -609,7 +642,7 @@ def routeplanner(request):
                     parent_student_arr.append({'id' : child["id"], 'route_id' : 0})
                 else:
                     parent_student_arr.append({'id' : child["id"], 'route_id' : child["route_id"]})
-            address_arr.append({'id' : student["user_id"], 'address' : parent_serializer.data["address"], 'students': parent_student_arr})
+            address_arr.append({'id' : student["user_id"], 'address' : parent_serializer.data["address"], 'lat': parent_serializer.data["lat"], 'long': parent_serializer.data["long"], 'students': parent_student_arr})
     data["parents"] = address_arr
     return Response(data)
 
