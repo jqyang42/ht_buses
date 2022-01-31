@@ -525,12 +525,11 @@ def edit_or_create_student(student_info,id=None):
     first_name = student_info['first_name']
     last_name = student_info['last_name']
     student_school_id = student_info['student_school_id']
-    # try:
-    user_id = User.objects.get(pk = id)
-    route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
-    school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
-    # except BaseException as e:
-    #     raise ValidationError({"messsage": "Invalid options were chosen"})
+    try:
+        user_id = User.objects.get(pk = id)
+        school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
+    except BaseException as e:
+        raise ValidationError({"messsage": "Invalid options were chosen"})
     # try: 
     #     student_object = Student.studentsTable.filter(student_school_id = student_school_id, user_id = user_id)[0] # Need to have something that doesn't change
     #     student_object.first_name = first_name
@@ -543,7 +542,11 @@ def edit_or_create_student(student_info,id=None):
     #     result = {"data" : data}
     #     return Response(result) 
     # except: 
-    Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+    try:
+        route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
+        Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+    except:
+        Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id)
     data["message"] = "student created successfully"
     result = {"data" : data}
     return Response(result) 
