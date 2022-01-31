@@ -33,7 +33,6 @@ urlpatterns = [
     path('users/add-students', student_add.add_new_students, name="add_new_students"),
     path('students/delete', student_delete.student_delete, name = "delete_student"),
     path('students/edit', student_edit.student_edit, name = "edit_student"),
-    path('schools/all', schools_view.schools, name='schools_all'),
     path('dashboard', parent_dashboard.parent_dashboard, name= "parent_dashboard"),
     path('dashboard/students/detail', parent_student_detail.parent_student_detail, name = "parent_student_detail"),
     path('routeplanner/edit', student_route_edit.student_route_edit, name='studnet_route_edit')
