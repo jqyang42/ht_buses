@@ -29,8 +29,7 @@ class BusRoutesPlanner extends Component {
             create_school_name: '',
             create_route_description: '',
             route_dropdown: [],
-            assign_mode: false,
-            active_route: 0
+            assign_mode: false
         }
     }
 
@@ -92,11 +91,6 @@ class BusRoutesPlanner extends Component {
             assign_mode: !prevState.assign_mode
         }));
         console.log(this.state.assign_mode);
-    }
-    
-    handleRouteSelection = event => {
-        this.setState({ active_route: event.target.value })
-        console.log(this.state.active_route)
     }
 
     handleRouteNameChange = event => {
@@ -248,9 +242,10 @@ class BusRoutesPlanner extends Component {
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
-                                        {!this.state.assign_mode ? 
-                                        <div className="row d-flex mt-2 align-items-center align-middle">
-                                            <div className="col-auto float-start my-auto align-self-center">
+
+                                        {/* TODO: Show this entire div only when assign mode is OFF */}
+                                        <div className="row d-flex mt-2">
+                                            <div className="col-auto float-start">
                                                 {/* Add Route button */}
                                                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     Add Route
@@ -295,9 +290,8 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                    <option selected value={0}>Select a Route</option>
-                                                    <option selected value={0}>Unassign Student</option>
+                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
+                                                    <option selected>Select a Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
@@ -309,60 +303,40 @@ class BusRoutesPlanner extends Component {
                                                 <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Assign</button>
                                             </div>
                                         </div>
-                                        :
-                                        <div className="row d-flex align-items-center align-middle mt-2">
+
+                                        {/* TODO: Show this entire div only when assign mode is ON */}
+                                        <div className="row d-flex mt-2">
                                             {/* Assign mode on label */}
-                                            <div className="col float-start align-items-center align-text-center">
-                                                <p className="align-self-center align-text-center align-middle my-auto">Assign mode on</p>
+                                            <div className="col-auto float-start">
+                                                <p>Assign mode on</p>
                                             </div>
 
                                             {/* TODO: Ensure that this dropdown still reads the same content as the dropdown in the assign mode OFF div  */}
-                                            <div className="col justify-content-end align-self-center">
-                                                <select className="form-select float-end me-1" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} disabled>
-                                                    <option selected value={0}>Select a Route</option>
-                                                    <option selected value={0}>Unassign Student</option>
+                                            <div className="col justify-content-end">
+                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
+                                                    <option selected>Select a Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
                                                 </select>
                                             </div>
-                                            <div className="col-auto align-self-center">
-                                                
-                                                <div className="row d-flex float-end me-0">
-                                                    {/* <select className="w-50 form-select float-end me-3" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                        <option selected value={0}>Select a Route</option>
-                                                        <option selected value={0}>Unassign Student</option>
-                                                        {this.state.route_dropdown.map(route => 
-                                                            <option value={route.value} id={route.display}>{route.display}</option>
-                                                        )}
-                                                    </select> */}
+
+                                            {/* Cancel and Save buttons */}
+                                            <div className="col-auto">
+                                                <div className="row d-inline-flex float-end">
                                                     {/* TODO: Change onClick handler to dismiss */}
-                                                    <button type="button" className="btn btn-secondary w-auto me-3" onClick={this.handleAssignMode}>Cancel</button>
+                                                    <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-0" onClick={this.handleRouteAssignSubmit}>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleAssignMode}>
                                                         Save
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            {/* Cancel and Save buttons */}
-                                            {/* <div className="col-auto">
-                                                <div className="row d-inline-flex"> */}
-                                                    {/* TODO: Change onClick handler to dismiss */}
-                                                    {/* <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button> */}
-                                                    {/* TODO: Change onClick handler to save changes */}
-                                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}> */}
-                                                        {/* Save
-                                                    </button>
-                                                </div>
-                                            </div> */}
                                         </div>
-                                        }
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap school={this.props.params.id} 
-                                            assign_mode={this.state.assign_mode} key={this.state.assign_mode} active_route={this.state.active_route} onChange={this.handleRouteIDChange}/>
+                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} />
                                         </div>
                                     </div>
                                     <div className="col">

@@ -77,7 +77,7 @@ def validAccess(request):
 
 # User Creation API
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -438,7 +438,7 @@ def routes(request):
     return Response(data)
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def users(request):
     data = {}
     users = User.objects.all()
@@ -623,7 +623,7 @@ def routeplanner(request):
     return Response(data)
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated]) 
+@permission_classes([AllowAny]) 
 def parent_dashboard(request):
     data = {}
     id = request.query_params["id"] # need id of parent
