@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import { emailRegex, passwordRegex } from "../regex/input-validation";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -69,6 +70,17 @@ class UsersCreate extends Component {
 
     handleLastNameChange = event => {
         this.setState({ user_last_name: event.target.value });
+    }
+
+    handleAutocompleteSelection = (event, place) => {
+        this.setState({ user_address: event.target.value });
+        Geocode.fromAddress(this.state.user_address).then(
+            (response) => {
+                console.log(response)
+                const lat = parseFloat(response.results[0].geometry.location.lat);
+                const lng = parseFloat(response.results[0].geometry.location.lng);
+            }
+        )
     }
 
     handleAddressChange = event => {
@@ -199,6 +211,7 @@ class UsersCreate extends Component {
     }
 
     handleSubmit = event => {
+        
         if (!this.validEmail || !this.validPassword) {
             return 
         }
@@ -395,7 +408,7 @@ class UsersCreate extends Component {
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -407,9 +420,9 @@ class UsersCreate extends Component {
                                                     }}
                                                     value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
-                                                onChange={this.handleAddressChange}></input>
+                                                    onChange={this.handleAddressChange} />
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
+                                                onChange={this.handleAddressChange}></input> */}
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
