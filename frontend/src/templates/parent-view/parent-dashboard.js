@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { API_DOMAIN, HT_LOGO } from "../../constants";
-import { Link , Navigate} from "react-router-dom";
+import { Link , Navigate, useParams} from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";

@@ -11,9 +11,9 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { STUDENTS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+
 class StudentsEdit extends Component {
     state = {
         first_name: '',
@@ -247,7 +247,7 @@ class StudentsEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={STUDENTS_DETAIL_URL}><h5>{this.state.student.first_name} {this.state.student.last_name}</h5></a>
+                                            <a href={"/students/" + this.props.params.id}><h5>{this.state.student.first_name} {this.state.student.last_name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -276,13 +276,13 @@ class StudentsEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                    defaultValue={this.state.first_name}placeholder="Enter first name" required
+                                                    defaultValue={this.state.student.first_name} placeholder="Enter first name" required
                                                     onChange={this.handleFirstNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                    defaultValue="Last Name" placeholder="Enter full name" required
+                                                    defaultValue={this.state.student.last_name} placeholder="Enter full name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
                                             <div className="form-group pb-3 w-75">
@@ -332,7 +332,12 @@ class StudentsEdit extends Component {
                                                 </select>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
+                                                <Link to={"/students/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                    <span className="btn-text">
+                                                        Cancel
+                                                    </span>
+                                                </Link>
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>

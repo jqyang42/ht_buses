@@ -12,7 +12,6 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { USERS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
 import { emailRegex } from "../regex/input-validation";
@@ -331,7 +330,7 @@ class UsersEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={USERS_DETAIL_URL}><h5>{this.state.user.first_name} {this.state.user.last_name}</h5></a>
+                                            <a href={"/users/" + this.props.params.id}><h5>{this.state.user.first_name} {this.state.user.last_name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -486,7 +485,12 @@ class UsersEdit extends Component {
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
-                                        <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                        {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
+                                        <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                            <span className="btn-text">
+                                                Cancel
+                                            </span>
+                                        </Link>
                                         <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                                     </div>
                                 </form>
