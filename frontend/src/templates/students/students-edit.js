@@ -11,9 +11,9 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { STUDENTS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+
 class StudentsEdit extends Component {
     state = {
         first_name: '',
@@ -44,7 +44,13 @@ class StudentsEdit extends Component {
     handleSchoolChange = event => {
         const school_id = event.target.value
 
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id)
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
         .then(res => {
             let routes_data
             if (res.data.routes == null) {
@@ -88,16 +94,47 @@ class StudentsEdit extends Component {
         this.setState({ redirect: true });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
        const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        // const students_detail_res = await axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id, config)
+        
+        // const student = students_detail_res.data
+        // this.setState({ student: student.data, init_parent_id: student.user_id, init_route_id: student.route.id, init_school_id: student.school.id} )
+
+        let init_parent_id, init_route_id, init_school_id
         axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
         .then(res => {
             const student = res.data;
             this.setState({ student: student });
+            init_parent_id = student.user_id
+            init_route_id = student.route.id
+            init_school_id = student.school.id
+            this.setState({ init_parent_id, init_route_id, init_school_id })
+
+            axios.get(API_DOMAIN + 'schools/detail?id=' + init_school_id, config)
+            .then(res => {
+                console.log(res)
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                console.log(routes_data)
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                console.log(routes)
+                this.setState({ routes_dropdown: routes })
+            })
         })
 
         axios.get(API_DOMAIN + `schools`, config)
@@ -107,25 +144,7 @@ class StudentsEdit extends Component {
             })
             this.setState({ schools_dropdown: schools})
         })
-
-        axios.get(API_DOMAIN + 'schools/detail?id=' + this.state.init_school_id, config)
-        .then(res => {
-            let routes_data
-            if (res.data.routes == null) {
-                routes_data = []
-            } else {
-                routes_data = res.data.routes
-            }
-            let routes = routes_data.map(route => {
-                return {
-                    value: route.id,
-                    display: route.name
-                }
-            })
-            this.setState({ routes_dropdown: routes })
-        })
-
-
+        
         axios.get(API_DOMAIN + 'users', config)
         .then(res => {
             let parents = res.data.users.filter(user => {
@@ -228,7 +247,7 @@ class StudentsEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={STUDENTS_DETAIL_URL}><h5>{this.state.student.first_name} {this.state.student.last_name}</h5></a>
+                                            <a href={"/students/" + this.props.params.id}><h5>{this.state.student.first_name} {this.state.student.last_name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -257,13 +276,13 @@ class StudentsEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                    defaultValue="First Name" placeholder="Enter first name" required
+                                                    defaultValue={this.state.student.first_name} placeholder="Enter first name" required
                                                     onChange={this.handleFirstNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                    defaultValue="Last Name" placeholder="Enter full name" required
+                                                    defaultValue={this.state.student.last_name} placeholder="Enter full name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
                                             <div className="form-group pb-3 w-75">
@@ -313,7 +332,12 @@ class StudentsEdit extends Component {
                                                 </select>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
+                                                <Link to={"/students/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                    <span className="btn-text">
+                                                        Cancel
+                                                    </span>
+                                                </Link>
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>

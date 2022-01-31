@@ -15,7 +15,6 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { SCHOOLS_DETAIL_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
@@ -211,7 +210,7 @@ class BusRoutesPlanner extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={SCHOOLS_DETAIL_URL}><h5>{this.state.school.name}</h5></a>
+                                            <a href={"/schools/" + this.props.params.id}><h5>{this.state.school.name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>

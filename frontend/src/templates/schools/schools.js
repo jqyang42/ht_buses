@@ -25,11 +25,6 @@ class Schools extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -54,7 +49,7 @@ class Schools extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        axios.get(API_DOMAIN + `schools`)
+        axios.get(API_DOMAIN + `schools`, config)
             .then(res => {
             const schools = res.data.schools;
             this.setState({ schools });

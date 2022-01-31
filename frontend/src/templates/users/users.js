@@ -13,9 +13,6 @@ import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 
-
-
-
 class Users extends Component {
     state = {
         users : []
