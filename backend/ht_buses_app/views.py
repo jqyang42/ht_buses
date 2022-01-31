@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User, UserManager
 from django.contrib.auth import authenticate
@@ -10,14 +9,6 @@ from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
-
-# TESTER METHOD FOR FRONTEND PAGINATION
-@api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticate[d
-def schools_all(request):
-    schools = School.schoolsTable.all()
-    school_serializer = SchoolSerializer(schools, many=True)
-    return Response(school_serializer.data)
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
@@ -32,7 +23,6 @@ def user_login(request):
         return Response({"message": "An account with this email does not exist.",  "token":'', "valid_login": False})
     if not check_password(password, user.password):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
-    #try:
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["id"] = user.id
@@ -42,8 +32,6 @@ def user_login(request):
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
     return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
-    #except: 
-        #return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
 
 # Logout API
 @api_view(["POST"])
