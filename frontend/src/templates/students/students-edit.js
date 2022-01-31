@@ -94,16 +94,47 @@ class StudentsEdit extends Component {
         this.setState({ redirect: true });
     }
 
-    componentDidMount() {
+    async componentDidMount() {
        const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        // const students_detail_res = await axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id, config)
+        
+        // const student = students_detail_res.data
+        // this.setState({ student: student.data, init_parent_id: student.user_id, init_route_id: student.route.id, init_school_id: student.school.id} )
+
+        let init_parent_id, init_route_id, init_school_id
         axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
         .then(res => {
             const student = res.data;
             this.setState({ student: student });
+            init_parent_id = student.user_id
+            init_route_id = student.route.id
+            init_school_id = student.school.id
+            this.setState({ init_parent_id, init_route_id, init_school_id })
+
+            axios.get(API_DOMAIN + 'schools/detail?id=' + init_school_id, config)
+            .then(res => {
+                console.log(res)
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                console.log(routes_data)
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                console.log(routes)
+                this.setState({ routes_dropdown: routes })
+            })
         })
 
         axios.get(API_DOMAIN + `schools`, config)
@@ -113,25 +144,7 @@ class StudentsEdit extends Component {
             })
             this.setState({ schools_dropdown: schools})
         })
-
-        axios.get(API_DOMAIN + 'schools/detail?id=' + this.state.init_school_id, config)
-        .then(res => {
-            let routes_data
-            if (res.data.routes == null) {
-                routes_data = []
-            } else {
-                routes_data = res.data.routes
-            }
-            let routes = routes_data.map(route => {
-                return {
-                    value: route.id,
-                    display: route.name
-                }
-            })
-            this.setState({ routes_dropdown: routes })
-        })
-
-
+        
         axios.get(API_DOMAIN + 'users', config)
         .then(res => {
             let parents = res.data.users.filter(user => {
