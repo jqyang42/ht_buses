@@ -63,6 +63,7 @@ class UsersEdit extends Component {
 
     handleIsStaffChange = event => {
         this.setState({ is_staff: event.target.value });
+        console.log(this.state.is_staff)
     }
 
     handleStudentFirstNameChange = (event, student_num) => {
@@ -187,11 +188,18 @@ class UsersEdit extends Component {
     }
 
     handleSubmit = event => {
-        if (!this.validEmail) {
+        if (!this.emailValidation) {
             return 
         }
 
         event.preventDefault();
+
+        let is_parent
+        if (this.state.students == null) {
+            is_parent = false
+        } else {
+            is_parent = true
+        }
 
         const user = {
             email: this.email,
@@ -199,8 +207,8 @@ class UsersEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff == 'General' ? false : true,
-            is_parent: this.state.students.length != 0,
+            is_staff: this.state.is_staff == 'general' ? false : true,
+            is_parent: is_parent,
             students: this.state.students
         }
 
@@ -212,7 +220,7 @@ class UsersEdit extends Component {
             }
         }
 
-        axios.put(API_DOMAIN + `users/edit`, user, config)
+        axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -231,7 +239,22 @@ class UsersEdit extends Component {
         .then(res => {
         const user = res.data;
         this.email = user.email
-        this.setState({ user: user });
+
+        let init_students
+        if (user.students == null) {
+            init_students = []
+        } else {
+            init_students = user.students
+        }
+        this.setState({ 
+            user: user,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            address: user.address,
+            is_staff: user.is_staff,
+            students: init_students
+        });
         })
 
         axios.get(API_DOMAIN + `schools`, config)
@@ -263,8 +286,6 @@ class UsersEdit extends Component {
             window.location.reload()
         })
     }
-
-
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -400,7 +421,7 @@ class UsersEdit extends Component {
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     value={this.state.address}
                                                     onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input>
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.user.address} onChange={this.handleAddressChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
