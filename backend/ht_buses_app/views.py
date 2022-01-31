@@ -24,7 +24,7 @@ def user_login(request):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
-    info["id"] = user.id
+    info["user_id"] = user.id
     info["is_staff"] = user.is_staff
     info["email"] = user.email
     info["first_name"] = user.first_name
@@ -64,7 +64,7 @@ def validAccess(request):
 
 # User Creation API
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -82,10 +82,12 @@ def user_create(request):
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=long)
     if is_parent:
-        create_students(request, user)
+        for student in reqBody["students"]:
+            create_student(student, user.id)
     data["message"] = "User created successfully"
     result = {"data" : data}
     return Response(result)
+
 
 # Student Create
 @permission_classes([IsAdminUser])
@@ -106,7 +108,7 @@ def create_students(request, user):
     data["message"] = "students registered successfully"
     result = {"data" : data}
     return Response(result)
-    
+ 
 
 # Students Detail API
 @api_view(["GET"])
@@ -187,23 +189,32 @@ def student_edit(request):
     new_last_name = reqBody['last_name']
     student_school_id = reqBody['student_school_id']
     try:
-        school_id = School.schoolsTable.filter(name=reqBody["school_name"])[0]
-        route_id = Route.routeTables.filter(name = reqBody["route_name"])[0]
-        parent = reqBody['parent']
-        user_id = User.objects.filter(first_name = parent["first_name"], last_name = parent["last_name"], email = parent["email"])[0]
-        og_student_object = Student.studentsTable.get(pk = id)   
+        og_student_object = Student.studentsTable.get(pk = id) 
+    except: 
+        data["message"] = "Student was not found. Update was unsucessful"
+        result = {"data" : data}
+        return Response(result)
+    try:
+        school_id = School.schoolsTable.get(pk=reqBody["school_id"])
+        user_id = User.objects.get(pk = reqBody["parent_id"]) 
         og_student_object.last_name = new_last_name
         og_student_object.first_name = new_first_name
         og_student_object.school_id = school_id
         og_student_object.student_school_id = student_school_id
-        og_student_object.route_id  = route_id
         og_student_object.user_id = user_id
-        og_student_object.save()
-        data["message"] = "Student information successfully updated"
+    except:
+        data["message"] = "Invalid options were chosen. Update was unsuccessful"
         result = {"data" : data}
         return Response(result)
-    except BaseException as e:
-        raise ValidationError({"messsage": "invalid options were chosen"})
+    try: 
+        og_student_object.route = Route.routeTables.get(pk = reqBody["route_id"])
+    except: 
+        og_student_object.route = None
+    og_student_object.save()
+    data["message"] = "Student information successfully updated"
+    data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": str(og_student_object.route), "user_id": user_id.id}
+    result = {"data" : data} # TODO: Ask evelyn why it's not updated on students page?
+    return Response(result)
 
 @api_view(['DELETE'])
 @permission_classes([IsAdminUser])
@@ -532,18 +543,23 @@ def user_edit(request):
     user_object.save()
     if user_object.is_parent is True:
         for student_info in reqBody["students"]:
-            edit_or_create_student(student_info, id)
+            create_student(student_info, id)
     data["message"] = "User and associated students updated successfully"
     result = {"data" : data}
     return Response(result)
 
+<<<<<<< HEAD
 def edit_or_create_student(student_info,id=None):
+=======
+def create_student(student_info, id=None):
+>>>>>>> 9d092a6b01e7bc4cdbd37cb15a8e2ca6d4882a6b
     data = {}
     first_name = student_info['first_name']
     last_name = student_info['last_name']
     student_school_id = student_info['student_school_id']
     try:
         user_id = User.objects.get(pk = id)
+<<<<<<< HEAD
         route_id = Route.routeTables.filter(name = student_info['route_name'])[0]
         school_id = School.schoolsTable.filter(name =student_info['school_name'])[0]
 
@@ -565,6 +581,23 @@ def edit_or_create_student(student_info,id=None):
         data["message"] = "student created successfully"
         result = {"data" : data}
         return Response(result) 
+=======
+        school_id = School.schoolsTable.get(id =student_info['school_id'])
+    except :
+        data["message"] = "Invalid options were chosen. Student information update was unsuccessful"
+        result = {"data" : data}
+        return Response(result)
+    try:
+        route_id = Route.routeTables.get(pk = student['route_id'])
+        student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
+    except:
+        route_id = None
+        student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id = route_id)
+    data["message"] = "student created successfully"
+    data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user_id.id}
+    result = {"data" : data}
+    return Response(result) 
+>>>>>>> 9d092a6b01e7bc4cdbd37cb15a8e2ca6d4882a6b
     
 @api_view(["POST"])
 @permission_classes([IsAdminUser]) 
@@ -676,23 +709,29 @@ def parent_student_detail(request):
     data = {}
     id = request.query_params["id"]
     student = Student.studentsTable.get(pk=id)
-    student_serializer = StudentSerializer(student, many=False)
-    data["school_student_id"] = student_serializer.data["student_school_id"]
-    data["first_name"] = student_serializer.data["first_name"]
-    data["last_name"] = student_serializer.data["last_name"]
-    school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
-    school_serializer = SchoolSerializer(school, many=False)
-    data["school_name"] = school_serializer.data["name"]
-    if ["route_id"] == None:
-        route_name = "Unassigned"
-        route_description = ""
-    else:
-        route = Route.routeTables.get(pk=student_serializer.data["route_id"])
-        route_serializer = RouteSerializer(route, many=False)
-        route_name = route_serializer.data["name"]
-        route_description = route_serializer.data["description"]
-    data["route"] = {'name' : route_name, 'description' : route_description}
-    return Response(data)
+    auth_string = "Token "+str(student.user_id.auth_token)
+    if auth_string == request.headers['Authorization']:
+        student_serializer = StudentSerializer(student, many=False)
+        data["school_student_id"] = student_serializer.data["student_school_id"]
+        data["first_name"] = student_serializer.data["first_name"]
+        data["last_name"] = student_serializer.data["last_name"]
+        school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+        school_serializer = SchoolSerializer(school, many=False)
+        data["school_name"] = school_serializer.data["name"]
+        if ["route_id"] == None:
+            route_name = "Unassigned"
+            route_description = ""
+        else:
+            route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+            route_serializer = RouteSerializer(route, many=False)
+            route_name = route_serializer.data["name"]
+            route_description = route_serializer.data["description"]
+        data["route"] = {'name' : route_name, 'description' : route_description}
+        return Response(data)
+    else: 
+        data["route"] = {'name' : '', 'description' : ''}
+        data["message"] = {"User is not authorized to see this page"}
+        return Response(data, status = 404) # TODO: make status code that just shows 404 pages, without redirecting to logout
 
 # Student Route PUT API
 @api_view(['PUT'])

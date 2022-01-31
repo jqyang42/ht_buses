@@ -44,7 +44,7 @@ class ParentDashboard extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        axios.get(API_DOMAIN + 'dashboard?id=' + this.state.id, config)
+        axios.get(API_DOMAIN + 'dashboard?id=' + sessionStorage.getItem('user_id'), config)
             .then(res => {
             const parent = res.data;
             const students = parent.students;
@@ -57,7 +57,7 @@ class ParentDashboard extends Component {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
         return (
