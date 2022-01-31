@@ -247,8 +247,8 @@ class BusRoutesPlanner extends Component {
                                     <div className="col-7 me-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
                                         {!this.state.assign_mode ? 
-                                        <div className="row d-flex mt-2">
-                                            <div className="col-auto float-start">
+                                        <div className="row d-flex mt-2 align-items-center align-middle">
+                                            <div className="col-auto float-start my-auto align-self-center">
                                                 {/* Add Route button */}
                                                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     Add Route
@@ -308,15 +308,15 @@ class BusRoutesPlanner extends Component {
                                             </div>
                                         </div>
                                         :
-                                        <div className="row d-flex mt-2">
+                                        <div className="row d-flex align-items-center align-middle mt-2">
                                             {/* Assign mode on label */}
-                                            <div className="col-auto float-start">
-                                                <p>Assign mode on</p>
+                                            <div className="col float-start align-items-center align-text-center">
+                                                <p className="align-self-center align-text-center align-middle my-auto">Assign mode on</p>
                                             </div>
 
                                             {/* TODO: Ensure that this dropdown still reads the same content as the dropdown in the assign mode OFF div  */}
-                                            <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
+                                            <div className="col justify-content-end align-self-center">
+                                                <select className="form-select float-end me-1" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} disabled>
                                                     <option selected value={0}>Select a Route</option>
                                                     <option selected value={0}>Unassign Student</option>
                                                     {this.state.route_dropdown.map(route => 
@@ -324,18 +324,36 @@ class BusRoutesPlanner extends Component {
                                                     )}
                                                 </select>
                                             </div>
-
-                                            {/* Cancel and Save buttons */}
-                                            <div className="col-auto">
-                                                <div className="row d-inline-flex float-end">
+                                            <div className="col-auto align-self-center">
+                                                
+                                                <div className="row d-flex float-end me-0">
+                                                    {/* <select className="w-50 form-select float-end me-3" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
+                                                        <option selected value={0}>Select a Route</option>
+                                                        <option selected value={0}>Unassign Student</option>
+                                                        {this.state.route_dropdown.map(route => 
+                                                            <option value={route.value} id={route.display}>{route.display}</option>
+                                                        )}
+                                                    </select> */}
                                                     {/* TODO: Change onClick handler to dismiss */}
-                                                    <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button>
+                                                    <button type="button" className="btn btn-secondary w-auto me-3" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-0" onClick={this.handleRouteAssignSubmit}>
                                                         Save
                                                     </button>
                                                 </div>
                                             </div>
+
+                                            {/* Cancel and Save buttons */}
+                                            {/* <div className="col-auto">
+                                                <div className="row d-inline-flex"> */}
+                                                    {/* TODO: Change onClick handler to dismiss */}
+                                                    {/* <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button> */}
+                                                    {/* TODO: Change onClick handler to save changes */}
+                                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}> */}
+                                                        {/* Save
+                                                    </button>
+                                                </div>
+                                            </div> */}
                                         </div>
                                         }
 
