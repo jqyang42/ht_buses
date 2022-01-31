@@ -11,8 +11,6 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { ROUTES_DETAIL_URL } from "../../constants";
-import { ROUTES_PLANNER_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
@@ -160,7 +158,7 @@ class BusRoutesEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={ROUTES_DETAIL_URL}><h5>{this.state.route.name}</h5></a>
+                                            <a href={"/routes/" + this.props.params.id}><h5>{this.state.route.name}</h5></a>
                                             {/* TODO: change href to refer to specific route url */}
                                         </div>
                                         <div className="w-auto px-2">
@@ -185,7 +183,9 @@ class BusRoutesEdit extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={ROUTES_PLANNER_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+
+                                            {/* TODO: change this.props.params.id to SCHOOL id, not ROUTE id */}
+                                            <Link to={"/schools/" + this.props.params.id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
                                                     Route Planner
@@ -221,7 +221,12 @@ class BusRoutesEdit extends Component {
                                                 onChange={this.handleDescriptionChange}></textarea>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
+                                                <Link to={"/routes/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                    <span className="btn-text">
+                                                        Cancel
+                                                    </span>
+                                                </Link>
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>

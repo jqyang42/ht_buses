@@ -11,9 +11,6 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { SCHOOLS_DETAIL_URL } from "../../constants";
-import { ROUTES_DETAIL_URL } from "../../constants";
-import { STUDENTS_EDIT_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class StudentsDetail extends Component {
@@ -147,7 +144,7 @@ class StudentsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={STUDENTS_EDIT_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit

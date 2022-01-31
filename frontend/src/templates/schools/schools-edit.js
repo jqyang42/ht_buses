@@ -3,7 +3,7 @@ import { HT_LOGO } from "../../constants";
 import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -11,7 +11,6 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { SCHOOLS_DETAIL_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
@@ -156,7 +155,7 @@ class SchoolsEdit extends Component {
                                             <i className="bi bi-chevron-right"></i>
                                         </div>
                                         <div className="w-auto px-2">
-                                            <a href={SCHOOLS_DETAIL_URL}><h5>{this.state.school.name}</h5></a>
+                                            <a href={"/schools/" + this.props.params.id}><h5>{this.state.school.name}</h5></a>
                                         </div>
                                         <div className="w-auto px-2">
                                             <i className="bi bi-chevron-right"></i>
@@ -209,7 +208,12 @@ class SchoolsEdit extends Component {
                                                 onChange={this.handleSchoolAddressChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button>
+                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
+                                                <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                    <span className="btn-text">
+                                                        Cancel
+                                                    </span>
+                                                </Link>
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>

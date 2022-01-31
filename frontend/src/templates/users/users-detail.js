@@ -12,8 +12,6 @@ import { SCHOOLS_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { USERS_EDIT_URL } from "../../constants";
-import { USERS_PASSWORD_URL } from '../../constants';
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class UsersDetail extends Component {
@@ -180,13 +178,13 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={USERS_PASSWORD_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            <Link to={"/users/" + this.props.params.id + "/change-password"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-key me-2"></i>
                                                     Change Password
                                                 </span>
                                             </Link>
-                                            <Link to={USERS_EDIT_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            <Link to={"/users/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
                                                     Edit
