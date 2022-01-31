@@ -132,6 +132,29 @@ class BusRoutesPlanner extends Component {
             })
     }
     
+    students = {"students":[]};
+
+    handleRouteIDChange = (students) => {
+      this.students["students"] = students
+      console.log(this.students)
+    }
+
+    handleRouteAssignSubmit = event => {
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        this.setState({
+            assign_mode: false
+        })
+        axios.put(API_DOMAIN + 'routeplanner/edit', this.students, config)
+        .then(res => {
+            console.log(res.data);
+            this.students = [];
+        })
+    }
+
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
