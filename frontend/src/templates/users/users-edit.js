@@ -187,7 +187,7 @@ class UsersEdit extends Component {
     // }
 
     handleSubmit = event => {
-        if (!this.emailValidation) {
+        if (!this.emailValidation()) {
             return 
         }
 
