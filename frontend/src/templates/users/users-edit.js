@@ -400,7 +400,7 @@ class UsersEdit extends Component {
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     value={this.state.address}
                                                     onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input>
+                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.user.address} onChange={this.handleAddressChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
