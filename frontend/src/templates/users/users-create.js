@@ -30,6 +30,9 @@ class UsersCreate extends Component {
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     password2 = '';
@@ -76,6 +79,26 @@ class UsersCreate extends Component {
         this.setState({ user_address: event.target.value });
     }
 
+    handleAddressValidation = event => {
+        if (this.state.user_address != '') {
+            console.log(this.state.user_address)
+            Geocode.fromAddress(this.state.user_address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
+                }
+            )
+        }
+    }
+    
     handleIsStaffChange = event => {
         const type = event.target.value
         this.setState({ user_is_staff: type });
@@ -201,23 +224,14 @@ class UsersCreate extends Component {
 
     handleSubmit = event => {
         let user_address
-        let lat = 0;
-        let lng = 0;
-        let valid_address = true;
+
         if (this.state.user_address === null) {
             user_address = ''
         } else {
             user_address = this.state.user_address;
-            Geocode.fromAddress(this.state.user_address).then(
-                (response) => {
-                    console.log(response)
-                    lat = parseFloat(response.results[0].geometry.location.lat);
-                    lng = parseFloat(response.results[0].geometry.location.lng);
-                    valid_address = response.status == 'OK'
-                }
-            )
         }
-        if (!this.validEmail || !this.validPassword || !valid_address) {
+
+        if (!this.validEmail || !this.validPassword || !this.state.valid_address) {
             console.log('address not valid')
             return 
         }
@@ -239,8 +253,8 @@ class UsersCreate extends Component {
             is_staff: this.state.user_is_staff === 'general' ? false : true,
             is_parent: this.state.students.length !== 0,
             students: this.state.students,
-            lat: lat,
-            lng: lng,
+            lat: this.state.lat,
+            long: this.state.lng,
         }
 
         console.log(user)
@@ -417,11 +431,12 @@ class UsersCreate extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} />
+                                                    onChange={this.handleAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>

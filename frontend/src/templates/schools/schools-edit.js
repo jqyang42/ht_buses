@@ -4,6 +4,7 @@ import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -21,6 +22,9 @@ class SchoolsEdit extends Component {
         school_address: '',
         school: [],
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     handleSchoolNameChange = event => {
@@ -29,6 +33,26 @@ class SchoolsEdit extends Component {
 
     handleSchoolAddressChange = event => {
         this.setState({ school_address: event.target.value });
+    }
+
+    handleAddressValidation = event => {
+        if (this.state.school_address != '') {
+            console.log(this.state.school_address)
+            Geocode.fromAddress(this.state.school_address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
+                }
+            )
+        }
     }
 
     handleLogout = event => {
@@ -55,18 +79,7 @@ class SchoolsEdit extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        let lat = 0;
-        let lng = 0;
-        let valid_address = true;
-        Geocode.fromAddress(this.state.school_address).then(
-            (response) => {
-                console.log(response)
-                lat = parseFloat(response.results[0].geometry.location.lat);
-                lng = parseFloat(response.results[0].geometry.location.lng);
-                valid_address = response.status == 'OK'
-            }
-        )
-        if ( !valid_address ) {
+        if ( !this.state.valid_address ) {
             console.log('address not valid')
             return 
         }
@@ -74,8 +87,8 @@ class SchoolsEdit extends Component {
         const school = {
             school_name: this.state.school_name,
             school_address: this.state.school_address,
-            lat: lat,
-            lng: lng,
+            lat: this.state.lat,
+            long: this.state.lng,
         }
 
         const config = {
@@ -207,7 +220,7 @@ class SchoolsEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -215,14 +228,15 @@ class SchoolsEdit extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     value={this.state.school_address} 
-                                                    onChange={this.handleSchoolAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                    onChange={this.handleSchoolAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
                                                 defaultValue={this.state.school.address} placeholder="Enter school address"
-                                                onChange={this.handleSchoolAddressChange}></input>
+                                                onChange={this.handleSchoolAddressChange}></input> */}
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
