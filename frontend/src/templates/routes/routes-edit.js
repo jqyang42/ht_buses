@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
+import HeaderMenu from "../components/header-menu";
 
 import { LOGIN_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
@@ -89,34 +90,7 @@ class BusRoutesEdit extends Component {
                     <SidebarMenu activeTab="routes" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
-                            <div className="row align-self-center d-flex justify-content-between">
-                                <div className="col-md-auto mx-2 py-2">
-                                    <div className="row d-flex align-middle">
-                                        <div className="w-auto px-2 ps-3">
-                                            <a href={ROUTES_URL}><h5>Bus Routes</h5></a>
-                                        </div>
-                                        <div className="w-auto px-2">
-                                            <i className="bi bi-chevron-right"></i>
-                                        </div>
-                                        <div className="w-auto px-2">
-                                            <a href={"/routes/" + this.props.params.id}><h5>{this.state.route.name}</h5></a>
-                                            {/* TODO: change href to refer to specific route url */}
-                                        </div>
-                                        <div className="w-auto px-2">
-                                            <i className="bi bi-chevron-right"></i>
-                                        </div>
-                                        <div className="w-auto px-2">
-                                            <h5>Edit Route</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-auto mx-2 py-0 mr-4">
-                                    <h6 className="font-weight-bold mb-0">{sessionStorage.getItem('first_name')} {sessionStorage.getItem('last_name')}</h6>
-                                    <p className="text-muted text-small">{sessionStorage.getItem('role')}</p>
-                                </div>
-                            </div>
-                        </div>
+                        <HeaderMenu root="Bus Routes" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.route.name} page="Edit Route" />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
