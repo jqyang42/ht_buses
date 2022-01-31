@@ -11,13 +11,13 @@ from .student_create import create_student
 def add_new_students(request):
     data = {}
     user_id = request.query_params["id"]
-    students = json.loads(request.body)
+    reqBody = json.loads(request.body)
     try:
-        for student in students:
+        for student in reqBody["students"]:
             create_student(student, user_id)
         data["message"] = "Students created successfully"
         result = {"data" : data}
-        return Response(result) 
+        return Response(result)
     except:
         data["message"] = "User does not exist. You can only add students to an existing user"
         result = {"data" : data}

@@ -22,6 +22,6 @@ def create_student(student_info, id=None):
     user.is_parent = True
     user.save()
     data["message"] = "student created successfully"
-    data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user_id.id}
+    data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user.id}
     result = {"data" : data}
-    return Response(result) 
+    return result
