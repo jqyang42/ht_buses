@@ -345,7 +345,7 @@ def route_create(request):
         raise ValidationError({"message": "route could not be created"})
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routes_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -356,17 +356,24 @@ def routes_detail(request):
     students = Student.studentsTable.filter(route_id=id)
     students_serializer = StudentSerializer(students, many=True)
     data["name"] = route_serializer.data["name"]
-    data["school"] = {'id' : route_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
+    data["school"] = {'id' : route_serializer.data["school_id"], 'name' : school_serializer.data["name"], 'lat' : school_serializer.data["lat"], 'long': school_serializer.data["long"]}
     data["description"] = route_serializer.data["description"]
-    student_list = []
+    parent_id_arr = []
+    parent_student_arr = []
+    address_arr = []
     for student in students_serializer.data:
-        student_id = student["id"]
-        student_school_id = student["student_school_id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
-        student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': first_name, 'last_name' : last_name})
-    if len(student_list) != 0:
-        data["students"] = student_list
+        parent_id = student["user_id"]
+        parent = User.objects.get(pk=parent_id)
+        if parent_id not in parent_id_arr:
+            parent_id_arr.append(parent_id)
+            parent_serializer = UserSerializer(parent, many=False)
+            parent_student = Student.studentsTable.filter(user_id=parent_id, route_id=id)
+            parent_student_serializer = StudentSerializer(parent_student, many=True)
+            for child in parent_student_serializer.data:
+                parent_student_arr.append({'id' : child["id"], 'student_school_id': child["student_school_id"], 'first_name': child["first_name"], 'last_name' : child["last_name"]})
+            address_arr.append({'id' : parent_id, 'address' : parent_serializer.data["address"], 'lat': parent_serializer.data["lat"], 'long': parent_serializer.data["long"], 'students': parent_student_arr})
+    if len(address_arr) != 0:
+        data["parents"] = address_arr
     return Response(data)
 
 @api_view(["PUT"])
@@ -401,7 +408,7 @@ def route_delete(request):
         raise ValidationError({"messsage": "Route could not be deleted"})
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routes(request):
     data = {}
     routes_filter = []
@@ -594,7 +601,7 @@ def user_password_edit(request):
         return Response(result)    
 
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
@@ -602,6 +609,8 @@ def routeplanner(request):
     school_serializer = SchoolSerializer(school, many=False)
     data["name"] = school_serializer.data["name"]
     data["address"] = school_serializer.data["address"]
+    data["lat"] = school_serializer.data["lat"]
+    data["long"] = school_serializer.data["long"]
     routes = Route.routeTables.filter(school_id=id)
     routes_serializer = RouteSerializer(routes, many=True)
     routes_arr = []
@@ -628,7 +637,7 @@ def routeplanner(request):
                     parent_student_arr.append({'id' : child["id"], 'route_id' : 0})
                 else:
                     parent_student_arr.append({'id' : child["id"], 'route_id' : child["route_id"]})
-            address_arr.append({'id' : student["user_id"], 'address' : parent_serializer.data["address"], 'students': parent_student_arr})
+            address_arr.append({'id' : student["user_id"], 'address' : parent_serializer.data["address"], 'lat': parent_serializer.data["lat"], 'long': parent_serializer.data["long"], 'students': parent_student_arr})
     data["parents"] = address_arr
     return Response(data)
 
