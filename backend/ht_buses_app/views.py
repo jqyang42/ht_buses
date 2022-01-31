@@ -644,23 +644,31 @@ def parent_student_detail(request):
     data = {}
     id = request.query_params["id"]
     student = Student.studentsTable.get(pk=id)
-    student_serializer = StudentSerializer(student, many=False)
-    data["school_student_id"] = student_serializer.data["student_school_id"]
-    data["first_name"] = student_serializer.data["first_name"]
-    data["last_name"] = student_serializer.data["last_name"]
-    school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
-    school_serializer = SchoolSerializer(school, many=False)
-    data["school_name"] = school_serializer.data["name"]
-    if ["route_id"] == None:
-        route_name = "Unassigned"
-        route_description = ""
-    else:
-        route = Route.routeTables.get(pk=student_serializer.data["route_id"])
-        route_serializer = RouteSerializer(route, many=False)
-        route_name = route_serializer.data["name"]
-        route_description = route_serializer.data["description"]
-    data["route"] = {'name' : route_name, 'description' : route_description}
-    return Response(data)
+    auth_string = "Token "+str(student.user_id.auth_token)
+    print(id)
+    print(auth_string == request.headers['Authorization'])
+    if auth_string == request.headers['Authorization']:
+        student_serializer = StudentSerializer(student, many=False)
+        data["school_student_id"] = student_serializer.data["student_school_id"]
+        data["first_name"] = student_serializer.data["first_name"]
+        data["last_name"] = student_serializer.data["last_name"]
+        school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+        school_serializer = SchoolSerializer(school, many=False)
+        data["school_name"] = school_serializer.data["name"]
+        if ["route_id"] == None:
+            route_name = "Unassigned"
+            route_description = ""
+        else:
+            route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+            route_serializer = RouteSerializer(route, many=False)
+            route_name = route_serializer.data["name"]
+            route_description = route_serializer.data["description"]
+        data["route"] = {'name' : route_name, 'description' : route_description}
+        return Response(data)
+    else: 
+        data["route"] = {'name' : '', 'description' : ''}
+        data["message"] = {"User is not authorized to see this page"}
+        return Response(data, status = 404) # TODO: make status code that just shows 404 pages, without redirecting to logout
 
 # Student Route PUT API
 @api_view(['PUT'])
