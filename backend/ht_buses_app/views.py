@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from rest_framework.authtoken.models import Token
 from .models import School, Route, Student, User, UserManager
-from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import api_view, permission_classes
@@ -10,14 +8,6 @@ from rest_framework.parsers import json
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from .serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
-
-# TESTER METHOD FOR FRONTEND PAGINATION
-@api_view(['GET'])
-@permission_classes([AllowAny]) # TODO: This needs to be changed to IsAuthenticate[d
-def schools_all(request):
-    schools = School.schoolsTable.all()
-    school_serializer = SchoolSerializer(schools, many=True)
-    return Response(school_serializer.data)
 
 @api_view(["POST"])
 @permission_classes([AllowAny]) 
@@ -32,7 +22,6 @@ def user_login(request):
         return Response({"message": "An account with this email does not exist.",  "token":'', "valid_login": False})
     if not check_password(password, user.password):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
-    #try:
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
@@ -42,8 +31,6 @@ def user_login(request):
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
     return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
-    #except: 
-        #return Response({"message": "This account could not be logged in, please contact administrators for help.",  "token":'', "valid_login": False})
 
 # Logout API
 @api_view(["POST"])
@@ -216,13 +203,13 @@ def student_edit(request):
     except BaseException as e:
         raise ValidationError({"messsage": "invalid options were chosen"})
 
-@api_view(['POST'])
+@api_view(['DELETE'])
 @permission_classes([IsAdminUser])
 def student_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        student_object =  Student.studentsTable.filter(student_school_id = reqBody['student_school_id'])[0]
+        student_object =  Student.studentsTable.get(pk=id)
         student_object.delete()
         data["message"] = "student successfully deleted"
         result = {"data" : data}
@@ -319,13 +306,13 @@ def school_edit(request):
     except BaseException as e:
         raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
 
-@api_view(["POST"])
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser])
 def school_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        school_object =  School.schoolsTable.filter(name = reqBody['school_name'])[0]
+        school_object =  School.schoolsTable.get(pk=id)
         school_object.delete()
         data["message"] = "school successfully deleted"
         result = {"data" : data}
@@ -394,13 +381,13 @@ def route_edit(request):
     except BaseException as e:
         raise ValidationError({"messsage": "invalid options were chosen"})
 
-@api_view(["POST"])
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser]) 
 def route_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        route_object =  Route.routeTables.filter(name = reqBody['route_name'])[0]
+        route_object =  Route.routeTables.get(pk=id)
         route_object.delete()
         data["message"] = "route successfully deleted"
         result = {"data" : data}
@@ -553,9 +540,9 @@ def user_edit(request):
 @permission_classes([IsAdminUser]) 
 def user_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        user_object =  User.objects.filter(first_name = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])
+        user_object =  User.objects.get(pk=id)
         user_object.delete()
         data["message"] = "user successfully deleted"
         result = {"data" : data}

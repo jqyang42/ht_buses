@@ -8,7 +8,7 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 
 
-@api_view(["POST"])
+@api_view(['POST'])
 @permission_classes([AllowAny]) 
 def user_login(request):
     info = {}
