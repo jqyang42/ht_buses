@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class School(models.Model):
     name = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
+    lat = models.FloatField(default=0)
+    long = models.FloatField(default=0)
     schoolsTable = models.Manager()
 
 class Student(models.Model):
@@ -33,7 +35,7 @@ class Route(models.Model):
 
 # Relook at this
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password):
+    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, long):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -47,14 +49,16 @@ class UserManager(BaseUserManager):
             first_name = first_name,
             last_name = last_name,
             address = address,
-            is_parent = is_parent
+            is_parent = is_parent,
+            lat = lat,
+            long = long
             )
         user.set_password(password)
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, password, address=""):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password)
+    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, long=0):
+        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, long)
         user.is_staff = True
         user.save(using=self._db)
         return user
@@ -66,6 +70,8 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
     address = models.CharField(max_length=100, default= '')
+    lat = models.FloatField(default=0)
+    long = models.FloatField(default=0)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
     
