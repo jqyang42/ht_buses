@@ -26,7 +26,7 @@ class ParentDashboard extends Component {
             }
         }
 
-        axios.post(API_DOMAIN + `logout`, creds, config)
+        axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
             sessionStorage.setItem('token', '')
