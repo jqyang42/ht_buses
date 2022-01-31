@@ -18,7 +18,6 @@ class UsersPassword extends Component {
     state = {
         password: '',
         confirm_password: '',
-        edit_success: 0,
         redirect: false,
     }
 
@@ -26,6 +25,7 @@ class UsersPassword extends Component {
     validEmail = false;
     validPassword = false;
     samePassword = false;
+    edit_success = 0;
     
     passwordValidation = function() {
         return (passwordRegex.test(this.state.password))
@@ -69,7 +69,7 @@ class UsersPassword extends Component {
 
     handleSubmit = event => {
         if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
-            // this.setState({ edit_success: -1 })  TODO ERROR: use edit_success???? tricky timing when redirect is true
+            this.edit_success = -1  //TODO ERROR: use edit_success???? tricky timing when redirect is true
             console.log(this.state)
             return 
         }
@@ -89,8 +89,8 @@ class UsersPassword extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'User password updated successfully') {
-                    // this.setState({ edit_success: 1 })   // TODO ERROR: edit_success?
-                    console.log(this.state)
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
                 }
             })
         // this.setState({ redirect: true });
