@@ -15,7 +15,7 @@ def school_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        school_object =  School.schoolsTable.filter(pk = id)
+        school_object =  School.schoolsTable.get(pk = id)
         school_object.name = reqBody['school_name']
         school_object.address = reqBody['school_address']
         school_object.lat = reqBody['lat']
@@ -24,5 +24,7 @@ def school_edit(request):
         data["message"] = "school information updated successfully"
         result = {"data" : data}
         return Response(result)
-    except BaseException as e:
-        raise ValidationError({"messsage": "school cannot be edited bc it does not exist"})
+    except:
+        data["message"] = "School could not be updated "
+        result = {"data" : data}
+        return Response(result)

@@ -1,5 +1,5 @@
 from django.urls import path
-from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete
+from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view
 from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
 from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
@@ -30,6 +30,7 @@ urlpatterns = [
     path('logout', logout.user_logout, name="logout"),
     path('login', login.user_login, name="login"),
     path('', login.user_login, name="index"),
+    path('users/add-students', student_add.add_new_students, name="add_new_students"),
     path('students/delete', student_delete.student_delete, name = "delete_student"),
     path('students/edit', student_edit.student_edit, name = "edit_student"),
     path('schools/all', schools_view.schools, name='schools_all'),
