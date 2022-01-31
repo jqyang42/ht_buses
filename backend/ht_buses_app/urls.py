@@ -1,14 +1,5 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from . import views
-
-"""
-routes = DefaultRouter(trailing_slash=False)
-
-routes.register(r'signup', RegistrationViewSet, basename='auth-register')
-routes.register(r'refresh', RefreshViewSet, basename='auth-refresh')
-routes.register(r'', LoginViewSet, basename='auth-login')
-"""
 
 urlpatterns = [
     path('students', views.students, name='students'),
@@ -36,8 +27,7 @@ urlpatterns = [
     path('', views.user_login, name="index"),
     path('students/delete', views.student_delete, name = "delete_student"),
     path('students/edit', views.student_edit, name = "edit_student"),
-    path('schools/all', views.schools_all, name='schools_all'),
     path('dashboard', views.parent_dashboard, name= "parent_dashboard"),
     path('dashboard/students/detail',views.parent_student_detail, name = "parent_student_detail"),
-    path('routeplanner/edit', views.student_route_edit, name='student_route_edit')
+    path('routeplanner/edit', views.student_route_edit, name='studnet_route_edit')
 ]

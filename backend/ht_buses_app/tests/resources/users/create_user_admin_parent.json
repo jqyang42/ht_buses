@@ -1,0 +1,25 @@
+{
+    "first_name" : "Maria",
+    "last_name": "Silvan",
+    "email": "msilvan@admin.com",
+    "password": "msilvan",
+    "address": "302 Berkshire St. Durham NC",
+    "is_parent": true,
+    "is_staff": true,
+    "students": [
+        {
+            "first_name": "James",
+            "last_name": "Silvan",
+            "school_name": "East Middle School",
+            "student_school_id": 12345,
+            "route_name": "Route 2"
+        },
+        {
+            "first_name": "Emily",
+            "last_name": "Silvan",
+            "school_name": "East Middle School",
+            "student_school_id": 45678,
+            "route_name": "Route 2"
+        }
+    ]
+}

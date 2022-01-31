@@ -1,0 +1,9 @@
+{
+    "first_name" : "Charles",
+    "last_name": "Sydney",
+    "email": "cs@admin.com",
+    "password": "IamTheCoolAdmin",
+    "is_staff": true,
+    "is_parent": false,
+    "address": ""
+}
