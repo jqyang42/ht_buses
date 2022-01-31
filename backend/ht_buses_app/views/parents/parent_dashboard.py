@@ -26,7 +26,7 @@ def parent_dashboard(request):
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         if student["route_id"] == None:
-            route_name = "Unassigned"
+            route_name = "Unassigned" # Config after credentials
         else:
             route = Route.routeTables.get(pk=student["route_id"])
             route_serializer = RouteSerializer(route, many=False)
