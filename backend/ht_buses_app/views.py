@@ -695,5 +695,5 @@ def student_route_edit(request):
         result = {"data": data}
         return Response(result)
     except BaseException as e:
-        raise ValidationError({"message" : "student was not added to route"})
+        raise ValidationError({"message" : "student was not added/removed to route"})
 
