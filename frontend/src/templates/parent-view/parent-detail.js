@@ -20,6 +20,7 @@ class ParentDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        console.log(config)
         axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id, config)
             .then(res => {
                 const student = res.data

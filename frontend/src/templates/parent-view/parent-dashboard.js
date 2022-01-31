@@ -57,7 +57,7 @@ class ParentDashboard extends Component {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
         return (
