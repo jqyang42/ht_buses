@@ -1,16 +1,15 @@
 from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
-from rest_framework.parsers import json
 from rest_framework.response import Response
   
-@api_view(["POST"])
+@api_view(["DELETE"])
 @permission_classes([IsAdminUser]) 
 def user_delete(request):
     data = {}
-    reqBody = json.loads(request.body)
+    id = request.query_params["id"]
     try:
-        user_object =  User.objects.filter(first_name = reqBody['first_name'], last_name =reqBody['last_name'], email = reqBody['email'])
+        user_object = User.objects.get(pk=id)
         user_object.delete()
         data["message"] = "user successfully deleted"
         result = {"data" : data}
