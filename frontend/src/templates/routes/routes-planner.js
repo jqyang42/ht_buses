@@ -29,7 +29,8 @@ class BusRoutesPlanner extends Component {
             create_school_name: '',
             create_route_description: '',
             route_dropdown: [],
-            assign_mode: false
+            assign_mode: false,
+            active_route: 0
         }
     }
 
@@ -91,6 +92,11 @@ class BusRoutesPlanner extends Component {
             assign_mode: !prevState.assign_mode
         }));
         console.log(this.state.assign_mode);
+    }
+    
+    handleRouteSelection = event => {
+        this.setState({ active_route: event.target.value })
+        console.log(this.state.active_route)
     }
 
     handleRouteNameChange = event => {
@@ -240,8 +246,7 @@ class BusRoutesPlanner extends Component {
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
-
-                                        {/* TODO: Show this entire div only when assign mode is OFF */}
+                                        {!this.state.assign_mode ? 
                                         <div className="row d-flex mt-2">
                                             <div className="col-auto float-start">
                                                 {/* Add Route button */}
@@ -288,8 +293,9 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
-                                                    <option selected>Select a Route</option>
+                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
+                                                    <option selected value={0}>Select a Route</option>
+                                                    <option selected value={0}>Unassign Student</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
@@ -301,8 +307,7 @@ class BusRoutesPlanner extends Component {
                                                 <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Assign</button>
                                             </div>
                                         </div>
-
-                                        {/* TODO: Show this entire div only when assign mode is ON */}
+                                        :
                                         <div className="row d-flex mt-2">
                                             {/* Assign mode on label */}
                                             <div className="col-auto float-start">
@@ -311,8 +316,9 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown still reads the same content as the dropdown in the assign mode OFF div  */}
                                             <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route">
-                                                    <option selected>Select a Route</option>
+                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
+                                                    <option selected value={0}>Select a Route</option>
+                                                    <option selected value={0}>Unassign Student</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
@@ -331,10 +337,11 @@ class BusRoutesPlanner extends Component {
                                                 </div>
                                             </div>
                                         </div>
+                                        }
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} onChange={this.handleRouteIDChange}/>
+                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} active_route={this.state.active_route} onChange={this.handleRouteIDChange}/>
                                         </div>
                                     </div>
                                     <div className="col">

@@ -36,7 +36,6 @@ const hidePOIs = [{
 
 class RouteMap extends Component {
   state = {
-    clickNumber: 0,
     icon: MARKER_ICONS[0],
     locations: [],
     latLngs: [],
@@ -139,7 +138,7 @@ class RouteMap extends Component {
                 location={value.position} 
                 assignMode={this.props.assign_mode} 
                 routeID={value.routeID} 
-                active_route={3}
+                active_route={this.props.active_route}
                 id={value.id}
                 studentIDs={value.studentIDs}
                 onChange={this.handleRouteIDChange} />
