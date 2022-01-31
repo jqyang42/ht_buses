@@ -25,30 +25,28 @@ class UsersEdit extends Component {
         address: '',
         is_staff: '',
         user: [],
-        added_students_list: [],
-        students: [],
-        schools_dropdown: [],
-        routes_dropdown: [],
+        // added_students_list: [],
+        // students: [],
+        // schools_dropdown: [],
+        // routes_dropdown: [],
         redirect: false,
     }
 
     edit_success = 0;
     validEmail = false;
-    email = ''
 
     emailValidation = function() {
-        return (emailRegex.test(this.email))
+        return (emailRegex.test(this.emailField.value))
     }
 
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
-        this.email = this.emailField.value
         this.validEmail = this.emailValidation() 
     }
 
-    handlePasswordChange = event => {
-        this.setState({ password: event.target.value });
-    }
+    // handlePasswordChange = event => {
+    //     this.setState({ password: event.target.value });
+    // }
 
     handleFirstNameChange = event => {
         this.setState({ first_name: event.target.value });
@@ -67,126 +65,126 @@ class UsersEdit extends Component {
         console.log(this.state.is_staff)
     }
 
-    handleStudentFirstNameChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.first_name = event.target.value
-        students[index] = student
-        this.setState({ students: students })
-    }
+    // handleStudentFirstNameChange = (event, student_num) => {
+    //     const index = this.state.added_students_list.indexOf(student_num)
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.first_name = event.target.value
+    //     students[index] = student
+    //     this.setState({ students: students })
+    // }
 
-    handleStudentLastNameChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.last_name = event.target.value
-        students[index] = student
-        this.setState({ students: students })
-    }
+    // handleStudentLastNameChange = (event, student_num) => {
+    //     const index = this.state.added_students_list.indexOf(student_num)
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.last_name = event.target.value
+    //     students[index] = student
+    //     this.setState({ students: students })
+    // }
 
-    handleStudentIDChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.student_school_id = event.target.value
-        students[index] = student
-        this.setState({ students: students })
-    }
+    // handleStudentIDChange = (event, student_num) => {
+    //     const index = this.state.added_students_list.indexOf(student_num)
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.student_school_id = event.target.value
+    //     students[index] = student
+    //     this.setState({ students: students })
+    // }
 
-    handleSchoolChange = (event, student_num) => {
-        const school_id = event.target.value
-        const school_name = event.target[event.target.selectedIndex].id
+    // handleSchoolChange = (event, student_num) => {
+    //     const school_id = event.target.value
+    //     const school_name = event.target[event.target.selectedIndex].id
         
-        const index = this.state.added_students_list.indexOf(student_num)        
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.school_name = school_name
-        students[index] = student
-        this.setState({ students: students })
+    //     const index = this.state.added_students_list.indexOf(student_num)        
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.school_name = school_name
+    //     students[index] = student
+    //     this.setState({ students: students })
 
-        let config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
+    //     let config = {
+    //         headers: {
+    //           Authorization: `Token ${sessionStorage.getItem('token')}`
+    //         }
+    //     }
 
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
-            .then(res => {
-                let routes_data
-                if (res.data.routes == null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        value: route.id,
-                        display: route.name
-                    }
-                })
-                console.log(routes)
-                this.setState({ routes_dropdown: routes })
-            })
-        console.log(this.state.routes_dropdown)
-    }
+    //     axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
+    //         .then(res => {
+    //             let routes_data
+    //             if (res.data.routes == null) {
+    //                 routes_data = []
+    //             } else {
+    //                 routes_data = res.data.routes
+    //             }
+    //             let routes = routes_data.map(route => {
+    //                 return {
+    //                     value: route.id,
+    //                     display: route.name
+    //                 }
+    //             })
+    //             console.log(routes)
+    //             this.setState({ routes_dropdown: routes })
+    //         })
+    //     console.log(this.state.routes_dropdown)
+    // }
 
-    handleRouteChange = (event, student_num) => {
-        const route_name = event.target[event.target.selectedIndex].id
+    // handleRouteChange = (event, student_num) => {
+    //     const route_name = event.target[event.target.selectedIndex].id
 
-        const index = this.state.added_students_list.indexOf(student_num)        
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.route_name = route_name
-        students[index] = student
-        this.setState({ students: students })
-    }
+    //     const index = this.state.added_students_list.indexOf(student_num)        
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.route_name = route_name
+    //     students[index] = student
+    //     this.setState({ students: students })
+    // }
 
-    handleAddStudent = () => {
-        let last_element_index
-        let new_list
-        if (this.state.added_students_list.length === 0) {
-            new_list =  [...this.state.added_students_list, 0]
-        } else {
-            last_element_index = this.state.added_students_list.length - 1
-            new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
-        }
-        // console.log(new_list)
-        this.setState({ added_students_list: new_list })    
+    // handleAddStudent = () => {
+    //     let last_element_index
+    //     let new_list
+    //     if (this.state.added_students_list.length === 0) {
+    //         new_list =  [...this.state.added_students_list, 0]
+    //     } else {
+    //         last_element_index = this.state.added_students_list.length - 1
+    //         new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
+    //     }
+    //     // console.log(new_list)
+    //     this.setState({ added_students_list: new_list })    
 
-        const student_field = {
-            first_name: '',
-            last_name: '',
-            school_name: '',
-            route_name: null,   //TODO: replicate?
-            student_school_id: ''
-        }
-        this.setState({ students: [...this.state.students, student_field] })
-    }
+    //     const student_field = {
+    //         first_name: '',
+    //         last_name: '',
+    //         school_name: '',
+    //         route_name: null,   //TODO: replicate?
+    //         student_school_id: ''
+    //     }
+    //     this.setState({ students: [...this.state.students, student_field] })
+    // }
 
-    handleDeleteStudent = (student_num) => {
-        console.log(student_num)
+    // handleDeleteStudent = (student_num) => {
+    //     console.log(student_num)
 
-        // console.log(this.state.added_students_list)        
-        const new_list = this.state.added_students_list
-        const index = new_list.indexOf(student_num)
-        // console.log(new_list)
-        // console.log(new_list[index])
-        new_list.splice(index, 1)
-        // console.log(new_list)
-        this.setState({ added_students_list: new_list })
+    //     // console.log(this.state.added_students_list)        
+    //     const new_list = this.state.added_students_list
+    //     const index = new_list.indexOf(student_num)
+    //     // console.log(new_list)
+    //     // console.log(new_list[index])
+    //     new_list.splice(index, 1)
+    //     // console.log(new_list)
+    //     this.setState({ added_students_list: new_list })
 
-        console.log(this.state.students)
-        const new_students = this.state.students
-        console.log(new_students)
-        console.log(new_students[index])
-        new_students.splice(index, 1)
-        console.log(new_students)
-        this.setState({ students: new_students })
+    //     console.log(this.state.students)
+    //     const new_students = this.state.students
+    //     console.log(new_students)
+    //     console.log(new_students[index])
+    //     new_students.splice(index, 1)
+    //     console.log(new_students)
+    //     this.setState({ students: new_students })
 
-        // console.log(this.state.added_students_list)
-        // console.log(dthis.state.students)
-    }
+    //     // console.log(this.state.added_students_list)
+    //     // console.log(dthis.state.students)
+    // }
 
     handleSubmit = event => {
         if (!this.emailValidation) {
@@ -195,22 +193,22 @@ class UsersEdit extends Component {
 
         event.preventDefault();
 
-        let is_parent
-        if (this.state.students == null) {
-            is_parent = false
-        } else {
-            is_parent = true
-        }
+        // let is_parent
+        // if (this.state.students == null) {
+        //     is_parent = false
+        // } else {
+        //     is_parent = true
+        // }
 
         const user = {
-            email: this.email,
+            email: this.state.email,
             password: this.state.password,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
             is_staff: this.state.is_staff == 'general' ? false : true,
-            is_parent: is_parent,
-            students: this.state.students
+            is_parent: this.state.user.is_parent,
+            // students: this.state.students
         }
 
         console.log(user)
@@ -240,7 +238,6 @@ class UsersEdit extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
@@ -263,13 +260,13 @@ class UsersEdit extends Component {
         });
         })
 
-        axios.get(API_DOMAIN + `schools`, config)
-            .then(res => {            
-            let schools = res.data.schools.map(school => {
-                return {value: school.id, display: school.name}
-            })
-            this.setState({ schools_dropdown: schools})
-        })
+        // axios.get(API_DOMAIN + `schools`, config)
+        //     .then(res => {            
+        //     let schools = res.data.schools.map(school => {
+        //         return {value: school.id, display: school.name}
+        //     })
+        //     this.setState({ schools_dropdown: schools})
+        // })
     }
 
     handleLogout = event => {
@@ -405,7 +402,7 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                {(!this.emailValidation()) ? 
+                                                {(!this.validEmail && this.state.user.email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
@@ -446,72 +443,6 @@ class UsersEdit extends Component {
                                             </div>
                                         </div>
                                         <div className="col mt-2">
-                                            <div className="form-group pb-3">
-                                                <label for="exampleInputStudents" className="pb-2">Students</label>
-                                                {/* <button type="add student test" className="btn btn-primary w-auto justify-content-end" onClick={this.handleAddStudent}>Create</button> */}
-                                                <div>
-                                                    <button type="add student test" className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
-                                                        <i className="bi bi-plus-circle me-2"></i>
-                                                        Add a student
-                                                    </button>
-
-                                                        {this.state.added_students_list.map(count => 
-                                                        <div className="accordion-item">
-                                                            <h2 className="accordion-header" id={"heading" + count}>
-                                                                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={"#collapse" + count} aria-expanded="true" aria-controls={"collapseOne" + count}>
-                                                                    Student {count + 1}
-                                                                </button>
-                                                            </h2>
-                                                            <div id={"collapse" + count} className="accordion-collapse collapse show" aria-labelledby={"heading" + count} data-bs-parent="#accordionExample">
-                                                                <div className="accordion-body">
-                                                                    <div className="row">
-                                                                        <div className="col">
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for={"exampleInputFirstName" + count} className="control-label pb-2">First Name</label>
-                                                                                <input type="name" className="form-control pb-2" id={"exampleInputFirstName" + count}
-                                                                                    placeholder="Enter first name" required onChange={(e) => this.handleStudentFirstNameChange(e, count)}></input>
-                                                                            </div>
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for={"exampleInputLastName" + count} className="control-label pb-2">Last Name</label>
-                                                                                <input type="name" className="form-control pb-2" id={"exampleInputLastName" + count}
-                                                                                    placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e, count)}></input>
-                                                                            </div>
-                                                                            <div className="form-group pb-3">
-                                                                                <label for={"exampleInputID" + count} className="control-label pb-2">Student ID</label>
-                                                                                <input type="id" className="form-control pb-2" id={"exampleInputID" + count} 
-                                                                                placeholder="Enter student ID" onChange={(e) => this.handleStudentIDChange(e, count)}></input>
-                                                                            </div>
-                                                                            <div className="form-group required pb-3">
-                                                                                <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" 
-                                                                                onChange={(e) => this.handleSchoolChange(e, count)} required>
-                                                                                    <option selected>Select a School</option>
-                                                                                    {this.state.schools_dropdown.map(school => 
-                                                                                        <option value={school.value} id={school.display}>{school.display}</option>
-                                                                                    )}
-                                                                                </select>
-                                                                            </div>
-                                                                            <div className="form-group pb-3">
-                                                                                <label for={"exampleInputRoute" + count} className="control-label pb-2">Route</label>
-                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
-                                                                                onChange={(e) => this.handleRouteChange(e, count)} required>
-                                                                                    <option selected>Select a Route</option>
-                                                                                    {this.state.routes_dropdown.map(route => 
-                                                                                        <option value={route.value} id={route.display}>{route.display}</option>
-                                                                                    )}
-                                                                                </select>
-                                                                            </div>
-                                                                            <div className="row justify-content-start mt-1 ms-0 mb-2">
-                                                                                <button type="button" className="btn btn-danger w-auto justify-content-end" onClick={(e) =>this.handleDeleteStudent(count)}>Delete</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">

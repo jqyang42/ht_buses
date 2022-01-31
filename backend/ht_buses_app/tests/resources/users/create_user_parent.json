@@ -1,0 +1,19 @@
+{
+    "first_name" : "Jerry",
+    "last_name": "Smith",
+    "email": "yellow@d.com",
+    "password": "yellow",
+    "address": "90 Oregon Ave. Durham, NC",
+    "is_parent": true,
+    "is_staff": false,
+    "students": [
+        {
+            "first_name": "Dary",
+            "last_name": "Smith",
+            "school_name": "West High School",
+            "student_school_id": 123456,
+            "route_name": "Route 1"
+        }
+    ]
+    
+}
