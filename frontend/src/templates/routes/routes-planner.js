@@ -359,7 +359,8 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap assign_mode={this.state.assign_mode} key={this.state.assign_mode} active_route={this.state.active_route} onChange={this.handleRouteIDChange}/>
+                                            <RouteMap school={this.props.params.id} 
+                                            assign_mode={this.state.assign_mode} key={this.state.assign_mode} active_route={this.state.active_route} onChange={this.handleRouteIDChange}/>
                                         </div>
                                     </div>
                                     <div className="col">
