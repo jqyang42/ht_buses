@@ -7,9 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 
 import { LOGIN_URL } from '../../constants';
-import { STUDENTS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
-import headerMenu from '../components/header-menu';
 
 class StudentsDetail extends Component {
     state = {
