@@ -40,12 +40,26 @@ class BusRoutesDetail extends Component {
             const route = res.data;
             const school = route.school;
             
-            if (route.students == null) {
-                this.setState({ students: [] })
+            let students
+            if (route.parents !== null) {
+                students = route.parents.map(parent => {
+                    return parent.students.map(student => {
+                        return {
+                            student_school_id: student.student_school_id,
+                            first_name: student.first_name,
+                            last_name: student.last_name
+                        }
+                    })
+                })
+                students = [].concat.apply([], students)
             } else {
-                this.setState({ students: route.students })
+                students = []
             }
+
+            console.log(students)
+                        
             this.setState({ 
+                students: students,
                 route: route, 
                 school: school, 
                 uppercaseSchool: school.name.toUpperCase(),
