@@ -20,6 +20,6 @@ def student_delete(request):
         data["message"] = "student successfully deleted"
         result = {"data" : data}
         return Response(result)
-    except BaseException as e:
+    except:
         return Response(data, status = 400)
         #raise ValidationError({"messsage": "student could not be deleted"})

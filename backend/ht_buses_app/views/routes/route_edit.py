@@ -22,5 +22,6 @@ def route_edit(request):
         data["message"] = "route updated successfully"
         result = {"data" : data}
         return Response(result)
-    except BaseException as e:
-        raise ValidationError({"messsage": "invalid options were chosen"})
+    except:
+        return Response(result, status = 400)
+        #raise ValidationError({"messsage": "invalid options were chosen"})

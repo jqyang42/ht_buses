@@ -24,4 +24,5 @@ def route_create(request):
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
-        raise ValidationError({"message": "route could not be created"})
+        return Response(result, status = 400)
+        #raise ValidationError({"message": "route could not be created"})
