@@ -28,20 +28,21 @@ def user_edit(request): # TODO: make try and catch
     #    for student_info in reqBody["students"]:
     #        create_student(student_info, id)
     data["message"] = "User information was successfully updated"
+    data["success"] = True
     result = {"data" : data}
     return Response(result)
 
 @csrf_exempt
-@api_view(["POST"])
+@api_view(["PUT"])
 @permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user edit form
-def valid_edit_email(request):
+def valid_email_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     email = reqBody['email']
     try: 
         user = User.objects.get(email = email)
-        if user.id != id:
+        if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["validEmail"] = False
             result = {"data" : data}
