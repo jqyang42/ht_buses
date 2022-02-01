@@ -26,11 +26,30 @@ def user_create(request):
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_staff = is_staff, is_parent= is_parent, password=password, address=address, lat=lat, long=long)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=long)
-    """
     if is_parent:
         for student in reqBody["students"]:
             student_create.create_student(student, user.id)
-    """
     data["message"] = "User created successfully"
     result = {"data" : data}
     return Response(result)
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user create forms
+def valid_create_email(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    email = reqBody['email']
+    try: 
+        User.objects.get(email = email)
+        data["message"] = "Please enter a different email. A user with this email already exists"
+        data["validEmail"] = False
+        result = {"data" : data}
+        return Response(result)
+    except: 
+        data["message"] = "The email entered is valid"
+        data["validEmail"] = True
+        result = {"data" : data}
+        return Response(result)
+
