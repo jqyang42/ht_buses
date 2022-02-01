@@ -21,7 +21,7 @@ def student_edit(request):
     except: 
         data["message"] = "Student was not found. Update was unsucessful"
         result = {"data" : data}
-        return Response(result)
+        return Response(result, status = 404)
     try:
         school_id = School.schoolsTable.get(pk=reqBody["school_id"])
         user_id = User.objects.get(pk = reqBody["parent_id"]) 

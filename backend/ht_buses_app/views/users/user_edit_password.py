@@ -22,4 +22,4 @@ def user_password_edit(request):
     except:
         data["message"] = "User's password could not be updated"
         result = {"data" : data}
-        return Response(result)   
+        return Response(result, status = 400)   
