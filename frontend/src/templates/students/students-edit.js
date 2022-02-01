@@ -29,6 +29,8 @@ class StudentsEdit extends Component {
         redirect: false,
     }
 
+    edit_success = 0
+
     handleFirstNameChange = event => {
         this.setState({ first_name: event.target.value });
     }
@@ -42,60 +44,61 @@ class StudentsEdit extends Component {
     }
 
     handleSchoolChange = event => {
+        // const school_name = event.target.value
         const school_id = event.target.value
-        console.log(this.state.schools_dropdown)
-        // const school_name = event.target[event.target.selectedIndex].id // TODO ?
-        this.setState({ school_id })
-        this.setState({ route_id: null })
-        
-
         const config = {
             headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
+            Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-
-        console.log(school_id)
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
-        .then(res => {
-            let routes_data
-            if (res.data.routes == null) {
-                routes_data = []
-            } else {
-                routes_data = res.data.routes
+        
+        console.log(this.state.schools_dropdown)
+        this.setState({ school_id: school_id }, () => {
+            console.log(this.state.school_id)
+            axios.get(API_DOMAIN + 'schools/detail?id=' + this.state.school_id, config)
+                .then(res => {
+                    let routes_data
+                    if (res.data.routes == null) {
+                        routes_data = []
+                    } else {
+                        routes_data = res.data.routes
+                    }
+                    let routes = routes_data.map(route => {
+                        return {
+                            id: route.id,
+                            name: route.name
+                        }
+                    })
+                    this.setState({ routes_dropdown: routes })
+                })
             }
-            let routes = routes_data.map(route => {
-                return {
-                    value: route.id,
-                    display: route.name
-                }
-            })
-            this.setState({ routes_dropdown: routes })
-        })
+        )
     } 
     
     handleRouteChange = event => {
         const route_id = event.target.value
-        console.log(this.routes_dropdown)
+        console.log(this.state.routes_dropdown)
         this.setState({ route_id })
         console.log(this.state.route_id)
     }
 
     handleParentIDChange = event => {
-        this.setState({ parent_id: event.target.value })
+        const parent_id = event.target.value
+        this.setState({ parent_id: parent_id })
         console.log(this.state.parent_id)
     }
     
     handleSubmit = event => {
         event.preventDefault();
+        console.log(this.state.route_id)
 
         const student = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             student_school_id: this.state.student_id,
             school_id: this.state.school_id,
-            route_id: this.state.route_id,
-            parent_id: this.state.parent_id
+            route_id: parseInt(this.state.route_id),
+            parent_id: parseInt(this.state.parent_id)
         }
 
         console.log(student)
@@ -109,8 +112,12 @@ class StudentsEdit extends Component {
         console.log(student)
         axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, student, config)
         .then(res => {
-            console.log(res);
-            console.log(res.data);
+            if (msg == 'Student information successfully updated') {
+                this.edit_success = 1     // TODO ERROR: edit_success?
+                console.log(this.edit_success)
+            } else {
+                this.edit_success = -1      // TODO ERROR
+            }
         })
         // this.setState({ redirect: true });
     }
@@ -162,8 +169,8 @@ class StudentsEdit extends Component {
                 }
                 let routes = routes_data.map(route => {
                     return {
-                        value: route.id,
-                        display: route.name
+                        id: route.id,
+                        name: route.name
                     }
                 })
                 this.setState({ routes_dropdown: routes })
@@ -173,7 +180,10 @@ class StudentsEdit extends Component {
         axios.get(API_DOMAIN + `schools`, config)
         .then(res => {            
             let schools = res.data.schools.map(school => {
-                return {value: school.id, display: school.name}
+                return {
+                    id: school.id, 
+                    name: school.name
+                }
             })
             this.setState({ schools_dropdown: schools})
         })
@@ -242,10 +252,10 @@ class StudentsEdit extends Component {
                                                 onChange={this.handleSchoolChange}>
                                                     <option>Select a School</option>
                                                     {this.state.schools_dropdown.map(school => {
-                                                        if (this.state.init_school_id == school.value) {     //TODO: CHANGE TO USE STUDENT_ID?
-                                                            return <option selected value={school.value} id={school.display}>{school.display}</option>
+                                                        if (this.state.init_school_id == school.id) {     //TODO: CHANGE TO USE STUDENT_ID?
+                                                            return <option selected value={school.id}>{school.name}</option>
                                                         } else {
-                                                            return <option value={school.value} id={school.display}>{school.display}</option>
+                                                            return <option value={school.id}>{school.name}</option>
                                                         }
                                                     })}
                                                 </select>
@@ -253,13 +263,13 @@ class StudentsEdit extends Component {
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
-                                                onChange={this.handleSchoolChange}>
+                                                onChange={this.handleRouteChange} value={this.state.route_id}>
                                                     <option>Select a Route</option>
                                                     {this.state.routes_dropdown.map(route => {
-                                                        if (this.state.init_route_id == route.value) {     //TODO: CHANGE TO USE STUDENT_ID?
-                                                            return <option selected value={route.value} id={route.display}>{route.display}</option>
+                                                        if (this.state.init_route_id == route.id) { 
+                                                            return <option selected value={route.id}>{route.name}</option>
                                                         } else {
-                                                            return <option value={route.value} id={route.display}>{route.display}</option>
+                                                            return <option value={route.id}>{route.name}</option>
                                                         }
                                                     })}
                                                 </select>
@@ -271,9 +281,9 @@ class StudentsEdit extends Component {
                                                     <option>Select a Parent</option>
                                                     {this.state.parents_dropdown.map(parent => {
                                                         if (this.state.init_parent_id == parent.user_id) {
-                                                            return <option selected value={parent.user_id} id={parent.name}>{parent.name}</option>
+                                                            return <option selected value={parent.user_id}>{parent.name}</option>
                                                         } else {
-                                                            return <option value={parent.user_id} id={parent.name}>{parent.name}</option>
+                                                            return <option value={parent.user_id}>{parent.name}</option>
                                                         }
                                                     })}
                                                 </select>
