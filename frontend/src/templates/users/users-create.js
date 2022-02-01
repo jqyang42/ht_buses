@@ -37,6 +37,7 @@ class UsersCreate extends Component {
     validEmail = false;
     validPassword = false;
     samePassword = false;
+    create_success = 0
 
     emailValidation = function() {
         return (emailRegex.test(this.emailField.value))
@@ -259,10 +260,10 @@ class UsersCreate extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'User created successfully') {
-                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    this.create_success = 1     // TODO ERROR: edit_success?
                     console.log(this.edit_success)
                 } else {
-                    this.edit_success = -1      // TODO ERROR
+                    this.create_success = -1      // TODO ERROR
                 }
             })
         this.setState({ redirect: true });

@@ -29,6 +29,8 @@ class StudentsEdit extends Component {
         redirect: false,
     }
 
+    edit_success = 0
+
     handleFirstNameChange = event => {
         this.setState({ first_name: event.target.value });
     }
@@ -110,8 +112,12 @@ class StudentsEdit extends Component {
         console.log(student)
         axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, student, config)
         .then(res => {
-            console.log(res);
-            console.log(res.data);
+            if (msg == 'Student information successfully updated') {
+                this.edit_success = 1     // TODO ERROR: edit_success?
+                console.log(this.edit_success)
+            } else {
+                this.edit_success = -1      // TODO ERROR
+            }
         })
         // this.setState({ redirect: true });
     }

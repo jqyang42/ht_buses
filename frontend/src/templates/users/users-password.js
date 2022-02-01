@@ -68,6 +68,8 @@ class UsersPassword extends Component {
                 if (msg === 'User password updated successfully') {
                     this.edit_success = 1     // TODO ERROR: edit_success?
                     console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1
                 }
             })
         this.setState({ redirect: true });
