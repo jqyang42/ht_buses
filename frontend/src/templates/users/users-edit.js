@@ -27,9 +27,9 @@ class UsersEdit extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
+        edit_success: 0
     }
 
-    edit_success = 0;
     validEmail = false;
     email = '';
 
@@ -80,12 +80,13 @@ class UsersEdit extends Component {
     }
 
     handleSubmit = event => {
-        if (!this.emailValidation() || !this.state.valid_address ) {
-            console.log('address not valid')
-            return 
-        }
 
         event.preventDefault();
+
+        if (!this.emailValidation() || !this.state.valid_address ) {
+            this.setState({ edit_success: -1 })
+            return 
+        }
 
         const user = {
             email: this.state.email,
@@ -111,13 +112,12 @@ class UsersEdit extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'User and associated students updated successfully') {
-                    this.edit_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.edit_success)
-                } else {
-                    this.edit_success = -1      // TODO ERROR
+                    this.setState({ edit_success: 1 })
+                    console.log(this.state.edit_success)
+                    this.setState({ redirect: true });
                 }
             })
-        this.setState({ redirect: true });
+            this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -138,6 +138,7 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
+            edit_success: 0
             });
         })
     }
@@ -167,6 +168,13 @@ class UsersEdit extends Component {
                                     <div className="col">
                                         <h5>Edit User</h5>
                                     </div>
+                                </div>
+                                <div className="w-50 pe-2 me-2">
+                                    {(this.state.edit_success === -1) ? 
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            Unable to edit user details. Please correct all errors before submitting.
+                                        </div>) : ""
+                                    }
                                 </div>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">

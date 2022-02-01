@@ -6,7 +6,7 @@ import { Navigate } from "react-router";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -27,6 +27,7 @@ class StudentsEdit extends Component {
         routes_dropdown: [],
         parents_dropdown: [],
         redirect: false,
+        edit_success: 0
     }
 
     edit_success = 0
@@ -112,12 +113,15 @@ class StudentsEdit extends Component {
         console.log(student)
         axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, student, config)
         .then(res => {
+            console.log(res);
             const msg = res.data.data.message
             if (msg == 'Student information successfully updated') {
-                this.edit_success = 1     // TODO ERROR: edit_success?
-                console.log(this.edit_success)
+                this.setState({ edit_success: 1 })
+                this.setState({ redirect: true });
+                console.log(this.state.edit_success)
             } else {
-                this.edit_success = -1      // TODO ERROR
+                this.setState({ edit_success: -1 })
+                console.log(this.state.edit_success)
             }
         })
         // this.setState({ redirect: true });
@@ -208,7 +212,7 @@ class StudentsEdit extends Component {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
-        const redirect_url = SCHOOLS_URL + '/' + this.props.params.id;
+        const redirect_url = STUDENTS_URL + '/' + this.props.params.id;
         if (redirect) {
             return <Navigate to={redirect_url}/>;
         }
@@ -226,6 +230,13 @@ class StudentsEdit extends Component {
                                         <h5>Edit Student</h5>
                                     </div>
                                 </div>
+                                <div className="w-50 pe-2 me-2">
+                                    {(this.state.edit_success === -1) ? 
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            Unable to edit student details. Please correct all errors before submitting.
+                                        </div>) : ""
+                                    }
+                                </div>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
@@ -241,10 +252,10 @@ class StudentsEdit extends Component {
                                                     defaultValue={this.state.student.last_name} placeholder="Enter full name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
-                                            <div className="form-group pb-3 w-75">
+                                            <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
-                                                defaultValue={this.state.student.student_school_id} placeholder="Enter student ID"
+                                                defaultValue={this.state.student.student_school_id} placeholder="Enter student ID" required
                                                 onChange={this.handleStudentIDChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">

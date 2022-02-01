@@ -13,7 +13,9 @@ class StudentsDetail extends Component {
     state = {
         student: [],
         route: [],
-        school: []
+        school: [],
+        redirect: false,
+        delete_success: 0
     }
     
     componentDidMount() {
@@ -28,6 +30,7 @@ class StudentsDetail extends Component {
             const route = student.route;
             const school = student.school;
             this.setState({ student: student, route: route, school: school });
+            this.setState({ delete_success: 0 })
             })
     }
 

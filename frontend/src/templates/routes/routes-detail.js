@@ -20,7 +20,9 @@ class BusRoutesDetail extends Component {
         center: {},
         markers: [],
         assign_mode: false,
-        active_route: 0
+        active_route: 0,
+        redirect: false,
+        delete_success: 0
     }
 
     componentDidMount() {
@@ -47,6 +49,7 @@ class BusRoutesDetail extends Component {
                     lat: school.lat, 
                     lng: school.long 
                 }, });
+            this.setState({ delete_success: 0 })
             route.parents.map((parent, index) => {
                 const studentIDs = [];
                 parent.students.map((student, index) => {

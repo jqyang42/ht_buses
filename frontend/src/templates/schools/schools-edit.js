@@ -22,9 +22,8 @@ class SchoolsEdit extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
+        edit_success: 0
     }
-
-    edit_success = 0
 
     handleSchoolNameChange = event => {
         this.setState({ school_name: event.target.value });
@@ -56,8 +55,9 @@ class SchoolsEdit extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
+
         if ( !this.state.valid_address ) {
-            console.log('address not valid')
+            this.setState({ edit_success: -1 })
             return 
         }
 
@@ -78,10 +78,9 @@ class SchoolsEdit extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'school information updated successfully') {
-                    this.edit_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.edit_success)
+                    this.setState({ edit_success: 1 })
                 } else {
-                    this.edit_success = -1      // TODO ERROR
+                    this.setState({ edit_success: -1 })
                 }
             })
         this.setState({ redirect: true });
@@ -97,6 +96,7 @@ class SchoolsEdit extends Component {
         .then(res => {
             const school = res.data;
             this.setState({ school: school, school_name: school.name, school_address: school.address });
+            this.setState({ edit_success: 0 })
         })
     }
     
@@ -125,6 +125,13 @@ class SchoolsEdit extends Component {
                                     <div className="col">
                                         <h5>Edit School</h5>
                                     </div>
+                                </div>
+                                <div className="w-50 pe-2 me-2">
+                                    {(this.state.edit_success === -1) ? 
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            Unable to edit school details. Please correct all errors before submitting.
+                                        </div>) : ""
+                                    }
                                 </div>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
