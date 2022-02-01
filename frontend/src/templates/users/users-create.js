@@ -131,12 +131,12 @@ class UsersCreate extends Component {
 
     handleSchoolChange = (event, student_num) => {
         const school_id = event.target.value
-        const school_name = event.target[event.target.selectedIndex].id
+        // const school_name = event.target[event.target.selectedIndex].id
         
         const index = this.state.added_students_list.indexOf(student_num)        
         let students = [...this.state.students]
         let student = {...students[index]}
-        student.school_name = school_name
+        student.school_id = school_id
         students[index] = student
         this.setState({ students: students })
 
@@ -164,12 +164,12 @@ class UsersCreate extends Component {
     }
 
     handleRouteChange = (event, student_num) => {
-        const route_name = event.target[event.target.selectedIndex].id
+        const route_id = event.target.value
 
         const index = this.state.added_students_list.indexOf(student_num)        
         let students = [...this.state.students]
         let student = {...students[index]}
-        student.route_name = route_name
+        student.route_id = route_id
         students[index] = student
         this.setState({ students: students })
     }
@@ -189,8 +189,8 @@ class UsersCreate extends Component {
         const student_field = {
             first_name: '',
             last_name: '',
-            school_name: '',
-            route_name: null,   //TODO: replicate?
+            school_id: '',
+            route_id: null,   //TODO: replicate?
             student_school_id: ''
         }
         this.setState({ students: [...this.state.students, student_field] })
@@ -235,14 +235,6 @@ class UsersCreate extends Component {
         }
         event.preventDefault();
 
-        // TODO delete if unnecessary
-        // let school_id
-        // if (this.state.student_id === '') {
-        //     school_id = null
-        // } else {
-        //     school_id = this.state.student_id
-        // }
-
         const user = {
             email: this.state.user_email,
             password: this.state.user_password,
@@ -257,7 +249,6 @@ class UsersCreate extends Component {
         }
 
         console.log(user)
-
 
          const config = {
             headers: {
