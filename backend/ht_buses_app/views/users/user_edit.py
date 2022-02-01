@@ -21,6 +21,8 @@ def user_edit(request): # TODO: make try and catch
     user_object.long = reqBody['long']
     user_object.is_parent = reqBody['is_parent']
     user_object.is_staff = reqBody['is_staff']
+    user_object.lat = reqBody['lat']
+    user_object.long = reqBody['long']
     user_object.save()
     #if user_object.is_parent is True:
     #    for student_info in reqBody["students"]:
