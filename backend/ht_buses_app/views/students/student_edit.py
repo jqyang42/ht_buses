@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
-from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 
 # Students PUT API
@@ -36,11 +35,11 @@ def student_edit(request):
         result = {"data" : data}
         return Response(result)
     try: 
-        og_student_object.route = Route.routeTables.get(pk = reqBody["route_id"])
+        og_student_object.route_id = Route.routeTables.get(pk=reqBody["route_id"])
     except: 
-        og_student_object.route = None
+        og_student_object.route_id = None
     og_student_object.save()
     data["message"] = "Student information successfully updated"
-    data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": str(og_student_object.route), "user_id": user_id.id}
+    data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["route_id"], "user_id": user_id.id}
     result = {"data" : data} # TODO: Ask evelyn why it's not updated on students page?
     return Response(result)

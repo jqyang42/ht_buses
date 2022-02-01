@@ -27,18 +27,19 @@ class UsersEdit extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
+        edit_success: 0
     }
 
-    edit_success = 0;
     validEmail = false;
+    email = '';
 
     emailValidation = function() {
-        return (emailRegex.test(this.emailField.value))
+        return (emailRegex.test(this.email))
     }
 
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
-        this.validEmail = this.emailValidation() 
+        this.email = this.emailField.value
     }
 
     handleFirstNameChange = event => {
@@ -79,12 +80,13 @@ class UsersEdit extends Component {
     }
 
     handleSubmit = event => {
-        if (!this.emailValidation() || !this.state.valid_address ) {
-            console.log('address not valid')
-            return 
-        }
 
         event.preventDefault();
+
+        if (!this.emailValidation() || !this.state.valid_address ) {
+            this.setState({ edit_success: -1 })
+            return 
+        }
 
         const user = {
             email: this.state.email,
@@ -110,13 +112,12 @@ class UsersEdit extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'User and associated students updated successfully') {
-                    this.edit_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.edit_success)
-                } else {
-                    this.edit_success = -1      // TODO ERROR
+                    this.setState({ edit_success: 1 })
+                    console.log(this.state.edit_success)
+                    this.setState({ redirect: true });
                 }
             })
-        this.setState({ redirect: true });
+            this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -137,6 +138,7 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
+            edit_success: 0
             });
         })
     }
@@ -167,6 +169,13 @@ class UsersEdit extends Component {
                                         <h5>Edit User</h5>
                                     </div>
                                 </div>
+                                <div className="w-50 pe-2 me-2">
+                                    {(this.state.edit_success === -1) ? 
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            Unable to edit user details. Please correct all errors before submitting.
+                                        </div>) : ""
+                                    }
+                                </div>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
@@ -189,7 +198,7 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                {(!this.validEmail && this.state.user.email !== "") ? 
+                                                {(!this.emailValidation()) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""

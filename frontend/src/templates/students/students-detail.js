@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { API_DOMAIN } from "../../constants";
+import { API_DOMAIN, STUDENTS_URL } from "../../constants";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 
@@ -13,7 +13,9 @@ class StudentsDetail extends Component {
     state = {
         student: [],
         route: [],
-        school: []
+        school: [],
+        redirect: false,
+        delete_success: 0
     }
     
     componentDidMount() {
@@ -28,6 +30,33 @@ class StudentsDetail extends Component {
             const route = student.route;
             const school = student.school;
             this.setState({ student: student, route: route, school: school });
+            this.setState({ delete_success: 0 })
+            })
+    }
+
+    handleDeleteSubmit = event => {
+        event.preventDefault()
+
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.delete(API_DOMAIN + `students/delete?id=` + this.props.params.id, config)
+            .then(res => {
+                console.log(res)
+                const msg = res.data.data.message
+                if (msg == 'student successfully deleted') {
+                    this.setState({ delete_success: 1 })
+                    this.setState({ redirect: true });
+                    console.log(this.state.redirect)
+                    // return <Navigate to={ STUDENTS_URL }/>;
+                    // TODO: NAVIGATES BUT STILL HAS THAT DARK LAYER
+                } else {
+                    console.log(this.state.redirect)
+                    this.setState({ delete_success: -1 });
+                }
             })
     }
 
@@ -37,6 +66,10 @@ class StudentsDetail extends Component {
         }
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={ STUDENTS_URL }/>;
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -73,17 +106,19 @@ class StudentsDetail extends Component {
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title" id="staticBackdropLabel">Delete Student</h5>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            Are you sure you want to delete this student?
-                                                        </div>
-                                                        <div className="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
-                                                        </div>
+                                                        <form onSubmit={this.handleDeleteSubmit}>
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title" id="staticBackdropLabel">Delete Student</h5>
+                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                Are you sure you want to delete this student?
+                                                            </div>
+                                                            <div className="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
