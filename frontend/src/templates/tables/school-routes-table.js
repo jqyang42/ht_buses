@@ -4,7 +4,7 @@ import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
 import { useNavigate } from 'react-router-dom';
     
-export function SchoolRoutesTable({ data }) {
+export function SchoolRoutesTable({ data, showAll }) {
     const navigate = useNavigate();
 
     const columns = React.useMemo(
@@ -33,6 +33,7 @@ export function SchoolRoutesTable({ data }) {
         prepareRow,
         setSortBy,
         page,
+        rows,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
 
@@ -95,31 +96,47 @@ export function SchoolRoutesTable({ data }) {
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                page.map((row, i) => {
-                    // Prepare the row for display
-                    prepareRow(row)
-                    return (
-                    // Apply the row props
-                    <tr {...row.getRowProps()} onClick={() => navigate("/routes/" + row.original.id)}>
-                        {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                        })}
-                    </tr>
-                    )
+                    showAll ?
+                    rows.map((row, i) => {
+                        // Prepare the row for display
+                        prepareRow(row)
+                        return (
+                        // Apply the row props
+                        <tr {...row.getRowProps()} onClick={() => navigate("/routes/" + row.original.id)}>
+                            {row.cells.map(cell => {
+                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                            })}
+                        </tr>
+                        )
+                    }) : 
+                    page.map((row, i) => {
+                        // Prepare the row for display
+                        prepareRow(row)
+                        return (
+                        // Apply the row props
+                        <tr {...row.getRowProps()} onClick={() => navigate("/routes/" + row.original.id)}>
+                            {row.cells.map(cell => {
+                            return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                            })}
+                        </tr>
+                        )
                 })}
                 </tbody>
             </table>
-
-            <TablePagination
-                pageIndex={pageIndex}
-                pageOptions={pageOptions}
-                previousPage={previousPage}
-                canPreviousPage={canPreviousPage}
-                nextPage={nextPage}
-                canNextPage={canNextPage}
-                pageSize={pageSize}
-                page={page}
-            />
+    
+            {
+                showAll ? "" :
+                <TablePagination
+                    pageIndex={pageIndex}
+                    pageOptions={pageOptions}
+                    previousPage={previousPage}
+                    canPreviousPage={canPreviousPage}
+                    nextPage={nextPage}
+                    canNextPage={canNextPage}
+                    pageSize={pageSize}
+                    page={page}
+                />
+            }
         </>
     )
 }

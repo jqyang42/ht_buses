@@ -5,7 +5,7 @@ import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
 import { useNavigate } from "react-router-dom";
     
-export function SchoolsTable({ data }) {
+export function SchoolsTable({ data, showAll }) {
     const navigate = useNavigate();
     
     // Global filter, search from any column
@@ -95,6 +95,7 @@ export function SchoolsTable({ data }) {
         setFilter,
         setSortBy,
         setState,
+        rows,
         page,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
@@ -189,17 +190,11 @@ export function SchoolsTable({ data }) {
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                page.map((row, i) => {
+                showAll ?
+                rows.map((row, i) => {
                     // Prepare the row for display
                     prepareRow(row)
                     return (
-                    // Apply the row props
-                    // <tr {...row.getRowProps()} onClick={() => this.props.history.push("/schools/detail?id="+this.state.id)}>
-                    // <tr {...row.getRowProps()} onClick={(e) => this.props.onRowClicked && this.props.onRowClicked(row, e)}>
-                    // <a href={{
-                    //     state: data, // your data array of objects
-                    //     pathname: "/schools/detail?id=" + {data}
-                    // }}>
                     <tr {...row.getRowProps()} onClick={() => navigate("/schools/" + row.original.id)}>
                         {row.cells.map(cell => {
                         return <td {...cell.getCellProps()}>
@@ -207,23 +202,37 @@ export function SchoolsTable({ data }) {
                                 </td>
                         })}
                     </tr>
-                    // </a>
+                    )
+                }) : 
+                page.map((row, i) => {
+                    // Prepare the row for display
+                    prepareRow(row)
+                    return (
+                    <tr {...row.getRowProps()} onClick={() => navigate("/schools/" + row.original.id)}>
+                        {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}>
+                                    {cell.render('Cell')}
+                                </td>
+                        })}
+                    </tr>
                     )
                 })}
                 </tbody>
             </table>
 
-            <TablePagination
-                pageIndex={pageIndex}
-                pageOptions={pageOptions}
-                previousPage={previousPage}
-                canPreviousPage={canPreviousPage}
-                nextPage={nextPage}
-                canNextPage={canNextPage}
-                pageSize={pageSize}
-                page={page}
-                rows={data.length}
-            />
+            {
+                showAll ? "" :
+                <TablePagination
+                    pageIndex={pageIndex}
+                    pageOptions={pageOptions}
+                    previousPage={previousPage}
+                    canPreviousPage={canPreviousPage}
+                    nextPage={nextPage}
+                    canNextPage={canNextPage}
+                    pageSize={pageSize}
+                    page={page}
+                />
+            }
         </>
     )
 }

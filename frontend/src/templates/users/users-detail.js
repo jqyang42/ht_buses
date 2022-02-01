@@ -16,7 +16,13 @@ class UsersDetail extends Component {
         users : [],
         students: [],
         redirect: false,
-        delete_success: 0
+        delete_success: 0,
+        show_all: false
+    }
+
+    handleShowAll = event => {
+        this.setState({show_all: !this.state.show_all})
+        console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -34,7 +40,8 @@ class UsersDetail extends Component {
                 this.setState({ students: users.students })
             }
             this.setState({ users: users });
-            this.setState({delete_success: 0});
+            this.setState({ delete_success: 0});
+            this.setState({ show_all: false});
             })
     }
 
@@ -228,7 +235,12 @@ class UsersDetail extends Component {
                                 </div>
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable data={this.state.students}/>   
+                                    <UserStudentsTable data={this.state.students} showAll={this.state.show_all}/>
+                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                        { !this.state.show_all ?
+                                            "Show All" : "Show Pages"
+                                        }
+                                    </button>
                                 </div>
                             </div>
                         </div>
