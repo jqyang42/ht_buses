@@ -39,7 +39,7 @@ class UsersPassword extends Component {
         this.setState({ confirm_password: event.target.value });
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
-        this.samePassword  = this.state.password == this.password2
+        this.samePassword  = this.state.password === this.password2
         this.validPassword = this.passwordValidation() && this.samePassword
     }
 
@@ -64,7 +64,7 @@ class UsersPassword extends Component {
         axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
             .then(res => {
                 const msg = res.data.data.message
-                if (msg == 'User password updated successfully') {
+                if (msg === 'User password updated successfully') {
                     this.edit_success = 1     // TODO ERROR: edit_success?
                     console.log(this.edit_success)
                 }
