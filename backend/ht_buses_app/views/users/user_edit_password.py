@@ -1,13 +1,13 @@
 from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import json
 from rest_framework.response import Response
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAuthenticated]) 
 def user_password_edit(request):
     data = {}
     id = request.query_params["id"]
