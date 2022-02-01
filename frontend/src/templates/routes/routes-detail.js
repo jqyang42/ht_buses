@@ -9,7 +9,7 @@ import HeaderMenu from "../components/header-menu";
 
 import { LOGIN_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 
 class BusRoutesDetail extends Component {
     state = {
@@ -31,24 +31,40 @@ class BusRoutesDetail extends Component {
         console.log(this.state.show_all)
     }
 
+    delete_success = 0
+
     componentDidMount() {
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        console.log(this.props.params.id)
+        
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
             const school = route.school;
             
-            if (route.students == null) {
-                this.setState({ students: [] })
+            let students
+            if (route.parents !== null) {
+                students = route.parents.map(parent => {
+                    return parent.students.map(student => {
+                        return {
+                            student_school_id: student.student_school_id,
+                            first_name: student.first_name,
+                            last_name: student.last_name
+                        }
+                    })
+                })
+                console.log(students)
+                students = [].concat.apply([], students)
             } else {
-                this.setState({ students: route.students })
+                students = []
             }
             
             this.setState({ 
+                students: students,
                 route: route, 
                 school: school, 
                 uppercaseSchool: school.name.toUpperCase(),
@@ -77,6 +93,28 @@ class BusRoutesDetail extends Component {
             });
             
         })
+    }
+
+    handleDelete = event => {
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.delete(API_DOMAIN + `routes/delete?id=` + this.props.params.id, config)
+            .then(res => {
+                console.log("hello")
+                const msg = res.data.data.message
+                console.log(res.data)
+                if (msg === 'route successfully deleted') {
+                    this.delete_success = 1
+                    this.setState({redirect: true})
+                    console.log(this.delete_success)
+                } else {
+                    this.delete_success = -1
+                }
+            })
     }
 
     // uppercaseSchool = text.toUpperCase()
@@ -118,18 +156,20 @@ class BusRoutesDetail extends Component {
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <div className="modal-header">
-                                                            <h5 className="modal-title" id="staticBackdropLabel">Delete Bus Route</h5>
-                                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div className="modal-body">
-                                                            Are you sure you want to delete this bus route?
-                                                            Note: All associated students will revert to having no bus route.
-                                                        </div>
-                                                        <div className="modal-footer">
-                                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
-                                                        </div>
+                                                        <form onSubmit={this.handleDelete}>
+                                                            <div className="modal-header">
+                                                                <h5 className="modal-title" id="staticBackdropLabel">Delete Bus Route</h5>
+                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                Are you sure you want to delete this bus route?
+                                                                Note: All associated students will revert to having no bus route.
+                                                            </div>
+                                                            <div className="modal-footer">
+                                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
