@@ -31,9 +31,11 @@ class StudentMarker extends Component {
         }
       }
     }
-    stringData = this.props.studentNames.join(',\n');
-    
   render () {
+    let stringData
+    if (this.props.studentNames){
+      stringData = this.props.studentNames.join(',\n');
+    }
     return (
       <Marker 
       position={this.state.location} 
@@ -44,7 +46,7 @@ class StudentMarker extends Component {
       key={this.state.id} 
       data-bs-toggle="tooltip" 
       data-bs-placement="top" 
-      title={this.stringData}/>
+      title={stringData}/>
     )
   }
 }
