@@ -26,9 +26,11 @@ def user_create(request):
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_staff = is_staff, is_parent= is_parent, password=password, address=address, lat=lat, long=long)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=long)
+    """
     if is_parent:
         for student in reqBody["students"]:
             student_create.create_student(student, user.id)
+    """
     data["message"] = "User created successfully"
     result = {"data" : data}
     return Response(result)
