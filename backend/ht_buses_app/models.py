@@ -24,7 +24,7 @@ class Student(models.Model):
         ]
 
 class Route(models.Model):
-    name = models.CharField(max_length=25)
+    name = models.CharField(max_length=50)
     school_id = models.ForeignKey(School, default=0, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
     routeTables = models.Manager()

@@ -1,7 +1,7 @@
 from ...models import Route, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.parsers import json
@@ -9,11 +9,11 @@ from ...serializers import RouteSerializer
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
-    name = reqBody['route_name']
+    name = reqBody['route_name'].capitalize()
     try:
         school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
         description = reqBody['route_description'].capitalize()
