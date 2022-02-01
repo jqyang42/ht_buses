@@ -15,9 +15,14 @@ class UsersDetail extends Component {
         id: '',
         users : [],
         students: [],
+        new_student: [],
+        schools_dropdown: [],
+        routes_dropdown: [],
         redirect: false,
         delete_success: 0
     }
+
+    create_success = 0
 
     componentDidMount() {
         let config = {
@@ -25,6 +30,7 @@ class UsersDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
             .then(res => {
             const users = res.data;
@@ -36,16 +42,28 @@ class UsersDetail extends Component {
             this.setState({ users: users });
             this.setState({delete_success: 0});
             })
+        
+            axios.get(API_DOMAIN + `schools`,  config)
+            .then(res => {            
+            let schools = res.data.schools.map(school => {
+                return {value: school.id, display: school.name}
+            })
+            this.setState({ schools_dropdown: schools})
+        })
+
+        this.setState({ new_student: 
+            {
+                first_name: '',
+                last_name: '',
+                school_id: '',
+                route_id: null,   //TODO: replicate?
+                student_school_id: ''
+            }
+        })
     }
 
     handleDeleteSubmit = event => {
         event.preventDefault();
-
-        const deleted_user = {
-            first_name: this.state.users.first_name,
-            last_name: this.state.users.last_name,
-            email: this.state.users.email
-        }
 
         let config = {
             headers: {
@@ -67,6 +85,91 @@ class UsersDetail extends Component {
                     this.setState({ delete_success: -1 });
                 }
             })
+    }
+
+    handleAddStudentSubmit = event => {
+        event.preventDefault();
+
+        const student = {
+            students: [this.state.new_student]
+        }
+
+        console.log(student)
+
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        
+        axios.post(API_DOMAIN + `users/add-students?id=` + this.props.params.id, student, config) // TODO, config as 3rd parameter
+            .then(res => {
+                const msg = res.data.data.message
+                if (msg === 'Students created successfully') {
+                    this.create_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.create_success)
+                } else {
+                    this.create_success = -1      // TODO ERROR
+                }
+            })
+    }
+
+    handleStudentFirstNameChange = (event) => {
+        const first_name = event.target.value
+        let student = this.state.new_student
+        student.first_name = first_name
+        this.setState({ new_student: student })
+        console.log(this.state.new_student)
+    }
+
+    handleStudentLastNameChange = (event) => {
+        const last_name = event.target.value
+        let student = this.state.new_student
+        student.last_name = last_name
+        this.setState({ new_student: student })
+    }
+
+    handleStudentIDChange = (event) => {
+        const student_school_id = event.target.value
+        let student = this.state.new_student
+        student.student_school_id = student_school_id
+        this.setState({ new_student: student })
+    }
+
+    handleSchoolChange = (event) => {
+        const school_id = event.target.value
+        let student = this.state.new_student
+        student.school_id = school_id
+        this.setState({ new_student: student })
+
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
+            .then(res => {
+                let routes_data
+                if (res.data.routes == null) {
+                    routes_data = []
+                } else {
+                    routes_data = res.data.routes
+                }
+                let routes = routes_data.map(route => {
+                    return {
+                        value: route.id,
+                        display: route.name
+                    }
+                })
+                this.setState({ routes_dropdown: routes })
+            })
+    }
+
+    handleRouteChange = (event) => {
+        const route_id = event.target.value
+        let student = this.state.new_student
+        student.route_id = route_id
+        this.setState({ new_student: student })
     }
 
     render() {
@@ -121,7 +224,7 @@ class UsersDetail extends Component {
                                             <div className="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <form> {/* TODO: add onClick handler */}
+                                                        <form onSubmit={this.handleAddStudentSubmit}> {/* TODO: add onClick handler */}
                                                             <div className="modal-header">
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Create New Student</h5>
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -130,36 +233,38 @@ class UsersDetail extends Component {
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputFirstName"} className="control-label pb-2">First Name</label>
                                                                     <input type="name" className="form-control pb-2" id={"exampleInputFirstName"}
-                                                                        placeholder="Enter first name" required></input>
+                                                                        placeholder="Enter first name" required onChange={(e) => this.handleStudentFirstNameChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputLastName"} className="control-label pb-2">Last Name</label>
                                                                     <input type="name" className="form-control pb-2" id={"exampleInputLastName"}
-                                                                        placeholder="Enter last name" required></input>
+                                                                        placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group pb-3">
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
-                                                                    placeholder="Enter student ID"></input>
+                                                                    placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
                                                                 </div>
-                                                                {/* <div className="form-group required pb-3">
+                                                                <div className="form-group required pb-3">
                                                                     <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
-                                                                    <select className="form-select" placeholder="Select a School" aria-label="Select a School" required>
+                                                                    <select className="form-select" placeholder="Select a School" aria-label="Select a School"
+                                                                    onChange={(e) => this.handleSchoolChange(e)} required>
                                                                         <option selected>Select a School</option>
                                                                         {this.state.schools_dropdown.map(school => 
                                                                             <option value={school.value} id={school.display}>{school.display}</option>
                                                                         )}
                                                                     </select>
-                                                                </div> */}
-                                                                {/* <div className="form-group pb-3">
+                                                                </div>
+                                                                <div className="form-group pb-3">
                                                                     <label for={"exampleInputRoute"} className="control-label pb-2">Route</label>
-                                                                    <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" required>
+                                                                    <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
+                                                                    onChange={(e) => this.handleRouteChange(e)} required>
                                                                         <option selected>Select a Route</option>
                                                                         {this.state.routes_dropdown.map(route => 
                                                                             <option value={route.value} id={route.display}>{route.display}</option>
                                                                         )}
                                                                     </select>
-                                                                </div> */}
+                                                                </div>
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
