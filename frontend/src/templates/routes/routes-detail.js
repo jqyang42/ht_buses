@@ -16,7 +16,9 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
-        uppercaseSchool : ''
+        uppercaseSchool : '',
+        redirect: false,
+        delete_success: 0
     }
 
     componentDidMount() {
@@ -36,6 +38,7 @@ class BusRoutesDetail extends Component {
                 this.setState({ students: route.students })
             }
             this.setState({ route: route, school: school, uppercaseSchool: school.name.toUpperCase() });
+            this.setState({ delete_success: 0 })
             })
     }
 

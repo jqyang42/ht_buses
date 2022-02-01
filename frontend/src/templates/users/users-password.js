@@ -16,13 +16,13 @@ class UsersPassword extends Component {
         password: '',
         confirm_password: '',
         redirect: false,
+        edit_success: 0
     }
 
     password2 = '';
     validEmail = false;
     validPassword = false;
     samePassword = false;
-    edit_success = 0;
     
     passwordValidation = function() {
         return (passwordRegex.test(this.state.password))
@@ -44,12 +44,14 @@ class UsersPassword extends Component {
     }
 
     handleSubmit = event => {
+        
+        event.preventDefault();
+
         if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
-            this.edit_success = -1  //TODO ERROR: use edit_success???? tricky timing when redirect is true
-            console.log(this.state)
+            this.setState({ edit_success: -1 })
+            console.log(this.state.edit_success)
             return 
         }
-        event.preventDefault();
 
         const password = {
             password: this.state.password
@@ -65,11 +67,11 @@ class UsersPassword extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg === 'User password updated successfully') {
-                    this.edit_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.edit_success)
+                    this.setState({ edit_success: 1 })    // TODO ERROR: edit_success?
+                    console.log(this.state.edit_success)
                 }
             })
-        this.setState({ redirect: true });
+        // this.setState({ redirect: true });
     }
 
     render() {
@@ -90,13 +92,25 @@ class UsersPassword extends Component {
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root="Manage Users" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.user.first_name + " " + this.state.user.last_name} page="Change Password" />
+                        {/* <HeaderMenu root="Manage Users" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.user.first_name + " " + this.state.user.last_name} page="Change Password" /> */}
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
                                         <h5>Change Password</h5>
                                     </div>
+                                </div>
+                                <div className="w-50 pe-2 me-2">
+                                    {(this.state.edit_success === -1) ? 
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            Unable to change password. Please correct all errors before submitting.
+                                        </div>) : ""
+                                    }
+                                    {(this.state.edit_success === 1) ? 
+                                        (<div class="alert alert-success mt-2 mb-2 w-75" role="alert">
+                                            Password successfully changed.
+                                        </div>) : ""
+                                    }
                                 </div>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">

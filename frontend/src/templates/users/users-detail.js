@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_DOMAIN } from '../../constants';
+import { API_DOMAIN, USERS_URL } from '../../constants';
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -14,7 +14,9 @@ class UsersDetail extends Component {
     state = {
         id: '',
         users : [],
-        students: []
+        students: [],
+        redirect: false,
+        delete_success: 0
     }
 
     componentDidMount() {
@@ -32,6 +34,7 @@ class UsersDetail extends Component {
                 this.setState({ students: users.students })
             }
             this.setState({ users: users });
+            this.setState({delete_success: 0});
             })
     }
 
@@ -50,11 +53,20 @@ class UsersDetail extends Component {
             }
         }
 
-        axios.post(API_DOMAIN + `users/delete`, deleted_user, config)
+        axios.delete(API_DOMAIN + `users/delete?id=` + this.props.params.id, config)
             .then(res => {
                 console.log(res)
+                const msg = res.data.data.message
+                if (msg == 'user successfully deleted') {
+                    this.setState({ delete_success: 1 })
+                    this.setState({ redirect: true });
+                    console.log(this.state.redirect)
+                    return <Navigate to={ USERS_URL }/>;
+                } else {
+                    console.log(this.state.redirect)
+                    this.setState({ delete_success: -1 });
+                }
             })
-        
     }
 
     render() {
@@ -71,7 +83,10 @@ class UsersDetail extends Component {
         } else {
             UserAddress = `-`
         }
-
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={USERS_URL}/>;
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -179,7 +194,7 @@ class UsersDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                                <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -188,6 +203,11 @@ class UsersDetail extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                {(this.state.delete_success === -1) ? 
+                                    (<div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        Unable to delete user. Please correct all errors before deleting.
+                                    </div>) : ""
+                                }
                                 <div className="row mt-4">
                                     <div className="col-1">
                                         <p className="gray-600">
