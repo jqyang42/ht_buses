@@ -112,6 +112,7 @@ class StudentsEdit extends Component {
         console.log(student)
         axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, student, config)
         .then(res => {
+            const msg = res.data.data.message
             if (msg == 'Student information successfully updated') {
                 this.edit_success = 1     // TODO ERROR: edit_success?
                 console.log(this.edit_success)
