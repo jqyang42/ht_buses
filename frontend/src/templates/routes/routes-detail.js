@@ -16,7 +16,11 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
-        uppercaseSchool : ''
+        uppercaseSchool : '',
+        center: {},
+        markers: [],
+        assign_mode: false,
+        active_route: 0
     }
 
     componentDidMount() {
@@ -35,8 +39,33 @@ class BusRoutesDetail extends Component {
             } else {
                 this.setState({ students: route.students })
             }
-            this.setState({ route: route, school: school, uppercaseSchool: school.name.toUpperCase() });
-            })
+            this.setState({ 
+                route: route, 
+                school: school, 
+                uppercaseSchool: school.name.toUpperCase(),
+                center: { 
+                    lat: school.lat, 
+                    lng: school.long 
+                }, });
+            route.parents.map((parent, index) => {
+                const studentIDs = [];
+                parent.students.map((student, index) => {
+                    studentIDs.push(student.id);
+                });
+                this.setState(prevState => ({
+                    markers: [...prevState.markers, {
+                        position: {
+                            lat: parent.lat,
+                            lng: parent.long
+                        },
+                        id: parent.parent_id,
+                        studentIDs: studentIDs,
+                        routeID: this.props.params.id //TODO: change markers to create per student
+                    }]
+                }));
+            });
+            
+        })
     }
 
     // uppercaseSchool = text.toUpperCase()
@@ -99,7 +128,12 @@ class BusRoutesDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
                                         <div className="bg-gray rounded mb-4">
-                                            <RouteMap />
+                                        <RouteMap 
+                                            assign_mode={false} 
+                                            key={this.state.assign_mode} 
+                                            active_route={this.props.params.id} 
+                                            center={this.state.center}
+                                            markers={this.state.markers}/>
                                         </div>
                                         <h6>Description</h6>
                                         <p>

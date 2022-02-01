@@ -56,58 +56,6 @@ class RouteMap extends Component {
     }
   }
 
-  // componentDidMount() {
-  //   const config = {
-  //     headers: {
-  //       Authorization: `Token ${sessionStorage.getItem('token')}`
-  //     }
-  //   }
-  //   axios.get(API_DOMAIN + `routeplanner?id=` + this.props.school , config)
-  //     .then(res => {
-  //       const locations = res.data;
-  //       this.setState({ locations });
-  //       Geocode.fromAddress(locations.address).then(
-  //         (response) => {
-  //           const lat = parseFloat(response.results[0].geometry.location.lat);
-  //           const lng = parseFloat(response.results[0].geometry.location.lng);
-  //           this.setState({
-  //             center: { lat: lat, lng: lng }
-  //           })
-  //         },
-  //         (error) => {
-  //           console.error(error);
-  //         }
-  //       )
-  //       locations.parents.map((parent, index) => {
-  //         const studentIDs = []
-  //         parent.students.map((student, index) => {
-  //             studentIDs.push(student.id);
-  //         })
-  //         Geocode.fromAddress(parent.address).then(
-  //           (response) => {
-  //             console.log(response)
-  //             const lat = parseFloat(response.results[0].geometry.location.lat);
-  //             const lng = parseFloat(response.results[0].geometry.location.lng);
-  //             this.setState(prevState => ({
-  //               markers: [...prevState.markers, {
-  //                 position: {
-  //                   lat: lat,
-  //                   lng: lng
-  //                 },
-  //                 id: parent.parent_id,
-  //                 studentIDs: studentIDs,
-  //                 routeID: parent.students[0].route_id //TODO: change markers to create per student
-  //               }]
-  //             }))
-  //           },
-  //           (error) => {
-  //             console.error(error);
-  //           }
-  //         );
-  //       })
-  //     })
-  // }
-
   render() {
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
@@ -129,7 +77,7 @@ class RouteMap extends Component {
             options={{
               styles: hidePOIs
             }}
-            zoom={15}
+            zoom={13}
           >
             <Marker position={this.props.center}  />
             {this.props.markers?.map((value, index) => {

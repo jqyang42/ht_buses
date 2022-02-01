@@ -26,7 +26,6 @@ class BusRoutesPlanner extends Component {
             create_route_description: '',
             route_dropdown: [],
             center: {},
-            locations: [],
             markers: [],
             assign_mode: false,
             active_route: 0
@@ -95,7 +94,6 @@ class BusRoutesPlanner extends Component {
                 const locations = res.data;
                 console.log(locations)
                 this.setState({ 
-                    locations: locations,
                     center: { 
                         lat: locations.lat, 
                         lng: locations.long 
@@ -191,7 +189,7 @@ class BusRoutesPlanner extends Component {
         axios.put(API_DOMAIN + 'routeplanner/edit', this.students, config)
         .then(res => {
             console.log(res.data);
-            this.students = [];
+            this.students = {"students":[]};
             this.handleTableGet(config) 
             this.handleLocationsGet(config)
         })
@@ -333,12 +331,11 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3">
-                                            <RouteMap school={this.props.params.id} 
+                                            <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
-                                            locations={this.state.locations}
                                             markers={this.state.markers}
                                             onChange={this.handleRouteIDChange}/>
                                         </div>
