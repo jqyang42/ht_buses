@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAdminUser
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.parsers import json
-from ...serializers import StudentSerializer, RouteSerializer
+from ...serializers import RouteSerializer
 
 @csrf_exempt
 @api_view(["POST"])
@@ -13,10 +13,10 @@ from ...serializers import StudentSerializer, RouteSerializer
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
-    name = reqBody['route_name']
+    name = reqBody['route_name'].capitalize()
     try:
         school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
-        description = reqBody['route_description']
+        description = reqBody['route_description'].capitalize()
         route = Route.routeTables.create(name=name, school_id = school, description = description)
         route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"

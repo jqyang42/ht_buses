@@ -16,8 +16,8 @@ def route_edit(request):
     reqBody = json.loads(request.body)
     try:
         route_object =  Route.routeTables.get(pk=id)
-        route_object.name = reqBody['route_name']
-        route_object.description = reqBody['route_description']
+        route_object.name = reqBody['route_name'].capitalize()
+        route_object.description = reqBody['route_description'].capitalize()
         route_object.save()
         data["message"] = "route updated successfully"
         result = {"data" : data}

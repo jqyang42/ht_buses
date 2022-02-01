@@ -15,8 +15,8 @@ def user_create(request):
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
-    first_name = reqBody['first_name']
-    last_name = reqBody['last_name']
+    first_name = reqBody['first_name'].capitalize()
+    last_name = reqBody['last_name'].capitalize()
     address = reqBody['address']
     is_staff = reqBody['is_staff']
     is_parent = reqBody['is_parent']
