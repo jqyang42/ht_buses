@@ -283,7 +283,7 @@ class UsersCreate extends Component {
             return 
         }
 
-         const config = {
+        const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }

@@ -81,16 +81,7 @@ class UsersEdit extends Component {
         }
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-        this.email = this.emailField.value
-        console.log(this.email)
-
-        if (!this.emailValidation() || !this.state.valid_address ) {
-            this.setState({ edit_success: -1 })
-            return 
-        }
-
+    sendEditRequest = (config) => {
         const user = {
             email: this.state.email,
             password: this.state.password,
@@ -104,6 +95,30 @@ class UsersEdit extends Component {
         }
 
         console.log(user)
+
+        axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
+        .then(res => {
+            const success = res.data.data.sucess
+            if ( success ) {
+                this.setState({ edit_success: 1 })
+                console.log(this.state.edit_success)
+                this.setState({ redirect: true });
+            }
+        })
+        this.validEmail = true 
+        this.setState({ redirect: true });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        this.email = this.emailField.value
+        console.log(this.email)
+
+        if (!this.emailValidation() || !this.state.valid_address ) {
+            this.setState({ edit_success: -1 })
+            return 
+        }
+
 
         let config = {
             headers: {
@@ -124,17 +139,7 @@ class UsersEdit extends Component {
                 this.handleRefresh()
                 return
             }     
-            axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
-            .then(res => {
-                const success = res.data.data.sucess
-                if ( success ) {
-                    this.setState({ edit_success: 1 })
-                    console.log(this.state.edit_success)
-                    this.setState({ redirect: true });
-                }
-            })
-            this.validEmail = true 
-            this.setState({ redirect: true });
+           this.sendEditRequest(config)
         })
         
     }
