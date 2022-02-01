@@ -30,7 +30,7 @@ def students(request):
         parent_serializer = UserSerializer(parent, many=False)
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
-        parent_name = {'first_name' : parent_first, 'last_name' : parent_last}
+        parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
         school = School.schoolsTable.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
