@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { HT_LOGO } from "../../constants";
 import { Link , Navigate} from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -19,6 +20,9 @@ class SchoolsCreate extends Component {
         school_name: '',
         school_address: '',
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     handleSchoolNameChange = event => {
@@ -34,7 +38,6 @@ class SchoolsCreate extends Component {
         const creds = {
             user_id: sessionStorage.getItem('user_id')
         }
-
         
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
@@ -51,14 +54,38 @@ class SchoolsCreate extends Component {
         })
     }
 
-
+    handleAddressValidation = event => {
+        if (this.state.school_address != '') {
+            console.log(this.state.school_address)
+            Geocode.fromAddress(this.state.school_address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
+                }
+            )
+        }
+    }
 
     handleSubmit = event => {
         event.preventDefault();
 
+        if (!this.state.valid_address ) {
+            console.log('address not valid')
+            return 
+        }
         const school = {
             school_name: this.state.school_name,
-            school_address: this.state.school_address
+            school_address: this.state.school_address,
+            lat: this.state.lat,
+            long: this.state.lng,
         }
         const config = {
             headers: {
@@ -168,7 +195,7 @@ class SchoolsCreate extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -176,14 +203,15 @@ class SchoolsCreate extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     value={this.state.school_address} 
-                                                    onChange={this.handleSchoolAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1"
+                                                    onChange={this.handleSchoolAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1"
                                                     placeholder="Enter school address"
-                                                    onChange={this.handleSchoolAddressChange}></input>
+                                                    onChange={this.handleSchoolAddressChange}></input> */}
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

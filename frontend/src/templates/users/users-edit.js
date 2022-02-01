@@ -5,6 +5,7 @@ import { Link} from "react-router-dom";
 import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -30,6 +31,9 @@ class UsersEdit extends Component {
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     validEmail = false;
@@ -138,6 +142,26 @@ class UsersEdit extends Component {
         this.setState({ students: students })
     }
 
+    handleAddressValidation = event => {
+        if (this.state.address != '') {
+            console.log(this.state.address)
+            Geocode.fromAddress(this.state.address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
+                }
+            )
+        }
+    }
+
     handleAddStudent = () => {
         let last_element_index
         let new_list
@@ -185,7 +209,8 @@ class UsersEdit extends Component {
     }
 
     handleSubmit = event => {
-        if (!this.emailValidation()) {
+        if (!this.emailValidation() || !this.state.valid_address ) {
+            console.log('address not valid')
             return 
         }
 
@@ -200,7 +225,9 @@ class UsersEdit extends Component {
             // address: '2625 Solano Avenue Hollywood, FL 33024',
             is_staff: this.state.is_staff == 'General' ? false : true,
             is_parent: this.state.students.length != 0,
-            students: this.state.students
+            students: this.state.students,
+            lat: this.state.lat,
+            long: this.state.lng,
         }
 
         console.log(user)
@@ -384,7 +411,7 @@ class UsersEdit extends Component {
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -392,12 +419,13 @@ class UsersEdit extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    value={this.state.address}
-                                                    onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input>
+                                                    defaultValue={this.state.address}
+                                                    onChange={this.handleAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input> */}
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
