@@ -19,12 +19,16 @@ class BusRoutesDetail extends Component {
         uppercaseSchool : ''
     }
 
+    delete_success = 0
+
     componentDidMount() {
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        console.log(this.props.params.id)
+        
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
             const route = res.data;
@@ -36,6 +40,25 @@ class BusRoutesDetail extends Component {
                 this.setState({ students: route.students })
             }
             this.setState({ route: route, school: school, uppercaseSchool: school.name.toUpperCase() });
+            })
+    }
+
+    handleDelete() {
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.delete(API_DOMAIN + `routes/delete?id=` + this.props.params.id, config)
+            .then(res => {
+                const msg = res.data.data.message
+                if (msg === 'route successfully deleted') {
+                    this.delete_success = 1
+                    console.log(this.delete_success)
+                } else {
+                    this.delete_success = -1
+                }
             })
     }
 
@@ -88,7 +111,7 @@ class BusRoutesDetail extends Component {
                                                         </div>
                                                         <div className="modal-footer">
                                                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="button" className="btn btn-danger">Delete</button>
+                                                            <button type="button" className="btn btn-danger" onClick={this.handleDelete}>Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>
