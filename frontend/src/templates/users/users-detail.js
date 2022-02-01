@@ -65,12 +65,6 @@ class UsersDetail extends Component {
     handleDeleteSubmit = event => {
         event.preventDefault();
 
-        const deleted_user = {
-            first_name: this.state.users.first_name,
-            last_name: this.state.users.last_name,
-            email: this.state.users.email
-        }
-
         let config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
