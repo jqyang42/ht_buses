@@ -5,6 +5,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Autocomplete from "react-google-autocomplete";
 import Geocode from "react-geocode";
+import { GOOGLE_API_KEY } from "../../constants";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
