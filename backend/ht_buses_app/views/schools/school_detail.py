@@ -51,5 +51,5 @@ def schools_detail(request):
         if len(route_list) != 0:
             data["routes"] = route_list
         return Response(data)
-    except BaseException as e:
-        raise ValidationError({"messsage": "School does not exist"})
+    except:
+        return Response(data, status = 404)
