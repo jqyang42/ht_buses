@@ -32,3 +32,24 @@ def user_create(request):
     data["message"] = "User created successfully"
     result = {"data" : data}
     return Response(result)
+
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user create forms
+def valid_create_email(request):
+    data = {}
+    reqBody = json.loads(request.body)
+    email = reqBody['email']
+    try: 
+        User.objects.get(email = email)
+        data["message"] = "Please enter a different email. A user with this email already exists"
+        data["validEmail"] = False
+        result = {"data" : data}
+        return Response(result)
+    except: 
+        data["message"] = "The email entered is valid"
+        data["validEmail"] = True
+        result = {"data" : data}
+        return Response(result)
+

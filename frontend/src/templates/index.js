@@ -4,22 +4,7 @@ import { Link , Navigate} from "react-router-dom";
 import { HT_LOGO, PARENT_DASHBOARD_URL } from "../constants";
 import PropTypes from 'prop-types';
 
-import { INDEX_URL } from "../constants";
-import { SCHOOLS_URL } from "../constants";
 import { STUDENTS_URL } from "../constants";
-import { USERS_URL } from "../constants";
-import { ROUTES_URL } from "../constants";
-import { SCHOOLS_DETAIL_URL } from "../constants";
-import { STUDENTS_DETAIL_URL } from "../constants";
-import { USERS_DETAIL_URL } from "../constants";
-import { ROUTES_DETAIL_URL } from "../constants";
-import { SCHOOLS_CREATE_URL } from "../constants";
-import { USERS_CREATE_URL } from "../constants";
-import { ROUTES_PLANNER_URL } from "../constants";
-import { SCHOOLS_EDIT_URL } from "../constants";
-import { STUDENTS_EDIT_URL } from "../constants";
-import { USERS_EDIT_URL } from "../constants";
-import { ROUTES_EDIT_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
 
 class Login extends Component {
