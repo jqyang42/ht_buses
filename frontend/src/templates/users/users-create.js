@@ -31,7 +31,9 @@ class UsersCreate extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
-        edit_success: 0
+        edit_success: 0,
+        redirect_detail: false,
+        detail_url: ''
     }
 
     password2 = '';
@@ -260,13 +262,12 @@ class UsersCreate extends Component {
         }
         axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
             .then(res => {
+                console.log(res)
                 const msg = res.data.data.message
                 if (msg == 'User created successfully') {
                     this.setState({ edit_success: 1 })
-                    this.setState({ redirect: true });
-                    console.log(res)
-                    // TODO: Add redirect to user's DETAIL page
-                    // return <Navigate to={USERS_URL + "/" +this.state.user.id} /> 
+                    this.setState({ redirect_detail: true });
+                    this.setState({ detail_url: USERS_URL + "/" + res.data.data.id});
                 } else {
                     this.setState({ edit_success: -1 })
                 }
@@ -300,6 +301,10 @@ class UsersCreate extends Component {
         const { redirect } = this.state.redirect;
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
+        }
+        // const { redirect_detail } = this.state.redirect_detail;
+        if (this.state.redirect_detail) {
+            return <Navigate to={this.state.detail_url}/>;
         }
 
         return (
