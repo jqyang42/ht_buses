@@ -89,6 +89,7 @@ class RouteMap extends Component {
                 active_route={this.props.active_route}
                 id={value.id}
                 studentIDs={value.studentIDs}
+                studentNames={value.studentIDs}
                 onChange={this.handleRouteIDChange} />
             })}
           </GoogleMap>
