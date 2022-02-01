@@ -22,9 +22,9 @@ def user_edit(request):
     user_object.is_parent = reqBody['is_parent']
     user_object.is_staff = reqBody['is_staff']
     user_object.save()
-    if user_object.is_parent is True:
-        for student_info in reqBody["students"]:
-            create_student(student_info, id)
+    # if user_object.is_parent is True:
+    #     for student_info in reqBody["students"]:
+    #         create_student(student_info, id)
     data["message"] = "User and associated students updated successfully"
     result = {"data" : data}
     return Response(result)

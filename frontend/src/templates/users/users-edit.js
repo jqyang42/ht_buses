@@ -61,52 +61,6 @@ class UsersEdit extends Component {
         this.setState({ is_staff }, console.log(this.state.is_staff));
     }
 
-    // handleSubmit = event => {
-    //     if (!this.emailValidation()) {
-    //     const index = this.state.added_students_list.indexOf(student_num)        
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.school_name = school_name
-    //     students[index] = student
-    //     this.setState({ students: students })
-
-    //     let config = {
-    //         headers: {
-    //           Authorization: `Token ${sessionStorage.getItem('token')}`
-    //         }
-    //     }
-
-    //     axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
-    //         .then(res => {
-    //             let routes_data
-    //             if (res.data.routes == null) {
-    //                 routes_data = []
-    //             } else {
-    //                 routes_data = res.data.routes
-    //             }
-    //             let routes = routes_data.map(route => {
-    //                 return {
-    //                     value: route.id,
-    //                     display: route.name
-    //                 }
-    //             })
-    //             console.log(routes)
-    //             this.setState({ routes_dropdown: routes })
-    //         })
-    //     console.log(this.state.routes_dropdown)
-    // }
-
-    // handleRouteChange = (event, student_num) => {
-    //     const route_name = event.target[event.target.selectedIndex].id
-
-    //     const index = this.state.added_students_list.indexOf(student_num)        
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.route_name = route_name
-    //     students[index] = student
-    //     this.setState({ students: students })
-    // }
-
     handleAddressValidation = event => {
         if (this.state.address != '') {
             console.log(this.state.address)
@@ -127,52 +81,6 @@ class UsersEdit extends Component {
         }
     }
 
-    // handleAddStudent = () => {
-    //     let last_element_index
-    //     let new_list
-    //     if (this.state.added_students_list.length === 0) {
-    //         new_list =  [...this.state.added_students_list, 0]
-    //     } else {
-    //         last_element_index = this.state.added_students_list.length - 1
-    //         new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
-    //     }
-    //     // console.log(new_list)
-    //     this.setState({ added_students_list: new_list })    
-
-    //     const student_field = {
-    //         first_name: '',
-    //         last_name: '',
-    //         school_name: '',
-    //         route_name: null,   //TODO: replicate?
-    //         student_school_id: ''
-    //     }
-    //     this.setState({ students: [...this.state.students, student_field] })
-    // }
-
-    // handleDeleteStudent = (student_num) => {
-    //     console.log(student_num)
-
-    //     // console.log(this.state.added_students_list)        
-    //     const new_list = this.state.added_students_list
-    //     const index = new_list.indexOf(student_num)
-    //     // console.log(new_list)
-    //     // console.log(new_list[index])
-    //     new_list.splice(index, 1)
-    //     // console.log(new_list)
-    //     this.setState({ added_students_list: new_list })
-
-    //     console.log(this.state.students)
-    //     const new_students = this.state.students
-    //     console.log(new_students)
-    //     console.log(new_students[index])
-    //     new_students.splice(index, 1)
-    //     console.log(new_students)
-    //     this.setState({ students: new_students })
-
-    //     // console.log(this.state.added_students_list)
-    //     // console.log(dthis.state.students)
-    // }
-
     handleSubmit = event => {
         if (!this.emailValidation() || !this.state.valid_address ) {
             console.log('address not valid')
@@ -189,7 +97,6 @@ class UsersEdit extends Component {
             address: this.state.address,
             is_staff: this.state.is_staff,
             is_parent: this.state.user.is_parent,
-            students: this.state.students,
             lat: this.state.lat,
             long: this.state.lng,
         }
@@ -233,16 +140,8 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
-        });
+            });
         })
-
-        // axios.get(API_DOMAIN + `schools`, config)
-        //     .then(res => {            
-        //     let schools = res.data.schools.map(school => {
-        //         return {value: school.id, display: school.name}
-        //     })
-        //     this.setState({ schools_dropdown: schools})
-        // })
     }
 
     handleLogout = event => {
