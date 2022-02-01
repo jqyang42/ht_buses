@@ -16,7 +16,8 @@ def school_create(request):
     address = reqBody['school_address']
     lat = reqBody['lat']
     long = reqBody['long']
-    School.schoolsTable.create(name=name, address=address, lat=lat, long=long)
+    school = School.schoolsTable.create(name=name, address=address, lat=lat, long=long)
     data["message"] = "school created successfully"
+    data["school"] = {'id' : school.id}
     result = {"data" : data}
     return Response(result)
