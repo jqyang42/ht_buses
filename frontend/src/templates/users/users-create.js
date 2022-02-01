@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
-import { GOOGLE_API_KEY } from "../../constants";
+import { GOOGLE_API_KEY, STUDENTS_URL } from "../../constants";
 import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
@@ -31,6 +31,9 @@ class UsersCreate extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
+        edit_success: 0,
+        redirect_detail: false,
+        detail_url: ''
     }
 
     password2 = '';
@@ -79,7 +82,7 @@ class UsersCreate extends Component {
     }
 
     handleAddressValidation = event => {
-        if (this.state.user_address != '') {
+        if (this.state.user_address !== '') {
             console.log(this.state.user_address)
             Geocode.fromAddress(this.state.user_address).then(
                 (response) => {
@@ -149,7 +152,7 @@ class UsersCreate extends Component {
         axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
             .then(res => {
                 let routes_data
-                if (res.data.routes == null) {
+                if (res.data.routes === null) {
                     routes_data = []
                 } else {
                     routes_data = res.data.routes
@@ -230,11 +233,12 @@ class UsersCreate extends Component {
             user_address = this.state.user_address;
         }
 
+        event.preventDefault();
+
         if (!this.validEmail || !this.validPassword || !this.state.valid_address) {
-            console.log('address not valid')
+            this.setState({ edit_success: -1 })
             return 
         }
-        event.preventDefault();
 
         const user = {
             email: this.state.user_email,
@@ -258,15 +262,16 @@ class UsersCreate extends Component {
         }
         axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
             .then(res => {
+                console.log(res)
                 const msg = res.data.data.message
                 if (msg == 'User created successfully') {
-                    this.create_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.edit_success)
+                    this.setState({ edit_success: 1 })
+                    this.setState({ redirect_detail: true });
+                    this.setState({ detail_url: USERS_URL + "/" + res.data.data.id});
                 } else {
-                    this.create_success = -1      // TODO ERROR
+                    this.setState({ edit_success: -1 })
                 }
             })
-        this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -281,6 +286,7 @@ class UsersCreate extends Component {
                 return {value: school.id, display: school.name}
             })
             this.setState({ schools_dropdown: schools})
+            this.setState({ edit_success: 0 })
             console.log(this.state.schools_dropdown)
         })
     }
@@ -296,6 +302,11 @@ class UsersCreate extends Component {
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
         }
+        // const { redirect_detail } = this.state.redirect_detail;
+        if (this.state.redirect_detail) {
+            return <Navigate to={this.state.detail_url}/>;
+        }
+
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -310,6 +321,11 @@ class UsersCreate extends Component {
                                         <h5>Create New User</h5>
                                     </div>
                                 </div>
+                                {(this.state.edit_success === -1) ? 
+                                    (<div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        Unable to create new user. Please correct all errors before submitting.
+                                    </div>) : ""
+                                }
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
