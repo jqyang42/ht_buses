@@ -97,46 +97,29 @@ class BusRoutesPlanner extends Component {
         axios.get(API_DOMAIN + `routeplanner?id=` + this.props.params.id, config)
             .then(res => {
                 const locations = res.data;
-                this.setState({ locations });
-                console.log(locations);
-                Geocode.fromAddress(locations.address).then(
-                    (response) => {
-                        const lat = parseFloat(response.results[0].geometry.location.lat);
-                        const lng = parseFloat(response.results[0].geometry.location.lng);
-                        this.setState({
-                            center: { lat: lat, lng: lng }
-                        });
-                    },
-                    (error) => {
-                        console.error(error);
+                this.setState({ 
+                    locations: locations,
+                    center: { 
+                        lat: locations.lat, 
+                        lng: locations.long 
                     }
-                );
+                 });
                 locations.parents.map((parent, index) => {
                     const studentIDs = [];
                     parent.students.map((student, index) => {
                         studentIDs.push(student.id);
                     });
-                    Geocode.fromAddress(parent.address).then(
-                        (response) => {
-                            console.log(response);
-                            const lat = parseFloat(response.results[0].geometry.location.lat);
-                            const lng = parseFloat(response.results[0].geometry.location.lng);
-                            this.setState(prevState => ({
-                                markers: [...prevState.markers, {
-                                    position: {
-                                        lat: lat,
-                                        lng: lng
-                                    },
-                                    id: parent.parent_id,
-                                    studentIDs: studentIDs,
-                                    routeID: parent.students[0].route_id //TODO: change markers to create per student
-                                }]
-                            }));
-                        },
-                        (error) => {
-                            console.error(error);
-                        }
-                    );
+                    this.setState(prevState => ({
+                        markers: [...prevState.markers, {
+                            position: {
+                                lat: parent.lat,
+                                lng: parent.long
+                            },
+                            id: parent.parent_id,
+                            studentIDs: studentIDs,
+                            routeID: parent.students[0].route_id //TODO: change markers to create per student
+                        }]
+                    }));
                 });
             });
     }
