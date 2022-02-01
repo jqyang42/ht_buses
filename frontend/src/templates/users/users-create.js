@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import { emailRegex, passwordRegex } from "../regex/input-validation";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -29,6 +30,9 @@ class UsersCreate extends Component {
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     password2 = '';
@@ -75,6 +79,26 @@ class UsersCreate extends Component {
         this.setState({ user_address: event.target.value });
     }
 
+    handleAddressValidation = event => {
+        if (this.state.user_address != '') {
+            console.log(this.state.user_address)
+            Geocode.fromAddress(this.state.user_address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
+                }
+            )
+        }
+    }
+    
     handleIsStaffChange = event => {
         const type = event.target.value
         this.setState({ user_is_staff: type });
@@ -199,17 +223,19 @@ class UsersCreate extends Component {
     }
 
     handleSubmit = event => {
-        if (!this.validEmail || !this.validPassword) {
-            return 
-        }
-        event.preventDefault();
-        
         let user_address
+
         if (this.state.user_address === null) {
             user_address = ''
         } else {
-            user_address = this.state.user_address
+            user_address = this.state.user_address;
         }
+
+        if (!this.validEmail || !this.validPassword || !this.state.valid_address) {
+            console.log('address not valid')
+            return 
+        }
+        event.preventDefault();
 
         // TODO delete if unnecessary
         // let school_id
@@ -227,7 +253,9 @@ class UsersCreate extends Component {
             address: user_address,
             is_staff: this.state.user_is_staff === 'general' ? false : true,
             is_parent: this.state.students.length !== 0,
-            students: this.state.students
+            students: this.state.students,
+            lat: this.state.lat,
+            long: this.state.lng,
         }
 
         console.log(user)
@@ -400,7 +428,7 @@ class UsersCreate extends Component {
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -408,13 +436,14 @@ class UsersCreate extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     value={this.state.user_address}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
-                                                onChange={this.handleAddressChange}></input>
+                                                    onChange={this.handleAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
+                                                onChange={this.handleAddressChange}></input> */}
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>

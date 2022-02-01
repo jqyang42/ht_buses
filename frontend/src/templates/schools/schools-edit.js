@@ -4,6 +4,7 @@ import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -21,6 +22,9 @@ class SchoolsEdit extends Component {
         school_address: '',
         school: [],
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     edit_success = 0
@@ -33,35 +37,24 @@ class SchoolsEdit extends Component {
         this.setState({ school_address: event.target.value });
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
-
-        const school = {
-            school_name: this.state.school_name,
-            school_address: this.state.school_address,
-            lat: 3.5,    // TODO REPLACE
-            long: 1.4
-        }
-        
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        
-        console.log(school)
-
-        axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school, config)  // TODO: use onclick id value
-            .then(res => {
-                const msg = res.data.data.message
-                if (msg == 'school information updated successfully') {
-                    this.edit_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.edit_success)
-                } else {
-                    this.edit_success = -1      // TODO ERROR
+        handleAddressValidation = event => {
+        if (this.state.school_address != '') {
+            console.log(this.state.school_address)
+            Geocode.fromAddress(this.state.school_address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
                 }
-            })
-        // this.setState({ redirect: true });
+            )
+        }
     }
 
     handleLogout = event => {
@@ -84,6 +77,39 @@ class SchoolsEdit extends Component {
             console.log(sessionStorage.getItem('token'))
             window.location.reload()
         })
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        if ( !this.state.valid_address ) {
+            console.log('address not valid')
+            return 
+        }
+
+        const school = {
+            school_name: this.state.school_name,
+            school_address: this.state.school_address,
+            lat: this.state.lat,
+            long: this.state.lng,
+        }
+
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school, config)  // TODO: use onclick id value
+            .then(res => {
+                const msg = res.data.data.message
+                if (msg == 'school information updated successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1      // TODO ERROR
+                }
+            })
+        this.setState({ redirect: true });
     }
 
     componentDidMount() {
@@ -201,7 +227,7 @@ class SchoolsEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -209,14 +235,15 @@ class SchoolsEdit extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     value={this.state.school_address} 
-                                                    onChange={this.handleSchoolAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                    onChange={this.handleSchoolAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
                                                 defaultValue={this.state.school.address} placeholder="Enter school address"
-                                                onChange={this.handleSchoolAddressChange}></input>
+                                                onChange={this.handleSchoolAddressChange}></input> */}
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}

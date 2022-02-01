@@ -5,6 +5,7 @@ import { Link} from "react-router-dom";
 import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
+import Geocode from "react-geocode";
 
 import { INDEX_URL } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -26,6 +27,9 @@ class UsersEdit extends Component {
         is_staff: null,
         user: [],
         redirect: false,
+        lat: 0,
+        lng: 0,
+        valid_address: true,
     }
 
     edit_success = 0;
@@ -55,11 +59,123 @@ class UsersEdit extends Component {
     handleIsStaffChange = event => {
         let is_staff = event.target.value === 'administrator'
         this.setState({ is_staff }, console.log(this.state.is_staff));
-        
     }
 
-        handleSubmit = event => {
-        if (!this.emailValidation()) {
+    // handleSubmit = event => {
+    //     if (!this.emailValidation()) {
+    //     const index = this.state.added_students_list.indexOf(student_num)        
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.school_name = school_name
+    //     students[index] = student
+    //     this.setState({ students: students })
+
+    //     let config = {
+    //         headers: {
+    //           Authorization: `Token ${sessionStorage.getItem('token')}`
+    //         }
+    //     }
+
+    //     axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
+    //         .then(res => {
+    //             let routes_data
+    //             if (res.data.routes == null) {
+    //                 routes_data = []
+    //             } else {
+    //                 routes_data = res.data.routes
+    //             }
+    //             let routes = routes_data.map(route => {
+    //                 return {
+    //                     value: route.id,
+    //                     display: route.name
+    //                 }
+    //             })
+    //             console.log(routes)
+    //             this.setState({ routes_dropdown: routes })
+    //         })
+    //     console.log(this.state.routes_dropdown)
+    // }
+
+    // handleRouteChange = (event, student_num) => {
+    //     const route_name = event.target[event.target.selectedIndex].id
+
+    //     const index = this.state.added_students_list.indexOf(student_num)        
+    //     let students = [...this.state.students]
+    //     let student = {...students[index]}
+    //     student.route_name = route_name
+    //     students[index] = student
+    //     this.setState({ students: students })
+    // }
+
+    handleAddressValidation = event => {
+        if (this.state.address != '') {
+            console.log(this.state.address)
+            Geocode.fromAddress(this.state.address).then(
+                (response) => {
+                    console.log(response)
+                    this.setState({
+                        lat : parseFloat(response.results[0].geometry.location.lat),
+                        lng : parseFloat(response.results[0].geometry.location.lng),
+                        valid_address : true,
+                    })
+                },
+                (error) => {
+                    console.log(error)
+                    this.setState({ valid_address: false})
+                }
+            )
+        }
+    }
+
+    // handleAddStudent = () => {
+    //     let last_element_index
+    //     let new_list
+    //     if (this.state.added_students_list.length === 0) {
+    //         new_list =  [...this.state.added_students_list, 0]
+    //     } else {
+    //         last_element_index = this.state.added_students_list.length - 1
+    //         new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
+    //     }
+    //     // console.log(new_list)
+    //     this.setState({ added_students_list: new_list })    
+
+    //     const student_field = {
+    //         first_name: '',
+    //         last_name: '',
+    //         school_name: '',
+    //         route_name: null,   //TODO: replicate?
+    //         student_school_id: ''
+    //     }
+    //     this.setState({ students: [...this.state.students, student_field] })
+    // }
+
+    // handleDeleteStudent = (student_num) => {
+    //     console.log(student_num)
+
+    //     // console.log(this.state.added_students_list)        
+    //     const new_list = this.state.added_students_list
+    //     const index = new_list.indexOf(student_num)
+    //     // console.log(new_list)
+    //     // console.log(new_list[index])
+    //     new_list.splice(index, 1)
+    //     // console.log(new_list)
+    //     this.setState({ added_students_list: new_list })
+
+    //     console.log(this.state.students)
+    //     const new_students = this.state.students
+    //     console.log(new_students)
+    //     console.log(new_students[index])
+    //     new_students.splice(index, 1)
+    //     console.log(new_students)
+    //     this.setState({ students: new_students })
+
+    //     // console.log(this.state.added_students_list)
+    //     // console.log(dthis.state.students)
+    // }
+
+    handleSubmit = event => {
+        if (!this.emailValidation() || !this.state.valid_address ) {
+            console.log('address not valid')
             return 
         }
 
@@ -73,8 +189,9 @@ class UsersEdit extends Component {
             address: this.state.address,
             is_staff: this.state.is_staff,
             is_parent: this.state.user.is_parent,
-            lat: 3.5,   // TODO DELETE
-            long: 4.5
+            students: this.state.students,
+            lat: this.state.lat,
+            long: this.state.lng,
         }
 
         console.log(user)
@@ -270,7 +387,7 @@ class UsersEdit extends Component {
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
-                                                {/* <Autocomplete
+                                                <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
                                                     onPlaceSelected={(place) => {
                                                         this.setState({
@@ -278,12 +395,13 @@ class UsersEdit extends Component {
                                                         })
                                                     }}
                                                     options={{
-                                                        types: 'address'
+                                                        types: ['address']
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    value={this.state.address}
-                                                    onChange={this.handleAddressChange} /> */}
-                                                <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.user.address} onChange={this.handleAddressChange}></input>
+                                                    defaultValue={this.state.address}
+                                                    onChange={this.handleAddressChange}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input> */}
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
