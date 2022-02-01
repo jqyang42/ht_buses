@@ -31,7 +31,13 @@ class ParentDashboard extends Component {
         axios.get(API_DOMAIN + 'dashboard?id=' + sessionStorage.getItem('user_id'), config)
             .then(res => {
             const parent = res.data;
-            const students = parent.students;
+
+            let students
+            if (parent.students) {
+                students = parent.students
+            } else {
+                students = []
+            }
             console.log(students)
             this.setState({ parent: parent, students: students, show_all: false})
         })
