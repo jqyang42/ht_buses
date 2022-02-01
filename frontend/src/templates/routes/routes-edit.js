@@ -15,6 +15,7 @@ class BusRoutesEdit extends Component {
     state = {
         route_name: '',
         route_description: '',
+        school_id: '',
         route: [],
         redirect: false,
         edit_success: 0
@@ -67,8 +68,13 @@ class BusRoutesEdit extends Component {
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
             const route = res.data;
-            this.setState({ route: route, route_description: route.description, route_name: route.name });
-            this.setState({ edit_success: 0})
+            this.setState({ 
+                route: route, 
+                route_description: route.description, 
+                route_name: route.name,
+                school_id: route.school.id,
+                edit_success: 0
+            });
         })
     }
 
@@ -101,7 +107,7 @@ class BusRoutesEdit extends Component {
                                         <div className="row d-inline-flex float-end">
 
                                             {/* TODO: change this.props.params.id to SCHOOL id, not ROUTE id */}
-                                            <Link to={"/schools/" + this.props.params.id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            <Link to={"/schools/" + this.state.school_id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
                                                     Route Planner

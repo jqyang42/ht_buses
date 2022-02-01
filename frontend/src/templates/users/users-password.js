@@ -15,6 +15,7 @@ class UsersPassword extends Component {
     state = {
         password: '',
         confirm_password: '',
+        user: [],
         redirect: false,
         edit_success: 0
     }
@@ -72,6 +73,25 @@ class UsersPassword extends Component {
                 }
             })
         // this.setState({ redirect: true });
+    }
+
+    componentDidMount() { 
+        const config = {
+            headers: {
+              Authorization: `Token ${sessionStorage.getItem('token')}`
+            }
+        }
+
+        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
+            .then(res => {
+            const user = res.data;
+            if (user.students == null) {
+                this.setState({ students: []})
+            } else {
+                this.setState({ students: user.students })
+            }
+            this.setState({ user: user });
+            })
     }
 
     render() {

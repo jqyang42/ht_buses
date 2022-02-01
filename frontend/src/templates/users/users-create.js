@@ -38,6 +38,7 @@ class UsersCreate extends Component {
     validEmail = false;
     validPassword = false;
     samePassword = false;
+    create_success = 0
 
     emailValidation = function() {
         return (emailRegex.test(this.emailField.value))
