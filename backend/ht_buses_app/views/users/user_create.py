@@ -21,11 +21,11 @@ def user_create(request):
     is_staff = reqBody['is_staff']
     is_parent = reqBody['is_parent']
     lat = reqBody['lat']
-    long = reqBody['long']
+    longitude = reqBody['long']
     if is_staff: 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_staff = is_staff, is_parent= is_parent, password=password, address=address, lat=lat, long=long)
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, long=longitude)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=long)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=longitude)
     if is_parent:
         for student in reqBody["students"]:
             student_create.create_student(student, user.id)
