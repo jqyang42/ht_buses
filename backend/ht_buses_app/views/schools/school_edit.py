@@ -27,4 +27,4 @@ def school_edit(request):
     except:
         data["message"] = "School could not be updated "
         result = {"data" : data}
-        return Response(result)
+        return Response(result, status = 400)

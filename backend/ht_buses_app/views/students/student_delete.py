@@ -21,4 +21,5 @@ def student_delete(request):
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
-        raise ValidationError({"messsage": "student could not be deleted"})
+        return Response(data, status = 400)
+        #raise ValidationError({"messsage": "student could not be deleted"})
