@@ -23,12 +23,8 @@ class UsersEdit extends Component {
         first_name: '',
         last_name: '',
         address: '',
-        is_staff: '',
+        is_staff: null,
         user: [],
-        // added_students_list: [],
-        // students: [],
-        // schools_dropdown: [],
-        // routes_dropdown: [],
         redirect: false,
     }
 
@@ -44,10 +40,6 @@ class UsersEdit extends Component {
         this.validEmail = this.emailValidation() 
     }
 
-    // handlePasswordChange = event => {
-    //     this.setState({ password: event.target.value });
-    // }
-
     handleFirstNameChange = event => {
         this.setState({ first_name: event.target.value });
     }
@@ -61,144 +53,17 @@ class UsersEdit extends Component {
     }
 
     handleIsStaffChange = event => {
-        this.setState({ is_staff: event.target.value });
-        console.log(this.state.is_staff)
+        let is_staff = event.target.value === 'administrator'
+        this.setState({ is_staff }, console.log(this.state.is_staff));
+        
     }
 
-    // handleStudentFirstNameChange = (event, student_num) => {
-    //     const index = this.state.added_students_list.indexOf(student_num)
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.first_name = event.target.value
-    //     students[index] = student
-    //     this.setState({ students: students })
-    // }
-
-    // handleStudentLastNameChange = (event, student_num) => {
-    //     const index = this.state.added_students_list.indexOf(student_num)
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.last_name = event.target.value
-    //     students[index] = student
-    //     this.setState({ students: students })
-    // }
-
-    // handleStudentIDChange = (event, student_num) => {
-    //     const index = this.state.added_students_list.indexOf(student_num)
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.student_school_id = event.target.value
-    //     students[index] = student
-    //     this.setState({ students: students })
-    // }
-
-    // handleSchoolChange = (event, student_num) => {
-    //     const school_id = event.target.value
-    //     const school_name = event.target[event.target.selectedIndex].id
-        
-    //     const index = this.state.added_students_list.indexOf(student_num)        
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.school_name = school_name
-    //     students[index] = student
-    //     this.setState({ students: students })
-
-    //     let config = {
-    //         headers: {
-    //           Authorization: `Token ${sessionStorage.getItem('token')}`
-    //         }
-    //     }
-
-    //     axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
-    //         .then(res => {
-    //             let routes_data
-    //             if (res.data.routes == null) {
-    //                 routes_data = []
-    //             } else {
-    //                 routes_data = res.data.routes
-    //             }
-    //             let routes = routes_data.map(route => {
-    //                 return {
-    //                     value: route.id,
-    //                     display: route.name
-    //                 }
-    //             })
-    //             console.log(routes)
-    //             this.setState({ routes_dropdown: routes })
-    //         })
-    //     console.log(this.state.routes_dropdown)
-    // }
-
-    // handleRouteChange = (event, student_num) => {
-    //     const route_name = event.target[event.target.selectedIndex].id
-
-    //     const index = this.state.added_students_list.indexOf(student_num)        
-    //     let students = [...this.state.students]
-    //     let student = {...students[index]}
-    //     student.route_name = route_name
-    //     students[index] = student
-    //     this.setState({ students: students })
-    // }
-
-    // handleAddStudent = () => {
-    //     let last_element_index
-    //     let new_list
-    //     if (this.state.added_students_list.length === 0) {
-    //         new_list =  [...this.state.added_students_list, 0]
-    //     } else {
-    //         last_element_index = this.state.added_students_list.length - 1
-    //         new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
-    //     }
-    //     // console.log(new_list)
-    //     this.setState({ added_students_list: new_list })    
-
-    //     const student_field = {
-    //         first_name: '',
-    //         last_name: '',
-    //         school_name: '',
-    //         route_name: null,   //TODO: replicate?
-    //         student_school_id: ''
-    //     }
-    //     this.setState({ students: [...this.state.students, student_field] })
-    // }
-
-    // handleDeleteStudent = (student_num) => {
-    //     console.log(student_num)
-
-    //     // console.log(this.state.added_students_list)        
-    //     const new_list = this.state.added_students_list
-    //     const index = new_list.indexOf(student_num)
-    //     // console.log(new_list)
-    //     // console.log(new_list[index])
-    //     new_list.splice(index, 1)
-    //     // console.log(new_list)
-    //     this.setState({ added_students_list: new_list })
-
-    //     console.log(this.state.students)
-    //     const new_students = this.state.students
-    //     console.log(new_students)
-    //     console.log(new_students[index])
-    //     new_students.splice(index, 1)
-    //     console.log(new_students)
-    //     this.setState({ students: new_students })
-
-    //     // console.log(this.state.added_students_list)
-    //     // console.log(dthis.state.students)
-    // }
-
-    handleSubmit = event => {
+        handleSubmit = event => {
         if (!this.emailValidation()) {
             return 
         }
 
         event.preventDefault();
-
-        // let is_parent
-        // if (this.state.students == null) {
-        //     is_parent = false
-        // } else {
-        //     is_parent = true
-        // }
 
         const user = {
             email: this.state.email,
@@ -206,9 +71,10 @@ class UsersEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff == 'general' ? false : true,
+            is_staff: this.state.is_staff,
             is_parent: this.state.user.is_parent,
-            // students: this.state.students
+            lat: 3.5,   // TODO DELETE
+            long: 4.5
         }
 
         console.log(user)
@@ -243,12 +109,6 @@ class UsersEdit extends Component {
         const user = res.data;
         this.email = user.email
 
-        // let init_students
-        // if (user.students == null) {
-        //     init_students = []
-        // } else {
-        //     init_students = user.students
-        // }
         this.setState({ 
             user: user,
             first_name: user.first_name,
@@ -256,7 +116,6 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
-            // students: init_students
         });
         })
 
@@ -432,7 +291,7 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    defaultChecked={this.state.user.is_staff} ></input>
+                                                    defaultChecked={this.state.user.is_staff } ></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
