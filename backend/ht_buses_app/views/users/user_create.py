@@ -29,6 +29,7 @@ def user_create(request):
     if is_parent:
         for student in reqBody["students"]:
             student_create.create_student(student, user.id)
+    data["id"] = user.id
     data["message"] = "User created successfully"
     result = {"data" : data}
     return Response(result)
