@@ -2,9 +2,7 @@ from ...models import School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
-from rest_framework.parsers import json
 from rest_framework.response import Response
-from django.core.exceptions import ValidationError
 
 # Schools DELETE API
 @csrf_exempt
