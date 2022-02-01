@@ -69,7 +69,7 @@ export function RoutesTable({ data }) {
             },
             {
                 Header: 'School',
-                accessor: 'school.name',
+                accessor: 'school_name.name',
                 disableFilter: true
             },
             {

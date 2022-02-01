@@ -23,8 +23,7 @@ class BusRoutes extends Component {
         axios.get(API_DOMAIN + `routes`, config)
             .then(res => {
             const routes = res.data.routes
-            this.setState({ routes }
-            )
+            this.setState({ routes })
         })
     }
 
