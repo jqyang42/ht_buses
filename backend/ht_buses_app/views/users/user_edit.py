@@ -14,8 +14,8 @@ def user_edit(request): # TODO: make try and catch
     reqBody = json.loads(request.body)
     user_object = User.objects.get(pk=id)
     user_object.email = reqBody['email']
-    user_object.first_name = reqBody['first_name']
-    user_object.last_name = reqBody['last_name']
+    user_object.first_name = reqBody['first_name'].capitalize()
+    user_object.last_name = reqBody['last_name'].capitalize()
     user_object.address = reqBody['address']
     user_object.lat = reqBody['lat']
     user_object.long = reqBody['long']

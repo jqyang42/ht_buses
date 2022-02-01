@@ -16,7 +16,7 @@ def school_edit(request):
     reqBody = json.loads(request.body)
     try:
         school_object =  School.schoolsTable.get(pk = id)
-        school_object.name = reqBody['school_name']
+        school_object.name = reqBody['school_name'].capitalize()
         school_object.address = reqBody['school_address']
         school_object.lat = reqBody['lat']
         school_object.long = reqBody['long']

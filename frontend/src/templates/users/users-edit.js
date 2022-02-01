@@ -27,7 +27,8 @@ class UsersEdit extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
-        edit_success: 0
+        edit_success: 0,
+        is_parent: false
     }
 
     validEmail = true;
@@ -151,6 +152,7 @@ class UsersEdit extends Component {
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
+        console.log(res)
         this.email = user.email
         this.setState({ 
             user: user,
@@ -159,7 +161,8 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
-            edit_success: 0
+            edit_success: 0,
+            is_parent: user.is_parent
             });
         })
     }
@@ -230,7 +233,7 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className="form-group pb-3 w-75">
+                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -246,8 +249,9 @@ class UsersEdit extends Component {
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     defaultValue={this.state.address}
                                                     onChange={this.handleAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input> */}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                                                    required={this.state.user.is_parent}/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>

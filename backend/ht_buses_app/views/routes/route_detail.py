@@ -21,9 +21,9 @@ def routes_detail(request):
     data["school"] = {'id' : route_serializer.data["school_id"], 'name' : school_serializer.data["name"], 'lat' : school_serializer.data["lat"], 'long': school_serializer.data["long"]}
     data["description"] = route_serializer.data["description"]
     parent_id_arr = []
-    parent_student_arr = []
     address_arr = []
     for student in students_serializer.data:
+        parent_student_arr = []
         parent_id = student["user_id"]
         parent = User.objects.get(pk=parent_id)
         if parent_id not in parent_id_arr:
