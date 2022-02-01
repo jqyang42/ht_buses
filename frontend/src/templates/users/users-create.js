@@ -55,6 +55,7 @@ class UsersCreate extends Component {
     handleEmailChange = event => {
         this.setState( {user_email: event.target.value})
         this.email = event.target.value
+        this.validEmail = true
     }
 
     handlePasswordChange = event => {
