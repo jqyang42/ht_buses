@@ -21,6 +21,7 @@ class ParentDashboard extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        console.log(sessionStorage.getItem('user_id'))
         axios.get(API_DOMAIN + 'dashboard?id=' + sessionStorage.getItem('user_id'), config)
             .then(res => {
             const parent = res.data;

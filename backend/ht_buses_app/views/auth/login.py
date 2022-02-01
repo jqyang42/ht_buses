@@ -24,7 +24,7 @@ def user_login(request):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
-    info["id"] = user.id
+    info["user_id"] = user.id
     info["is_staff"] = user.is_staff
     info["email"] = user.email
     info["first_name"] = user.first_name
