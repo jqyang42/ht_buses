@@ -23,6 +23,7 @@ class UsersCreate extends Component {
         user_last_name: '',
         user_address: '',
         user_is_staff: '',
+        user_is_parent: false,
         added_students_list: [],
         students: [],
         schools_dropdown: [],
@@ -37,13 +38,14 @@ class UsersCreate extends Component {
     }
 
     password2 = '';
-    validEmail = false;
     validPassword = false;
     samePassword = false;
     create_success = 0
+    validEmail = true;
+    email = '';
 
     emailValidation = function() {
-        return (emailRegex.test(this.emailField.value))
+        return (emailRegex.test(this.email))
     }
     
     passwordValidation = function() {
@@ -52,7 +54,8 @@ class UsersCreate extends Component {
 
     handleEmailChange = event => {
         this.setState( {user_email: event.target.value})
-        this.validEmail = this.emailValidation() 
+        this.email = event.target.value
+        this.validEmail = true
     }
 
     handlePasswordChange = event => {
@@ -189,6 +192,8 @@ class UsersCreate extends Component {
         }
         // console.log(new_list)
         this.setState({ added_students_list: new_list })
+        this.setState({ user_is_parent: true })
+        console.log(this.state.user_is_parent)
         
         const student_field = {
             first_name: '',
@@ -211,6 +216,10 @@ class UsersCreate extends Component {
         new_list.splice(index, 1)
         // console.log(new_list)
         this.setState({ added_students_list: new_list })
+        console.log(this.state.added_students_list.length)
+        if (this.state.added_students_list.length === 0) {
+            this.setState({ user_is_parent: false })
+        }
 
         console.log(this.state.students)
         const new_students = this.state.students
@@ -224,20 +233,13 @@ class UsersCreate extends Component {
         // console.log(dthis.state.students)
     }
 
-    handleSubmit = event => {
+    sendCreateRequest =  (config) => {
         let user_address
 
         if (this.state.user_address === null) {
             user_address = ''
         } else {
             user_address = this.state.user_address;
-        }
-
-        event.preventDefault();
-
-        if (!this.validEmail || !this.validPassword || !this.state.valid_address) {
-            this.setState({ edit_success: -1 })
-            return 
         }
 
         const user = {
@@ -254,24 +256,56 @@ class UsersCreate extends Component {
         }
 
         console.log(user)
+        axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
+        .then(res => {
+            console.log(res)
+            const msg = res.data.data.message
+            if (msg == 'User created successfully') {
+                this.setState({ edit_success: 1 })
+                this.setState({ redirect_detail: true });
+                this.setState({ detail_url: USERS_URL + "/" + res.data.data.id});
+            } else {
+                this.setState({ edit_success: -1 })
+            }
+        })
+    }
 
-         const config = {
+    handleRefresh = () => {
+        this.setState({});
+    };
+
+    handleSubmit = event => {
+        
+        event.preventDefault();
+
+        if (!this.emailValidation() || !this.validPassword || !this.state.valid_address) {
+            this.setState({ edit_success: -1 })
+            return 
+        }
+
+        const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
-            .then(res => {
-                console.log(res)
-                const msg = res.data.data.message
-                if (msg == 'User created successfully') {
-                    this.setState({ edit_success: 1 })
-                    this.setState({ redirect_detail: true });
-                    this.setState({ detail_url: USERS_URL + "/" + res.data.data.id});
-                } else {
-                    this.setState({ edit_success: -1 })
-                }
-            })
+
+        let request_body = {
+            email: this.email
+        }
+
+        axios.post(API_DOMAIN + `users/create/validate-email`, request_body, config)
+        .then(res => {
+            const data = res.data.data
+            this.validEmail = data.validEmail
+       
+            if(!this.validEmail) {
+                this.handleRefresh()
+                return
+            }   
+            
+            this.sendCreateRequest(config)
+
+        })
     }
 
     componentDidMount() {
@@ -287,6 +321,7 @@ class UsersCreate extends Component {
             })
             this.setState({ schools_dropdown: schools})
             this.setState({ edit_success: 0 })
+            this.setState({ user_is_parent: false })
             console.log(this.state.schools_dropdown)
         })
     }
@@ -345,13 +380,18 @@ class UsersCreate extends Component {
                                                 placeholder="Enter email" required ref={el => this.emailField = el} onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                {(!this.validEmail && this.state.user_email !== "") ? 
+                                                {(!this.emailValidation() && this.state.user_email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
                                                 }
+                                                {(!this.validEmail) ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Update unsuccessful. Please enter a different email, a user with this email already exists
+                                                    </div>) : ""
+                                                }
                                             </div>
-                                            <div className="form-group pb-3 w-75">
+                                            <div className={"form-group pb-3 w-75 " + (this.state.user_is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -365,9 +405,10 @@ class UsersCreate extends Component {
                                                         types: ['address']
                                                     }}
                                                     value={this.state.user_address}
-                                                    placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                    placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
                                                     onChange={this.handleAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                                                    required={this.state.user_is_parent} />
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>

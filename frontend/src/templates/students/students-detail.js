@@ -51,8 +51,6 @@ class StudentsDetail extends Component {
                     this.setState({ delete_success: 1 })
                     this.setState({ redirect: true });
                     console.log(this.state.redirect)
-                    // return <Navigate to={ STUDENTS_URL }/>;
-                    // TODO: NAVIGATES BUT STILL HAS THAT DARK LAYER
                 } else {
                     console.log(this.state.redirect)
                     this.setState({ delete_success: -1 });
@@ -116,7 +114,7 @@ class StudentsDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                                <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
                                                             </div>
                                                         </form>
                                                     </div>

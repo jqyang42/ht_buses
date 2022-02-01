@@ -255,7 +255,7 @@ class BusRoutesPlanner extends Component {
                                                                 </div>
                                                                 <div className="modal-footer">
                                                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                    <button type="submit" className="btn btn-primary">Create</button>
+                                                                    <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
                                                                 </div>
                                                             </form>
                                                         </div>

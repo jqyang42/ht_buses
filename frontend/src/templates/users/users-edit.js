@@ -27,10 +27,11 @@ class UsersEdit extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
-        edit_success: 0
+        edit_success: 0,
+        is_parent: false
     }
 
-    validEmail = false;
+    validEmail = true;
     email = '';
 
     emailValidation = function() {
@@ -39,7 +40,8 @@ class UsersEdit extends Component {
 
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
-        this.email = this.emailField.value
+        this.email = event.target.value
+        this.validEmail = true
     }
 
     handleFirstNameChange = event => {
@@ -79,15 +81,7 @@ class UsersEdit extends Component {
         }
     }
 
-    handleSubmit = event => {
-
-        event.preventDefault();
-
-        if (!this.emailValidation() || !this.state.valid_address ) {
-            this.setState({ edit_success: -1 })
-            return 
-        }
-
+    sendEditRequest = (config) => {
         const user = {
             email: this.state.email,
             password: this.state.password,
@@ -102,23 +96,57 @@ class UsersEdit extends Component {
 
         console.log(user)
 
+        axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
+        .then(res => {
+            const success = res.data.data.sucess
+            if ( success ) {
+                this.setState({ edit_success: 1 })
+                console.log(this.state.edit_success)
+                this.setState({ redirect: true });
+            }
+        })
+        this.validEmail = true 
+        this.setState({ redirect: true });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        this.email = this.emailField.value
+        console.log(this.email)
+
+        if (!this.emailValidation() || !this.state.valid_address ) {
+            this.setState({ edit_success: -1 })
+            return 
+        }
+
+
         let config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
 
-        axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
-            .then(res => {
-                const msg = res.data.data.message
-                if (msg == 'User and associated students updated successfully') {
-                    this.setState({ edit_success: 1 })
-                    console.log(this.state.edit_success)
-                    this.setState({ redirect: true });
-                }
-            })
-            this.setState({ redirect: true });
+       
+        let request_body = {
+            email: this.state.email
+        }
+        axios.put(API_DOMAIN + `users/edit/validate-email?id=` + this.props.params.id, request_body, config)
+        .then(res => {
+            const data = res.data.data
+            this.validEmail = data.validEmail
+       
+            if(!this.validEmail) {
+                this.handleRefresh()
+                return
+            }     
+           this.sendEditRequest(config)
+        })
+        
     }
+
+    handleRefresh = () => {
+        this.setState({});
+    };
 
     componentDidMount() {
         let config = {
@@ -129,8 +157,8 @@ class UsersEdit extends Component {
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
+        console.log(res)
         this.email = user.email
-
         this.setState({ 
             user: user,
             first_name: user.first_name,
@@ -138,7 +166,8 @@ class UsersEdit extends Component {
             email: user.email,
             address: user.address,
             is_staff: user.is_staff,
-            edit_success: 0
+            edit_success: 0,
+            is_parent: user.is_parent
             });
         })
     }
@@ -198,13 +227,18 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                {(!this.emailValidation()) ? 
+                                                    {(!this.emailValidation()) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
                                                 }
+                                                 {(!this.validEmail) ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Update unsuccessful. Please enter a different email, a user with this email already exists
+                                                    </div>) : ""
+                                                }
                                             </div>
-                                            <div className="form-group pb-3 w-75">
+                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -220,8 +254,9 @@ class UsersEdit extends Component {
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
                                                     defaultValue={this.state.address}
                                                     onChange={this.handleAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" value="User Address" onChange={this.handleAddressChange}></input> */}
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                                                    required={this.state.user.is_parent}/>
+                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
