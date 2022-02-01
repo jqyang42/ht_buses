@@ -16,9 +16,12 @@ class StudentsEdit extends Component {
         first_name: '',
         last_name: '',
         student_id: '',
-        school_name: '',
-        route_name: null,
-        parent_name: [],
+        school_id: '',
+        route_id: null,
+        parent_id: '',
+        // school_name: '',
+        // route_name: null,
+        // parent_name: [],
         student: [],
         init_school_id: 0,
         init_parent_id: 0,
@@ -43,8 +46,11 @@ class StudentsEdit extends Component {
 
     handleSchoolChange = event => {
         const school_id = event.target.value
-        const school_name = event.target[event.target.selectedIndex].id // TODO ?
+        console.log(this.state.schools_dropdown)
+        // const school_name = event.target[event.target.selectedIndex].id // TODO ?
         this.setState({ school_id })
+        this.setState({ route_id: null })
+        
 
         const config = {
             headers: {
@@ -52,6 +58,7 @@ class StudentsEdit extends Component {
             }
         }
 
+        console.log(school_id)
         axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
         .then(res => {
             let routes_data
@@ -71,14 +78,15 @@ class StudentsEdit extends Component {
     } 
     
     handleRouteChange = event => {
-        const route_name = event.target[event.target.selectedIndex].id
-        this.setState({ route_name: route_name })
+        const route_id = event.target.value
+        console.log(this.routes_dropdown)
+        this.setState({ route_id })
+        console.log(this.state.route_id)
     }
 
-    handleParentNameChange = event => {
-        const parent = {
-            first_name: event
-        }
+    handleParentIDChange = event => {
+        this.setState({ parent_id: event.target.value })
+        console.log(this.state.parent_id)
     }
     
     handleSubmit = event => {
@@ -88,10 +96,12 @@ class StudentsEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             student_school_id: this.state.student_id,
-            school_name: this.state.school_name,
-            route_name: this.state.route_name,
-            parent_name: this.state.parent
+            school_id: this.state.school_id,
+            route_id: this.state.route_id,
+            parent_id: this.state.parent_id
         }
+
+        console.log(student)
 
         const config = {
             headers: {
@@ -128,7 +138,7 @@ class StudentsEdit extends Component {
             if (student.route === null) {
                 init_route = null
             } else {
-                init_route = student.route.name
+                init_route = student.route.id
             }
 
             this.setState({ 
@@ -138,28 +148,27 @@ class StudentsEdit extends Component {
                 first_name: student.first_name,
                 last_name: student.last_name,
                 student_id: student.student_school_id,
-                school_name: student.school.name,
-                route_name: init_route,
-
+                school_id: init_school_id,
+                route_id: init_route_id,
+                parent_id: init_parent_id
             })
+
+            console.log(this.state)
 
             axios.get(API_DOMAIN + 'schools/detail?id=' + init_school_id, config)
             .then(res => {
-                console.log(res)
                 let routes_data
                 if (res.data.routes == null) {
                     routes_data = []
                 } else {
                     routes_data = res.data.routes
                 }
-                console.log(routes_data)
                 let routes = routes_data.map(route => {
                     return {
                         value: route.id,
                         display: route.name
                     }
                 })
-                console.log(routes)
                 this.setState({ routes_dropdown: routes })
             })
         })
@@ -246,7 +255,8 @@ class StudentsEdit extends Component {
                                             </div>
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
-                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route">
+                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
+                                                onChange={this.handleSchoolChange}>
                                                     <option>Select a Route</option>
                                                     {this.state.routes_dropdown.map(route => {
                                                         if (this.state.init_route_id == route.value) {     //TODO: CHANGE TO USE STUDENT_ID?
@@ -259,7 +269,8 @@ class StudentsEdit extends Component {
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputParent1" className="control-label pb-2">Parent</label>
-                                                <select className="form-select" placeholder="Select a Parent" aria-label="Select a Parent">
+                                                <select className="form-select" placeholder="Select a Parent" aria-label="Select a Parent"
+                                                onChange={this.handleParentIDChange}>
                                                     <option>Select a Parent</option>
                                                     {this.state.parents_dropdown.map(parent => {
                                                         if (this.state.init_parent_id == parent.user_id) {
