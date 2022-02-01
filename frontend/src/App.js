@@ -10,6 +10,7 @@ import './static/custom.css';
 import Login from "./templates/index";
 import ParentDashboard from './templates/parent-view/parent-dashboard';
 import ParentDetail from './templates/parent-view/parent-detail';
+import ParentPassword from './templates/parent-view/parent-change-password';
 
 import Students from "./templates/students/students";
 import StudentsDetail from "./templates/students/students-detail";
@@ -55,6 +56,7 @@ import { USERS_PASSWORD_URL } from './constants';
 import { ROUTES_EDIT_URL } from "./constants";
 import { PARENT_DASHBOARD_URL } from './constants';
 import { PARENT_DETAIL_URL } from './constants';
+import { PARENT_PASSWORD_URL } from './constants';
 
 class App extends Component {
   render() {
@@ -65,6 +67,7 @@ class App extends Component {
           <Route path={LOGIN_URL} element={<Login />} />
           <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
           <Route path={PARENT_DETAIL_URL} element={<ParentDetail />} />
+          <Route path={PARENT_PASSWORD_URL} element={<ParentPassword />} />
 
           <Route path={STUDENTS_URL} element={<Students />} />
           <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />

@@ -3,7 +3,7 @@ import { Link , Navigate} from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { passwordRegex } from "../regex/input-validation";
-import SidebarMenu from '../components/sidebar-menu';
+import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 
 import { LOGIN_URL } from "../../constants";
@@ -11,7 +11,7 @@ import { USERS_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
-class UsersPassword extends Component {
+class ParentPassword extends Component {
     state = {
         password: '',
         confirm_password: '',
@@ -82,37 +82,37 @@ class UsersPassword extends Component {
             }
         }
 
-        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
-            .then(res => {
-            const user = res.data;
-            if (user.students == null) {
-                this.setState({ students: []})
-            } else {
-                this.setState({ students: user.students })
-            }
-            this.setState({ user: user });
-            })
+        // axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
+        //     .then(res => {
+        //     const user = res.data;
+        //     if (user.students == null) {
+        //         this.setState({ students: []})
+        //     } else {
+        //         this.setState({ students: user.students })
+        //     }
+        //     this.setState({ user: user });
+        //     })
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
-            return <Navigate to={LOGIN_URL} />
-        }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
-            return <Navigate to={PARENT_DASHBOARD_URL} />
-        }
-        const { redirect } = this.state;
-        const redirect_url = USERS_URL + '/' + this.props.params.id;
-        if (redirect) {
-            return <Navigate to={redirect_url}/>;
-        }
+        // if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        //     return <Navigate to={LOGIN_URL} />
+        // }
+        // else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        //     return <Navigate to={PARENT_DASHBOARD_URL} />
+        // }
+        // const { redirect } = this.state;
+        // const redirect_url = USERS_URL + '/' + this.props.params.id;
+        // if (redirect) {
+        //     return <Navigate to={ PARENT_DASHBOARD_URL }/>;
+        // }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
-                    <SidebarMenu activeTab="users" />
+                    <ParentSidebarMenu />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root="Manage Users" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.user.first_name + " " + this.state.user.last_name} page="Change Password" />
+                        <HeaderMenu root="My Account" isRoot={false} isSecond={true} name="Change Password" />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
@@ -135,10 +135,6 @@ class UsersPassword extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            {/* <div className="form-group required pb-3 w-75">
-                                                <label for="exampleInputPassword1" className="control-label pb-2">Old Password</label>
-                                                <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Enter old password" required></input>
-                                            </div> */}
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
@@ -164,12 +160,11 @@ class UsersPassword extends Component {
                                                 }
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
+                                                <Link to={"/dashboard"} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
                                                     </span>
                                                 </Link>
-                                                {/* <button type="button" href={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                                             </div>
                                         </div>
@@ -187,7 +182,7 @@ class UsersPassword extends Component {
 }
 
 export default (props) => (
-    <UsersPassword
+    <ParentPassword
         {...props}
         params={useParams()}
     />

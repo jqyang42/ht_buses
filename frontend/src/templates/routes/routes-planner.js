@@ -266,8 +266,8 @@ class BusRoutesPlanner extends Component {
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                    <option selected value={0}>Select a Route</option>
-                                                    <option selected value={0}>Unassign Student</option>
+                                                    <option selected value={0}>Select a route to assign</option>
+                                                    <option selected value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
@@ -276,7 +276,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* Assign button */}
                                             <div className="col-auto">
-                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Assign</button>
+                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Switch to Assign Mode</button>
                                             </div>
                                         </div>
                                         :
@@ -289,8 +289,8 @@ class BusRoutesPlanner extends Component {
                                             {/* TODO: Ensure that this dropdown still reads the same content as the dropdown in the assign mode OFF div  */}
                                             <div className="col justify-content-end align-self-center">
                                                 <select className="form-select float-end me-1" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} disabled>
-                                                    <option selected value={0}>Select a Route</option>
-                                                    <option selected value={0}>Unassign Student</option>
+                                                    <option selected value={0}>No Route</option>
+                                                    <option selected value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}

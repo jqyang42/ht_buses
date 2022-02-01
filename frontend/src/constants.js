@@ -43,3 +43,4 @@ export const ROUTES_EDIT_URL = "/routes/:id/edit";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";
+export const PARENT_PASSWORD_URL = "/change-password";
