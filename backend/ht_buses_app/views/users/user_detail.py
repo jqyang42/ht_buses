@@ -2,7 +2,6 @@ from ...models import Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
-from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, UserSerializer
 
@@ -48,5 +47,6 @@ def users_detail(request):
         data["is_staff"] = user_serializer.data["is_staff"]
         data["is_parent"] = user_serializer.data["is_parent"]
         return Response(data)
-    except BaseException as e:
-        raise ValidationError({"message": "User does not exist"})
+    except:
+        return Response(data, status = 404)
+        #raise ValidationError({"message": "User does not exist"})

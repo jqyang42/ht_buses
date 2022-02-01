@@ -1,4 +1,4 @@
-from ...models import School, Route, Student, User
+from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
@@ -10,38 +10,42 @@ from rest_framework.response import Response
 @permission_classes([IsAdminUser]) 
 def user_edit(request): # TODO: make try and catch
     data = {}
-    id = request.query_params["id"]
-    reqBody = json.loads(request.body)
-    user_object = User.objects.get(pk=id)
-    user_object.email = reqBody['email']
-    user_object.first_name = reqBody['first_name'].capitalize()
-    user_object.last_name = reqBody['last_name'].capitalize()
-    user_object.address = reqBody['address']
-    user_object.lat = reqBody['lat']
-    user_object.long = reqBody['long']
-    user_object.is_parent = reqBody['is_parent']
-    user_object.is_staff = reqBody['is_staff']
-    user_object.lat = reqBody['lat']
-    user_object.long = reqBody['long']
-    user_object.save()
-    #if user_object.is_parent is True:
-    #    for student_info in reqBody["students"]:
-    #        create_student(student_info, id)
-    data["message"] = "User information was successfully updated"
-    result = {"data" : data}
-    return Response(result)
+    try:
+        id = request.query_params["id"]
+        reqBody = json.loads(request.body)
+        user_object = User.objects.get(pk=id)
+        user_object.email = reqBody['email']
+        user_object.first_name = reqBody['first_name'].capitalize()
+        user_object.last_name = reqBody['last_name'].capitalize()
+        user_object.address = reqBody['address']
+        user_object.lat = reqBody['lat']
+        user_object.long = reqBody['long']
+        user_object.is_parent = reqBody['is_parent']
+        user_object.is_staff = reqBody['is_staff']
+        user_object.lat = reqBody['lat']
+        user_object.long = reqBody['long']
+        user_object.save()
+        #if user_object.is_parent is True:
+        #    for student_info in reqBody["students"]:
+        #        create_student(student_info, id)
+        data["message"] = "User information was successfully updated"
+        data["success"] = True
+        result = {"data" : data}
+        return Response(result)
+    except:
+        return Response(result, status = 404)
 
 @csrf_exempt
-@api_view(["POST"])
+@api_view(["PUT"])
 @permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user edit form
-def valid_edit_email(request):
+def valid_email_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     email = reqBody['email']
     try: 
         user = User.objects.get(email = email)
-        if user.id != id:
+        if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["validEmail"] = False
             result = {"data" : data}
