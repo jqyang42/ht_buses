@@ -14,66 +14,48 @@ const containerStyle = {
   width: '100%',
   height: '400px'
 };
-// const pinSVGHole = "M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z";
+const hidePOIs = [{
+  "featureType": "poi",
+  "elementType": "labels.icon",
+  "stylers": [
+    {
+      "visibility": "off"
+    }
+  ]
+},
+{
+  "featureType": "all",
+  "elementType": "labels.text",
+  "stylers": [
+    {
+      "visibility": "off"
+    }
+  ]
+},
+]
 
 class RouteMap extends Component {
   state = {
-    clickNumber: 0,
-    icon: MARKER_ICONS[0],
     locations: [],
     latLngs: [],
     center: {},
     markers: [],
-    // assignMode: this.props.assignMode
   }
 
-  componentDidMount() {
-    const config = {
-      headers: {
-        Authorization: `Token ${sessionStorage.getItem('token')}`
-      }
-    }
-    axios.get(API_DOMAIN + `routeplanner?id=4`, config)
-      .then(res => {
-        const locations = res.data;
-        this.setState({ locations });
-        Geocode.fromAddress(locations.address).then(
-          (response) => {
-            const lat = parseFloat(response.results[0].geometry.location.lat);
-            const lng = parseFloat(response.results[0].geometry.location.lng);
-            this.setState({
-              center: { lat: lat, lng: lng }
-            })
-          },
-          (error) => {
-            console.error(error);
-          }
-        )
-        locations.addresses.map((address, index) => {
-          Geocode.fromAddress(address.address).then(
-            (response) => {
-              const lat = parseFloat(response.results[0].geometry.location.lat);
-              const lng = parseFloat(response.results[0].geometry.location.lng);
-              this.setState(prevState => ({
-                markers: [...prevState.markers, {
-                  position: {
-                    lat: lat,
-                    lng: lng
-                  },
-                  id: address.parent_id
-                }]
-              }))
-            },
-            (error) => {
-              console.error(error);
-            }
-          );
-        })
+  students = [];
+
+  handleRouteIDChange = (routeID, studentIDs) => {
+    for (let i = 0; i < studentIDs.length; i++) {
+      this.students.push({
+        "id": studentIDs[i],
+        "route_id": routeID
       })
+    }
+    if(this.props.onChange) {
+      this.props.onChange(this.students);
+    }
   }
-  // componentDidUpdate(prevProps) {
-  //   this.setState({assignMode: this.props.assign_mode});
-  // }
+
   render() {
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
@@ -89,20 +71,25 @@ class RouteMap extends Component {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={{
-              lat: parseFloat(this.state.center.lat),
-              lng: parseFloat(this.state.center.lng)
+              lat: parseFloat(this.props.center.lat),
+              lng: parseFloat(this.props.center.lng)
             }}
-            zoom={15}
+            options={{
+              styles: hidePOIs
+            }}
+            zoom={13}
           >
-            <Marker position={this.state.center}  />
-            {this.state.markers.map((value, index) => {
+            <Marker position={this.props.center}  />
+            {this.props.markers?.map((value, index) => {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 
                 assignMode={this.props.assign_mode} 
-                routeID={1} 
-                active_route={3}
-                id={value.id} />
+                routeID={value.routeID} 
+                active_route={this.props.active_route}
+                id={value.id}
+                studentIDs={value.studentIDs}
+                onChange={this.handleRouteIDChange} />
             })}
           </GoogleMap>
         </LoadScript>
