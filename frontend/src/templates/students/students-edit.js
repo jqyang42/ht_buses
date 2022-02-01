@@ -96,7 +96,7 @@ class StudentsEdit extends Component {
             student_school_id: this.state.student_id,
             school_id: this.state.school_id,
             route_id: parseInt(this.state.route_id),
-            parent_id: this.state.parent_id
+            parent_id: parseInt(this.state.parent_id)
         }
 
         console.log(student)
