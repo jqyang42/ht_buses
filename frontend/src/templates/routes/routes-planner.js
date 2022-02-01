@@ -93,6 +93,7 @@ class BusRoutesPlanner extends Component {
         axios.get(API_DOMAIN + `routeplanner?id=` + this.props.params.id, config)
             .then(res => {
                 const locations = res.data;
+                console.log(locations)
                 this.setState({ 
                     locations: locations,
                     center: { 

@@ -63,6 +63,7 @@ class SchoolsCreate extends Component {
             lat: this.state.lat,
             long: this.state.lng,
         }
+        console.log(school)
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
