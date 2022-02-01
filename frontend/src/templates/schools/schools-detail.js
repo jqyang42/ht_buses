@@ -29,11 +29,6 @@ class SchoolsDetail extends Component {
         event.preventDefault();
 
         if (this.state.delete_school == this.state.school.name) {
-
-            const deleted_school = {
-                school_name: this.state.delete_school
-            }
-
             const config = {
                 headers: {
                     Authorization: `Token ${sessionStorage.getItem('token')}`
