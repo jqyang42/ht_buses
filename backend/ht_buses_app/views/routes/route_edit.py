@@ -22,5 +22,5 @@ def route_edit(request):
         result = {"data" : data}
         return Response(result)
     except:
-        return Response(result, status = 400)
+        return Response(data, status = 400)
         #raise ValidationError({"messsage": "invalid options were chosen"})
