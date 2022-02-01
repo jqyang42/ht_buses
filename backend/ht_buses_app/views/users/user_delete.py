@@ -20,4 +20,4 @@ def user_delete(request):
     except:
         data["message"] = "User could not be deleted"
         result = {"data" : data}
-        return Response(result) 
+        return Response(result, status = 400) 
