@@ -21,18 +21,15 @@ class UsersEdit extends Component {
         first_name: '',
         last_name: '',
         address: '',
-        is_staff: '',
+        is_staff: null,
         user: [],
-        added_students_list: [],
-        students: [],
-        schools_dropdown: [],
-        routes_dropdown: [],
         redirect: false,
         lat: 0,
         lng: 0,
         valid_address: true,
     }
 
+    edit_success = 0;
     validEmail = false;
 
     emailValidation = function() {
@@ -42,10 +39,6 @@ class UsersEdit extends Component {
     handleEmailChange = event => {
         this.setState( { email: event.target.value })
         this.validEmail = this.emailValidation() 
-    }
-
-    handlePasswordChange = event => {
-        this.setState({ password: event.target.value });
     }
 
     handleFirstNameChange = event => {
@@ -61,82 +54,8 @@ class UsersEdit extends Component {
     }
 
     handleIsStaffChange = event => {
-        this.setState({ is_staff: event.target.value });
-    }
-
-    handleStudentFirstNameChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.first_name = event.target.value
-        students[index] = student
-        this.setState({ students: students })
-    }
-
-    handleStudentLastNameChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.last_name = event.target.value
-        students[index] = student
-        this.setState({ students: students })
-    }
-
-    handleStudentIDChange = (event, student_num) => {
-        const index = this.state.added_students_list.indexOf(student_num)
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.student_school_id = event.target.value
-        students[index] = student
-        this.setState({ students: students })
-    }
-
-    handleSchoolChange = (event, student_num) => {
-        const school_id = event.target.value
-        const school_name = event.target[event.target.selectedIndex].id
-        
-        const index = this.state.added_students_list.indexOf(student_num)        
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.school_name = school_name
-        students[index] = student
-        this.setState({ students: students })
-
-        let config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
-            .then(res => {
-                let routes_data
-                if (res.data.routes == null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        value: route.id,
-                        display: route.name
-                    }
-                })
-                console.log(routes)
-                this.setState({ routes_dropdown: routes })
-            })
-        console.log(this.state.routes_dropdown)
-    }
-
-    handleRouteChange = (event, student_num) => {
-        const route_name = event.target[event.target.selectedIndex].id
-
-        const index = this.state.added_students_list.indexOf(student_num)        
-        let students = [...this.state.students]
-        let student = {...students[index]}
-        student.route_name = route_name
-        students[index] = student
-        this.setState({ students: students })
+        let is_staff = event.target.value === 'administrator'
+        this.setState({ is_staff }, console.log(this.state.is_staff));
     }
 
     handleAddressValidation = event => {
@@ -159,52 +78,6 @@ class UsersEdit extends Component {
         }
     }
 
-    handleAddStudent = () => {
-        let last_element_index
-        let new_list
-        if (this.state.added_students_list.length === 0) {
-            new_list =  [...this.state.added_students_list, 0]
-        } else {
-            last_element_index = this.state.added_students_list.length - 1
-            new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
-        }
-        // console.log(new_list)
-        this.setState({ added_students_list: new_list })    
-
-        const student_field = {
-            first_name: '',
-            last_name: '',
-            school_name: '',
-            route_name: null,   //TODO: replicate?
-            student_school_id: ''
-        }
-        this.setState({ students: [...this.state.students, student_field] })
-    }
-
-    handleDeleteStudent = (student_num) => {
-        console.log(student_num)
-
-        // console.log(this.state.added_students_list)        
-        const new_list = this.state.added_students_list
-        const index = new_list.indexOf(student_num)
-        // console.log(new_list)
-        // console.log(new_list[index])
-        new_list.splice(index, 1)
-        // console.log(new_list)
-        this.setState({ added_students_list: new_list })
-
-        console.log(this.state.students)
-        const new_students = this.state.students
-        console.log(new_students)
-        console.log(new_students[index])
-        new_students.splice(index, 1)
-        console.log(new_students)
-        this.setState({ students: new_students })
-
-        // console.log(this.state.added_students_list)
-        // console.log(dthis.state.students)
-    }
-
     handleSubmit = event => {
         if (!this.emailValidation() || !this.state.valid_address ) {
             console.log('address not valid')
@@ -219,10 +92,8 @@ class UsersEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            // address: '2625 Solano Avenue Hollywood, FL 33024',
-            is_staff: this.state.is_staff == 'General' ? false : true,
-            is_parent: this.state.students.length != 0,
-            students: this.state.students,
+            is_staff: this.state.is_staff,
+            is_parent: this.state.user.is_parent,
             lat: this.state.lat,
             long: this.state.lng,
         }
@@ -235,10 +106,15 @@ class UsersEdit extends Component {
             }
         }
 
-        axios.put(API_DOMAIN + `users/edit`, user, config)
+        axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'User and associated students updated successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1      // TODO ERROR
+                }
             })
         this.setState({ redirect: true });
     }
@@ -252,15 +128,16 @@ class UsersEdit extends Component {
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
-        this.setState({ user: user });
-        })
+        this.email = user.email
 
-        axios.get(API_DOMAIN + `schools`, config)
-            .then(res => {            
-            let schools = res.data.schools.map(school => {
-                return {value: school.id, display: school.name}
-            })
-            this.setState({ schools_dropdown: schools})
+        this.setState({ 
+            user: user,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            address: user.address,
+            is_staff: user.is_staff,
+            });
         })
     }
 
@@ -343,7 +220,7 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    defaultChecked={this.state.user.is_staff} ></input>
+                                                    defaultChecked={this.state.user.is_staff } ></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">

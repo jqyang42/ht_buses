@@ -24,6 +24,8 @@ class SchoolsEdit extends Component {
         valid_address: true,
     }
 
+    edit_success = 0
+
     handleSchoolNameChange = event => {
         this.setState({ school_name: event.target.value });
     }
@@ -32,7 +34,7 @@ class SchoolsEdit extends Component {
         this.setState({ school_address: event.target.value });
     }
 
-    handleAddressValidation = event => {
+        handleAddressValidation = event => {
         if (this.state.school_address != '') {
             console.log(this.state.school_address)
             Geocode.fromAddress(this.state.school_address).then(
@@ -74,8 +76,13 @@ class SchoolsEdit extends Component {
 
         axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school, config)  // TODO: use onclick id value
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'school information updated successfully') {
+                    this.edit_success = 1     // TODO ERROR: edit_success?
+                    console.log(this.edit_success)
+                } else {
+                    this.edit_success = -1      // TODO ERROR
+                }
             })
         this.setState({ redirect: true });
     }
@@ -88,8 +95,8 @@ class SchoolsEdit extends Component {
         }
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
-        const school = res.data;
-        this.setState({ school: school });
+            const school = res.data;
+            this.setState({ school: school, school_name: school.name, school_address: school.address });
         })
     }
     
