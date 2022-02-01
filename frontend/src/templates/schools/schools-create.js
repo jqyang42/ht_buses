@@ -20,7 +20,9 @@ class SchoolsCreate extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
-        edit_success: 0
+        edit_success: 0,
+        redirect_detail: false,
+        detail_url: ''
     }
 
     handleSchoolNameChange = event => {
@@ -75,12 +77,10 @@ class SchoolsCreate extends Component {
         axios.post(API_DOMAIN + `schools/create`, school, config)
             .then(res => {
                 const msg = res.data.data.message
-                if (msg == 'School created successfully') {
+                if (msg == 'school created successfully') {
                     this.setState({ edit_success: 1 })
-                    this.setState({ redirect: true });
-                    console.log(res)
-                    // TODO: Add redirect to school's DETAIL page
-                    // return <Navigate to={SCHOOLS_URL + "/" +this.state.school.id} /> 
+                    this.setState({ redirect_detail: true });
+                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.data.school.id })
                 } else {
                     this.setState({ edit_success: -1 })
                 }
@@ -97,6 +97,9 @@ class SchoolsCreate extends Component {
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={SCHOOLS_URL}/>;
+        }
+        if (this.state.redirect_detail) {
+            return <Navigate to={this.state.detail_url}/>;
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -160,7 +163,7 @@ class SchoolsCreate extends Component {
                                                         Create
                                                     </span>
                                                 </Link> */}
-                                                <button href={SCHOOLS_URL} type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
+                                                <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                             </div>
                                         </div>
                                         <div className="col mt-2"></div>
