@@ -3,8 +3,8 @@ from rest_framework.response import Response
 
 def create_student(student_info, id=None):
     data = {}
-    first_name = student_info['first_name']
-    last_name = student_info['last_name']
+    first_name = student_info['first_name'].capitalize()
+    last_name = student_info['last_name'].capitalize()
     student_school_id = student_info['student_school_id']
     try:
         user = User.objects.get(pk = id)

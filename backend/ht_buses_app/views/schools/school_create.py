@@ -12,7 +12,7 @@ from rest_framework.response import Response
 def school_create(request):
     data = {}
     reqBody = json.loads(request.body)
-    name = reqBody['school_name']
+    name = reqBody['school_name'].capitalize()
     address = reqBody['school_address']
     lat = reqBody['lat']
     long = reqBody['long']
