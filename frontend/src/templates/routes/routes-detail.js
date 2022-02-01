@@ -31,15 +31,12 @@ class BusRoutesDetail extends Component {
         console.log(this.state.show_all)
     }
 
-    delete_success = 0
-
     componentDidMount() {
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        console.log(this.props.params.id)
         
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
@@ -48,7 +45,7 @@ class BusRoutesDetail extends Component {
             
             let students
             if (route.parents !== null) {
-                students = route.parents.map(parent => {
+                students = route.parents?.map(parent => {
                     return parent.students.map(student => {
                         return {
                             student_school_id: student.student_school_id,
@@ -102,19 +99,21 @@ class BusRoutesDetail extends Component {
             }
         }
 
+        event.preventDefault()
+
         axios.delete(API_DOMAIN + `routes/delete?id=` + this.props.params.id, config)
             .then(res => {
                 console.log("hello")
                 const msg = res.data.data.message
                 console.log(res.data)
                 if (msg === 'route successfully deleted') {
-                    this.delete_success = 1
+                    this.setState({ delete_success: 1})
                     this.setState({redirect: true})
-                    console.log(this.delete_success)
+                    console.log(this.state.redirect)
                 } else {
-                    this.delete_success = -1
+                    this.setState({ delete_success: -1})
                 }
-            })
+            }) 
     }
 
     // uppercaseSchool = text.toUpperCase()
@@ -125,6 +124,10 @@ class BusRoutesDetail extends Component {
           }
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={ ROUTES_URL }/>;
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -167,7 +170,7 @@ class BusRoutesDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                                <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -176,6 +179,11 @@ class BusRoutesDetail extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                {(this.state.delete_success === -1) ? 
+                                    (<div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        Unable to delete route. Please correct all errors before deleting.
+                                    </div>) : ""
+                                }
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
                                         <div className="bg-gray rounded mb-4">
