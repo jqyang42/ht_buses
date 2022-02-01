@@ -19,6 +19,7 @@ class UsersDetail extends Component {
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
+        create_success: 0,
         delete_success: 0,
         show_all: false
     }
@@ -27,8 +28,6 @@ class UsersDetail extends Component {
         this.setState({show_all: !this.state.show_all})
         console.log(this.state.show_all)
     }
-
-    create_success = 0
 
     componentDidMount() {
         let config = {
@@ -46,6 +45,7 @@ class UsersDetail extends Component {
                 this.setState({ students: users.students })
             }
             this.setState({ users: users });
+            this.setState({ create_success: 0 });
             this.setState({ delete_success: 0});
             this.setState({ show_all: false});
             })
@@ -95,7 +95,7 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = event => {
-        event.preventDefault();
+        // event.preventDefault();
 
         const student = {
             students: [this.state.new_student]
@@ -113,10 +113,10 @@ class UsersDetail extends Component {
             .then(res => {
                 const msg = res.data.data.message
                 if (msg === 'Students created successfully') {
-                    this.create_success = 1     // TODO ERROR: edit_success?
-                    console.log(this.create_success)
+                    this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
+                    console.log(this.state.create_success)
                 } else {
-                    this.create_success = -1      // TODO ERROR
+                    this.setState({ create_success: -1 })      // TODO ERROR
                 }
             })
     }
@@ -247,7 +247,7 @@ class UsersDetail extends Component {
                                                                     <input type="name" className="form-control pb-2" id={"exampleInputLastName"}
                                                                         placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e)}></input>
                                                                 </div>
-                                                                <div className="form-group pb-3">
+                                                                <div className="form-group required pb-3">
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
@@ -275,7 +275,7 @@ class UsersDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-primary">Create</button>
+                                                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -318,6 +318,11 @@ class UsersDetail extends Component {
                                 {(this.state.delete_success === -1) ? 
                                     (<div class="alert alert-danger mt-2 mb-2" role="alert">
                                         Unable to delete user. Please correct all errors before deleting.
+                                    </div>) : ""
+                                }
+                                {(this.state.create_success === -1) ? 
+                                    (<div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        Unable to add student. Please correct all errors before deleting.
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
