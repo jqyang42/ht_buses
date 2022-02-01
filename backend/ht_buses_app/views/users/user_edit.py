@@ -8,7 +8,7 @@ from rest_framework.response import Response
 @csrf_exempt
 @api_view(["PUT"])
 @permission_classes([IsAdminUser]) 
-def user_edit(request):
+def user_edit(request): # TODO: make try and catch
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
@@ -29,25 +29,28 @@ def user_edit(request):
     result = {"data" : data}
     return Response(result)
 
-def create_student(student_info, id=None):
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user edit form
+def valid_edit_email(request):
     data = {}
-    first_name = student_info['first_name']
-    last_name = student_info['last_name']
-    student_school_id = student_info['student_school_id']
-    try:
-        user_id = User.objects.get(pk = id)
-        school_id = School.schoolsTable.get(id =student_info['school_id'])
-    except :
-        data["message"] = "Invalid options were chosen. Student information update was unsuccessful"
+    id = request.query_params["id"]
+    reqBody = json.loads(request.body)
+    email = reqBody['email']
+    try: 
+        user = User.objects.get(email = email)
+        if user.id != id:
+            data["message"] = "Please enter a different email. A user with this email already exists"
+            data["validEmail"] = False
+            result = {"data" : data}
+            return Response(result)
+        else: 
+            data["message"] = "The email entered is valid"
+            data["validEmail"] = True
+            result = {"data" : data}
+            return Response(result)
+    except: 
+        data["message"] = "The email entered is valid"
+        data["validEmail"] = True
         result = {"data" : data}
         return Response(result)
-    try:
-        route_id = Route.routeTables.get(pk = student_info['route_id'])
-        student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id=route_id)
-    except:
-        route_id = None
-        student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user_id, student_school_id=student_school_id, route_id = route_id)
-    data["message"] = "student created successfully"
-    data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user_id.id}
-    result = {"data" : data}
-    return Response(result) 
