@@ -12,6 +12,12 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 class BusRoutes extends Component {
     state = {
         routes : [],
+        show_all: false
+    }
+
+    handleShowAll = event => {
+        this.setState({show_all: !this.state.show_all})
+        console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -23,7 +29,8 @@ class BusRoutes extends Component {
         axios.get(API_DOMAIN + `routes`, config)
             .then(res => {
             const routes = res.data.routes
-            this.setState({ routes })
+            this.setState({ routes });
+            this.setState({ show_all: false });
         })
     }
 
@@ -44,7 +51,12 @@ class BusRoutes extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
-                                    <RoutesTable data={this.state.routes}/>
+                                    <RoutesTable data={this.state.routes} showAll={this.state.show_all}/>
+                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                        { !this.state.show_all ?
+                                            "Show All" : "Show Pages"
+                                        }
+                                    </button>
                                 </div>
                             </div>
                         </div>

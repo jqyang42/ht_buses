@@ -22,7 +22,13 @@ class BusRoutesDetail extends Component {
         assign_mode: false,
         active_route: 0,
         redirect: false,
-        delete_success: 0
+        delete_success: 0,
+        show_all: false
+    }
+
+    handleShowAll = event => {
+        this.setState({show_all: !this.state.show_all})
+        console.log(this.state.show_all)
     }
 
     delete_success = 0
@@ -56,9 +62,7 @@ class BusRoutesDetail extends Component {
             } else {
                 students = []
             }
-
-            console.log(students)
-                        
+            
             this.setState({ 
                 students: students,
                 route: route, 
@@ -69,6 +73,7 @@ class BusRoutesDetail extends Component {
                     lng: school.long 
                 }, });
             this.setState({ delete_success: 0 })
+            this.setState({ show_all: false });
             route.parents.map((parent, index) => {
                 const studentIDs = [];
                 parent.students.map((student, index) => {
@@ -188,7 +193,12 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
-                                        <RouteStudentsTable data={this.state.students} />
+                                        <RouteStudentsTable data={this.state.students} showAll={this.state.show_all}/>
+                                        <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                            { !this.state.show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
                                     </div>
                                 </div>
                             </div>

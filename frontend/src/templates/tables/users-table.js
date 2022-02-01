@@ -5,7 +5,7 @@ import TablePagination from "../components/pagination";
 import { SORT, SORT_ASC, SORT_DESC } from "../../constants";
 import { useNavigate } from 'react-router-dom';
     
-export function UsersTable({ data }) {
+export function UsersTable({ data, showAll }) {
     const navigate = useNavigate();
 
     // Global filter, search from any column
@@ -125,6 +125,7 @@ export function UsersTable({ data }) {
         setSortBy,
         setState,
         page,
+        rows,
         // Instead of using 'rows', we'll use page,
         // which has only the rows for the active page
 
@@ -215,14 +216,29 @@ export function UsersTable({ data }) {
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
+                showAll ?
+                rows.map((row, i) => {
+                    // Prepare the row for display
+                    prepareRow(row)
+                    return (
+                    <tr {...row.getRowProps()} onClick={() => navigate("/users/" + row.original.id)}>
+                        {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}>
+                                    {cell.render('Cell')}
+                                </td>
+                        })}
+                    </tr>
+                    )
+                }) : 
                 page.map((row, i) => {
                     // Prepare the row for display
                     prepareRow(row)
                     return (
-                    // Apply the row props
                     <tr {...row.getRowProps()} onClick={() => navigate("/users/" + row.original.id)}>
                         {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        return <td {...cell.getCellProps()}>
+                                    {cell.render('Cell')}
+                                </td>
                         })}
                     </tr>
                     )
@@ -230,16 +246,19 @@ export function UsersTable({ data }) {
                 </tbody>
             </table>
 
-            <TablePagination
-                pageIndex={pageIndex}
-                pageOptions={pageOptions}
-                previousPage={previousPage}
-                canPreviousPage={canPreviousPage}
-                nextPage={nextPage}
-                canNextPage={canNextPage}
-                pageSize={pageSize}
-                page={page}
-            />
+            {
+                showAll ? "" :
+                <TablePagination
+                    pageIndex={pageIndex}
+                    pageOptions={pageOptions}
+                    previousPage={previousPage}
+                    canPreviousPage={canPreviousPage}
+                    nextPage={nextPage}
+                    canNextPage={canNextPage}
+                    pageSize={pageSize}
+                    page={page}
+                />
+            }
         </>
     )
 }

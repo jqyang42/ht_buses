@@ -11,7 +11,13 @@ import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 
 class Users extends Component {
     state = {
-        users : []
+        users : [],
+        show_all: false
+    }
+
+    handleShowAll = event => {
+        this.setState({show_all: !this.state.show_all})
+        console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -24,6 +30,7 @@ class Users extends Component {
             .then(response => {
             const users = response.data.users;
             this.setState({ users });
+            this.setState({ show_all: false })
         })
     }
 
@@ -52,7 +59,12 @@ class Users extends Component {
                                             </span>
                                         </Link>
                                     </div>
-                                    <UsersTable data={this.state.users} />
+                                    <UsersTable data={this.state.users} showAll={this.state.show_all}/>
+                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                        { !this.state.show_all ?
+                                            "Show All" : "Show Pages"
+                                        }
+                                    </button>
                                 </div>
                             </div>
                         </div>
