@@ -13,8 +13,8 @@ def student_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    new_first_name = reqBody['first_name']
-    new_last_name = reqBody['last_name']
+    new_first_name = reqBody['first_name'].capitalize()
+    new_last_name = reqBody['last_name'].capitalize()
     student_school_id = reqBody['student_school_id']
     try:
         og_student_object = Student.studentsTable.get(pk = id) 
