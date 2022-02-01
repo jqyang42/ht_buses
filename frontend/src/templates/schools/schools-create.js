@@ -20,6 +20,9 @@ class SchoolsCreate extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
+        edit_success: 0,
+        redirect_detail: false,
+        detail_url: ''
     }
 
     handleSchoolNameChange = event => {
@@ -54,26 +57,34 @@ class SchoolsCreate extends Component {
         event.preventDefault();
 
         if (!this.state.valid_address ) {
-            console.log('address not valid')
+            this.setState({ edit_success: -1 })
             return 
         }
+
         const school = {
             school_name: this.state.school_name,
             school_address: this.state.school_address,
             lat: this.state.lat,
             long: this.state.lng,
         }
+
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
         axios.post(API_DOMAIN + `schools/create`, school, config)
             .then(res => {
-                console.log(res);
-                console.log(res.data);
+                const msg = res.data.data.message
+                if (msg == 'school created successfully') {
+                    this.setState({ edit_success: 1 })
+                    this.setState({ redirect_detail: true });
+                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.data.school.id })
+                } else {
+                    this.setState({ edit_success: -1 })
+                }
             })
-        this.setState({ redirect: true });
     }
 
     render() {
@@ -86,6 +97,9 @@ class SchoolsCreate extends Component {
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={SCHOOLS_URL}/>;
+        }
+        if (this.state.redirect_detail) {
+            return <Navigate to={this.state.detail_url}/>;
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -100,6 +114,13 @@ class SchoolsCreate extends Component {
                                     <div className="col">
                                         <h5>Create New School</h5>
                                     </div>
+                                </div>
+                                <div className="w-50 pe-2 me-2">
+                                    {(this.state.edit_success === -1) ? 
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            Unable to create new school. Please correct all errors before submitting.
+                                        </div>) : ""
+                                    }
                                 </div>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
@@ -142,7 +163,7 @@ class SchoolsCreate extends Component {
                                                         Create
                                                     </span>
                                                 </Link> */}
-                                                <button href={SCHOOLS_URL} type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
+                                                <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                             </div>
                                         </div>
                                         <div className="col mt-2"></div>

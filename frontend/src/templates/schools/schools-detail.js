@@ -7,7 +7,7 @@ import { SchoolRoutesTable } from "../tables/school-routes-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
@@ -16,7 +16,9 @@ class SchoolsDetail extends Component {
         school: [],
         students: [],
         routes: [],
-        delete_school: ''
+        delete_school: '',
+        delete_success: 0,
+        redirect: false
     }
 
     handleDeleteSchool = event => {
@@ -24,15 +26,37 @@ class SchoolsDetail extends Component {
     }
 
     handleDeleteSubmit = event => {
+        event.preventDefault();
+
         if (this.state.delete_school == this.state.school.name) {
-            event.preventDefault();
+
             const deleted_school = {
                 school_name: this.state.delete_school
             }
-            axios.post(API_DOMAIN + `schools/delete`, deleted_school)
+
+            const config = {
+                headers: {
+                    Authorization: `Token ${sessionStorage.getItem('token')}`
+                }
+            }
+
+            console.log(config)
+
+            axios.delete(API_DOMAIN + `schools/delete?id=` + this.props.params.id, config)
                 .then(res => {
                     console.log(res)
+                    const msg = res.data.data.message
+                    if (msg == 'school successfully deleted') {
+                        this.setState({ delete_success: 1 })
+                        this.setState({ redirect: true });
+                        console.log(this.state.redirect)
+                        return <Navigate to={ SCHOOLS_URL }/>;
+                    } else {
+                        this.setState({ delete_success: -1 })
+                    }
                 })
+        } else {
+            this.setState({ delete_success: -1 })
         }
     }
 
@@ -60,6 +84,7 @@ class SchoolsDetail extends Component {
 
                 console.log(school)
                 this.setState({ school: school });
+                this.setState({ delete_success: 0 })
             })
     }
 
@@ -69,6 +94,10 @@ class SchoolsDetail extends Component {
         }
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={SCHOOLS_URL}/>;
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -121,7 +150,7 @@ class SchoolsDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-danger">Delete</button>
+                                                                <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -130,6 +159,11 @@ class SchoolsDetail extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                {(this.state.delete_success === -1) ? 
+                                    (<div class="alert alert-danger mt-2 mb-2" role="alert">
+                                        Unable to delete school. Please correct all errors before deleting.
+                                    </div>) : ""
+                                }
                                 <div className="row mt-4">
                                     <div className="col me-4">
                                         <h7>STUDENTS</h7>
