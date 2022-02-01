@@ -18,7 +18,20 @@ class SchoolsDetail extends Component {
         routes: [],
         delete_school: '',
         delete_success: 0,
-        redirect: false
+        redirect: false,
+        students_show_all: false,
+        routes_show_all: false
+    }
+
+    handleStudentsShowAll = event => {
+        this.setState({students_show_all: !this.state.students_show_all})
+        console.log(this.state.students_show_all)
+    }
+
+
+    handleRoutesShowAll = event => {
+        this.setState({routes_show_all: !this.state.routes_show_all})
+        console.log(this.state.routes_show_all)
     }
 
     handleDeleteSchool = event => {
@@ -79,7 +92,8 @@ class SchoolsDetail extends Component {
 
                 console.log(school)
                 this.setState({ school: school });
-                this.setState({ delete_success: 0 })
+                this.setState({ delete_success: 0 });
+                this.setState({ students_show_all: false, routes_show_all: false });
             })
     }
 
@@ -162,32 +176,21 @@ class SchoolsDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col me-4">
                                         <h7>STUDENTS</h7>
-                                        <SchoolStudentsTable data={this.state.students}/>
+                                        <SchoolStudentsTable data={this.state.students} showAll={this.state.students_show_all}/>
+                                        <button className="btn btn-secondary align-self-center" onClick={this.handleStudentsShowAll}>
+                                            { !this.state.students_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        <SchoolRoutesTable data={this.state.routes}/>
-                                        {/* <table className="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Name</th>
-                                                    <th>Student Count</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                    <td>Example</td>
-                                                </tr>
-                                            </tbody>
-                                        </table> */}
+                                        <SchoolRoutesTable data={this.state.routes} showAll={this.state.routes_show_all}/>
+                                        <button className="btn btn-secondary align-self-center" onClick={this.handleRoutesShowAll}>
+                                            { !this.state.routes_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
                                     </div>
                                 </div>
                             </div>

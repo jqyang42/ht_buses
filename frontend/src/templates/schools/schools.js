@@ -13,7 +13,13 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 class Schools extends Component {
 
     state = {
-        schools : []
+        schools : [],
+        show_all: false
+    }
+
+    handleShowAll = event => {
+        this.setState({show_all: !this.state.show_all})
+        console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -26,6 +32,7 @@ class Schools extends Component {
             .then(res => {
             const schools = res.data.schools;
             this.setState({ schools });
+            this.setState({ show_all: false });
         })
     }
     
@@ -54,7 +61,12 @@ class Schools extends Component {
                                             </span>
                                         </Link>
                                     </div>
-                                    <SchoolsTable data={this.state.schools} />
+                                    <SchoolsTable data={this.state.schools} showAll={this.state.show_all}/>
+                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                        { !this.state.show_all ?
+                                            "Show All" : "Show Pages"
+                                        }
+                                    </button>
                                 </div>
                             </div>
                         </div>
