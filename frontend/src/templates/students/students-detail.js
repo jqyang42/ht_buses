@@ -52,6 +52,7 @@ class StudentsDetail extends Component {
                     this.setState({ redirect: true });
                     console.log(this.state.redirect)
                     // return <Navigate to={ STUDENTS_URL }/>;
+                    // TODO: NAVIGATES BUT STILL HAS THAT DARK LAYER
                 } else {
                     console.log(this.state.redirect)
                     this.setState({ delete_success: -1 });
@@ -65,6 +66,10 @@ class StudentsDetail extends Component {
         }
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        const { redirect } = this.state;
+        if (redirect) {
+            return <Navigate to={ STUDENTS_URL }/>;
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
