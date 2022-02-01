@@ -26,5 +26,5 @@ def student_route_edit(request):
         result = {"data": data}
         return Response(result)
     except:
-        return Response(result, status = 404)
+        return Response(data, status = 404)
         #raise ValidationError({"message" : "student was not added/removed to route"})
