@@ -16,6 +16,7 @@ def add_new_students(request):
         for student in reqBody["students"]:
             create_student(student, user_id)
         data["message"] = "Students created successfully"
+        print(data)
         result = {"data" : data}
         return Response(result)
     except:
