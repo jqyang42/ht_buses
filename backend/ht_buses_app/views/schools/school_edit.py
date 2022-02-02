@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
-from django.core.exceptions import ValidationError
 
 # Schools PUT API
 @csrf_exempt
@@ -27,4 +26,4 @@ def school_edit(request):
     except:
         data["message"] = "School could not be updated "
         result = {"data" : data}
-        return Response(result)
+        return Response(result, status = 400)
