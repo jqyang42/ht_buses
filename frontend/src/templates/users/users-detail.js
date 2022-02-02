@@ -349,7 +349,7 @@ class UsersDetail extends Component {
                                             Address
                                         </p>
                                     </div>
-                                    <div className="col-2 me-4">
+                                    <div className="col-5 me-4">
                                         <p>
                                             {this.state.users.email}
                                         </p>
