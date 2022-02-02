@@ -7,7 +7,7 @@ import Geocode from "react-geocode";
 import { Navigate } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
-import Error404 from "../error404";
+import ErrorPage from "../error-page";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
@@ -30,7 +30,8 @@ class BusRoutesPlanner extends Component {
             markers: [],
             assign_mode: false,
             active_route: 0,
-            error404: false
+            error_status: false,
+            error_code: 200
         }
     }
 
@@ -93,9 +94,10 @@ class BusRoutesPlanner extends Component {
                 }                                
             }).catch (function(error) {
                 console.log(error.response)
-                if (error.response.status === 404) {
+                if (error.response.status !== 200) {
                     console.log(error.response.data)
-                    self.setState({ error404: true });
+                    self.setState({ error_status: true });
+                    self.setState({ error_code: error.response.status });
                 }
             } 
             )        
@@ -139,7 +141,7 @@ class BusRoutesPlanner extends Component {
                 console.log(error.response)
                 if (error.response.status === 404) {
                     console.log(error.response.data)
-                    self.setState({ error404: true });
+                    self.setState({ error_status: true });
                 }
             } 
             );
@@ -228,8 +230,8 @@ class BusRoutesPlanner extends Component {
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        if (this.state.error404) {
-            return <Error404 />
+        if (this.state.error_status) {
+            return <ErrorPage />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

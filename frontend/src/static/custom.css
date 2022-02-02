@@ -173,9 +173,17 @@ td.unassigned {
     color: #dc3545;
 }
 
-.gigantic {
+h1 {
     font-size: 20em;
+    line-height: 1.2em;
 }
+
+h2 {
+    font-size: 4em;
+    line-height: 2em;
+    font-weight: 600;
+}
+
 
 .gray {
     color: #F3F3F3;

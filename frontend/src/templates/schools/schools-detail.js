@@ -6,7 +6,7 @@ import { SchoolStudentsTable } from "../tables/school-students-table";
 import { SchoolRoutesTable } from "../tables/school-routes-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
-import Error404 from "../error404";
+import ErrorPage from "../error-page";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
@@ -22,7 +22,8 @@ class SchoolsDetail extends Component {
         redirect: false,
         students_show_all: false,
         routes_show_all: false,
-        error404: false
+        error_status: false,
+        error_code: 200
     }
 
     handleStudentsShowAll = event => {
@@ -102,9 +103,10 @@ class SchoolsDetail extends Component {
             })
             .catch (function(error) {
                 console.log(error.response)
-                if (error.response.status === 404) {
+                if (error.response.status !== 200) {
                     console.log(error.response.data)
-                    self.setState({ error404: true });
+                    self.setState({ error_status: true });
+                    self.setState({ error_code: error.response.status });
                 }
             } 
             )
@@ -121,8 +123,8 @@ class SchoolsDetail extends Component {
         if (redirect) {
             return <Navigate to={SCHOOLS_URL}/>;
         }
-        if (this.state.error404) {
-            return <Error404 />
+        if (this.state.error_status) {
+            return <ErrorPage />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
