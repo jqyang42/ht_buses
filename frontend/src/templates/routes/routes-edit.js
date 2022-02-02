@@ -5,6 +5,7 @@ import { Navigate } from "react-router";
 import { useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import Error404 from "../error404";
 
 import { LOGIN_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
@@ -18,7 +19,8 @@ class BusRoutesEdit extends Component {
         school_id: '',
         route: [],
         redirect: false,
-        edit_success: 0
+        edit_success: 0,
+        error404: false
     }
 
     handleRouteNameChange = event => {
@@ -64,6 +66,8 @@ class BusRoutesEdit extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        var self = this
         
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
@@ -75,7 +79,14 @@ class BusRoutesEdit extends Component {
                 school_id: route.school.id,
                 edit_success: 0
             });
-        })
+        }).catch (function(error) {
+            console.log(error.response)
+            if (error.response.status === 404) {
+                console.log(error.response.data)
+                self.setState({ error404: true });
+            }
+        } 
+        )
     }
 
     render() {
@@ -90,6 +101,10 @@ class BusRoutesEdit extends Component {
         if (redirect) {
             return <Navigate to={redirect_url}/>;
         }
+        if (this.state.error404) {
+            return <Error404 />
+        }
+        
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">

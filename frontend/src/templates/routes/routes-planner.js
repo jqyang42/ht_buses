@@ -7,6 +7,7 @@ import Geocode from "react-geocode";
 import { Navigate } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import Error404 from "../error404";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { API_DOMAIN } from "../../constants";
@@ -28,7 +29,8 @@ class BusRoutesPlanner extends Component {
             center: {},
             markers: [],
             assign_mode: false,
-            active_route: 0
+            active_route: 0,
+            error404: false
         }
     }
 
@@ -65,6 +67,9 @@ class BusRoutesPlanner extends Component {
     }
 
     handleTableGet = config => {
+
+        var self = this
+        
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
                 const school = res.data;
@@ -86,9 +91,19 @@ class BusRoutesPlanner extends Component {
                         this.setState({ route_dropdown: routes })
                     })
                 }                                
-            })        
+            }).catch (function(error) {
+                console.log(error.response)
+                if (error.response.status === 404) {
+                    console.log(error.response.data)
+                    self.setState({ error404: true });
+                }
+            } 
+            )        
     }
     handleLocationsGet = config => {
+
+        var self = this
+
         axios.get(API_DOMAIN + `routeplanner?id=` + this.props.params.id, config)
             .then(res => {
                 const locations = res.data;
@@ -120,7 +135,14 @@ class BusRoutesPlanner extends Component {
                         }]
                     }));
                 });
-            });
+            }).catch (function(error) {
+                console.log(error.response)
+                if (error.response.status === 404) {
+                    console.log(error.response.data)
+                    self.setState({ error404: true });
+                }
+            } 
+            );
     }
 
     handleAssignMode = event => {
@@ -206,6 +228,9 @@ class BusRoutesPlanner extends Component {
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
+        if (this.state.error404) {
+            return <Error404 />
+        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -270,8 +295,8 @@ class BusRoutesPlanner extends Component {
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                    <option selected value={0}>Select a Route</option>
-                                                    <option selected value={0}>Unassign Student</option>
+                                                    <option selected value={0}>Select a route to assign</option>
+                                                    <option selected value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
@@ -280,7 +305,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* Assign button */}
                                             <div className="col-auto">
-                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Assign</button>
+                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Switch to Assign Mode</button>
                                             </div>
                                         </div>
                                         :
@@ -293,8 +318,8 @@ class BusRoutesPlanner extends Component {
                                             {/* TODO: Ensure that this dropdown still reads the same content as the dropdown in the assign mode OFF div  */}
                                             <div className="col justify-content-end align-self-center">
                                                 <select className="form-select float-end me-1" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} disabled>
-                                                    <option selected value={0}>Select a Route</option>
-                                                    <option selected value={0}>Unassign Student</option>
+                                                    <option selected value={0}>No Route</option>
+                                                    <option selected value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
