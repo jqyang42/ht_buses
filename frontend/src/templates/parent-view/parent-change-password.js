@@ -64,7 +64,7 @@ class ParentPassword extends Component {
             }
         }
     
-        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
+        axios.put(API_DOMAIN + `users/password-edit?id=` + sessionStorage.getItem('user_id'), password, config) 
             .then(res => {
                 const msg = res.data.data.message
                 if (msg === 'User password updated successfully') {
