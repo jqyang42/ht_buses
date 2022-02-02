@@ -33,10 +33,6 @@ class ParentSidebarMenu extends Component {
         })
     }
 
-    changePassword = event => {
-        this.setState({redirect: true})
-    }
-
     componentDidMount() {
         const config = {
         headers: {
@@ -45,9 +41,9 @@ class ParentSidebarMenu extends Component {
     }
 
     render() {
-        if (this.state.redirect) {
-            return <Navigate to={PARENT_PASSWORD_URL}/>;
-        }
+        // if (this.state.redirect) {
+        //     return <Navigate to={PARENT_PASSWORD_URL}/>;
+        // }
 
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
@@ -65,14 +61,11 @@ class ParentSidebarMenu extends Component {
                         </li>
                     </ul>
                     <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
-                            {/* <Link to="/change-password" className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
+                            <Link to="/change-password" className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
                                 <span className="btn-text">
                                     Change Password
                                 </span>
-                            </Link> */}
-                            <button className="btn btn-primary w-75 mb-2 mx-auto" role="button" onClick={this.changePassword}>
-                                Change Password
-                            </button> 
+                            </Link>
                             <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                 Log Out
                             </button> 
