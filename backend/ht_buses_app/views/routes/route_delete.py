@@ -18,5 +18,5 @@ def route_delete(request):
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
-        return Response(result, status = 400)
+        return Response(data, status = 400)
         #raise ValidationError({"messsage": "Route could not be deleted"})
