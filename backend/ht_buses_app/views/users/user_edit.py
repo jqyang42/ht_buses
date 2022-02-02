@@ -33,7 +33,7 @@ def user_edit(request): # TODO: make try and catch
         result = {"data" : data}
         return Response(result)
     except:
-        return Response(result, status = 404)
+        return Response(data, status = 404)
 
 @csrf_exempt
 @api_view(["PUT"])
