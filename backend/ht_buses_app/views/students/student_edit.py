@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
+import re
+from ..resources import capitalize_reg
 
 # Students PUT API
 @csrf_exempt
@@ -13,8 +15,8 @@ def student_edit(request):
     data = {}
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
-    new_first_name = reqBody['first_name'].capitalize()
-    new_last_name = reqBody['last_name'].capitalize()
+    new_first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['first_name'])
+    new_last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['last_name'])
     student_school_id = reqBody['student_school_id']
     try:
         og_student_object = Student.studentsTable.get(pk = id) 

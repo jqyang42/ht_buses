@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
+import re
+from ..resources import capitalize_reg
 
 # Schools PUT API
 @csrf_exempt
@@ -15,7 +17,7 @@ def school_edit(request):
     reqBody = json.loads(request.body)
     try:
         school_object =  School.schoolsTable.get(pk = id)
-        school_object.name = reqBody['school_name'].capitalize()
+        school_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['school_name'])
         school_object.address = reqBody['school_address']
         school_object.lat = reqBody['lat']
         school_object.long = reqBody['long']

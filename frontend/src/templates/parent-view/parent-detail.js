@@ -63,8 +63,11 @@ class ParentDetail extends Component {
                                             <p className="gray-600">
                                                 Route
                                             </p>
+                                            <p className="gray-600">
+                                                Route Description
+                                            </p>
                                         </div>
-                                        <div className="col-2 me-4">
+                                        <div className="col-5 me-4">
                                             <p>
                                                 {this.state.student.school_name}
                                             </p>

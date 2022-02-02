@@ -43,6 +43,7 @@ class StudentsEdit extends Component {
 
     handleStudentIDChange = event => {
         this.setState({ student_id: event.target.value });
+        this.setState({ edit_success: 1 })
     }
 
     handleSchoolChange = event => {
@@ -53,7 +54,7 @@ class StudentsEdit extends Component {
             Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        
+        this.setState({ route_id : null})
         console.log(this.state.schools_dropdown)
         this.setState({ school_id: school_id }, () => {
             console.log(this.state.school_id)
@@ -92,10 +93,24 @@ class StudentsEdit extends Component {
         console.log(this.state.parent_id)
     }
     
+    studentIDValidation = () => {
+        const isNumber = !isNaN(this.state.student_id)
+        if (!isNumber ) {
+            return false
+        }
+        else if(isNumber && Math.sign(this.state.student_id) === -1)   {
+            return false
+        }
+        return true 
+    }
+
     handleSubmit = event => {
         event.preventDefault();
         console.log(this.state.route_id)
-
+        if(!this.studentIDValidation()) {
+            this.setState({ edit_success: -1 })
+            return
+        }
         const student = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
@@ -270,7 +285,13 @@ class StudentsEdit extends Component {
                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
                                                 defaultValue={this.state.student.student_school_id} placeholder="Enter student ID" required
                                                 onChange={this.handleStudentIDChange}></input>
+                                                 {(!this.studentIDValidation()) ? 
+                                                      (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                           The Student ID value is invalid. Please edit and try again.
+                                                      </div>) : ""
+                                                }
                                             </div>
+                        
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School"

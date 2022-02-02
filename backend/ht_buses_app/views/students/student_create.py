@@ -1,10 +1,12 @@
 from ...models import Student, School, User, Route
 from rest_framework.response import Response
+import re
+from ..resources import capitalize_reg
 
 def create_student(student_info, id=None):
     data = {}
-    first_name = student_info['first_name'].capitalize()
-    last_name = student_info['last_name'].capitalize()
+    first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info['first_name'])
+    last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info['last_name'])
     student_school_id = student_info['student_school_id']
     try:
         user = User.objects.get(pk = id)
