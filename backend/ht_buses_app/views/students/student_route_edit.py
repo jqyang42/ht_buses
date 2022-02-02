@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
+from ...serializers import StudentSerializer
 
 # Student Route PUT API
 @csrf_exempt
@@ -23,6 +24,8 @@ def student_route_edit(request):
                  student_obj.route_id = Route.routeTables.get(pk=student["route_id"])
             student_obj.save()
         data["message"] = "Student's route information was successfully updated"
+        student_serializer = StudentSerializer(student_obj, many=False)
+        data["student"] = student_serializer.data
         result = {"data": data}
         return Response(result)
     except:
