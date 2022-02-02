@@ -16,12 +16,14 @@ def user_login(request):
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
+    print("here")
     try:
         user = User.objects.get(email=email)
     except BaseException as e:
         return Response({"message": "An account with this email does not exist.",  "token":'', "valid_login": False})
     if not check_password(password, user.password):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
+    print("aslo here")
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
@@ -30,4 +32,5 @@ def user_login(request):
     info["first_name"] = user.first_name
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
+    print("made it")
     return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
