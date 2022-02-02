@@ -275,11 +275,28 @@ class UsersCreate extends Component {
         this.setState({});
     };
 
+
+    studentIDValidation = () => {
+        console.log(this.state.students.length)
+        for(var i = 0; i< this.state.students.length; i++) {
+            const id = this.state.students[i].student_school_id
+            const isNumber = !isNaN(id)
+            if (!isNumber ) {
+                return false
+            }
+            else if(isNumber && Math.sign(id) === -1)   {
+                return false
+            }
+        }
+        return true 
+    }
+
+
     handleSubmit = event => {
         
         event.preventDefault();
 
-        if (!this.emailValidation() || !this.validPassword || !this.state.valid_address) {
+        if (!this.emailValidation() || !this.validPassword || !this.state.valid_address || !this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return 
         }
@@ -486,10 +503,10 @@ class UsersCreate extends Component {
                                                                                 <input type="name" className="form-control pb-2" id={"exampleInputLastName" + count}
                                                                                     placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e, count)}></input>
                                                                             </div>
-                                                                            <div className="form-group pb-3">
+                                                                            <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputID" + count} className="control-label pb-2">Student ID</label>
                                                                                 <input type="id" className="form-control pb-2" id={"exampleInputID" + count} 
-                                                                                placeholder="Enter student ID" onChange={(e) => this.handleStudentIDChange(e, count)}></input>
+                                                                                placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
@@ -520,6 +537,11 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
+                                                    {(!this.studentIDValidation()) ? 
+                                                      (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                          The Student ID value for at least one student is invalid. Please edit and try again.
+                                                      </div>) : ""
+                                                      }
                                                 </div>
                                             </div>
                                         </div>
