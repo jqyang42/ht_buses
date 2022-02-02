@@ -43,6 +43,7 @@ class UsersCreate extends Component {
     create_success = 0
     validEmail = true;
     email = '';
+    validStudentIDs  = true
 
     emailValidation = function() {
         return (emailRegex.test(this.email))
@@ -274,11 +275,28 @@ class UsersCreate extends Component {
         this.setState({});
     };
 
+    
+    studentIDValidation = () => {
+        for(var i = 0; i< this.state.students.length; i++) {
+            const id = this.state.students[i].student_school_id
+            const isNumber = !isNaN(id)
+            if (!isNumber ) {
+                this.validStudentIDs  = true
+                return false
+            }
+            else if(isNumber && Math.sign(id) === -1)   {
+                this.validStudentIDs  = true
+                return false
+            }
+        }
+        this.validStudentIDs  = true
+        return true 
+    }
+
     handleSubmit = event => {
-        
         event.preventDefault();
 
-        if (!this.emailValidation() || !this.validPassword || !this.state.valid_address) {
+        if (!this.emailValidation() || !this.validPassword || !this.state.valid_address || !this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return 
         }
@@ -520,6 +538,11 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
+                                                    {(!this.studentIDValidation()) ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        The Student ID value for at least one student is invalid. Please edit and try again.
+                                                    </div>) : ""
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

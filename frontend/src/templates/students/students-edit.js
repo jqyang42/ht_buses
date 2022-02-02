@@ -31,6 +31,7 @@ class StudentsEdit extends Component {
     }
 
     edit_success = 0
+    validStudentIDs = true
 
     handleFirstNameChange = event => {
         this.setState({ first_name: event.target.value });
@@ -88,10 +89,28 @@ class StudentsEdit extends Component {
         this.setState({ parent_id: parent_id })
         console.log(this.state.parent_id)
     }
+
+    studentIDValidation = () => {
+        const isNumber = !isNaN(this.state.student_id)
+        if (!isNumber ) {
+            this.validStudentIDs = false
+            return false
+        }
+        else if(isNumber && Math.sign(this.state.student_school_id) === -1)   {
+            this.validStudentIDs = false
+            return false
+        }
+        this.validStudentIDs = true
+        return true 
+    }
     
     handleSubmit = event => {
         event.preventDefault();
         console.log(this.state.route_id)
+
+        if(!this.validStudentIDs())  {
+            return 
+        }
 
         const student = {
             first_name: this.state.first_name,
@@ -299,6 +318,11 @@ class StudentsEdit extends Component {
                                                     })}
                                                 </select>
                                             </div>
+                                            {(!this.studentIDValidation()) ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                         The Student ID value is invalid. Please edit and try again.
+                                                    </div>) : ""
+                                                }
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/students/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
