@@ -73,8 +73,11 @@ class BusRoutesDetail extends Component {
             this.setState({ show_all: false });
             route.parents.map((parent, index) => {
                 const studentIDs = [];
+                const studentNames = [];
                 parent.students.map((student, index) => {
                     studentIDs.push(student.id);
+                    const fullName = student.first_name + ' ' + student.last_name;
+                    studentNames.push(fullName);
                 });
                 this.setState(prevState => ({
                     markers: [...prevState.markers, {
@@ -84,6 +87,7 @@ class BusRoutesDetail extends Component {
                         },
                         id: parent.parent_id,
                         studentIDs: studentIDs,
+                        studentNames: studentNames,
                         routeID: this.props.params.id //TODO: change markers to create per student
                     }]
                 }));
