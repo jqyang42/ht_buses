@@ -36,7 +36,7 @@ import BusRoutesPlanner from "./templates/routes/routes-planner";
 import BusRoutesEdit from "./templates/routes/routes-edit";
 // import BusRoutesDelete from "./templates/routes-delete";
 
-import Error404 from './templates/error404';
+import ErrorPage from './templates/error-page';
 
 import { INDEX_URL } from "./constants";
 import { LOGIN_URL } from "./constants";
@@ -91,7 +91,7 @@ class App extends Component {
           <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
           <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
 
-          <Route component={Error404} />
+          <Route component={ErrorPage} />
         </Routes>
       </div>
     );

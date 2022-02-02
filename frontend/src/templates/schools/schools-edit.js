@@ -6,7 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
-import Error404 from "../error404";
+import ErrorPage from "../error-page";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -24,7 +24,8 @@ class SchoolsEdit extends Component {
         lng: 0,
         valid_address: true,
         edit_success: 0,
-        error404: false
+        error_status: false,
+        error_code: 200
     }
 
     handleSchoolNameChange = event => {
@@ -104,9 +105,10 @@ class SchoolsEdit extends Component {
             this.setState({ edit_success: 0 })
         }).catch (function(error) {
             console.log(error.response)
-            if (error.response.status === 404) {
+            if (error.response.status !== 200) {
                 console.log(error.response.data)
-                self.setState({ error404: true });
+                self.setState({ error_status: true });
+                self.setState({ error_code: error.response.status });
             }
         } 
         )
@@ -124,8 +126,8 @@ class SchoolsEdit extends Component {
         if (redirect) {
             return <Navigate to={redirect_url}/>;  // TODO: use onclick id values
         }
-        if (this.state.error404) {
-            return <Error404 />
+        if (this.state.error_status) {
+            return <ErrorPage />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
