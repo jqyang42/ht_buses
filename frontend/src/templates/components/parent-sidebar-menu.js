@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { HT_LOGO } from "../../constants";
+import { HT_LOGO, PARENT_PASSWORD_URL } from "../../constants";
 import { API_DOMAIN } from '../../constants';
 import axios from "axios";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { Link, Navigate } from 'react-router-dom';
 
 class ParentSidebarMenu extends Component {
     state = {
         activeTab: "",
-        label: ""
+        label: "",
+        redirect: false
     }
 
     handleLogout = event => {
@@ -39,6 +41,10 @@ class ParentSidebarMenu extends Component {
     }
 
     render() {
+        // if (this.state.redirect) {
+        //     return <Navigate to={PARENT_PASSWORD_URL}/>;
+        // }
+
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
                 <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
@@ -54,10 +60,16 @@ class ParentSidebarMenu extends Component {
                             </a>
                         </li>
                     </ul>
-                    <div className="w-100 px-auto pb-1 d-flex justify-content-around">
-                        <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
-                            Log Out
-                        </button> 
+                    <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
+                            <Link to="/change-password" className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
+                                <span className="btn-text">
+                                    Change Password
+                                </span>
+                            </Link>
+                            <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
+                                Log Out
+                            </button> 
+                        
                     </div>
                 </div>
             </div>

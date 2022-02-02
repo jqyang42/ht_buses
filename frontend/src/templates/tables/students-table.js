@@ -65,8 +65,8 @@ export function StudentsTable( {data, showAll} ) {
     const ourGlobalFilterFunction = useCallback(
         (rows, ids, query) => {
             return rows.filter((row) => 
-                row.values["id"].includes(query) ||
-                row.values["name"].includes(query)
+                row.values["student_school_id"].toString().includes(query.toString()) ||
+                row.values["name"].toLowerCase().includes(query.toLowerCase())
             );
         },
         [],
@@ -77,7 +77,9 @@ export function StudentsTable( {data, showAll} ) {
             {
                 Header: '#',
                 accessor: d => `${d.id}`, // accessor is the "key" in the data
-                id: 'id'
+                id: 'id',
+                disableFilter: true,
+                disableSortBy: true
             },
             {
                 Header: 'Name',
@@ -228,9 +230,7 @@ export function StudentsTable( {data, showAll} ) {
                     return (
                     <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
                         {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>
-                                    {cell.render('Cell')}
-                                </td>
+                        return <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )
@@ -241,9 +241,7 @@ export function StudentsTable( {data, showAll} ) {
                     return (
                     <tr {...row.getRowProps()} onClick={() => navigate("/students/" + row.original.id)}>
                         {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}>
-                                    {cell.render('Cell')}
-                                </td>
+                        return <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )

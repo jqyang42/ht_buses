@@ -15,7 +15,7 @@ export const MARKER_COLORS = colors;
 export const MARKER_ICONS = marker_icons;
 
 export const SITE_NAME = "Hypothetical Transportation Bus Management System";
-export const API_DOMAIN = "http://localhost:8000/"
+export const API_DOMAIN = "http://localhost:8000/api/"
 
 // Link URLs
 export const INDEX_URL = "/";
@@ -43,3 +43,4 @@ export const ROUTES_EDIT_URL = "/routes/:id/edit";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";
+export const PARENT_PASSWORD_URL = "/change-password";

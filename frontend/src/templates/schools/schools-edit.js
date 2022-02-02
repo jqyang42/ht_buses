@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
+import Error404 from "../error404";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -22,7 +23,8 @@ class SchoolsEdit extends Component {
         lat: 0,
         lng: 0,
         valid_address: true,
-        edit_success: 0
+        edit_success: 0,
+        error404: false
     }
 
     handleSchoolNameChange = event => {
@@ -92,12 +94,22 @@ class SchoolsEdit extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        var self = this
+
         axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
             const school = res.data;
             this.setState({ school: school, school_name: school.name, school_address: school.address });
             this.setState({ edit_success: 0 })
-        })
+        }).catch (function(error) {
+            console.log(error.response)
+            if (error.response.status === 404) {
+                console.log(error.response.data)
+                self.setState({ error404: true });
+            }
+        } 
+        )
     }
     
     render() {
@@ -111,6 +123,9 @@ class SchoolsEdit extends Component {
         const redirect_url = SCHOOLS_URL + '/' + this.props.params.id;
         if (redirect) {
             return <Navigate to={redirect_url}/>;  // TODO: use onclick id values
+        }
+        if (this.state.error404) {
+            return <Error404 />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

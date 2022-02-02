@@ -65,8 +65,8 @@ export function UsersTable({ data, showAll }) {
     const ourGlobalFilterFunction = useCallback(
         (rows, ids, query) => {
             return rows.filter((row) => 
-                row.values["name"].includes(query) ||
-                row.values["email"].includes(query)
+                row.values["name"].toLowerCase().includes(query.toLowerCase()) ||
+                row.values["email"].toLowerCase().includes(query.toLowerCase())
             );
         },
         [],
@@ -75,7 +75,7 @@ export function UsersTable({ data, showAll }) {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'ID',
+                Header: '#',
                 accessor: 'id', // accessor is the "key" in the data
                 disableSortBy: true,
                 disableFilter: true
