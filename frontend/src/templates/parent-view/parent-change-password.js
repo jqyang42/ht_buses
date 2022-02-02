@@ -95,12 +95,9 @@ class ParentPassword extends Component {
     }
 
     render() {
-        // if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
-        //     return <Navigate to={LOGIN_URL} />
-        // }
-        // else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
-        //     return <Navigate to={PARENT_DASHBOARD_URL} />
-        // }
+        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+            return <Navigate to={LOGIN_URL} />
+        }
         // const { redirect } = this.state;
         // const redirect_url = USERS_URL + '/' + this.props.params.id;
         // if (redirect) {
