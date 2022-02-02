@@ -106,11 +106,10 @@ class StudentsEdit extends Component {
         event.preventDefault();
         console.log(this.state.route_id)
 
-        if(!this.validStudentIDs())  {  
+        if(!this.studentIDValidation())  {  
             this.setState({ edit_success: -1 })
             return 
         }
-
 
         const student = {
             first_name: this.state.first_name,
