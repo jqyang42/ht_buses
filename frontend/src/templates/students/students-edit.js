@@ -44,6 +44,7 @@ class StudentsEdit extends Component {
 
     handleStudentIDChange = event => {
         this.setState({ student_id: event.target.value });
+        this.setState({ edit_success: 1 })
     }
 
     handleSchoolChange = event => {
@@ -109,7 +110,6 @@ class StudentsEdit extends Component {
             this.setState({ edit_success: -1 })
             return
         }
-
         const student = {
             first_name: this.state.first_name,
             last_name: this.state.last_name,

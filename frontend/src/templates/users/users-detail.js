@@ -108,7 +108,6 @@ class UsersDetail extends Component {
     studentIDValidation = () => {
         const isNumber = !isNaN(this.state.new_student.student_school_id)
         if (!isNumber ) {
-            //this.validStudentIDs = false
             return false
         }
         else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
@@ -120,6 +119,7 @@ class UsersDetail extends Component {
         // event.preventDefault();
         if (!this.studentIDValidation()) {
             this.setState({ create_success: -1 })  
+            return
         }
 
         const student = {
