@@ -106,9 +106,13 @@ class UsersDetail extends Component {
             })
     }
 
+
     handleAddStudentSubmit = event => {
         // event.preventDefault();
-
+        if(!this.studentIDValidation()) {
+            this.setState({ create_success: -1 })  // TODO: invalid message  
+            return 
+        }
         const student = {
             students: [this.state.new_student]
         }
@@ -130,6 +134,7 @@ class UsersDetail extends Component {
                 } else {
                     this.setState({ create_success: -1 })      // TODO ERROR
                 }
+
             })
     }
 
@@ -155,6 +160,20 @@ class UsersDetail extends Component {
         this.setState({ new_student: student })
     }
 
+    validStudentIDs = true;
+    studentIDValidation = () => {
+        const isNumber = !isNaN(this.state.new_student.student_school_id)
+        if (!isNumber ) {
+            this.validStudentIDs = false
+            return false
+        }
+        else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
+            this.validStudentIDs = false
+            return false
+        }
+        this.validStudentIDs = true
+        return true 
+    }
     handleSchoolChange = (event) => {
         const school_id = event.target.value
         let student = this.state.new_student
@@ -254,17 +273,17 @@ class UsersDetail extends Component {
                                                             <div className="modal-body">
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputFirstName"} className="control-label pb-2">First Name</label>
-                                                                    <input type="name" className="form-control pb-2" id={"exampleInputFirstName"}
+                                                                    <input type="name" className="form-control pb-2" ref={el => this.firstField = el} id={"exampleInputFirstName"}
                                                                         placeholder="Enter first name" required onChange={(e) => this.handleStudentFirstNameChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputLastName"} className="control-label pb-2">Last Name</label>
-                                                                    <input type="name" className="form-control pb-2" id={"exampleInputLastName"}
+                                                                    <input type="name" className="form-control pb-2" ref={el => this.lastField = el}id={"exampleInputLastName"}
                                                                         placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
-                                                                    <input type="id" className="form-control pb-2" id={"exampleInputID"} 
+                                                                    <input type="id" className="form-control pb-2" ref={el => this.idField = el}id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group required pb-3">
@@ -288,6 +307,11 @@ class UsersDetail extends Component {
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                            {(!this.studentIDValidation()) ? 
+                                                            (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                    The Student ID value for at least one student is invalid. Please edit and try again.
+                                                            </div>) : ""
+                                                            }
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
