@@ -107,8 +107,7 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = event => {
-        // event.preventDefault();
-
+         event.preventDefault();
         if(!this.studentIDValidation()) {
             this.setState({ create_success: -1})   
             return 
@@ -129,6 +128,7 @@ class UsersDetail extends Component {
         axios.post(API_DOMAIN + `users/add-students?id=` + this.props.params.id, student, config) // TODO, config as 3rd parameter
             .then(res => {
                 const msg = res.data.data.message
+                console.log('here')
                 if (msg === 'Students created successfully') {
                     this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
                     console.log(this.state.create_success)
