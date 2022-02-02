@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
+import re
+from ..resources import capitalize_reg
 
 # Routes PUT API
 @csrf_exempt
@@ -15,8 +17,8 @@ def route_edit(request):
     reqBody = json.loads(request.body)
     try:
         route_object =  Route.routeTables.get(pk=id)
-        route_object.name = reqBody['route_name'].capitalize()
-        route_object.description = reqBody['route_description'].capitalize()
+        route_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['route_name'])
+        route_object.description = reqBody['route_description']
         route_object.save()
         data["message"] = "route updated successfully"
         result = {"data" : data}

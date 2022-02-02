@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from ..students import student_create
+import re
+from ..resources import capitalize_reg
 
 # User POST API
 @csrf_exempt
@@ -15,8 +17,8 @@ def user_create(request):
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
-    first_name = reqBody['first_name'].capitalize()
-    last_name = reqBody['last_name'].capitalize()
+    first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['first_name'])
+    last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['last_name'])
     address = reqBody['address']
     is_staff = reqBody['is_staff']
     is_parent = reqBody['is_parent']
