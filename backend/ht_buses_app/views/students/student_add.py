@@ -22,4 +22,4 @@ def add_new_students(request):
     except:
         data["message"] = "User does not exist. You can only add students to an existing user"
         result = {"data" : data}
-        return Response(result) 
+        return Response(result, status = 404) 

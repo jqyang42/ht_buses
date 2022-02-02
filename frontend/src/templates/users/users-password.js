@@ -10,6 +10,7 @@ import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import Error404 from "../error404";
 
 class UsersPassword extends Component {
     state = {
@@ -17,7 +18,8 @@ class UsersPassword extends Component {
         confirm_password: '',
         user: [],
         redirect: false,
-        edit_success: 0
+        edit_success: 0,
+        error404: false
     }
 
     password2 = '';
@@ -82,6 +84,8 @@ class UsersPassword extends Component {
             }
         }
 
+        var self = this
+
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
             .then(res => {
             const user = res.data;
@@ -91,7 +95,14 @@ class UsersPassword extends Component {
                 this.setState({ students: user.students })
             }
             this.setState({ user: user });
-            })
+        }).catch (function(error) {
+            console.log(error.response)
+            if (error.response.status === 404) {
+                console.log(error.response.data)
+                self.setState({ error404: true });
+            }
+        } 
+        )
     }
 
     render() {
@@ -105,6 +116,9 @@ class UsersPassword extends Component {
         const redirect_url = USERS_URL + '/' + this.props.params.id;
         if (redirect) {
             return <Navigate to={redirect_url}/>;
+        }
+        if (this.state.error404) {
+            return <Error404 />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

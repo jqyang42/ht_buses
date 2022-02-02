@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { UserStudentsTable } from '../tables/user-students-table';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
+import Error404 from "../error404";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -21,7 +22,8 @@ class UsersDetail extends Component {
         redirect: false,
         create_success: 0,
         delete_success: 0,
-        show_all: false
+        show_all: false,
+        error404: false
     }
 
     handleShowAll = event => {
@@ -35,6 +37,8 @@ class UsersDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        var self = this
         
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
             .then(res => {
@@ -49,8 +53,16 @@ class UsersDetail extends Component {
             this.setState({ delete_success: 0});
             this.setState({ show_all: false});
             })
+            .catch (function(error) {
+                console.log(error.response)
+                if (error.response.status === 404) {
+                    console.log(error.response.data)
+                    self.setState({ error404: true });
+                }
+            } 
+        )
         
-            axios.get(API_DOMAIN + `schools`,  config)
+        axios.get(API_DOMAIN + `schools`,  config)
             .then(res => {            
             let schools = res.data.schools.map(school => {
                 return {value: school.id, display: school.name}
@@ -196,6 +208,9 @@ class UsersDetail extends Component {
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
+        }
+        if (this.state.error404) {
+            return <Error404 />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

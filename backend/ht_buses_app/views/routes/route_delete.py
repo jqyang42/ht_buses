@@ -2,7 +2,6 @@ from ...models import Route
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
-from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 
 # Routes DELETE API
@@ -19,4 +18,5 @@ def route_delete(request):
         result = {"data" : data}
         return Response(result)
     except BaseException as e:
-        raise ValidationError({"messsage": "Route could not be deleted"})
+        return Response(result, status = 400)
+        #raise ValidationError({"messsage": "Route could not be deleted"})

@@ -10,7 +10,13 @@ export function RouteStudentsTable({ data, showAll }) {
     const columns = React.useMemo(
         () => [
             {
-                Header: 'ID',
+                Header: '#',
+                accessor: d => `${d.id}`, // accessor is the "key" in the data
+                id: 'id',
+                disableSortBy: true
+            },
+            {
+                Header: 'Student ID',
                 accessor: 'student_school_id', // accessor is the "key" in the data
             },
             {

@@ -6,6 +6,7 @@ import { RouteStudentsTable } from "../tables/route-students-table";
 import RouteMap from './route-map';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import Error404 from "../error404";
 
 import { LOGIN_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
@@ -23,7 +24,8 @@ class BusRoutesDetail extends Component {
         active_route: 0,
         redirect: false,
         delete_success: 0,
-        show_all: false
+        show_all: false,
+        error404: false
     }
 
     handleShowAll = event => {
@@ -37,6 +39,8 @@ class BusRoutesDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        var self = this
         
         axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(res => {
@@ -49,6 +53,7 @@ class BusRoutesDetail extends Component {
                     return parent.students.map(student => {
                         return {
                             student_school_id: student.student_school_id,
+                            id: student.id,
                             first_name: student.first_name,
                             last_name: student.last_name
                         }
@@ -90,6 +95,14 @@ class BusRoutesDetail extends Component {
             });
             
         })
+        .catch (function(error) {
+            console.log(error.response)
+            if (error.response.status === 404) {
+                console.log(error.response.data)
+                self.setState({ error404: true });
+            }
+        } 
+        )
     }
 
     handleDelete = event => {
@@ -128,6 +141,9 @@ class BusRoutesDetail extends Component {
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={ ROUTES_URL }/>;
+        }
+        if (this.state.error404) {
+            return <Error404 />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

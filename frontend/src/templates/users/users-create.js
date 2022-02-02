@@ -34,7 +34,8 @@ class UsersCreate extends Component {
         valid_address: true,
         edit_success: 0,
         redirect_detail: false,
-        detail_url: ''
+        detail_url: '',
+        error404: false
     }
 
     password2 = '';
@@ -341,7 +342,6 @@ class UsersCreate extends Component {
         if (this.state.redirect_detail) {
             return <Navigate to={this.state.detail_url}/>;
         }
-
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
