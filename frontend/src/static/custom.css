@@ -172,3 +172,11 @@ li.page-item a[disabled]:hover {
 td.unassigned {
     color: #dc3545;
 }
+
+.gigantic {
+    font-size: 20em;
+}
+
+.gray {
+    color: #F3F3F3;
+}
