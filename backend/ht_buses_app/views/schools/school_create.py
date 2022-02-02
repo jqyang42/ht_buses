@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
+import re
+from ..resources import capitalize_reg
 
 # Schools POST API
 @csrf_exempt
@@ -12,7 +14,7 @@ from rest_framework.response import Response
 def school_create(request):
     data = {}
     reqBody = json.loads(request.body)
-    name = reqBody['school_name'].capitalize()
+    name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['school_name'])
     address = reqBody['school_address']
     lat = reqBody['lat']
     long = reqBody['long']

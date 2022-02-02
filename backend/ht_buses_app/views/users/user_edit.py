@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
+import re
+from ..resources import capitalize_reg
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -15,8 +17,8 @@ def user_edit(request): # TODO: make try and catch
         reqBody = json.loads(request.body)
         user_object = User.objects.get(pk=id)
         user_object.email = reqBody['email']
-        user_object.first_name = reqBody['first_name'].capitalize()
-        user_object.last_name = reqBody['last_name'].capitalize()
+        user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['first_name'])
+        user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['last_name'])
         user_object.address = reqBody['address']
         user_object.lat = reqBody['lat']
         user_object.long = reqBody['long']
