@@ -23,7 +23,6 @@ class StudentsEdit extends Component {
         student: [],
         init_school_id: 0,
         init_parent_id: 0,
-        init_route_id: 0,
         schools_dropdown: [],
         routes_dropdown: [],
         parents_dropdown: [],
@@ -76,6 +75,8 @@ class StudentsEdit extends Component {
                 })
             }
         )
+
+        this.setState({ route_id: null })
     } 
     
     handleRouteChange = event => {
@@ -135,7 +136,7 @@ class StudentsEdit extends Component {
             }
         }
 
-        let init_parent_id, init_route_id, init_school_id
+        let init_parent_id, init_school_id
         var self = this
 
         axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
@@ -143,7 +144,6 @@ class StudentsEdit extends Component {
             const student = res.data;
             this.setState({ student: student });
             init_parent_id = student.user_id
-            init_route_id = student.route.id
             init_school_id = student.school.id
 
             let init_route
@@ -155,13 +155,13 @@ class StudentsEdit extends Component {
 
             this.setState({ 
                 init_parent_id, 
-                init_route_id, 
+                // init_route_id, 
                 init_school_id,
                 first_name: student.first_name,
                 last_name: student.last_name,
                 student_id: student.student_school_id,
                 school_id: init_school_id,
-                route_id: init_route_id,
+                route_id: init_route,
                 parent_id: init_parent_id
             })
 
@@ -291,7 +291,7 @@ class StudentsEdit extends Component {
                                                 onChange={this.handleRouteChange} value={this.state.route_id}>
                                                     <option>Select a Route</option>
                                                     {this.state.routes_dropdown.map(route => {
-                                                        if (this.state.init_route_id == route.id) { 
+                                                        if (this.state.route_id == route.id) { 
                                                             return <option selected value={route.id}>{route.name}</option>
                                                         } else {
                                                             return <option value={route.id}>{route.name}</option>
