@@ -8,6 +8,7 @@ import HeaderMenu from '../components/header-menu';
 
 import { LOGIN_URL } from '../../constants';
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import Error404 from '../error404';
 
 class StudentsDetail extends Component {
     state = {
@@ -15,7 +16,8 @@ class StudentsDetail extends Component {
         route: [],
         school: [],
         redirect: false,
-        delete_success: 0
+        delete_success: 0,
+        error404: false
     }
     
     componentDidMount() {
@@ -24,14 +26,26 @@ class StudentsDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
+        var self = this
+
         axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(response => {
+            console.log(response)
             const student = response.data;
             const route = student.route;
             const school = student.school;
             this.setState({ student: student, route: route, school: school });
             this.setState({ delete_success: 0 })
             })
+            .catch (function(error) {
+                console.log(error.response)
+                if (error.response.status === 404) {
+                    console.log(error.response.data)
+                    self.setState({ error404: true });
+                }
+            } 
+            )
     }
 
     handleDeleteSubmit = event => {
@@ -68,6 +82,9 @@ class StudentsDetail extends Component {
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={ STUDENTS_URL }/>;
+        }
+        if (this.state.error404) {
+            return <Error404 />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

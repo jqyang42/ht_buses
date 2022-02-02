@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { Navigate } from "react-router";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import Error404 from "../error404";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -27,7 +28,8 @@ class StudentsEdit extends Component {
         routes_dropdown: [],
         parents_dropdown: [],
         redirect: false,
-        edit_success: 0
+        edit_success: 0,
+        error404: false
     }
 
     edit_success = 0
@@ -134,6 +136,8 @@ class StudentsEdit extends Component {
         }
 
         let init_parent_id, init_route_id, init_school_id
+        var self = this
+
         axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
         .then(res => {
             const student = res.data;
@@ -179,7 +183,14 @@ class StudentsEdit extends Component {
                 })
                 this.setState({ routes_dropdown: routes })
             })
-        })
+        }).catch (function(error) {
+            console.log(error.response)
+            if (error.response.status === 404) {
+                console.log(error.response.data)
+                self.setState({ error404: true });
+            }
+        } 
+        )
 
         axios.get(API_DOMAIN + `schools`, config)
         .then(res => {            
@@ -214,6 +225,9 @@ class StudentsEdit extends Component {
         const redirect_url = STUDENTS_URL + '/' + this.props.params.id;
         if (redirect) {
             return <Navigate to={redirect_url}/>;
+        }
+        if (this.state.error404) {
+            return <Error404 />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
