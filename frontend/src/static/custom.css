@@ -180,24 +180,3 @@ td.unassigned {
 .gray {
     color: #F3F3F3;
 }
-
-.tooltip {
-    padding: 4px;
-}
-
-.gm-style .gm-style-iw-c {
-    text-align: center;
-    font-size: 1em;
-    font-family: system-ui;
-    position: absolute;
-    box-sizing: border-box;
-    overflow: hidden;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px 1px rgba(125, 125, 125, 0.3);
-}
-
-button.gm-ui-hover-effect {
-    visibility: hidden;
-}
- 
