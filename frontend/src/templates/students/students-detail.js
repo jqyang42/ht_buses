@@ -149,7 +149,7 @@ class StudentsDetail extends Component {
                                             Route
                                         </p>
                                     </div>
-                                    <div className="col-2 me-4">
+                                    <div className="col-5 me-6">
                                         <a href={"/schools/" + this.state.school.id}>
                                             <p>
                                                 {this.state.school.name}
