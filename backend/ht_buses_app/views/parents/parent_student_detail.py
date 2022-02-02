@@ -22,7 +22,7 @@ def parent_student_detail(request):
             school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
             school_serializer = SchoolSerializer(school, many=False)
             data["school_name"] = school_serializer.data["name"]
-            if ["route_id"] == None:
+            if student_serializer.data["route_id"] == None:
                 route_name = "Unassigned"
                 route_description = ""
             else:
