@@ -91,9 +91,26 @@ class StudentsEdit extends Component {
         console.log(this.state.parent_id)
     }
     
+    studentIDValidation = () => {
+        const isNumber = !isNaN(this.state.student_id)
+        if (!isNumber ) {
+            return false
+        }
+        else if(isNumber && Math.sign(this.state.student_id) === -1)   {
+            return false
+        }
+        return true 
+    }
+
     handleSubmit = event => {
         event.preventDefault();
         console.log(this.state.route_id)
+
+        if(!this.validStudentIDs())  {  
+            this.setState({ edit_success: -1 })
+            return 
+        }
+
 
         const student = {
             first_name: this.state.first_name,
@@ -313,6 +330,11 @@ class StudentsEdit extends Component {
                                                     })}
                                                 </select>
                                             </div>
+                                            {(!this.studentIDValidation()) ? 
+                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                          The Student ID value is invalid. Please edit and try again.
+                                                     </div>) : ""
+                                            }
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/students/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

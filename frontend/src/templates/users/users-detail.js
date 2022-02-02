@@ -109,6 +109,11 @@ class UsersDetail extends Component {
     handleAddStudentSubmit = event => {
         // event.preventDefault();
 
+        if(!this.studentIDValidation()) {
+            this.setState({ create_success: -1})   
+            return 
+        }
+
         const student = {
             students: [this.state.new_student]
         }
@@ -153,6 +158,21 @@ class UsersDetail extends Component {
         let student = this.state.new_student
         student.student_school_id = student_school_id
         this.setState({ new_student: student })
+    }
+
+    validStudentIDs = true;
+    studentIDValidation = () => {
+        const isNumber = !isNaN(this.state.new_student.student_school_id)
+        if (!isNumber ) {
+            //this.validStudentIDs = false
+            return false
+        }
+        else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
+           // this.validStudentIDs = false
+            return false
+        }
+       // this.validStudentIDs = true
+        return true 
     }
 
     handleSchoolChange = (event) => {
@@ -288,6 +308,11 @@ class UsersDetail extends Component {
                                                                     </select>
                                                                 </div>
                                                             </div>
+                                                            {(!this.studentIDValidation()) ? 
+                                                             (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                     The Student ID value is invalid. Please edit and try again.
+                                                             </div>) : ""
+                                                             }
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
