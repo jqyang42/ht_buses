@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Data, GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Data, GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
@@ -16,8 +16,20 @@ class StudentMarker extends Component {
         id: this.props.id,
         name: this.props.name,
         updated: false,
+        showInfoWindow: false
+      };
 
-    }
+      handleMouseOver = e => {
+          this.setState({
+              showInfoWindow: true
+          });
+      };
+      handleMouseExit = e => {
+          this.setState({
+              showInfoWindow: false
+          });
+      };
+
     handleClick = (e) => {
       console.log(this.props.assignMode)
       if (this.props.assignMode && this.state.currentRoute != this.props.active_route){
@@ -36,6 +48,7 @@ class StudentMarker extends Component {
     if (this.props.studentNames){
       stringData = this.props.studentNames.join(',\n');
     }
+    const { showInfoWindow } = this.state;
     return (
       <Marker 
       position={this.state.location} 
@@ -44,9 +57,14 @@ class StudentMarker extends Component {
       onClick={this.handleClick} 
       id={this.state.id} 
       key={this.state.id} 
-      data-bs-toggle="tooltip" 
-      data-bs-placement="top" 
-      title={stringData}/>
+      onMouseOver={this.handleMouseOver}
+      onMouseOut={this.handleMouseExit}>
+        {showInfoWindow && (
+          <InfoWindow>
+              <h6 className='text-center ms-1 me-0 mt-0 mb-1'>{stringData}</h6>
+          </InfoWindow>
+        )}
+      </Marker>
     )
   }
 }
