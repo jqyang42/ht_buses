@@ -277,6 +277,7 @@ class UsersCreate extends Component {
 
 
     studentIDValidation = () => {
+        console.log(this.state.students.length)
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
             const isNumber = !isNaN(id)

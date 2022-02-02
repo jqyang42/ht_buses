@@ -105,9 +105,22 @@ class UsersDetail extends Component {
                 }
             })
     }
-
+    studentIDValidation = () => {
+        const isNumber = !isNaN(this.state.new_student.student_school_id)
+        if (!isNumber ) {
+            //this.validStudentIDs = false
+            return false
+        }
+        else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
+            return false
+        }
+        return true 
+    }
     handleAddStudentSubmit = event => {
         // event.preventDefault();
+        if (!this.studentIDValidation()) {
+            this.setState({ create_success: -1 })  
+        }
 
         const student = {
             students: [this.state.new_student]
@@ -266,6 +279,11 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
+                                                                                    {(!this.studentIDValidation()) ? 
+                                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                        The Student ID value is invalid. Please edit and try again.
+                                                                    </div>) : ""
+                                                                    }
                                                                 </div>
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
