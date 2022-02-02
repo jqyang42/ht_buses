@@ -55,7 +55,7 @@ class StudentsEdit extends Component {
             Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        
+        this.setState({ route_id : null})
         console.log(this.state.schools_dropdown)
         this.setState({ school_id: school_id }, () => {
             console.log(this.state.school_id)
