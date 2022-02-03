@@ -298,7 +298,7 @@ class StudentsEdit extends Component {
                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School"
                                                 onChange={this.handleSchoolChange}>
-                                                    <option>Select a School</option>
+                                                   <option value="" disabled selected>Select a School</option>
                                                     {this.state.schools_dropdown.map(school => {
                                                         if (this.state.init_school_id == school.id) {     //TODO: CHANGE TO USE STUDENT_ID?
                                                             return <option selected value={school.id}>{school.name}</option>
