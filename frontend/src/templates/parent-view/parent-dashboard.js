@@ -18,7 +18,7 @@ class ParentDashboard extends Component {
 
     handleShowAll = event => {
         this.setState({show_all: !this.state.show_all})
-        console.log(this.state.show_all)
+        // console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -27,12 +27,12 @@ class ParentDashboard extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        console.log(sessionStorage.getItem('user_id'))
+        // console.log(sessionStorage.getItem('user_id'))
         axios.get(API_DOMAIN + 'dashboard?id=' + sessionStorage.getItem('user_id'), config)
             .then(res => {
             const parent = res.data;
 
-            console.log(parent)
+            // console.log(parent)
 
             let students
             if (parent.students) {
@@ -40,7 +40,7 @@ class ParentDashboard extends Component {
             } else {
                 students = []
             }
-            console.log(students)
+            // console.log(students)
             this.setState({ parent: parent, students: students, show_all: false})
         })
     }

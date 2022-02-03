@@ -50,7 +50,7 @@ class ParentPassword extends Component {
 
         if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
             this.setState({ edit_success: -1 })
-            console.log(this.state.edit_success)
+            // console.log(this.state.edit_success)
             return 
         }
 
@@ -69,7 +69,7 @@ class ParentPassword extends Component {
                 const msg = res.data.data.message
                 if (msg === 'User password updated successfully') {
                     this.setState({ edit_success: 1 })    // TODO ERROR: edit_success?
-                    console.log(this.state.edit_success)
+                    // console.log(this.state.edit_success)
                 }
             })
         // this.setState({ redirect: true });

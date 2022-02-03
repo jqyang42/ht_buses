@@ -32,7 +32,7 @@ class StudentsDetail extends Component {
 
         axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
             .then(response => {
-            console.log(response)
+            // console.log(response)
             const student = response.data;
             const route = student.route;
             const school = student.school;
@@ -40,9 +40,9 @@ class StudentsDetail extends Component {
             this.setState({ delete_success: 0 })
             })
             .catch (function(error) {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status !== 200) {
-                    console.log(error.response.data)
+                    // console.log(error.response.data)
                     self.setState({ error_status: true });
                     self.setState({ error_code: error.response.status });
                 }
@@ -61,14 +61,14 @@ class StudentsDetail extends Component {
 
         axios.delete(API_DOMAIN + `students/delete?id=` + this.props.params.id, config)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 const msg = res.data.data.message
                 if (msg == 'student successfully deleted') {
                     this.setState({ delete_success: 1 })
                     this.setState({ redirect: true });
-                    console.log(this.state.redirect)
+                    // console.log(this.state.redirect)
                 } else {
-                    console.log(this.state.redirect)
+                    // console.log(this.state.redirect)
                     this.setState({ delete_success: -1 });
                 }
             })

@@ -17,7 +17,7 @@ class BusRoutes extends Component {
 
     handleShowAll = event => {
         this.setState({show_all: !this.state.show_all})
-        console.log(this.state.show_all)
+        // console.log(this.state.show_all)
     }
 
     componentDidMount() {

@@ -60,15 +60,15 @@ class UsersEdit extends Component {
 
     handleIsStaffChange = event => {
         let is_staff = event.target.value
-        this.setState({ is_staff }, console.log(this.state.is_staff));
+        this.setState({ is_staff });
     }
 
     handleAddressValidation = event => {
         if (this.state.address != '') {
-            console.log(this.state.address)
+            // console.log(this.state.address)
             Geocode.fromAddress(this.state.address).then(
                 (response) => {
-                    console.log(response)
+                    // console.log(response)
                     this.setState({
                         lat : parseFloat(response.results[0].geometry.location.lat),
                         lng : parseFloat(response.results[0].geometry.location.lng),
@@ -76,7 +76,7 @@ class UsersEdit extends Component {
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    // console.log(error)
                     this.setState({ valid_address: false})
                 }
             )
@@ -96,14 +96,14 @@ class UsersEdit extends Component {
             long: this.state.lng,
         }
 
-        console.log(user)
+        // console.log(user)
 
         axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
         .then(res => {
             const success = res.data.data.sucess
             if ( success ) {
                 this.setState({ edit_success: 1 })
-                console.log(this.state.edit_success)
+                // console.log(this.state.edit_success)
                 this.setState({ redirect: true });
             }
         })
@@ -114,7 +114,7 @@ class UsersEdit extends Component {
     handleSubmit = event => {
         event.preventDefault();
         this.email = this.emailField.value
-        console.log(this.email)
+        // console.log(this.email)
 
         if (!this.emailValidation() || !this.state.valid_address ) {
             this.setState({ edit_success: -1 })
@@ -162,7 +162,7 @@ class UsersEdit extends Component {
         axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
         .then(res => {
         const user = res.data;
-        console.log(res)
+        // console.log(res)
         this.email = user.email
 
         let staff_value
@@ -184,9 +184,9 @@ class UsersEdit extends Component {
             });
         })
         .catch (function(error) {
-            console.log(error.response)
+            // console.log(error.response)
             if (error.response.status !== 200) {
-                console.log(error.response.data)
+                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
             }

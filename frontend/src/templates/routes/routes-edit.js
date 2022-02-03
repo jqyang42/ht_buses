@@ -46,7 +46,7 @@ class BusRoutesEdit extends Component {
             }
         }
         
-        console.log(route)
+        // console.log(route)
 
         axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route, config)  // TODO: use onclick id value
             .then(res => {
@@ -81,9 +81,9 @@ class BusRoutesEdit extends Component {
                 edit_success: 0
             });
         }).catch (function(error) {
-            console.log(error.response)
+            // console.log(error.response)
             if (error.response.status !== 200) {
-                console.log(error.response.data)
+                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
             }

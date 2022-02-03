@@ -31,7 +31,7 @@ class BusRoutesDetail extends Component {
 
     handleShowAll = event => {
         this.setState({show_all: !this.state.show_all})
-        console.log(this.state.show_all)
+        // console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -60,7 +60,7 @@ class BusRoutesDetail extends Component {
                         }
                     })
                 })
-                console.log(students)
+                // console.log(students)
                 students = [].concat.apply([], students)
             } else {
                 students = []
@@ -101,9 +101,9 @@ class BusRoutesDetail extends Component {
             
         })
         .catch (function(error) {
-            console.log(error.response)
+            // console.log(error.response)
             if (error.response.status !== 200) {
-                console.log(error.response.data)
+                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
             }
@@ -122,13 +122,13 @@ class BusRoutesDetail extends Component {
 
         axios.delete(API_DOMAIN + `routes/delete?id=` + this.props.params.id, config)
             .then(res => {
-                console.log("hello")
+                // console.log("hello")
                 const msg = res.data.data.message
-                console.log(res.data)
+                // console.log(res.data)
                 if (msg === 'route successfully deleted') {
                     this.setState({ delete_success: 1})
                     this.setState({redirect: true})
-                    console.log(this.state.redirect)
+                    // console.log(this.state.redirect)
                 } else {
                     this.setState({ delete_success: -1})
                 }

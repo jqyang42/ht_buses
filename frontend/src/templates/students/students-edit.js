@@ -56,9 +56,9 @@ class StudentsEdit extends Component {
             }
         }
         this.setState({ route_id : null})
-        console.log(this.state.schools_dropdown)
+        // console.log(this.state.schools_dropdown)
         this.setState({ school_id: school_id }, () => {
-            console.log(this.state.school_id)
+            // console.log(this.state.school_id)
             axios.get(API_DOMAIN + 'schools/detail?id=' + this.state.school_id, config)
                 .then(res => {
                     let routes_data
@@ -83,15 +83,15 @@ class StudentsEdit extends Component {
     
     handleRouteChange = event => {
         const route_id = event.target.value
-        console.log(this.state.routes_dropdown)
+        // console.log(this.state.routes_dropdown)
         this.setState({ route_id })
-        console.log(this.state.route_id)
+        // console.log(this.state.route_id)
     }
 
     handleParentIDChange = event => {
         const parent_id = event.target.value
         this.setState({ parent_id: parent_id })
-        console.log(this.state.parent_id)
+        // console.log(this.state.parent_id)
     }
     
     studentIDValidation = () => {
@@ -107,7 +107,7 @@ class StudentsEdit extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        console.log(this.state.route_id)
+        // console.log(this.state.route_id)
         if(!this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return
@@ -121,7 +121,7 @@ class StudentsEdit extends Component {
             parent_id: parseInt(this.state.parent_id)
         }
 
-        console.log(student)
+        // console.log(student)
 
         const config = {
             headers: {
@@ -129,17 +129,17 @@ class StudentsEdit extends Component {
             }
         }
         
-        console.log(student)
+        // console.log(student)
         axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, student, config)
         .then(res => {
             const msg = res.data.data.message
             if (msg == 'Student information successfully updated') {
                 this.setState({ edit_success: 1 })
                 this.setState({ redirect: true });
-                console.log(this.state.edit_success)
+                // console.log(this.state.edit_success)
             } else {
                 this.setState({ edit_success: -1 })
-                console.log(this.state.edit_success)
+                // console.log(this.state.edit_success)
             }
         })
         // this.setState({ redirect: true });
@@ -181,7 +181,7 @@ class StudentsEdit extends Component {
                 parent_id: init_parent_id
             })
 
-            console.log(this.state)
+            // console.log(this.state)
 
             axios.get(API_DOMAIN + 'schools/detail?id=' + init_school_id, config)
             .then(res => {
@@ -200,9 +200,9 @@ class StudentsEdit extends Component {
                 this.setState({ routes_dropdown: routes })
             })
         }).catch (function(error) {
-            console.log(error.response)
+            // console.log(error.response)
             if (error.response.status !== 200) {
-                console.log(error.response.data)
+                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
             }

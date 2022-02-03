@@ -57,7 +57,7 @@ export function UsersTable({ data, showAll }) {
 
     // Filter by multiple columns
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget);
+        // console.log(e.currentTarget);
         const { value } = e.currentTarget;
         setGlobalFilter(value);
     };

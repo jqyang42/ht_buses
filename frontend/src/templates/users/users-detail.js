@@ -29,7 +29,7 @@ class UsersDetail extends Component {
 
     handleShowAll = event => {
         this.setState({show_all: !this.state.show_all})
-        console.log(this.state.show_all)
+        // console.log(this.state.show_all)
     }
 
     componentDidMount() {
@@ -55,9 +55,9 @@ class UsersDetail extends Component {
             this.setState({ show_all: false});
             })
             .catch (function(error) {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status !== 200) {
-                    console.log(error.response.data)
+                    // console.log(error.response.data)
                     self.setState({ error_status: true });
                     self.setState({ error_code: error.response.status });
                 }
@@ -94,15 +94,15 @@ class UsersDetail extends Component {
 
         axios.delete(API_DOMAIN + `users/delete?id=` + this.props.params.id, config)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 const msg = res.data.data.message
                 if (msg == 'user successfully deleted') {
                     this.setState({ delete_success: 1 })
                     this.setState({ redirect: true });
-                    console.log(this.state.redirect)
+                    // console.log(this.state.redirect)
                     return <Navigate to={ USERS_URL }/>;
                 } else {
-                    console.log(this.state.redirect)
+                    // console.log(this.state.redirect)
                     this.setState({ delete_success: -1 });
                 }
             })
@@ -128,7 +128,7 @@ class UsersDetail extends Component {
             students: [this.state.new_student]
         }
 
-        console.log(student)
+        // console.log(student)
 
         const config = {
             headers: {
@@ -141,7 +141,7 @@ class UsersDetail extends Component {
                 const msg = res.data.data.message
                 if (msg === 'Students created successfully') {
                     this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
-                    console.log(this.state.create_success)
+                    // console.log(this.state.create_success)
                 } else {
                     this.setState({ create_success: -1 })      // TODO ERROR
                 }
@@ -153,7 +153,7 @@ class UsersDetail extends Component {
         let student = this.state.new_student
         student.first_name = first_name
         this.setState({ new_student: student })
-        console.log(this.state.new_student)
+        // console.log(this.state.new_student)
     }
 
     handleStudentLastNameChange = (event) => {
