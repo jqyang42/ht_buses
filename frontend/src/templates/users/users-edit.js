@@ -59,7 +59,7 @@ class UsersEdit extends Component {
     }
 
     handleIsStaffChange = event => {
-        let is_staff = event.target.value === 'administrator'
+        let is_staff = event.target.value
         this.setState({ is_staff }, console.log(this.state.is_staff));
     }
 
@@ -90,7 +90,7 @@ class UsersEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff,
+            is_staff: this.state.is_staff === 'administrator',
             is_parent: this.state.user.is_parent,
             lat: this.state.lat,
             long: this.state.lng,
@@ -164,13 +164,21 @@ class UsersEdit extends Component {
         const user = res.data;
         console.log(res)
         this.email = user.email
+
+        let staff_value
+        if (user.is_staff) {
+            staff_value = 'administrator'
+        } else {
+            staff_value = 'general'
+        }
+
         this.setState({ 
             user: user,
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
             address: user.address,
-            is_staff: user.is_staff,
+            is_staff: staff_value,
             edit_success: 0,
             is_parent: user.is_parent
             });
@@ -275,18 +283,18 @@ class UsersEdit extends Component {
                                                     required={this.state.user.is_parent}/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
-                                            <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 w-75">
                                                 <div>
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    defaultChecked={this.state.user.is_staff } ></input>
+                                                    checked={this.state.is_staff === "administrator" } onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
-                                                    defaultChecked={!this.state.user.is_staff}></input>
+                                                    checked={this.state.is_staff === "general" } onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
