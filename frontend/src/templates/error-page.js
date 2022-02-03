@@ -22,8 +22,8 @@ class ErrorPage extends Component {
                 <div className="container-fluid d-flex py-4 overflow-hidden align-items-center justify-content-center">
                     <div className='row my-4 py-4 align-middle d-flex justify-content-center'>
                         <div className='col my-4 py-4 align-middle my-auto'>
-                            <h1 className="text-center mt-4 pt-4 gray-600">{code}</h1>
-                            <h2 className="text-center gray-600">{label}</h2>
+                            <h1 className="text-center mt-4 pt-4 gigantic gray-600">{code}</h1>
+                            <h2 className="text-center big gray-600">{label}</h2>
                             <h3 className="text-center gray-600">{msg}</h3>
                         </div>
                     </div>
