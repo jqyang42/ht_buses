@@ -322,7 +322,7 @@ class BusRoutesPlanner extends Component {
                                         <div className="row d-flex align-items-center align-middle mt-2">
                                             {/* Assign mode on label */}
                                             <div className="col float-start align-items-center align-text-center">
-                                                <p className="align-self-center align-text-center align-middle my-auto">Assign mode on</p>
+                                                <p className="align-self-center align-text-center align-middle my-auto yellow-600 ">Assign mode on</p>
                                             </div>
 
                                             {/* TODO: Ensure that this dropdown still reads the same content as the dropdown in the assign mode OFF div  */}
@@ -366,6 +366,15 @@ class BusRoutesPlanner extends Component {
                                                 </div>
                                             </div> */}
                                         </div>
+                                        }
+
+                                        {(this.state.assign_mode) ? 
+                                            (<div>
+                                                <div class="alert alert-primary mt-3 mb-2" role="alert">
+                                                    <i className="bi bi-info-circle-fill me-2"></i>
+                                                    Click on a location marker to add it to this route!
+                                                </div>
+                                            </div>) : ""
                                         }
 
                                         {/* Map Interface */}
