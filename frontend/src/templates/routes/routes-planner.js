@@ -196,8 +196,8 @@ class BusRoutesPlanner extends Component {
                 const new_route = res.data.data.route
                 console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
-                    id: new_route.id,
-                    name: new_route.name
+                    id: route.id,
+                    name: route.route_name
                 }]})
                 this.handleLocationsGet(config)
             })
