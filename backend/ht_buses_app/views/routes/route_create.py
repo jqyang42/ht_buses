@@ -7,16 +7,14 @@ from rest_framework.parsers import json
 from ...serializers import RouteSerializer
 import re
 from ..resources import capitalize_reg
-import urllib.parse
+
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
-    clean_route = urllib.parse(reqBody['route_name'])
-    clean_route = clean_route.encode('utf-8')
-    name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, clean_route)
+    name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['route_name'])
     try:
         school = School.schoolsTable.filter(name = reqBody['school_name'])[0]
         description = reqBody['route_description']
