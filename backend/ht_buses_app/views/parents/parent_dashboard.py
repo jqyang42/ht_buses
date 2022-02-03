@@ -21,6 +21,7 @@ def parent_dashboard(request):
         parent_kids = []
         for student in student_serializer.data:
             id = student["id"]
+            student_school_id = student["student_school_id"]
             first_name = student["first_name"]
             last_name = student["last_name"]
             school = School.schoolsTable.get(pk=student["school_id"])
@@ -32,7 +33,7 @@ def parent_dashboard(request):
                 route = Route.routeTables.get(pk=student["route_id"])
                 route_serializer = RouteSerializer(route, many=False)
                 route_name = route_serializer.data["name"]
-            parent_kids.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
+            parent_kids.append({'id' : id, 'student_school_id': student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
         data["students"] = parent_kids
         return Response(data)
     except:
