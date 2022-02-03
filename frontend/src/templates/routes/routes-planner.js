@@ -87,7 +87,10 @@ class BusRoutesPlanner extends Component {
                 } else {
                     this.setState({ routes: school.routes }, () => {
                         let routes = this.state.routes.map(route => {
-                            return {value: route.id, display: route.name}
+                            return {
+                                id: route.id, 
+                                name: route.name
+                            }
                         })
                         this.setState({ route_dropdown: routes })
                     })
@@ -300,7 +303,7 @@ class BusRoutesPlanner extends Component {
                                                     <option selected value={0}>Select a route to assign</option>
                                                     <option selected value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
-                                                        <option value={route.value} id={route.display}>{route.display}</option>
+                                                        <option value={route.id}>{route.name}</option>
                                                     )}
                                                 </select>
                                             </div>
