@@ -244,7 +244,7 @@ class StudentsEdit extends Component {
             return <Navigate to={redirect_url}/>;
         }
         if (this.state.error_status) {
-            return <ErrorPage />
+            return <ErrorPage code={this.state.error_code} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

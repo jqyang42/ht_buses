@@ -57,12 +57,12 @@ export function SchoolsTable({ data, showAll }) {
 
     const columns = React.useMemo(
         () => [
-            {
-                Header: '#',
-                accessor: 'id', // accessor is the "key" in the data
-                disableSortBy: true,
-                disableFilter: true
-            },
+            // {
+            //     Header: '#',
+            //     accessor: 'id', // accessor is the "key" in the data
+            //     disableSortBy: true,
+            //     disableFilter: true
+            // },
             {
                 Header: 'Name',
                 accessor: 'name',
