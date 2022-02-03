@@ -64,7 +64,7 @@ class BusRoutesPlanner extends Component {
             }
         }
         this.handleTableGet(config);       
-        this.handleLocationsGet(config);        
+        this.handleLocationsGet(config);     
     }
 
     handleTableGet = config => {
@@ -87,7 +87,10 @@ class BusRoutesPlanner extends Component {
                 } else {
                     this.setState({ routes: school.routes }, () => {
                         let routes = this.state.routes.map(route => {
-                            return {value: route.id, display: route.name}
+                            return {
+                                id: route.id, 
+                                name: route.name
+                            }
                         })
                         this.setState({ route_dropdown: routes })
                     })
@@ -155,8 +158,7 @@ class BusRoutesPlanner extends Component {
     }
     
     handleRouteSelection = event => {
-        this.setState({ active_route: event.target.value })
-        console.log(this.state.active_route)
+        this.setState({ active_route: event.target.value }, () => console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
     handleRouteNameChange = event => {
@@ -187,16 +189,21 @@ class BusRoutesPlanner extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+        console.log(this.state.routes)
 
         axios.post(API_DOMAIN + 'routes/create', route, config)
             .then(res => {
-                // TODO: UPDATE WITH RES
+                const new_route = res.data.data.route
+                // console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
-                    value: route.id,
-                    display: route.route_name
-                }]}, this.updateDropdown)
+                    id: new_route.id,
+                    name: new_route.name
+                }]})
+                this.handleLocationsGet(config)
             })
     }
+
+
     
     students = {"students":[]};
 
@@ -218,6 +225,7 @@ class BusRoutesPlanner extends Component {
         .then(res => {
             console.log(res.data);
             this.students = {"students":[]};
+            this.setState({markers: []})
             this.handleTableGet(config) 
             this.handleLocationsGet(config)
         })
@@ -300,7 +308,7 @@ class BusRoutesPlanner extends Component {
                                                     <option selected value={0}>Select a route to assign</option>
                                                     <option selected value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
-                                                        <option value={route.value} id={route.display}>{route.display}</option>
+                                                        <option value={route.id}>{route.name}</option>
                                                     )}
                                                 </select>
                                             </div>
