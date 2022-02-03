@@ -193,14 +193,17 @@ class BusRoutesPlanner extends Component {
 
         axios.post(API_DOMAIN + 'routes/create', route, config)
             .then(res => {
-                // TODO: UPDATE WITH RES
+                const new_route = res.data.data.route
+                console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
-                    id: route.id,
-                    name: route.route_name
-                }]}, this.updateDropdown)
+                    id: new_route.id,
+                    name: new_route.name
+                }]})
                 this.handleLocationsGet(config)
             })
     }
+
+
     
     students = {"students":[]};
 
