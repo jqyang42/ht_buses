@@ -195,6 +195,7 @@ class BusRoutesPlanner extends Component {
                     value: route.id,
                     display: route.route_name
                 }]}, this.updateDropdown)
+                this.handleLocationsGet(config)
             })
     }
     

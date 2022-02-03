@@ -50,6 +50,7 @@ class RouteMap extends Component {
         "id": studentIDs[i],
         "route_id": routeID
       })
+      console.log(this.students)
     }
     if(this.props.onChange) {
       this.props.onChange(this.students);
