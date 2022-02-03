@@ -64,7 +64,7 @@ class BusRoutesPlanner extends Component {
             }
         }
         this.handleTableGet(config);       
-        this.handleLocationsGet(config);        
+        this.handleLocationsGet(config);     
     }
 
     handleTableGet = config => {
@@ -189,15 +189,15 @@ class BusRoutesPlanner extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-
+        console.log(this.state.routes)
 
         axios.post(API_DOMAIN + 'routes/create', route, config)
             .then(res => {
                 const new_route = res.data.data.route
-                console.log(new_route)
+                // console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
-                    id: route.id,
-                    name: route.route_name
+                    id: new_route.id,
+                    name: new_route.name
                 }]})
                 this.handleLocationsGet(config)
             })
@@ -278,7 +278,7 @@ class BusRoutesPlanner extends Component {
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-name" className="control-label pb-2">Name</label>
                                                                         <input type="name" className="form-control" id="route-name" required
-                                                                        placeholder="Enter route name" onClick={this.handleRouteNameChange}></input>
+                                                                        placeholder="Enter route name" onChange={this.handleRouteNameChange}></input>
                                                                     </div>
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-school" className="control-label pb-2">School</label>
