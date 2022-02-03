@@ -32,6 +32,8 @@ class ParentDashboard extends Component {
             .then(res => {
             const parent = res.data;
 
+            console.log(parent)
+
             let students
             if (parent.students) {
                 students = parent.students

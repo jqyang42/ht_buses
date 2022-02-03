@@ -104,7 +104,7 @@ class BusRoutesEdit extends Component {
             return <Navigate to={redirect_url}/>;
         }
         if (this.state.error_status) {
-            return <ErrorPage />
+            return <ErrorPage code={this.state.error_code} />
         }
         
         return (

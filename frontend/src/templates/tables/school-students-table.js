@@ -9,12 +9,12 @@ export function SchoolStudentsTable({ data, showAll }) {
 
     const columns = React.useMemo(
         () => [
-            {
-                Header: '#',
-                accessor: d => `${d.id}`, // accessor is the "key" in the data
-                id: 'id',
-                disableSortBy: true
-            },
+            // {
+            //     Header: '#',
+            //     accessor: d => `${d.id}`, // accessor is the "key" in the data
+            //     id: 'id',
+            //     disableSortBy: true
+            // },
             {
                 Header: 'ID',
                 accessor: 'student_school_id', // accessor is the "key" in the data

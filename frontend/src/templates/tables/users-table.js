@@ -74,12 +74,12 @@ export function UsersTable({ data, showAll }) {
 
     const columns = React.useMemo(
         () => [
-            {
-                Header: '#',
-                accessor: 'id', // accessor is the "key" in the data
-                disableSortBy: true,
-                disableFilter: true
-            },
+            // {
+            //     Header: '#',
+            //     accessor: 'id', // accessor is the "key" in the data
+            //     disableSortBy: true,
+            //     disableFilter: true
+            // },
             {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,

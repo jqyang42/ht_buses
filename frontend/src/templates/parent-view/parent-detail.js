@@ -4,6 +4,7 @@ import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import ErrorPage from "../error-page";
 
 import { LOGIN_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
@@ -12,22 +13,40 @@ import axios from "axios";
 class ParentDetail extends Component {
     state = {
         student: [],
-        route: []
+        route: [],
+        error_status: false,
+        error_code: 200
     }
 
     componentDidMount() {
+
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
         console.log(config)
+
+        var self = this
+
         axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id, config)
             .then(res => {
                 const student = res.data
                 const route = student.route
                 this.setState({ student: student, route: route })
-            })
+                this.setState({error_status: false})
+                this.setState({error_code: 200})
+            }).catch (function(error) {
+                console.log(error.response)
+                if (error.response.status !== 200) {
+                    console.log(error.response.status)
+                    self.setState({ error_status: true });
+                    console.log(self.state.error_status)
+                    self.setState({ error_code: error.response.status });
+                    console.log(self.state.error_code)
+                }
+            } 
+            )
     }
 
     render() {
@@ -36,6 +55,10 @@ class ParentDetail extends Component {
         }
         else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
+        }
+        if (this.state.error_status) {
+            console.log("reached")
+            return <ErrorPage code={this.state.error_code} />
         }
         return (
             <body className="overflow-hidden">
