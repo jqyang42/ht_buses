@@ -195,8 +195,8 @@ class BusRoutesPlanner extends Component {
             .then(res => {
                 // TODO: UPDATE WITH RES
                 this.setState({ route_dropdown: [...this.state.routes, {
-                    value: route.id,
-                    display: route.route_name
+                    id: route.id,
+                    name: route.route_name
                 }]}, this.updateDropdown)
             })
     }
