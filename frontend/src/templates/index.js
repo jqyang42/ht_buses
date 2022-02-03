@@ -103,14 +103,10 @@ class Login extends Component {
                                                     placeholder="Enter email" ref={el => this.emailField = el}  onChange={this.handleEmailChange}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone else.</small>
                                             </div>
-                                            <div className="form-group pb-3">
+                                            <div className="form-group pb-3 mb-2">
                                                 <label for="exampleInputPassword1" className="pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2" name="password" id="exampleInputPassword1" 
                                                 placeholder="Password" ref={el => this.passwordField = el} onChange={this.handlePasswordChange}></input>
-                                            </div>
-                                            <div className="form-group form-check pb-4">
-                                                <input type="checkbox" className="form-check-input pb-2" id="exampleCheck1"></input>
-                                                <label className="form-check-label pb-2" for="exampleCheck1">Remember me</label>
                                             </div>
                                             <button type="submit" className="btn btn-primary">Log In</button>
                                         </form>
