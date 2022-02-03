@@ -87,10 +87,10 @@ class UsersCreate extends Component {
 
     handleAddressValidation = event => {
         if (this.state.user_address !== '') {
-            console.log(this.state.user_address)
+            // console.log(this.state.user_address)
             Geocode.fromAddress(this.state.user_address).then(
                 (response) => {
-                    console.log(response)
+                    // console.log(response)
                     this.setState({
                         lat : parseFloat(response.results[0].geometry.location.lat),
                         lng : parseFloat(response.results[0].geometry.location.lng),
@@ -98,7 +98,7 @@ class UsersCreate extends Component {
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    // console.log(error)
                     this.setState({ valid_address: false})
                 }
             )
@@ -191,10 +191,10 @@ class UsersCreate extends Component {
             last_element_index = this.state.added_students_list.length - 1
             new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
         }
-        // console.log(new_list)
+        // // console.log(new_list)
         this.setState({ added_students_list: new_list })
         this.setState({ user_is_parent: true })
-        console.log(this.state.user_is_parent)
+        // console.log(this.state.user_is_parent)
         
         const student_field = {
             first_name: '',
@@ -207,31 +207,31 @@ class UsersCreate extends Component {
     }
 
     handleDeleteStudent = (student_num) => {
-        console.log(student_num)
+        // console.log(student_num)
 
-        // console.log(this.state.added_students_list)        
+        // // console.log(this.state.added_students_list)        
         const new_list = this.state.added_students_list
         const index = new_list.indexOf(student_num)
-        // console.log(new_list)
-        // console.log(new_list[index])
+        // // console.log(new_list)
+        // // console.log(new_list[index])
         new_list.splice(index, 1)
-        // console.log(new_list)
+        // // console.log(new_list)
         this.setState({ added_students_list: new_list })
-        console.log(this.state.added_students_list.length)
+        // console.log(this.state.added_students_list.length)
         if (this.state.added_students_list.length === 0) {
             this.setState({ user_is_parent: false })
         }
 
-        console.log(this.state.students)
+        // console.log(this.state.students)
         const new_students = this.state.students
-        console.log(new_students)
-        console.log(new_students[index])
+        // console.log(new_students)
+        // console.log(new_students[index])
         new_students.splice(index, 1)
-        console.log(new_students)
+        // console.log(new_students)
         this.setState({ students: new_students })
 
-        // console.log(this.state.added_students_list)
-        // console.log(dthis.state.students)
+        // // console.log(this.state.added_students_list)
+        // // console.log(dthis.state.students)
     }
 
     sendCreateRequest =  (config) => {
@@ -256,10 +256,10 @@ class UsersCreate extends Component {
             long: this.state.lng,
         }
 
-        console.log(user)
+        // console.log(user)
         axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const msg = res.data.data.message
             if (msg == 'User created successfully') {
                 this.setState({ edit_success: 1 })
@@ -277,7 +277,7 @@ class UsersCreate extends Component {
 
 
     studentIDValidation = () => {
-        console.log(this.state.students.length)
+        // console.log(this.state.students.length)
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
             const isNumber = !isNaN(id)
@@ -340,7 +340,7 @@ class UsersCreate extends Component {
             this.setState({ schools_dropdown: schools})
             this.setState({ edit_success: 0 })
             this.setState({ user_is_parent: false })
-            console.log(this.state.schools_dropdown)
+            // console.log(this.state.schools_dropdown)
         })
     }
 

@@ -28,13 +28,13 @@ class SchoolsDetail extends Component {
 
     handleStudentsShowAll = event => {
         this.setState({students_show_all: !this.state.students_show_all})
-        console.log(this.state.students_show_all)
+        // console.log(this.state.students_show_all)
     }
 
 
     handleRoutesShowAll = event => {
         this.setState({routes_show_all: !this.state.routes_show_all})
-        console.log(this.state.routes_show_all)
+        // console.log(this.state.routes_show_all)
     }
 
     handleDeleteSchool = event => {
@@ -51,16 +51,16 @@ class SchoolsDetail extends Component {
                 }
             }
 
-            console.log(config)
+            // console.log(config)
 
             axios.delete(API_DOMAIN + `schools/delete?id=` + this.props.params.id, config)
                 .then(res => {
-                    console.log(res)
+                    // console.log(res)
                     const msg = res.data.data.message
                     if (msg == 'school successfully deleted') {
                         this.setState({ delete_success: 1 })
                         this.setState({ redirect: true });
-                        console.log(this.state.redirect)
+                        // console.log(this.state.redirect)
                         return <Navigate to={ SCHOOLS_URL }/>;
                     } else {
                         this.setState({ delete_success: -1 })
@@ -96,15 +96,15 @@ class SchoolsDetail extends Component {
                     this.setState({ routes: school.routes })
                 }
 
-                console.log(school)
+                // console.log(school)
                 this.setState({ school: school });
                 this.setState({ delete_success: 0 });
                 this.setState({ students_show_all: false, routes_show_all: false });
             })
             .catch (function(error) {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status !== 200) {
-                    console.log(error.response.data)
+                    // console.log(error.response.data)
                     self.setState({ error_status: true });
                     self.setState({ error_code: error.response.status });
                 }

@@ -50,8 +50,8 @@ class RouteMap extends Component {
         "id": studentIDs[i],
         "route_id": parseInt(routeID)
       })
-      console.log(this.students)
-      console.log("Map onHandleRouteIDChange Active Route: " + this.props.active_route)
+      // console.log(this.students)
+      // console.log("Map onHandleRouteIDChange Active Route: " + this.props.active_route)
     }
     if(this.props.onChange) {
       this.props.onChange(this.students);
@@ -59,7 +59,7 @@ class RouteMap extends Component {
   }
 
   render() {
-    console.log("Map onRender Active Route: " + this.props.active_route)
+    // console.log("Map onRender Active Route: " + this.props.active_route)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }

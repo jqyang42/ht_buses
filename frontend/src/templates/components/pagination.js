@@ -1,7 +1,7 @@
 import React from "react";
 
 const TablePagination = (props) => {
-    // console.log(props.pageOptions)
+    // // console.log(props.pageOptions)
     return (
         <div className="row TablePagination align-middle align-items-center">
             

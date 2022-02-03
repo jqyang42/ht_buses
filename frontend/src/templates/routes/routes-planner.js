@@ -50,8 +50,8 @@ class BusRoutesPlanner extends Component {
             sessionStorage.setItem('last_name', '')
             sessionStorage.setItem('is_staff', false)
             sessionStorage.setItem('logged_in', false)
-            console.log(sessionStorage.getItem('logged_in'))
-            console.log(sessionStorage.getItem('token'))
+            // console.log(sessionStorage.getItem('logged_in'))
+            // console.log(sessionStorage.getItem('token'))
             window.location.reload()
         })
     }
@@ -96,9 +96,9 @@ class BusRoutesPlanner extends Component {
                     })
                 }                                
             }).catch (function(error) {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status !== 200) {
-                    console.log(error.response.data)
+                    // console.log(error.response.data)
                     self.setState({ error_status: true });
                     self.setState({ error_code: error.response.status });
                 }
@@ -112,7 +112,7 @@ class BusRoutesPlanner extends Component {
         axios.get(API_DOMAIN + `routeplanner?id=` + this.props.params.id, config)
             .then(res => {
                 const locations = res.data;
-                console.log(locations)
+                // console.log(locations)
                 this.setState({ 
                     center: { 
                         lat: locations.lat, 
@@ -141,9 +141,9 @@ class BusRoutesPlanner extends Component {
                     }));
                 });
             }).catch (function(error) {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status === 404) {
-                    console.log(error.response.data)
+                    // console.log(error.response.data)
                     self.setState({ error_status: true });
                 }
             } 
@@ -154,11 +154,12 @@ class BusRoutesPlanner extends Component {
         this.setState(prevState => ({ 
             assign_mode: !prevState.assign_mode
         }));
-        console.log(this.state.assign_mode);
+        // console.log(this.state.assign_mode);
     }
     
     handleRouteSelection = event => {
-        this.setState({ active_route: event.target.value }, () => console.log("onHandleRouteSelection active_route: " + this.state.active_route))
+        this.setState({ active_route: event.target.value })
+        // this.setState({ active_route: event.target.value }, () => // console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
     handleRouteNameChange = event => {
@@ -182,19 +183,19 @@ class BusRoutesPlanner extends Component {
             route_description: this.state.create_route_description
         }
         
-        console.log(route)
+        // console.log(route)
 
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        console.log(this.state.routes)
+        // console.log(this.state.routes)
 
         axios.post(API_DOMAIN + 'routes/create', route, config)
             .then(res => {
                 const new_route = res.data.data.route
-                // console.log(new_route)
+                // // console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
                     id: new_route.id,
                     name: new_route.name
@@ -209,7 +210,7 @@ class BusRoutesPlanner extends Component {
 
     handleRouteIDChange = (students) => {
       this.students["students"] = students
-      console.log(this.students)
+      // console.log(this.students)
     }
 
     handleRouteAssignSubmit = event => {
@@ -223,7 +224,7 @@ class BusRoutesPlanner extends Component {
         })
         axios.put(API_DOMAIN + 'routeplanner/edit', this.students, config)
         .then(res => {
-            console.log(res.data);
+            // console.log(res.data);
             this.students = {"students":[]};
             this.setState({markers: []})
             this.handleTableGet(config) 
@@ -405,7 +406,7 @@ function RouteSelectDropdown() {
     let routes = this.state.routes(route => {
         return {value: route.id, display: route.name}
     })
-    console.log(routes)
+    // console.log(routes)
     this.setState({ route_dropdown: routes })
 }
 

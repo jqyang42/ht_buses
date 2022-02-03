@@ -38,10 +38,10 @@ class SchoolsEdit extends Component {
 
         handleAddressValidation = event => {
         if (this.state.school_address != '') {
-            console.log(this.state.school_address)
+            // console.log(this.state.school_address)
             Geocode.fromAddress(this.state.school_address).then(
                 (response) => {
-                    console.log(response)
+                    // console.log(response)
                     this.setState({
                         lat : parseFloat(response.results[0].geometry.location.lat),
                         lng : parseFloat(response.results[0].geometry.location.lng),
@@ -49,7 +49,7 @@ class SchoolsEdit extends Component {
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    // console.log(error)
                     this.setState({ valid_address: false})
                 }
             )
@@ -104,9 +104,9 @@ class SchoolsEdit extends Component {
             this.setState({ school: school, school_name: school.name, school_address: school.address });
             this.setState({ edit_success: 0 })
         }).catch (function(error) {
-            console.log(error.response)
+            // console.log(error.response)
             if (error.response.status !== 200) {
-                console.log(error.response.data)
+                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
             }

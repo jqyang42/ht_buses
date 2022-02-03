@@ -35,10 +35,10 @@ class SchoolsCreate extends Component {
 
     handleAddressValidation = event => {
         if (this.state.school_address != '') {
-            console.log(this.state.school_address)
+            // console.log(this.state.school_address)
             Geocode.fromAddress(this.state.school_address).then(
                 (response) => {
-                    console.log(response)
+                    // console.log(response)
                     this.setState({
                         lat : parseFloat(response.results[0].geometry.location.lat),
                         lng : parseFloat(response.results[0].geometry.location.lng),
@@ -46,7 +46,7 @@ class SchoolsCreate extends Component {
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    // console.log(error)
                     this.setState({ valid_address: false})
                 }
             )

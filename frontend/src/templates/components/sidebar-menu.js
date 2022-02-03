@@ -25,8 +25,8 @@ class SidebarMenu extends Component {
             sessionStorage.setItem('last_name', '')
             sessionStorage.setItem('is_staff', false)
             sessionStorage.setItem('logged_in', false)
-            console.log(sessionStorage.getItem('logged_in'))
-            console.log(sessionStorage.getItem('token'))
+            // console.log(sessionStorage.getItem('logged_in'))
+            // console.log(sessionStorage.getItem('token'))
             window.location.reload()
         })
     }
@@ -44,7 +44,7 @@ class SidebarMenu extends Component {
         var routesTab = (activeTab === "routes") ? 'active' : '';
         var schoolsTab = (activeTab === "schools") ? 'active' : '';
         var usersTab = (activeTab === "users") ? 'active' : '';
-        console.log(studentsTab)
+        // console.log(studentsTab)
 
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">

@@ -25,7 +25,7 @@ class ParentDetail extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
-        console.log(config)
+        // console.log(config)
 
         var self = this
 
@@ -37,13 +37,13 @@ class ParentDetail extends Component {
                 this.setState({error_status: false})
                 this.setState({error_code: 200})
             }).catch (function(error) {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status !== 200) {
-                    console.log(error.response.status)
+                    // console.log(error.response.status)
                     self.setState({ error_status: true });
-                    console.log(self.state.error_status)
+                    // console.log(self.state.error_status)
                     self.setState({ error_code: error.response.status });
-                    console.log(self.state.error_code)
+                    // console.log(self.state.error_code)
                 }
             } 
             )
@@ -57,7 +57,7 @@ class ParentDetail extends Component {
             return <Navigate to={STUDENTS_URL} />
         }
         if (this.state.error_status) {
-            console.log("reached")
+            // console.log("reached")
             return <ErrorPage code={this.state.error_code} />
         }
         return (
