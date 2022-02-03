@@ -1,7 +1,8 @@
-# ht_buses
-ECE458 Senior Design Project
+# ht_buses: ECE458 Senior Design Project
+Kyra Chan (ktc22@duke.edu)
+Fernanda Corona Rizo (fec6@duke.edu)
+Evelyn Cupil-Garcia (ec220@duke.edu)
+Thomas Quintanilla (tq11@duke.edu)
+Jessica Yang (jqy2@duke.edu)
 
-## main branch: production branch
-* Need to run `manage.py collectstatic` so that all static files are collected into /static
-
-## dev branch: main development branch
+## Current Evolution: 1
