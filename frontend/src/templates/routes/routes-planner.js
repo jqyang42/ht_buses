@@ -273,7 +273,7 @@ class BusRoutesPlanner extends Component {
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-school" className="control-label pb-2">School</label>
                                                                         <select className="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
-                                                                            <option>Select a School</option>
+                                                                        <option value="" disabled selected>Select a School</option>
                                                                             <option selected value="1">{this.state.school.name}</option>
                                                                         </select>
                                                                     </div>
