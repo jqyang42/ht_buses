@@ -158,8 +158,7 @@ class BusRoutesPlanner extends Component {
     }
     
     handleRouteSelection = event => {
-        this.setState({ active_route: event.target.value })
-        console.log(this.state.active_route)
+        this.setState({ active_route: event.target.value }, () => console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
     handleRouteNameChange = event => {
@@ -190,6 +189,7 @@ class BusRoutesPlanner extends Component {
               Authorization: `Token ${sessionStorage.getItem('token')}`
             }
         }
+
 
         axios.post(API_DOMAIN + 'routes/create', route, config)
             .then(res => {
@@ -222,6 +222,7 @@ class BusRoutesPlanner extends Component {
         .then(res => {
             console.log(res.data);
             this.students = {"students":[]};
+            this.setState({markers: []})
             this.handleTableGet(config) 
             this.handleLocationsGet(config)
         })
@@ -274,7 +275,7 @@ class BusRoutesPlanner extends Component {
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-name" className="control-label pb-2">Name</label>
                                                                         <input type="name" className="form-control" id="route-name" required
-                                                                        placeholder="Enter route name" onChange={this.handleRouteNameChange}></input>
+                                                                        placeholder="Enter route name" onClick={this.handleRouteNameChange}></input>
                                                                     </div>
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-school" className="control-label pb-2">School</label>
