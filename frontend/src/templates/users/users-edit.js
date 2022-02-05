@@ -56,6 +56,7 @@ class UsersEdit extends Component {
 
     handleAddressChange = event => {
         this.setState({ address: event.target.value });
+        console.log(this.state.address)
     }
 
     handleIsStaffChange = event => {
@@ -207,7 +208,7 @@ class UsersEdit extends Component {
             return <Navigate to={redirect_url}/>;
         }
         if (this.state.error_status) {
-            return <ErrorPage code={this.state.error_code} />
+            return <ErrorPage />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

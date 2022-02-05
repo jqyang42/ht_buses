@@ -24,7 +24,8 @@ class UsersDetail extends Component {
         delete_success: 0,
         show_all: false,
         error_status: false,
-        error_code: 200
+        error_code: 200,
+        add_student_clicked: false
     }
 
     handleShowAll = event => {
@@ -206,6 +207,10 @@ class UsersDetail extends Component {
         this.setState({ new_student: student })
     }
 
+    handleClickAddStudent = (event) => {
+        this.setState({add_student_clicked: !this.state.add_student_clicked});
+    }
+
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -215,11 +220,11 @@ class UsersDetail extends Component {
         }
         let UserAddress='';
         
-        if (this.state.users.address != null) {
-            UserAddress = this.state.users.address
-        } else {
-            UserAddress = `-`
-        }
+        // if (this.state.users.address != null) {
+        //     UserAddress = this.state.users.address
+        // } else {
+        //     UserAddress = `-`
+        // }
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
@@ -253,7 +258,7 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link>
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#addModal">
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.users.address ? "#addModal" : ""}onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
                                             </button>
@@ -281,7 +286,7 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
-                                                                                    {(!this.studentIDValidation()) ? 
+                                                                    {(!this.studentIDValidation()) ? 
                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                         The Student ID value is invalid. Please edit and try again.
                                                                     </div>) : ""
@@ -310,7 +315,7 @@ class UsersDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
+                                                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal" onClick={this.handleClickAddStudent}>Create</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -374,10 +379,17 @@ class UsersDetail extends Component {
                                             {this.state.users.email}
                                         </p>
                                         <p>
-                                            {UserAddress}
+                                            {this.state.users.address ? this.state.users.address : ""}
                                         </p>
                                     </div>
                                 </div>
+
+                                {(!this.state.users.address && this.state.add_student_clicked) ? 
+                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                        Please input an address before you add a student.
+                                    </div>) : ""
+                                }
+
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
                                     <UserStudentsTable data={this.state.students} showAll={this.state.show_all}/>
