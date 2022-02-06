@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
+# Only would need to do wrap of student: {json data}
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAuthenticated]) 
@@ -35,6 +36,6 @@ def parent_student_detail(request):
         else: 
             data["route"] = {'name' : '', 'description' : ''}
             data["message"] = {"User is not authorized to see this page"}
-            return Response(data, status = 404) # TODO: make status code that just shows 404 pages, without redirecting to logout
+            return Response(data, status = 404)
     except:
         return Response(data, status = 404)

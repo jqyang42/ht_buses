@@ -8,6 +8,7 @@ import re
 from ..resources import capitalize_reg
 
 # Students PUT API
+# Refactor into a PATCH request
 @csrf_exempt
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])

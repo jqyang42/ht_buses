@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer
 
 # Schools Detail GET API
+# Try to cut down on line count
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdminUser]) 

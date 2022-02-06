@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer
 
 # Student Route PUT API
+# Refactor into a PATCH API
 @csrf_exempt
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])

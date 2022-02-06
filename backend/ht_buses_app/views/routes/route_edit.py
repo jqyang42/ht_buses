@@ -8,6 +8,7 @@ import re
 from ..resources import capitalize_reg
 
 # Routes PUT API
+# Switch to a PATCH API, would need to investigate how to rewrite this
 @csrf_exempt
 @api_view(["PUT"])
 @permission_classes([IsAdminUser]) 

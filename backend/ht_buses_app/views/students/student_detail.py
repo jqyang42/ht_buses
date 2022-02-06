@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
 # Students Detail GET API
+# Wrap in a student object
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser]) 

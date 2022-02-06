@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
+# Only would need to refactor to do instead: "parent": {json info}
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAuthenticated]) 

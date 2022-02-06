@@ -7,6 +7,7 @@ from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 
+# Refactor into PATCH
 @csrf_exempt
 @api_view(["PUT"])
 @permission_classes([IsAdminUser]) 

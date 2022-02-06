@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, UserSerializer
 
+# Wrap into user: {json data}
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])

@@ -8,6 +8,7 @@ import re
 from ..resources import capitalize_reg
 
 # Schools PUT API
+# Refactor to be a PUT request
 @csrf_exempt
 @api_view(["PUT"])
 @permission_classes([IsAdminUser])
