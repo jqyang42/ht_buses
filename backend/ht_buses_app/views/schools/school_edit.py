@@ -24,9 +24,7 @@ def school_edit(request):
         school_object.long = reqBody['long']
         school_object.save()
         data["message"] = "school information updated successfully"
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)
     except:
-        data["message"] = "School could not be updated "
-        result = {"data" : data}
-        return Response(result, status = 400)
+        data["message"] = "school could not be updated"
+        return Response(data, status = 400)

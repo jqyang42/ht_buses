@@ -1,13 +1,13 @@
 from ...models import School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import SchoolSerializer
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def schools(request):
     data = {}
     schools = School.schoolsTable.all()
