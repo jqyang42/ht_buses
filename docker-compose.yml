@@ -4,14 +4,12 @@ services:
   backend:
     build: 
       context: .
-      dockerfile: backend/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes: 
-      - ./app/:/usr/src/app/
+      dockerfile: docker/backend/Dockerfile
+    command: gunicorn ht_buses.wsgi:application --bind 0.0.0.0:8000
     ports:
       - 8000:8000
     env_file:
-      - ./backend/.env
+      - ./docker/backend/.env
     depends_on:
     - db
   db:
