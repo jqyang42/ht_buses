@@ -1,23 +1,35 @@
 version: '3.8'
 
 services:
-  backend:
-    build: 
-      context: .
-      dockerfile: docker/backend/Dockerfile
-    command: gunicorn ht_buses.wsgi:application --bind 0.0.0.0:8000
-    ports:
-      - 8000:8000
-    env_file:
-      - ./docker/backend/.env
-    depends_on:
-    - db
   db:
     image: postgres:13.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./docker/postgres/.env
+      - ./docker/postgres/.env    
+  backend:
+    build: 
+      context: .
+      dockerfile: docker/backend/Dockerfile
+    command: gunicorn ht_buses.wsgi:application --bind 0.0.0.0:8000
+    # ports:
+    #   - 8000:8000
+    expose:
+      - 8000
+    env_file:
+      - ./docker/backend/.env
+    depends_on:
+    - db
+  nginx:
+    build: 
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - 1337:80
+    depends_on:
+      - backend
+
+
 
 volumes:
   postgres_data:
