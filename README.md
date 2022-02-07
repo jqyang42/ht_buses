@@ -11,8 +11,8 @@ ECE458 Senior Design Project
       - `server_name`: can be `vcm-#####.vm.duke.edu` if you want, or remove line for localhost
     - `constants.js`: `API_DOMAIN` should match the domain in `server_name`
 5. Download [docker](https://docs.docker.com/engine/install/ubuntu/) and [docker-compose](https://docs.docker.com/compose/install/)
-  - FYI, docker and docker-compose commands require `sudo` prepended
+    - FYI, docker and docker-compose commands require `sudo` prepended
 6. Get the thing running:
-  - `sudo docker-compose up --build -d`: builds docker images thru `docker-compose.yml`, and gets them up and running in detached mode (logs don't automatically take up terminal)
-  - `sudo docker-compose logs -f`: follows logs output - here's where you see what all the different services built in docker-compose (nginx, backend, db) are saying
-  - `sudo docker-compose down --volumes --remove-orphans`: shuts down the images, deletes the volumes, removes any volumes not associated by name anymore. This should be run before bring the images back up!
+    - `sudo docker-compose up --build -d`: builds docker images thru `docker-compose.yml`, and gets them up and running in detached mode (logs don't automatically take up terminal)    
+    - `sudo docker-compose logs -f`: follows logs output - here's where you see what all the different services built in docker-compose (nginx, backend, db) are saying
+    - `sudo docker-compose down --volumes --remove-orphans`: shuts down the images, deletes the volumes, removes any volumes not associated by name anymore. This should be run before bring the images back up!
