@@ -1,3 +1,4 @@
+from ...serializers import RouteSerializer
 from ...models import Route
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -22,7 +23,9 @@ def route_edit(request):
         route_object.description = reqBody['route_description']
         route_object.save()
         data["message"] = "route updated successfully"
-        result = {"data" : data}
+        route_serializer = RouteSerializer(route_object, many=False)
+        data["route"] = route_serializer.data
+        result = data
         return Response(result)
     except:
         return Response(data, status = 400)

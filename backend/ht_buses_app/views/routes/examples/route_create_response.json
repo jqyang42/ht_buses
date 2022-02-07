@@ -1,0 +1,9 @@
+{
+    "message": "route created successfully",
+    "route": {
+        "id": 1,
+        "name": "Route 1",
+        "school_id": 1,
+        "description": "Route 1 description"
+    }
+}

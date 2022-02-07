@@ -1,0 +1,121 @@
+{
+    "routes": [
+        {
+            "id": 2,
+            "name": "Route 89",
+            "school_name": {
+                "id": 2,
+                "name": "Est Middle School"
+            },
+            "student_count": 2
+        },
+        {
+            "id": 3,
+            "name": "Routes 1",
+            "school_name": {
+                "id": 3,
+                "name": "Duke School"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 4,
+            "name": "Routes 2",
+            "school_name": {
+                "id": 3,
+                "name": "Duke School"
+            },
+            "student_count": 1
+        },
+        {
+            "id": 5,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 1
+        },
+        {
+            "id": 6,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 7,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 8,
+            "name": "Cool route",
+            "school_name": {
+                "id": 3,
+                "name": "Duke School"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 9,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 10,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 11,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 12,
+            "name": "Cool route",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 13,
+            "name": "New route lowercase",
+            "school_name": {
+                "id": 2,
+                "name": "Est Middle School"
+            },
+            "student_count": 0
+        },
+        {
+            "id": 14,
+            "name": "ROute TESTING",
+            "school_name": {
+                "id": 1,
+                "name": "WCHS"
+            },
+            "student_count": 0
+        }
+    ]
+}

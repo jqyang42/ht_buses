@@ -1,0 +1,8 @@
+{
+    "message": "route updated successfully",
+    "route": {
+        "id": 1,
+        "school_id": 1,
+        "description": "Route 1 description"
+    }
+}

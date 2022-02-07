@@ -1,0 +1,32 @@
+{
+    "route": {
+        "id": 1,
+        "school": {
+            "id": 1,
+            "name": "School 1",
+            "address": {
+                "lat": 0.0,
+                "long": 0.0
+            }
+        },
+        "description": "Route 1 description"
+    },
+    "parents": [
+        {
+            "id": 1,
+            "address": {
+                "address": "Duke St. Durham NC",
+                "lat": 0.0,
+                "long": 0.0
+            },
+            "students": [
+                {
+                    "id": 1,
+                    "student_school_id": 123,
+                    "first_name": "Mary",
+                    "last_name": "Jane"
+                }
+            ]
+        }
+    ]
+}
