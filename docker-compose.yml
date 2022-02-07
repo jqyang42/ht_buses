@@ -12,8 +12,6 @@ services:
       context: .
       dockerfile: docker/backend/Dockerfile
     command: gunicorn ht_buses.wsgi:application --bind 0.0.0.0:8000
-    # ports:
-    #   - 8000:8000
     expose:
       - 8000
     env_file:
@@ -25,11 +23,21 @@ services:
       context: .
       dockerfile: docker/nginx/Dockerfile
     ports:
-      - 1337:80
+      - 80:80
+      - 443:443
+    volumes:
+      - ./docker/nginx/certbot/conf:/etc/letsencrypt
+      - ./docker/nginx/certbot/www:/var/www/certbot
     depends_on:
       - backend
-
-
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx/certbot/conf:/etc/letsencrypt
+      - ./docker/nginx/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
 volumes:
   postgres_data:
+  static_volume:
