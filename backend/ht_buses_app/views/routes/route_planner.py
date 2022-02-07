@@ -49,4 +49,5 @@ def routeplanner(request):
         data["parents"] = address_arr
         return Response(data)
     except:
+        data["message"] = "school is invalid"
         return Response(data, status = 404)

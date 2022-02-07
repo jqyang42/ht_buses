@@ -28,5 +28,5 @@ def route_edit(request):
         result = data
         return Response(result)
     except:
+        data["message"] = "route could not be updated"
         return Response(data, status = 400)
-        #raise ValidationError({"messsage": "invalid options were chosen"})
