@@ -12,11 +12,10 @@ def school_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        school_object =  School.schoolsTable.get(pk=id)
+        school_object = School.schoolsTable.get(pk=id)
         school_object.delete()
         data["message"] = "school successfully deleted"
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)
     except:
+        data["message"] = "school could not be deleted"
         return Response(data, status = 400)
-        #raise ValidationError({"messsage": "school could not be deleted"})

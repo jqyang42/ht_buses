@@ -20,7 +20,7 @@ def routes_detail(request):
         students = Student.studentsTable.filter(route_id=id)
         students_serializer = StudentSerializer(students, many=True)
         route_address = {"lat": school_serializer.data["lat"], "long": school_serializer.data["long"]}
-        route_school = {"id" : route_serializer.data["school_id"], "name" : school_serializer.data["name"], "address": route_address}
+        route_school = {"id" : route_serializer.data["school_id"], "name" : school_serializer.data["name"], "location": route_address}
         route_arr = {"name": route_serializer.data["name"], "school": route_school, "description": route_serializer.data["description"]}
         parent_id_arr = []
         address_arr = []
@@ -34,9 +34,9 @@ def routes_detail(request):
                 parent_student = Student.studentsTable.filter(user_id=parent_id, route_id=id)
                 parent_student_serializer = StudentSerializer(parent_student, many=True)
                 for child in parent_student_serializer.data:
-                    parent_student_arr.append({'id' : child["id"], 'student_school_id': child["student_school_id"], 'first_name': child["first_name"], 'last_name' : child["last_name"]})
-                parent_address = {"address": parent_serializer.data["address"], "lat": parent_serializer.data["lat"], 'long': parent_serializer.data["long"]}
-                address_arr.append({'id' : parent_id, 'address' : parent_address, 'students': parent_student_arr})
+                    parent_student_arr.append({"id" : child["id"], "student_school_id": child["student_school_id"], "first_name": child["first_name"], "last_name" : child["last_name"]})
+                parent_address = {"address": parent_serializer.data["address"], "lat": parent_serializer.data["lat"], "long": parent_serializer.data["long"]}
+                address_arr.append({"id" : parent_id, "location" : parent_address, "students": parent_student_arr})
         data["route"] = route_arr
         if len(address_arr) != 0:
             data["parents"] = address_arr
