@@ -1,0 +1,9 @@
+{
+    "student": {
+        "first_name": "Mary",
+        "last_name": "Cool",
+        "student_school_id": 123456,
+        "school_id": 1,
+        "user_id": 7
+    }
+}

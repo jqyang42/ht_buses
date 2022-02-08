@@ -1,3 +1,4 @@
+from ...serializers import StudentSerializer
 from ...models import Student, School, User, Route
 from rest_framework.response import Response
 import re
@@ -5,16 +6,15 @@ from ..resources import capitalize_reg
 
 def create_student(student_info, id=None):
     data = {}
-    first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info['first_name'])
-    last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info['last_name'])
-    student_school_id = student_info['student_school_id']
+    first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info["first_name"])
+    last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info["last_name"])
+    student_school_id = student_info["student_school_id"]
     try:
-        user = User.objects.get(pk = id)
-        school_id = School.schoolsTable.get(id =student_info['school_id'])
+        user = User.objects.get(pk=id)
+        school_id = School.schoolsTable.get(id =student_info["school_id"])
     except :
-        data["message"] = "Invalid options were chosen. Student information update was unsuccessful"
-        result = {"data" : data}
-        return Response(result)
+        data["message"] = "invalid options were chosen, student information update was unsuccessful"
+        return Response(data)
     try:
         route_id = Route.routeTables.get(pk = student_info['route_id'])
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id=route_id)
@@ -25,5 +25,4 @@ def create_student(student_info, id=None):
     user.save()
     data["message"] = "student created successfully"
     data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user.id}
-    result = {"data" : data}
-    return result
+    return data

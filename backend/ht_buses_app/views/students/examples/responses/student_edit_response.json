@@ -1,0 +1,10 @@
+{
+    "message": "student information successfully updated",
+    "student": {
+        "first_name": "Mary",
+        "last_name": "Cool",
+        "student_school_id": 123456,
+        "route_id": 0,
+        "user_id": 7
+    }
+}

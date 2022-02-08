@@ -1,0 +1,9 @@
+{
+    "students": [{
+        "first_name": "Tester",
+        "last_name": "Cool",
+        "student_school_id": 1,
+        "school_id": 1,
+        "route_id": 1
+    }]
+}

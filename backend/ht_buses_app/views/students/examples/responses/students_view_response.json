@@ -1,0 +1,17 @@
+{
+    "students": [
+        {
+            "id": 4,
+            "student_school_id": 123456,
+            "first_name": "Mary",
+            "last_name": "Smith",
+            "school_name": "East Middle School",
+            "route_name": "Route 90",
+            "parent": {
+                "id": 7,
+                "first_name": "Jerry",
+                "last_name": "Smith"
+            }
+        }
+    ]
+}

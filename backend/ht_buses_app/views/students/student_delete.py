@@ -16,8 +16,7 @@ def student_delete(request):
         student_object =  Student.studentsTable.get(pk=id)
         student_object.delete()
         data["message"] = "student successfully deleted"
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)
     except:
+        data["message"] = "student could not be deleted"
         return Response(data, status = 400)
-        #raise ValidationError({"messsage": "student could not be deleted"})

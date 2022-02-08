@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
 # Students Detail GET API
-# Wrap in a student object
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser]) 
@@ -26,12 +25,11 @@ def students_detail(request):
             route_name = route_serializer.data["name"]
         school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
-        data["user_id"] = student_serializer.data["user_id"]
-        data["student_school_id"] = student_serializer.data["student_school_id"]
-        data["first_name"] = student_serializer.data["first_name"]
-        data["last_name"] = student_serializer.data["last_name"]
+        student_arr = {"user_id": student_serializer.data["user_id"], "student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"]}
+        data["student"] = student_arr
         data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
         data["route"] = {'id' : route_id, 'name' : route_name}
         return Response(data)
     except:
+        data["message"] = "student was not found"
         return Response(data, status = 404)

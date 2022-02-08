@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer
 
 # Student Route PUT API
-# Refactor into a PATCH API
+# Need to test
 @csrf_exempt
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])
@@ -24,11 +24,9 @@ def student_route_edit(request):
             else:
                  student_obj.route_id = Route.routeTables.get(pk=student["route_id"])
             student_obj.save()
-        data["message"] = "Student's route information was successfully updated"
+        data["message"] = "student's route information was successfully updated"
         student_serializer = StudentSerializer(student_obj, many=False)
         data["student"] = student_serializer.data
-        result = {"data": data}
-        return Response(result)
     except:
+        data["message"] = "student was not added/removed to route"
         return Response(data, status = 404)
-        #raise ValidationError({"message" : "student was not added/removed to route"})
