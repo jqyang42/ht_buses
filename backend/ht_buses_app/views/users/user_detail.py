@@ -49,5 +49,5 @@ def users_detail(request):
         data["is_parent"] = user_serializer.data["is_parent"]
         return Response(data)
     except:
+        data["message"] = "user does not exist"
         return Response(data, status = 404)
-        #raise ValidationError({"message": "User does not exist"})

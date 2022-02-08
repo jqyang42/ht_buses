@@ -7,7 +7,6 @@ from ...serializers import UserSerializer
 
 
 # User GET API: All Users for Admin
-# Cut down on code
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([AllowAny]) 

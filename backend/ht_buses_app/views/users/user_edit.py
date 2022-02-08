@@ -7,7 +7,6 @@ from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 
-# Refactor into PATCH
 @csrf_exempt
 @api_view(["PUT"])
 @permission_classes([IsAdminUser]) 
@@ -31,11 +30,11 @@ def user_edit(request): # TODO: make try and catch
         #if user_object.is_parent is True:
         #    for student_info in reqBody["students"]:
         #        create_student(student_info, id)
-        data["message"] = "User information was successfully updated"
+        data["message"] = "user information was successfully updated"
         data["success"] = True
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)
     except:
+        data["message"] = "user information could not be updated"
         return Response(data, status = 404)
 
 @csrf_exempt
@@ -51,15 +50,12 @@ def valid_email_edit(request):
         if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["validEmail"] = False
-            result = {"data" : data}
-            return Response(result)
+            return Response(data)
         else: 
             data["message"] = "The email entered is valid"
             data["validEmail"] = True
-            result = {"data" : data}
-            return Response(result)
+            return Response(data)
     except: 
         data["message"] = "The email entered is valid"
         data["validEmail"] = True
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)

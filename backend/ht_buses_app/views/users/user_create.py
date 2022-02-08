@@ -1,3 +1,4 @@
+from ...serializers import UserSerializer
 from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -32,10 +33,10 @@ def user_create(request):
     if is_parent:
         for student in reqBody["students"]:
             student_create.create_student(student, user.id)
-    data["id"] = user.id
-    data["message"] = "User created successfully"
-    result = {"data" : data}
-    return Response(result)
+    data["message"] = "user created successfully"
+    user_serializer = UserSerializer(user, many=False)
+    data["user"] = user_serializer.data
+    return Response(data)
 
 
 @csrf_exempt
@@ -49,11 +50,9 @@ def valid_email_create(request):
         User.objects.get(email = email)
         data["message"] = "Please enter a different email. A user with this email already exists"
         data["validEmail"] = False
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)
     except: 
         data["message"] = "The email entered is valid"
         data["validEmail"] = True
-        result = {"data" : data}
-        return Response(result)
+        return Response(data)
 
