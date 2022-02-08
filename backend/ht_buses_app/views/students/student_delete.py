@@ -19,7 +19,6 @@ def student_delete(request):
             parent.is_parent = False
         student_object.delete()
         parent.save()
-        print(parent.is_parent)
         data["message"] = "student successfully deleted"
         result = {"data" : data}
         return Response(result)

@@ -13,7 +13,6 @@ def users_detail(request):
     id = request.query_params["id"]
     try:
         user = User.objects.get(pk=id)
-        print(user.is_parent)
         user_serializer = UserSerializer(user, many=False)
         data["first_name"] = user_serializer.data["first_name"]
         data["last_name"] = user_serializer.data["last_name"]

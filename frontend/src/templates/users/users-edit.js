@@ -173,7 +173,6 @@ class UsersEdit extends Component {
         } else {
             role = 'general'
         }
-        console.log(user.is_parent)
         this.setState({ 
             user: user,
             first_name: user.first_name,
