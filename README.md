@@ -16,3 +16,4 @@ ECE458 Senior Design Project
     - `sudo docker-compose up --build -d`: builds docker images thru `docker-compose.yml`, and gets them up and running in detached mode (logs don't automatically take up terminal)    
     - `sudo docker-compose logs -f`: follows logs output - here's where you see what all the different services built in docker-compose (nginx, backend, db) are saying
     - `sudo docker-compose down --volumes --remove-orphans`: shuts down the images, deletes the volumes, removes any volumes not associated by name anymore. This should be run before bring the images back up!
+Note: If you get a "cannot start service nginx" error run 'sudo service nginx stop'
