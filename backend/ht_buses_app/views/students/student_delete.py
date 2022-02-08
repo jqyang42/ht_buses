@@ -14,11 +14,12 @@ def student_delete(request):
     id = request.query_params["id"]
     try:
         student_object =  Student.studentsTable.get(pk=id)
-        parent = User.objects.get(pk = 40)
+        parent = User.objects.get(pk = student_object.user_id.id)
         if(Student.studentsTable.filter(user_id = parent).count() == 1):
             parent.is_parent = False
         student_object.delete()
         parent.save()
+        print(parent.is_parent)
         data["message"] = "student successfully deleted"
         result = {"data" : data}
         return Response(result)

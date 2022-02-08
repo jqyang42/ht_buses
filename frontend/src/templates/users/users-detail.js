@@ -358,9 +358,9 @@ class UsersDetail extends Component {
                                         Unable to delete user. Please correct all errors before deleting.
                                     </div>) : ""
                                 }
-                                {(this.state.create_success === 1) ? 
+                                {(this.state.create_success === -1) ? 
                                     (<div class="alert alert-danger mt-2 mb-2" role="alert">
-                                        Unable to add student. Please correct all errors before deleting.
+                                        Unable to add student. Please correct all errors before adding.
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">

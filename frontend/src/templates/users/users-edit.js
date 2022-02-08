@@ -173,7 +173,7 @@ class UsersEdit extends Component {
         } else {
             role = 'general'
         }
-    
+        console.log(user.is_parent)
         this.setState({ 
             user: user,
             first_name: user.first_name,
@@ -238,19 +238,19 @@ class UsersEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
-                                                    value={this.state.user.first_name} placeholder="Enter first name" required
+                                                    defaultValue={this.state.user.first_name} placeholder="Enter first name" required
                                                     onChange={this.handleFirstNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
-                                                    value={this.state.user.last_name} placeholder="Enter last name" required
+                                                    defaultValue={this.state.user.last_name} placeholder="Enter last name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
-                                                value={this.state.user.email} placeholder="Enter email" required
+                                                defaultValue={this.state.user.email} placeholder="Enter email" required
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
@@ -265,7 +265,7 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 w-75 " + (this.state.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -282,7 +282,7 @@ class UsersEdit extends Component {
                                                     value={this.state.address}
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.user.is_parent}/>
+                                                    required={this.state.is_parent}/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div className="form-group required pb-3 w-75">
