@@ -1,22 +1,19 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
-# Only would need to refactor to do instead: "parent": {json info}
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAuthenticated]) 
+@permission_classes([AllowAny]) 
 def parent_dashboard(request):
     data = {}
     try:
         id = request.query_params["id"] # need id of parent
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
-        data["first_name"] = user_serializer.data["first_name"]
-        data["last_name"] = user_serializer.data["last_name"]
         students = Student.studentsTable.filter(user_id=id)
         student_serializer = StudentSerializer(students, many=True)
         parent_kids = []
@@ -35,7 +32,7 @@ def parent_dashboard(request):
                 route_serializer = RouteSerializer(route, many=False)
                 route_name = route_serializer.data["name"]
             parent_kids.append({'id' : id, 'student_school_id': student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
-        data["students"] = parent_kids
+        data["users"] = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "students": parent_kids}
         return Response(data)
     except:
         return Response(data, status = 404)
