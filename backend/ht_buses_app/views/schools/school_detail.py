@@ -1,14 +1,14 @@
 from ...models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer
 
 # Schools Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def schools_detail(request):
     data = {}
     id = request.query_params["id"]

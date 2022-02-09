@@ -1,13 +1,13 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAuthenticated]) 
 def parent_dashboard(request):
     data = {}
     try:

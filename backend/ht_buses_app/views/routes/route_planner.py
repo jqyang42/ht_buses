@@ -1,7 +1,7 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
@@ -9,7 +9,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 # This needs to be rewritten, currently have 3 for loops
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
