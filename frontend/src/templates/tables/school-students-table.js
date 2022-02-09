@@ -26,7 +26,6 @@ export function SchoolStudentsTable({ data, showAll }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
-                disableSortBy: true,
                 className: 'unassigned'
             },
         ],
