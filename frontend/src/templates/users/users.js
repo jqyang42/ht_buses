@@ -1,10 +1,9 @@
-import axios from 'axios';
 import React, { Component } from "react";
 import { Link, Navigate} from "react-router-dom";
 import { UsersTable } from '../tables/users-table';
-import { API_DOMAIN } from '../../constants';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
+import api from "../components/api";
 
 import { LOGIN_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
@@ -21,12 +20,7 @@ class Users extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + `users`, config)
+        api.get('users')
             .then(response => {
             const users = response.data.users;
             this.setState({ users });

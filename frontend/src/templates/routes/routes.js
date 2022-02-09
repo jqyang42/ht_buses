@@ -1,12 +1,11 @@
-import axios from "axios";
 import React, { Component } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { RoutesTable } from "../tables/routes-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class BusRoutes extends Component {
@@ -21,16 +20,11 @@ class BusRoutes extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + `routes`, config)
+        api.get('routes')
             .then(res => {
-            const routes = res.data.routes
-            this.setState({ routes });
-            this.setState({ show_all: false });
+                const routes = res.data.routes
+                this.setState({ routes });
+                this.setState({ show_all: false });
         })
     }
 
