@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { API_DOMAIN } from "../../constants";
-import { Link , Navigate} from "react-router-dom";
+import { Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import RouteMap from "../routes/route-map";
 import { StopsTable } from "../tables/stops-table";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
-import axios from "axios";
 
 class ParentDetail extends Component {
     state = {
@@ -27,16 +27,9 @@ class ParentDetail extends Component {
 
     componentDidMount() {
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        // console.log(config)
-
         var self = this
 
-        axios.get(API_DOMAIN + 'dashboard/students/detail?id=' + this.props.params.id, config)
+        api.get(`dashboard/students/detail?id=${this.props.params.id}`)
             .then(res => {
                 const student = res.data
                 const route = student.route

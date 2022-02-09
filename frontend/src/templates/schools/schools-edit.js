@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
-import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import ErrorPage from "../error-page";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
@@ -71,13 +71,7 @@ class SchoolsEdit extends Component {
             long: this.state.lng,
         }
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
-        axios.put(API_DOMAIN + `schools/edit?id=` + this.props.params.id, school, config)  // TODO: use onclick id value
+        api.put(`schools/edit?id=${this.props.params.id}`, school)
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'school information updated successfully') {
@@ -90,15 +84,9 @@ class SchoolsEdit extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
 
-        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`schools/detail?id=${this.props.params.id}`)
         .then(res => {
             const school = res.data;
             this.setState({ school: school, school_name: school.name, school_address: school.address });

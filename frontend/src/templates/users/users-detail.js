@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_DOMAIN, USERS_URL } from '../../constants';
+import { USERS_URL } from '../../constants';
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -7,6 +6,7 @@ import { UserStudentsTable } from '../tables/user-students-table';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
+import api from '../components/api';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -34,15 +34,9 @@ class UsersDetail extends Component {
     }
 
     componentDidMount() {
-        let config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
         
-        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
+        api.get(`users/detail?id=${this.props.params.id}`)
             .then(res => {
             const users = res.data;
             if (users.students == null) {
@@ -65,7 +59,7 @@ class UsersDetail extends Component {
             } 
         )
         
-        axios.get(API_DOMAIN + `schools`,  config)
+        api.get(`schools`)
             .then(res => {            
             let schools = res.data.schools.map(school => {
                 return {value: school.id, display: school.name}
@@ -86,14 +80,8 @@ class UsersDetail extends Component {
 
     handleDeleteSubmit = event => {
         event.preventDefault();
-
-        let config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
-        axios.delete(API_DOMAIN + `users/delete?id=` + this.props.params.id, config)
+        
+        api.delete(`users/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log(res)
                 const msg = res.data.data.message
@@ -129,13 +117,7 @@ class UsersDetail extends Component {
             students: [this.state.new_student]
         }
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        
-        axios.post(API_DOMAIN + `users/add-students?id=` + this.props.params.id, student, config) // TODO, config as 3rd parameter
+        api.post(`users/add-students?id=${this.props.params.id}`, student)
             .then(res => {
                 const msg = res.data.data.message
                 if (msg === 'Students created successfully') {
@@ -175,12 +157,7 @@ class UsersDetail extends Component {
         student.school_id = school_id
         this.setState({ new_student: student })
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
+        api.get(`schools/detail?id=${school_id}`)
             .then(res => {
                 let routes_data
                 if (res.data.routes == null) {

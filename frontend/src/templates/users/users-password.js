@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { passwordRegex } from "../regex/input-validation";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import ErrorPage from "../error-page";
 
@@ -61,13 +60,7 @@ class UsersPassword extends Component {
             password: this.state.password
         }
         
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-    
-        axios.put(API_DOMAIN + `users/password-edit?id=` + this.props.params.id, password, config) 
+        api.put(`users/password-edit?id=${this.props.params.id}`, password) 
             .then(res => {
                 const msg = res.data.data.message
                 if (msg === 'User password updated successfully') {
@@ -79,15 +72,9 @@ class UsersPassword extends Component {
     }
 
     componentDidMount() { 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
 
-        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)
+        api.get(`users/detail?id=${this.props.params.id}`)
             .then(res => {
             const user = res.data;
             if (user.students == null) {
