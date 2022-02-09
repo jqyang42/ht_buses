@@ -1,5 +1,6 @@
 # Based off of djangowaves.com's ultimate Django gitignore
 
+certbot/
 # Django #
 *.log
 *.pot
