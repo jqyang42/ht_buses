@@ -10,7 +10,6 @@ import re
 from ..resources import capitalize_reg
 
 # User POST API
-# Return the newly created object
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
