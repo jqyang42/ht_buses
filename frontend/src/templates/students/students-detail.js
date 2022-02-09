@@ -1,10 +1,10 @@
-import axios from 'axios';
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { API_DOMAIN, STUDENTS_URL } from "../../constants";
+import { STUDENTS_URL } from "../../constants";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
+import api from "../components/api";
 
 import { LOGIN_URL } from '../../constants';
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -22,15 +22,9 @@ class StudentsDetail extends Component {
     }
     
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
 
-        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`students/detail?id=${this.props.params.id}`)
             .then(response => {
             // console.log(response)
             const student = response.data;
@@ -53,13 +47,7 @@ class StudentsDetail extends Component {
     handleDeleteSubmit = event => {
         event.preventDefault()
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
-        axios.delete(API_DOMAIN + `students/delete?id=` + this.props.params.id, config)
+        api.delete(`students/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log(res)
                 const msg = res.data.data.message

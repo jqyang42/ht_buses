@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
@@ -6,10 +5,10 @@ import { useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { ROUTES_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class BusRoutesEdit extends Component {
@@ -40,15 +39,7 @@ class BusRoutesEdit extends Component {
             route_description: this.state.route_description,
         }
         
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        
-        // console.log(route)
-
-        axios.put(API_DOMAIN + `routes/edit?id=` + this.props.params.id, route, config)  // TODO: use onclick id value
+        api.put(`routes/edit?id=${this.props.params.id}`, route)  // TODO: use onclick id value
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'route updated successfully') {
@@ -62,15 +53,9 @@ class BusRoutesEdit extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
         
-        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`routes/detail?id=${this.props.params.id}`)  // TODO: use onclick id values
         .then(res => {
             const route = res.data;
             this.setState({ 

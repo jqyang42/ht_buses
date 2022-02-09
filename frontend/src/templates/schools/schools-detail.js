@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -7,6 +6,7 @@ import { SchoolRoutesTable } from "../tables/school-routes-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
+import api from "../components/api";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
 import { API_DOMAIN } from "../../constants";
@@ -45,15 +45,7 @@ class SchoolsDetail extends Component {
         event.preventDefault();
 
         if (this.state.delete_school == this.state.school.name) {
-            const config = {
-                headers: {
-                    Authorization: `Token ${sessionStorage.getItem('token')}`
-                }
-            }
-
-            // console.log(config)
-
-            axios.delete(API_DOMAIN + `schools/delete?id=` + this.props.params.id, config)
+            api.delete(`schools/delete?id=${this.props.params.id}`)
                 .then(res => {
                     // console.log(res)
                     const msg = res.data.data.message
@@ -72,15 +64,9 @@ class SchoolsDetail extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
 
-        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const school = res.data;
                 

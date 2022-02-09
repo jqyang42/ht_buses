@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -7,9 +6,9 @@ import RouteMap from './route-map';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 
 class BusRoutesDetail extends Component {
@@ -29,21 +28,15 @@ class BusRoutesDetail extends Component {
         error_code: 200
     }
 
-    handleShowAll = event => {
+    handleShowAll = () => {
         this.setState({show_all: !this.state.show_all})
         // console.log(this.state.show_all)
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
         
-        axios.get(API_DOMAIN + `routes/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`routes/detail?id=${this.props.params.id}`)
             .then(res => {
             const route = res.data;
             const school = route.school;
@@ -112,15 +105,9 @@ class BusRoutesDetail extends Component {
     }
 
     handleDelete = event => {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         event.preventDefault()
 
-        axios.delete(API_DOMAIN + `routes/delete?id=` + this.props.params.id, config)
+        api.delete(`routes/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log("hello")
                 const msg = res.data.data.message

@@ -3,9 +3,7 @@ import { Data, GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-m
 import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
-import { API_DOMAIN } from '../../constants';
 import { MARKER_ICONS } from '../../constants';
-import axios from "axios";
 import Geocode from "react-geocode";
 
 class StudentMarker extends Component {

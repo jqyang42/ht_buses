@@ -1,12 +1,11 @@
-import axios from "axios";
 import React, { Component } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { StudentsTable } from "../tables/students-table";
 import SidebarMenu from "../components/sidebar-menu";
 import HeaderMenu from "../components/header-menu";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class Students extends Component {
@@ -15,22 +14,16 @@ class Students extends Component {
         show_all: false
     }
 
-    handleShowAll = event => {
+    handleShowAll = () => {
         this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + `students`, config)
+        api.get('students')
             .then(res => {
-            const students = res.data.students;
-            this.setState({ students });
-            this.setState({ show_all: false });
+                const students = res.data.students;
+                this.setState({ students });
+                this.setState({ show_all: false });
         })
     }
 
