@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
@@ -6,10 +5,10 @@ import HeaderMenu from "../components/header-menu";
 import Autocomplete from "react-google-autocomplete";
 import Geocode from "react-geocode";
 import { GOOGLE_API_KEY } from "../../constants";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class SchoolsCreate extends Component {
@@ -67,13 +66,8 @@ class SchoolsCreate extends Component {
             lat: this.state.lat,
             long: this.state.lng,
         }
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
-        axios.post(API_DOMAIN + `schools/create`, school, config)
+        
+        api.post(`schools/create`, school)
             .then(res => {
                 const msg = res.data.data.message
                 if (msg == 'school created successfully') {
