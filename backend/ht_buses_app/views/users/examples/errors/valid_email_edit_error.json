@@ -1,0 +1,4 @@
+{
+    "message": "Please enter a different email. A user with this email already exists",
+    "valid_email": false
+}

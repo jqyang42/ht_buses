@@ -1,0 +1,16 @@
+{
+    "user": {
+        "email": "example@example.com",
+        "password": "something",
+        "first_name": "Example",
+        "last_name": "IsCool",
+        "is_staff": true,
+        "is_parent": false,
+        "location": {
+            "address": "Address here",
+            "lat": 0.0,
+            "long": 0.0
+        }
+
+    }
+}

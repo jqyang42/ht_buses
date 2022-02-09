@@ -9,14 +9,15 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 # This needs to be rewritten, currently have 3 for loops
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
     try:
         school = School.schoolsTable.get(pk=id)
         school_serializer = SchoolSerializer(school, many=False)
-        school_arr = {"name": school_serializer.data["name"], "address": school_serializer.data["address"], "lat": school_serializer.data["lat"], "long": school_serializer.data["long"]} 
+        school_address = {"address": school_serializer.data["address"], "lat": school_serializer.data["lat"], "long": school_serializer.data["long"]}
+        school_arr = {"name": school_serializer.data["name"], "location": school_address} 
         data["school"] = school_arr
         routes = Route.routeTables.filter(school_id=id)
         routes_serializer = RouteSerializer(routes, many=True)

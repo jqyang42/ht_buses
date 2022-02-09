@@ -1,0 +1,95 @@
+{
+    "users": [
+        {
+            "id": 29,
+            "first_name": "Emmy",
+            "last_name": "Bean",
+            "email": "emmy@d.com",
+            "is_staff": false,
+            "is_parent": true,
+            "location": {
+                "address": "a cool place",
+                "lat": 178.2,
+                "long": 152.1
+            }
+        },
+        {
+            "id": 30,
+            "first_name": "Emmy",
+            "last_name": "Beans",
+            "email": "emmybeans@d.com",
+            "is_staff": false,
+            "is_parent": true,
+            "location": {
+                "address": "a cool place",
+                "lat": 178.2,
+                "long": 152.1
+            }
+        },
+        {
+            "id": 7,
+            "first_name": "Jerry",
+            "last_name": "Smith",
+            "email": "y1@d.com",
+            "is_staff": true,
+            "is_parent": true,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            }
+        },
+        {
+            "id": 8,
+            "first_name": "Jerry",
+            "last_name": "Smith",
+            "email": "yddd@d.com",
+            "is_staff": false,
+            "is_parent": true,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            }
+        },
+        {
+            "id": 9,
+            "first_name": "Emily",
+            "last_name": "Smith",
+            "email": "eee@d.com",
+            "is_staff": false,
+            "is_parent": true,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            }
+        },
+        {
+            "id": 11,
+            "first_name": "Emily",
+            "last_name": "Smith",
+            "email": "eef@d.com",
+            "is_staff": false,
+            "is_parent": true,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            }
+        },
+        {
+            "id": 13,
+            "first_name": "Emily",
+            "last_name": "Smith",
+            "email": "abceeee@d.com",
+            "is_staff": false,
+            "is_parent": true,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            }
+        }
+    ]
+}

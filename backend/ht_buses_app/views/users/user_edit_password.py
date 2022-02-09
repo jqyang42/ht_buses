@@ -14,7 +14,7 @@ def user_password_edit(request):
     reqBody = json.loads(request.body)
     try:
         user_object = User.objects.get(pk = id)
-        user_object.set_password(reqBody['password'])
+        user_object.set_password(reqBody['user']['password'])
         user_object.save()
         data["message"] = "user password updated successfully"
         return Response(data) 

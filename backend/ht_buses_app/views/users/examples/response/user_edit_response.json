@@ -1,0 +1,15 @@
+{
+    "message": "user information was successfully updated",
+    "success": true,
+    "user": {
+        "id": 3,
+        "first_name": "Abc",
+        "last_name": "Buses",
+        "email": "example@gmail.com",
+        "is_staff": true,
+        "is_parent": false,
+        "address": "Address here",
+        "lat": 0.0,
+        "long": 0.0
+    }
+}
