@@ -13,13 +13,10 @@ def parent_student_detail(request):
     student_arr = {}
     id = request.query_params["id"]
     try:
-        print("do i get here")
         student = Student.studentsTable.get(pk=id)
-        #auth_string = "Token "+str(student.user_id.auth_token)
-        # request.headers['Authorization']
+        auth_string = "Token "+str(student.user_id.auth_token)
         auth_string = True
-        if auth_string == True:
-            print("do i get here")
+        if auth_string == request.headers['Authorization']:
             student_serializer = StudentSerializer(student, many=False)
             student_arr["school_student_id"] = student_serializer.data["student_school_id"]
             student_arr["first_name"] = student_serializer.data["first_name"]
