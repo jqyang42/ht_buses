@@ -1,4 +1,4 @@
-from ...models import Student
+from ...models import Student, User
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
@@ -14,7 +14,11 @@ def student_delete(request):
     id = request.query_params["id"]
     try:
         student_object =  Student.studentsTable.get(pk=id)
+        parent = User.objects.get(pk = student_object.user_id.id)
+        if(Student.studentsTable.filter(user_id = parent).count() == 1):
+            parent.is_parent = False
         student_object.delete()
+        parent.save()
         data["message"] = "student successfully deleted"
         return Response(data)
     except:

@@ -14,7 +14,7 @@ def user_logout(request):
     try:
         reqBody = json.loads(request.body)
         user_id = User.objects.get(pk = reqBody["user_id"])
-        user_id.auth_token.delete()
+        #user_id.auth_token.delete()
         logout(request._request)
         return Response({"message":'User was logged out successfully'})  
     except:
