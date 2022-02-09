@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link} from "react-router-dom";
 import { Navigate } from "react-router";
@@ -8,9 +7,10 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import ErrorPage from "../error-page";
+import api from "../components/api";
+
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
 import { emailRegex } from "../regex/input-validation";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -84,7 +84,7 @@ class UsersEdit extends Component {
         }
     }
 
-    sendEditRequest = (config) => {
+    sendEditRequest = () => {
         const user = {
             email: this.state.email,
             password: this.state.password,
@@ -99,7 +99,7 @@ class UsersEdit extends Component {
 
         // console.log(user)
 
-        axios.put(API_DOMAIN + `users/edit?id=` + this.props.params.id, user, config)
+        api.put(`users/edit?id=${this.props.params.id}`, user)
         .then(res => {
             const success = res.data.data.sucess
             if ( success ) {
@@ -123,18 +123,11 @@ class UsersEdit extends Component {
             return 
         }
 
-
-        let config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
-       
         let request_body = {
             email: this.state.email
         }
-        axios.put(API_DOMAIN + `users/edit/validate-email?id=` + this.props.params.id, request_body, config)
+        
+        api.put(`users/edit/validate-email?id=${this.props.params.id}`, request_body)
         .then(res => {
             const data = res.data.data
             this.validEmail = data.validEmail
@@ -143,7 +136,7 @@ class UsersEdit extends Component {
                 this.handleRefresh()
                 return
             }     
-           this.sendEditRequest(config)
+           this.sendEditRequest()
         })
         
     }
@@ -153,15 +146,9 @@ class UsersEdit extends Component {
     };
 
     componentDidMount() {
-        let config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         var self = this
 
-        axios.get(API_DOMAIN + `users/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`users/detail?id=${this.props.params.id}`)
         .then(res => {
         const user = res.data;
         // console.log(res)

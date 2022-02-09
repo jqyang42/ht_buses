@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { Component } from "react";
 import { Link} from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -6,10 +5,10 @@ import { Navigate } from "react-router";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
+import api from "../components/api";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class StudentsEdit extends Component {
@@ -50,16 +49,11 @@ class StudentsEdit extends Component {
     handleSchoolChange = event => {
         // const school_name = event.target.value
         const school_id = event.target.value
-        const config = {
-            headers: {
-            Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        this.setState({ route_id : null})
+                this.setState({ route_id : null})
         // console.log(this.state.schools_dropdown)
         this.setState({ school_id: school_id }, () => {
             // console.log(this.state.school_id)
-            axios.get(API_DOMAIN + 'schools/detail?id=' + this.state.school_id, config)
+            api.get(`schools/detail?id=${this.state.school_id}`)
                 .then(res => {
                     let routes_data
                     if (res.data.routes == null) {
@@ -121,16 +115,7 @@ class StudentsEdit extends Component {
             parent_id: parseInt(this.state.parent_id)
         }
 
-        // console.log(student)
-
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        
-        // console.log(student)
-        axios.put(API_DOMAIN + `students/edit?id=` + this.props.params.id, student, config)
+        api.put(`students/edit?id=${this.props.params.id}`, student)
         .then(res => {
             const msg = res.data.data.message
             if (msg == 'Student information successfully updated') {
@@ -146,16 +131,10 @@ class StudentsEdit extends Component {
     }
 
     async componentDidMount() {
-       const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         let init_parent_id, init_school_id
         var self = this
 
-        axios.get(API_DOMAIN + `students/detail?id=` + this.props.params.id,config)
+        api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
             const student = res.data;
             this.setState({ student: student });
@@ -183,7 +162,7 @@ class StudentsEdit extends Component {
 
             // console.log(this.state)
 
-            axios.get(API_DOMAIN + 'schools/detail?id=' + init_school_id, config)
+            api.get(`schools/detail?id=${init_school_id}`)
             .then(res => {
                 let routes_data
                 if (res.data.routes == null) {
@@ -209,7 +188,7 @@ class StudentsEdit extends Component {
         } 
         )
 
-        axios.get(API_DOMAIN + `schools`, config)
+        api.get(`schools`)
         .then(res => {            
             let schools = res.data.schools.map(school => {
                 return {
@@ -220,7 +199,7 @@ class StudentsEdit extends Component {
             this.setState({ schools_dropdown: schools})
         })
         
-        axios.get(API_DOMAIN + 'users', config)
+        api.get('users')
         .then(res => {
             let parents = res.data.users.filter(user => {
                 return user.is_parent === true
