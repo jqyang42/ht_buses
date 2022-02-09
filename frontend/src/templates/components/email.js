@@ -83,10 +83,10 @@ class Email extends Component {
                                     <div className="row">
                                         <div className="col mt-2">
                                             
-                                            <div className="form-group pb-3 w-75">
+                                            <div className="form-group required pb-3 w-75">
                                                 <label for="subject" className="control-label pb-2">Subject</label>
                                                 <input type="text" className="form-control pb-2" id="subject" 
-                                                placeholder="Add a subject"></input>
+                                                placeholder="Add a subject" required></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="email-body" className="control-label pb-2">Message</label>
