@@ -21,7 +21,7 @@ class UsersEdit extends Component {
         first_name: '',
         last_name: '',
         address: '',
-        is_staff: null,
+        role_value: null,
         user: [],
         redirect: false,
         lat: 0,
@@ -60,8 +60,8 @@ class UsersEdit extends Component {
     }
 
     handleIsStaffChange = event => {
-        let is_staff = event.target.value
-        this.setState({ is_staff });
+        let role_value = event.target.value
+        this.setState({ role_value });
     }
 
     handleAddressValidation = event => {
@@ -91,7 +91,7 @@ class UsersEdit extends Component {
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             address: this.state.address,
-            is_staff: this.state.is_staff === 'administrator',
+            is_staff: this.state.role_value === 'administrator',
             is_parent: this.state.user.is_parent,
             lat: this.state.lat,
             long: this.state.lng,
@@ -116,6 +116,7 @@ class UsersEdit extends Component {
         event.preventDefault();
         this.email = this.emailField.value
         // console.log(this.email)
+
 
         if (!this.emailValidation() || !this.state.valid_address ) {
             this.setState({ edit_success: -1 })
@@ -166,20 +167,19 @@ class UsersEdit extends Component {
         // console.log(res)
         this.email = user.email
 
-        let staff_value
+        let role
         if (user.is_staff) {
-            staff_value = 'administrator'
+            role = 'administrator'
         } else {
-            staff_value = 'general'
+            role = 'general'
         }
-
         this.setState({ 
             user: user,
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
             address: user.address,
-            is_staff: staff_value,
+            role_value: role,
             edit_success: 0,
             is_parent: user.is_parent
             });
@@ -264,7 +264,7 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 w-75 " + (this.state.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -278,10 +278,10 @@ class UsersEdit extends Component {
                                                         types: ['address']
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    defaultValue={this.state.address}
+                                                    value={this.state.address}
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.user.is_parent}/>
+                                                    required={this.state.is_parent}/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div className="form-group required pb-3 w-75">
@@ -290,12 +290,12 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    checked={this.state.is_staff === "administrator" } onChange={this.handleIsStaffChange}></input>
+                                                    checked={this.state.role_value === "administrator" } onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
-                                                    checked={this.state.is_staff === "general" } onChange={this.handleIsStaffChange}></input>
+                                                    checked={this.state.role_value === "general" } onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>

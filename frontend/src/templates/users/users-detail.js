@@ -129,8 +129,6 @@ class UsersDetail extends Component {
             students: [this.state.new_student]
         }
 
-        // console.log(student)
-
         const config = {
             headers: {
               Authorization: `Token ${sessionStorage.getItem('token')}`
@@ -362,7 +360,7 @@ class UsersDetail extends Component {
                                 }
                                 {(this.state.create_success === -1) ? 
                                     (<div class="alert alert-danger mt-2 mb-2" role="alert">
-                                        Unable to add student. Please correct all errors before deleting.
+                                        Unable to add student. Please correct all errors before adding.
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">

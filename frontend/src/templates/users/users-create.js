@@ -399,12 +399,12 @@ class UsersCreate extends Component {
                                                     else.</small>
                                                 {(!this.emailValidation() && this.state.user_email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Please enter a valid email
+                                                        Please enter a valid email.
                                                     </div>) : ""
                                                 }
                                                 {(!this.validEmail) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Update unsuccessful. Please enter a different email, a user with this email already exists
+                                                        User creation was unsuccessful. Please enter a different email, a user with this email already exists.
                                                     </div>) : ""
                                                 }
                                             </div>
