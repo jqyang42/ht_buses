@@ -192,3 +192,15 @@ td.unassigned {
     color: #F3F3F3;
 }
  
+.bg-red {
+    background-color: #E35D6A;
+    color: #ffffff;
+}
+
+.badge {
+    font-size: 0.6em;
+    font-weight: 500;
+    vertical-align: text-top;
+    margin-top: 2px;
+    padding-top: 5px;
+}

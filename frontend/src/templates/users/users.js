@@ -52,6 +52,12 @@ class Users extends Component {
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
                                     <div className="row d-inline-flex float-end">
+                                        <Link to={"/users/email"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            <span className="btn-text">
+                                                <i className="bi bi-envelope me-2"></i>
+                                                Send Announcement
+                                            </span>
+                                        </Link>
                                         <Link to={USERS_CREATE_URL} className="btn btn-primary float-end w-auto me-3" role="button">
                                             <span className="btn-text">
                                                 <i className="bi bi-person-plus-fill me-2"></i>

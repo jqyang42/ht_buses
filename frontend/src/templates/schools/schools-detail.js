@@ -142,6 +142,12 @@ class SchoolsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
+                                            <Link to={"/schools/" + this.props.params.id + "/email"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
+                                                    <i className="bi bi-envelope me-2"></i>
+                                                    Send Announcement
+                                                </span>
+                                            </Link>
                                             <Link to={"/schools/" + this.props.params.id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
