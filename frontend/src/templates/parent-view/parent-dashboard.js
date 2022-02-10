@@ -1,45 +1,41 @@
 import React, { Component } from "react";
-import { API_DOMAIN } from "../../constants";
-import { Link , Navigate, useParams} from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import api from "../components/api";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { ParentDashboardTable } from "../tables/parent-dashboard-table";
-import api from "../components/api";
 
 class ParentDashboard extends Component {
     state = {
         id: 0,
-        parent: [],
+        user: {},
         students: [],
         show_all: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    componentDidMount() {
+        this.getUserDashboard();
     }
 
-    componentDidMount() {
+    // api calls
+    getUserDashboard() {
         api.get(`dashboard?id=${sessionStorage.getItem('user_id')}`)
             .then(res => {
-            const parent = res.data;
-
-            let students
-            if (parent.students) {
-                students = parent.students
-            } else {
-                students = []
-            }
+            const user = res.data.user;
 
             this.setState({ 
-                parent: parent, 
-                students: students, 
-                show_all: false
+                user: user, 
+                students: user.students
             })
         })
     }
+    
+    // render handlers
+    handleShowAll() {
+        this.setState({show_all: !this.state.show_all})
+    }    
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
