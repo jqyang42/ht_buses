@@ -1,17 +1,15 @@
-import axios from 'axios';
 import React, { Component } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { SchoolsTable } from '../tables/schools-table';
-import { API_DOMAIN } from "../../constants";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
+import api from "../components/api";
 
 import { LOGIN_URL } from '../../constants';
 import { SCHOOLS_CREATE_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class Schools extends Component {
-
     state = {
         schools : [],
         show_all: false
@@ -23,16 +21,11 @@ class Schools extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + `schools`, config)
+        api.get('schools')
             .then(res => {
-            const schools = res.data.schools;
-            this.setState({ schools });
-            this.setState({ show_all: false });
+                const schools = res.data.schools;
+                this.setState({ schools });
+                this.setState({ show_all: false });
         })
     }
     

@@ -3,9 +3,7 @@ import { Data, GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-m
 import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
-import { API_DOMAIN } from '../../constants';
 import { MARKER_ICONS } from '../../constants';
-import axios from "axios";
 import Geocode from "react-geocode";
 
 class StudentMarker extends Component {
@@ -32,14 +30,20 @@ class StudentMarker extends Component {
 
     handleClick = (e) => {
       // console.log("map marker on handle click: " + this.props.active_route)
-      if (this.props.assignMode && this.state.currentRoute != this.props.active_route){
-        this.setState({
-          icon: MARKER_ICONS[this.props.active_route],
-          currentRoute: this.props.active_route
-        })
-        if (this.props.onChange && !this.state.updated) {
+      if (this.props.assignMode ){
+        if (this.state.currentRoute == 0) {
+          this.setState({
+            icon: MARKER_ICONS[this.props.active_route],
+            currentRoute: this.props.active_route
+          })
+        } else {
+          this.setState({
+            icon: MARKER_ICONS[0],
+            currentRoute: 0
+          })
+        }
+        if (this.props.onChange) {
           this.props.onChange(this.state.currentRoute, this.props.studentIDs)
-          this.setState({updated: true})
         }
       }
     }

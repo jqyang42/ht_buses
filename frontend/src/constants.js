@@ -16,6 +16,7 @@ export const MARKER_ICONS = marker_icons;
 
 export const SITE_NAME = "Hypothetical Transportation Bus Management System";
 export const API_DOMAIN = "http://localhost:8000/api/"
+// export const API_DOMAIN = "https://vcm-25243.vm.duke.edu/api/"
 
 // Link URLs
 export const INDEX_URL = "/";
@@ -40,6 +41,10 @@ export const STUDENTS_EDIT_URL = "/students/:id/edit";
 export const USERS_EDIT_URL = "/users/:id/edit";
 export const USERS_PASSWORD_URL = "/users/:id/change-password";
 export const ROUTES_EDIT_URL = "/routes/:id/edit";
+
+export const SCHOOLS_EMAIL_URL = "/schools/:id/email";
+export const ROUTES_EMAIL_URL = "/routes/:id/email";
+export const USERS_EMAIL_URL = "/users/email";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";

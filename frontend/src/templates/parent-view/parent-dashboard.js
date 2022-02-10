@@ -6,7 +6,7 @@ import HeaderMenu from "../components/header-menu";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { ParentDashboardTable } from "../tables/parent-dashboard-table";
-import axios from "axios";
+import api from "../components/api";
 
 class ParentDashboard extends Component {
     state = {
@@ -22,17 +22,9 @@ class ParentDashboard extends Component {
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        // console.log(sessionStorage.getItem('user_id'))
-        axios.get(API_DOMAIN + 'dashboard?id=' + sessionStorage.getItem('user_id'), config)
+        api.get(`dashboard?id=${sessionStorage.getItem('user_id')}`)
             .then(res => {
             const parent = res.data;
-
-            // console.log(parent)
 
             let students
             if (parent.students) {
@@ -40,8 +32,12 @@ class ParentDashboard extends Component {
             } else {
                 students = []
             }
-            // console.log(students)
-            this.setState({ parent: parent, students: students, show_all: false})
+
+            this.setState({ 
+                parent: parent, 
+                students: students, 
+                show_all: false
+            })
         })
     }
 

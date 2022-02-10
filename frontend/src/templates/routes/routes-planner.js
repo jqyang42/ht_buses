@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
@@ -8,9 +7,9 @@ import { Navigate } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
+import api from "../components/api";
 
 import { GOOGLE_API_KEY } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
@@ -35,43 +34,15 @@ class BusRoutesPlanner extends Component {
         }
     }
 
-    handleLogout = event => {
-        event.preventDefault();
-        const creds = {
-            user_id: sessionStorage.getItem('user_id')
-        }
-
-        axios.post(API_DOMAIN + `logout`, creds)
-        .then(res => {
-            this.setState({token: '', message: res.data.message})
-            sessionStorage.setItem('token', '')
-            sessionStorage.setItem('user_id', '')
-            sessionStorage.setItem('first_name', '')
-            sessionStorage.setItem('last_name', '')
-            sessionStorage.setItem('is_staff', false)
-            sessionStorage.setItem('logged_in', false)
-            // console.log(sessionStorage.getItem('logged_in'))
-            // console.log(sessionStorage.getItem('token'))
-            window.location.reload()
-        })
-    }
-
-
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        this.handleTableGet(config);       
-        this.handleLocationsGet(config);     
+        this.handleTableGet();       
+        this.handleLocationsGet();     
     }
 
-    handleTableGet = config => {
-
+    handleTableGet = () => {
         var self = this
         
-        axios.get(API_DOMAIN + `schools/detail?id=` + this.props.params.id, config)  // TODO: use onclick id values
+        api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const school = res.data;
                 this.setState({ school: school });
@@ -105,11 +76,10 @@ class BusRoutesPlanner extends Component {
             } 
             )        
     }
-    handleLocationsGet = config => {
-
+    handleLocationsGet = () => {
         var self = this
 
-        axios.get(API_DOMAIN + `routeplanner?id=` + this.props.params.id, config)
+        api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
                 const locations = res.data;
                 // console.log(locations)
@@ -182,17 +152,7 @@ class BusRoutesPlanner extends Component {
             school_name: this.state.school.name,
             route_description: this.state.create_route_description
         }
-        
-        // console.log(route)
-
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        // console.log(this.state.routes)
-
-        axios.post(API_DOMAIN + 'routes/create', route, config)
+        api.post(`routes/create`, route)
             .then(res => {
                 const new_route = res.data.data.route
                 // // console.log(new_route)
@@ -200,7 +160,7 @@ class BusRoutesPlanner extends Component {
                     id: new_route.id,
                     name: new_route.name
                 }]})
-                this.handleLocationsGet(config)
+                this.handleLocationsGet()
             })
     }
 
@@ -214,21 +174,17 @@ class BusRoutesPlanner extends Component {
     }
 
     handleRouteAssignSubmit = event => {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
         this.setState({
             assign_mode: false
         })
-        axios.put(API_DOMAIN + 'routeplanner/edit', this.students, config)
+
+        api.put('routeplanner/edit', this.students)
         .then(res => {
             // console.log(res.data);
             this.students = {"students":[]};
             this.setState({markers: []})
-            this.handleTableGet(config) 
-            this.handleLocationsGet(config)
+            this.handleTableGet() 
+            this.handleLocationsGet()
         })
     }
 

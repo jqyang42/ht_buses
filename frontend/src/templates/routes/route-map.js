@@ -4,8 +4,7 @@ import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
 import { MARKER_ICONS } from '../../constants';
-import { API_DOMAIN } from '../../constants';
-import axios from "axios";
+
 import Geocode from "react-geocode";
 import StudentMarker from './map-marker';
 import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";

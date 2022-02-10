@@ -1,6 +1,5 @@
-import axios from "axios";
 import React, { Component } from "react";
-import { GOOGLE_API_KEY, STUDENTS_URL } from "../../constants";
+import { GOOGLE_API_KEY } from "../../constants";
 import { Link } from "react-router-dom";
 import { Navigate } from "react-router";
 import Autocomplete from "react-google-autocomplete";
@@ -8,10 +7,10 @@ import { emailRegex, passwordRegex } from "../regex/input-validation";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
+import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 
@@ -148,12 +147,7 @@ class UsersCreate extends Component {
         students[index] = student
         this.setState({ students: students })
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + 'schools/detail?id=' + school_id, config)
+        api.get(`schools/detail?id=${school_id}`)
             .then(res => {
                 let routes_data
                 if (res.data.routes === null) {
@@ -234,7 +228,7 @@ class UsersCreate extends Component {
         // // console.log(dthis.state.students)
     }
 
-    sendCreateRequest =  (config) => {
+    sendCreateRequest =  () => {
         let user_address
 
         if (this.state.user_address === null) {
@@ -257,7 +251,7 @@ class UsersCreate extends Component {
         }
 
         // console.log(user)
-        axios.post(API_DOMAIN + `users/create`, user, config) // TODO, config as 3rd parameter
+        api.post(`users/create`, user)
         .then(res => {
             // console.log(res)
             const msg = res.data.data.message
@@ -301,17 +295,11 @@ class UsersCreate extends Component {
             return 
         }
 
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-
         let request_body = {
             email: this.email
         }
 
-        axios.post(API_DOMAIN + `users/create/validate-email`, request_body, config)
+        api.post(`users/create/validate-email`, request_body)
         .then(res => {
             const data = res.data.data
             this.validEmail = data.validEmail
@@ -321,18 +309,13 @@ class UsersCreate extends Component {
                 return
             }   
             
-            this.sendCreateRequest(config)
+            this.sendCreateRequest()
 
         })
     }
 
     componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
-        }
-        axios.get(API_DOMAIN + `schools`,  config)
+        api.get(`schools`)
             .then(res => {            
             let schools = res.data.schools.map(school => {
                 return {value: school.id, display: school.name}
@@ -399,12 +382,12 @@ class UsersCreate extends Component {
                                                     else.</small>
                                                 {(!this.emailValidation() && this.state.user_email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Please enter a valid email
+                                                        Please enter a valid email.
                                                     </div>) : ""
                                                 }
                                                 {(!this.validEmail) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Update unsuccessful. Please enter a different email, a user with this email already exists
+                                                        User creation was unsuccessful. Please enter a different email, a user with this email already exists.
                                                     </div>) : ""
                                                 }
                                             </div>
