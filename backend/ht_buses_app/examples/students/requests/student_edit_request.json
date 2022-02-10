@@ -4,6 +4,7 @@
         "last_name": "Cool",
         "student_school_id": 123456,
         "school_id": 1,
+        "route_id": 0,
         "user_id": 7
     }
 }
