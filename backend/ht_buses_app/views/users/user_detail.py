@@ -25,6 +25,8 @@ def users_detail(request):
                 user_long = 0
             else:
                 user_long = user_serializer.data["long"]
+        else:
+            user_address = ""
         location_arr = {"address": user_address, "lat": user_lat, "long": user_long}
         if user_serializer.data["is_parent"] == True:
             students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
