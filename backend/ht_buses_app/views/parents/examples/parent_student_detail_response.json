@@ -1,0 +1,12 @@
+{
+    "student": {
+        "school_student_id": 11111,
+        "first_name": "my plushie",
+        "last_name": "cat",
+        "school_name": "Est Middle School",
+        "route": {
+            "name": "Route 90",
+            "description": "This is Route 90"
+        }
+    }
+}
