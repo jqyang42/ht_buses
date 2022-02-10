@@ -95,22 +95,21 @@ class UsersEdit extends Component {
                     lat: this.state.lat,
                     long: this.state.lng
                 },
-                is_staff: false,
+                is_staff: this.state.role_value === 'administrator',
                 is_parent: this.state.user.is_parent,
             }
         }
 
+        console.log(request)
+
         api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
-            const success = res.data.data.success
+            const success = res.data.success
             if ( success ) {
                 this.setState({ edit_success: 1 })
                 // console.log(this.state.edit_success)
                 this.setState({ redirect: true });
             }
-        })
-        .catch(err => {
-            console.log(err)
         })
         this.validEmail = true 
         // this.setState({ redirect: true });

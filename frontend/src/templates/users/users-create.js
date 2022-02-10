@@ -242,15 +242,18 @@ class UsersCreate extends Component {
             password: this.state.user_password,
             first_name: this.state.user_first_name,
             last_name: this.state.user_last_name,
-            address: user_address,
             is_staff: this.state.user_is_staff === 'general' ? false : true,
             is_parent: this.state.students.length !== 0,
             students: this.state.students,
-            lat: this.state.lat,
-            long: this.state.lng,
+            location: {
+                address: user_address,
+                lat: this.state.lat,
+                long: this.state.lng,
+            }
+            
         }
 
-        // console.log(user)
+        console.log(user)
         api.post(`users/create`, user)
         .then(res => {
             // console.log(res)
@@ -296,13 +299,16 @@ class UsersCreate extends Component {
         }
 
         let request_body = {
-            email: this.email
+            user: {
+                email: this.email
+            }            
         }
+        console.log(request_body)
 
         api.post(`users/create/validate-email`, request_body)
         .then(res => {
-            const data = res.data.data
-            this.validEmail = data.validEmail
+            const data = res.data
+            this.validEmail = data.valid_email
        
             if(!this.validEmail) {
                 this.handleRefresh()

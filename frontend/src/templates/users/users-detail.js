@@ -61,7 +61,9 @@ class UsersDetail extends Component {
                 let schools = res.data.schools.map(school => {
                     return {value: school.id, display: school.name}
                 })
-                this.setState({ schools_dropdown: schools})
+                this.setState({ 
+                    schools_dropdown: schools,
+                })
         })
 
         this.setState({ new_student: 
@@ -81,14 +83,12 @@ class UsersDetail extends Component {
         api.delete(`users/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log(res)
-                const msg = res.data.data.message
+                const msg = res.data.message
                 if (msg == 'user successfully deleted') {
                     this.setState({ delete_success: 1 })
                     this.setState({ redirect: true });
-                    // console.log(this.state.redirect)
                     return <Navigate to={ USERS_URL }/>;
                 } else {
-                    // console.log(this.state.redirect)
                     this.setState({ delete_success: -1 });
                 }
             })
