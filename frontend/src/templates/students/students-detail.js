@@ -53,7 +53,7 @@ class StudentsDetail extends Component {
 
         api.delete(`students/delete?id=${this.props.params.id}`)
             .then(res => {
-                const msg = res.data.data.message
+                const msg = res.data.message
                 if (msg == 'student successfully deleted') {
                     this.setState({ delete_success: 1 })
                     this.setState({ redirect: true });
