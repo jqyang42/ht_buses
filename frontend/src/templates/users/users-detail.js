@@ -7,6 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
+import { makeSchoolsDropdown } from '../components/schools-dropdown';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -16,7 +17,13 @@ class UsersDetail extends Component {
         user: {},
         location: {},
         students: [],
-        new_student: [],
+        new_student: {
+            first_name: '',
+            last_name: '',
+            school_id: '',
+            route_id: null,
+            student_school_id: ''
+        },
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
@@ -28,71 +35,80 @@ class UsersDetail extends Component {
         add_student_clicked: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    componentDidMount() {
+        this.getUserDetails()
+        const dropdown = makeSchoolsDropdown()
+        console.log(dropdown)
     }
 
-    componentDidMount() {
-        var self = this
-        
+    // api calls
+    getUserDetails() {
         api.get(`users/detail?id=${this.props.params.id}`)
-            .then(res => {
-                const user = res.data.user;
-                this.setState({ 
-                    user: user,
-                    location: user.location,
-                    students: user.students
-                });
-                this.setState({ create_success: 0 });
-                this.setState({ delete_success: 0});
-                this.setState({ show_all: false});
-            })
-            .catch (function (error) {
-                if (error.response.status !== 200) {
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-        )
-        
-        api.get(`schools`)
-            .then(res => {            
-                let schools = res.data.schools.map(school => {
-                    return {value: school.id, display: school.name}
-                })
-                this.setState({ 
-                    schools_dropdown: schools,
-                })
+        .then(res => {
+            const user = res.data.user;
+            this.setState({ 
+                user: user,
+                location: user.location,
+                students: user.students
+            });
         })
-
-        this.setState({ new_student: 
-            {
-                first_name: '',
-                last_name: '',
-                school_id: '',
-                route_id: null,   //TODO: replicate?
-                student_school_id: ''
+        .catch (err => {
+            if (err.response.status !== 200) {
+                this.setState({ error_status: true });
+                this.setState({ error_code: err.response.status });
             }
         })
     }
 
-    handleDeleteSubmit = event => {
-        event.preventDefault();
-        
+    // getSchools() {
+    //     return api.get(`schools`)        
+    // }
+
+    // makeSchoolsDropdown() {
+    //     this.getSchools()
+    //     .then(res => {            
+    //         let schools = res.data.schools.map(school => {
+    //             return {
+    //                 value: school.id, 
+    //                 display: school.name
+    //             }
+    //         })
+    //         this.setState({ 
+    //             schools_dropdown: schools,
+    //         })
+    //     })
+    // }
+
+    deleteUser() {
         api.delete(`users/delete?id=${this.props.params.id}`)
-            .then(res => {
-                // console.log(res)
-                const msg = res.data.message
-                if (msg == 'user successfully deleted') {
-                    this.setState({ delete_success: 1 })
-                    this.setState({ redirect: true });
-                    return <Navigate to={ USERS_URL }/>;
-                } else {
-                    this.setState({ delete_success: -1 });
-                }
-            })
+        .then(res => {
+            const msg = res.data.message
+            if (msg == 'user successfully deleted') {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true
+                })
+                return <Navigate to={ USERS_URL }/>;
+            } else {
+                this.setState({ 
+                    delete_success: -1 
+                });
+            }
+        })
     }
+
+    // render handlers
+    handleShowAll = () => {
+        this.setState({
+            show_all: !this.state.show_all
+        })
+    }
+
+    handleDeleteSubmit = (event) => {
+        event.preventDefault();
+        this.deleteUser();
+    }
+
     studentIDValidation = () => {
         const isNumber = !isNaN(this.state.new_student.student_school_id)
         if (!isNumber ) {
@@ -103,6 +119,7 @@ class UsersDetail extends Component {
         }
         return true 
     }
+    
     handleAddStudentSubmit = event => {
         // event.preventDefault();
         if (!this.studentIDValidation()) {
