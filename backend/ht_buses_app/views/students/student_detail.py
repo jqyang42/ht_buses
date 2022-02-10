@@ -29,7 +29,9 @@ def students_detail(request):
         data["student"] = student_arr
         data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
         data["route"] = {'id' : route_id, 'name' : route_name}
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "student was not found"
+        data["success"] = False
         return Response(data, status = 404)

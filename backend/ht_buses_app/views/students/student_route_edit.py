@@ -27,6 +27,9 @@ def student_route_edit(request):
         data["message"] = "student's route information was successfully updated"
         student_serializer = StudentSerializer(student_obj, many=False)
         data["student"] = student_serializer.data
+        data["success"] = True
+        return Response(data)
     except:
         data["message"] = "student was not added/removed to route"
+        data["success"] = False
         return Response(data, status = 404)
