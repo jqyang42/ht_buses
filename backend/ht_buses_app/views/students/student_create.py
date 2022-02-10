@@ -14,6 +14,7 @@ def create_student(student_info, id=None):
         school_id = School.schoolsTable.get(id =student_info["school_id"])
     except :
         data["message"] = "invalid options were chosen, student information update was unsuccessful"
+        data["success"] = False
         return Response(data)
     try:
         route_id = Route.routeTables.get(pk = student_info['route_id'])
@@ -24,5 +25,6 @@ def create_student(student_info, id=None):
     user.is_parent = True
     user.save()
     data["message"] = "student created successfully"
+    data["success"] = True
     data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user.id}
     return data
