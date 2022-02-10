@@ -33,6 +33,7 @@ def user_edit(request):
         return Response(data)
     except:
         data["message"] = "user information could not be updated"
+        data["sucess"] = False
         return Response(data, status = 404)
 
 @csrf_exempt
