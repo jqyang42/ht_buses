@@ -26,13 +26,12 @@ class StudentsDetail extends Component {
 
         api.get(`students/detail?id=${this.props.params.id}`)
             .then(response => {
-            // console.log(response)
-            const student = response.data;
-            const route = student.route;
-            const school = student.school;
-            this.setState({ student: student, route: route, school: school });
-            this.setState({ delete_success: 0 })
-            })
+                const student = response.data;
+                const route = student.route;
+                const school = student.school;
+                this.setState({ student: student, route: route, school: school });
+                this.setState({ delete_success: 0 })
+                })
             .catch (function(error) {
                 // console.log(error.response)
                 if (error.response.status !== 200) {
@@ -41,7 +40,7 @@ class StudentsDetail extends Component {
                     self.setState({ error_code: error.response.status });
                 }
             } 
-            )
+        )
     }
 
     handleDeleteSubmit = event => {
@@ -49,14 +48,11 @@ class StudentsDetail extends Component {
 
         api.delete(`students/delete?id=${this.props.params.id}`)
             .then(res => {
-                // console.log(res)
                 const msg = res.data.data.message
                 if (msg == 'student successfully deleted') {
                     this.setState({ delete_success: 1 })
                     this.setState({ redirect: true });
-                    // console.log(this.state.redirect)
                 } else {
-                    // console.log(this.state.redirect)
                     this.setState({ delete_success: -1 });
                 }
             })
