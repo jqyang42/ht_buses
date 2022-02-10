@@ -1,3 +1,4 @@
+from pickle import TRUE
 from ...serializers import RouteSerializer
 from ...models import Route
 from rest_framework.decorators import api_view, permission_classes
@@ -23,10 +24,11 @@ def route_edit(request):
         route_object.description = reqBody["route"]["description"]
         route_object.save()
         data["message"] = "route updated successfully"
+        data["success"] = True
         route_serializer = RouteSerializer(route_object, many=False)
         data["route"] = route_serializer.data
-        result = data
-        return Response(result)
+        return Response(data)
     except:
         data["message"] = "route could not be updated"
+        data["success"] = False
         return Response(data, status = 400)

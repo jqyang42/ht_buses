@@ -48,7 +48,9 @@ def routeplanner(request):
                 parent_address = {"address": parent_serializer.data["address"], "lat": parent_serializer.data["lat"], "long": parent_serializer.data["long"]}
                 address_arr.append({"id" : student["user_id"], "location": parent_address, "student": parent_student_arr})
         data["parents"] = address_arr
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "school is invalid"
+        data["success"] = False
         return Response(data, status = 404)
