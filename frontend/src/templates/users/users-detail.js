@@ -227,12 +227,12 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={"/users/" + this.props.params.id + "/change-password"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            {/* <Link to={"/users/" + this.props.params.id + "/change-password"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-key me-2"></i>
                                                     Change Password
                                                 </span>
-                                            </Link>
+                                            </Link> */}
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.users.address ? "#addModal" : ""}onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student

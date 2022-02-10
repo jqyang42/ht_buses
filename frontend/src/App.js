@@ -36,9 +36,10 @@ import BusRoutesPlanner from "./templates/routes/routes-planner";
 import BusRoutesEdit from "./templates/routes/routes-edit";
 // import BusRoutesDelete from "./templates/routes-delete";
 
+import Email from './templates/components/email';
 import ErrorPage from './templates/error-page';
 
-import { INDEX_URL } from "./constants";
+import { INDEX_URL, ROUTES_EMAIL_URL } from "./constants";
 import { LOGIN_URL } from "./constants";
 import { SCHOOLS_URL } from "./constants";
 import { STUDENTS_URL } from "./constants";
@@ -56,9 +57,11 @@ import { STUDENTS_EDIT_URL } from "./constants";
 import { USERS_EDIT_URL } from "./constants";
 import { USERS_PASSWORD_URL } from './constants';
 import { ROUTES_EDIT_URL } from "./constants";
+import { SCHOOLS_EMAIL_URL } from './constants';
 import { PARENT_DASHBOARD_URL } from './constants';
 import { PARENT_DETAIL_URL } from './constants';
 import { PARENT_PASSWORD_URL } from './constants';
+import { USERS_EMAIL_URL } from './constants';
 
 class App extends Component {
   render() {
@@ -79,17 +82,20 @@ class App extends Component {
           <Route path={SCHOOLS_CREATE_URL} element={<SchoolsCreate />} />
           <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail  route={this.props.route} />} />
           <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
+          <Route path={SCHOOLS_EMAIL_URL} element={<Email source="Schools" />} />
 
           <Route path={USERS_URL} element={<Users />} />
           <Route path={USERS_CREATE_URL} element={<UsersCreate />} />
           <Route path={USERS_DETAIL_URL} element={<UsersDetail />} />
           <Route path={USERS_EDIT_URL} element={<UsersEdit />} />
           <Route path={USERS_PASSWORD_URL} element={<UsersPassword />} />
+          <Route path={USERS_EMAIL_URL} element={<Email source="Users" />} />
 
           <Route path={ROUTES_URL} element={<BusRoutes />} />
           <Route path={ROUTES_DETAIL_URL} element={<BusRoutesDetail />} />
           <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
           <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
+          <Route path={ROUTES_EMAIL_URL} element={<Email source="Routes" />} />
 
           <Route component={ErrorPage} />
         </Routes>

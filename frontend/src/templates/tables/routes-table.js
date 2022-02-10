@@ -35,6 +35,12 @@ export function RoutesTable({ data, showAll }) {
                 accessor: 'student_count',
                 disableFilter: true
             },
+            {
+                Header: 'Status',
+                accessor: 'status',
+                disableFilter: true,
+                className: 'unassigned'
+            },
         ],
         []
     )
