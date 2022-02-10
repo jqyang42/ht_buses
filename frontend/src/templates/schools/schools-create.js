@@ -61,19 +61,23 @@ class SchoolsCreate extends Component {
         }
 
         const school = {
-            school_name: this.state.school_name,
-            school_address: this.state.school_address,
-            lat: this.state.lat,
-            long: this.state.lng,
+            school: {
+                name: this.state.school_name,
+                location: {
+                    address: this.state.school_address,
+                    lat: this.state.lat,
+                    long: this.state.lng,
+                }               
+            }
         }
         
         api.post(`schools/create`, school)
             .then(res => {
-                const msg = res.data.data.message
+                const msg = res.data.message
                 if (msg == 'school created successfully') {
                     this.setState({ edit_success: 1 })
                     this.setState({ redirect_detail: true });
-                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.data.school.id })
+                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.school.id })
                 } else {
                     this.setState({ edit_success: -1 })
                 }
