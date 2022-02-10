@@ -33,6 +33,8 @@ def parent_dashboard(request):
                 route_name = route_serializer.data["name"]
             parent_kids.append({'id' : id, 'student_school_id': student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
         data["user"] = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "students": parent_kids}
+        data["success"] = True
         return Response(data)
     except:
+        data["success"] = False
         return Response(data, status = 404)
