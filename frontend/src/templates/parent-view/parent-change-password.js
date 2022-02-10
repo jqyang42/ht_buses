@@ -12,7 +12,6 @@ class ParentPassword extends Component {
     state = {
         password: '',
         confirm_password: '',
-        user: [],
         redirect: false,
         edit_success: 0
     }
@@ -22,11 +21,11 @@ class ParentPassword extends Component {
     validPassword = false;
     samePassword = false;
     
-    passwordValidation = function() {
+    passwordValidation() {
         return (passwordRegex.test(this.state.password))
     }
 
-    handlePasswordChange = event => {
+    handlePasswordChange = (event) => {
         this.password2 = '';
         this.password2Field.value = '';
         this.samePassword = false;
