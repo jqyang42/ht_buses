@@ -1,5 +1,6 @@
 {
     "message": "school information updated successfully",
+    "success": true,
     "school": {
         "id": 1,
         "name": "New School Name",
