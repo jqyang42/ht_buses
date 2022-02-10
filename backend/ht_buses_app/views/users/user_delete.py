@@ -14,7 +14,9 @@ def user_delete(request):
         user_object =  User.objects.get(pk=id)
         user_object.delete()
         data["message"] = "user successfully deleted"
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "user could not be deleted"
+        data["success"] = False
         return Response(data, status = 400) 

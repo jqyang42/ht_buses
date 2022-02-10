@@ -41,4 +41,5 @@ def users(request):
         location_arr = {'address': address, 'lat': lat, 'long': long}
         users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'location' : location_arr})
     data["users"] = users_arr
+    data["success"] = True
     return Response(data)

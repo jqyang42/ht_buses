@@ -25,6 +25,8 @@ def users_detail(request):
                 user_long = 0
             else:
                 user_long = user_serializer.data["long"]
+        else:
+            user_address = ""
         location_arr = {"address": user_address, "lat": user_lat, "long": user_long}
         if user_serializer.data["is_parent"] == True:
             students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
@@ -46,7 +48,9 @@ def users_detail(request):
         else:
             user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": []}
         data["user"] = user_arr
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "user does not exist"
+        data["success"] = False
         return Response(data, status = 404)

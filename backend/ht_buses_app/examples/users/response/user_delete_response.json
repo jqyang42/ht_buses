@@ -1,3 +1,4 @@
 {
-    "message": "user successfully deleted"
+    "message": "user successfully deleted",
+    "success": true
 }
