@@ -41,7 +41,7 @@ def user_create(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user create forms
+@permission_classes([AllowAny]) #TODO : very that the email is valid when sumbit button pressed in user create forms
 def valid_email_create(request):
     data = {}
     reqBody = json.loads(request.body)

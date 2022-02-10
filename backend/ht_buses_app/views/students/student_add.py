@@ -16,7 +16,9 @@ def add_new_students(request):
         for student in reqBody["students"]:
             create_student(student, user_id)
         data["message"] = "students created successfully"
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "user does not exist, you can only add students to an existing user"
+        data["success"] = False
         return Response(data, status = 404) 
