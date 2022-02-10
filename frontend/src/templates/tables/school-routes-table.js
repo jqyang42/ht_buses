@@ -18,6 +18,11 @@ export function SchoolRoutesTable({ data, showAll }) {
                 Header: 'Student Count',
                 accessor: 'student_count',
             },
+            {
+                Header: 'Status',
+                accessor: 'status',
+                className: 'unassigned'
+            },
         ],
         []
     )

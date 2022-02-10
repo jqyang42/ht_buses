@@ -25,7 +25,7 @@ const TablePagination = (props) => {
                 <nav className="row d-inline-flex float-end" aria-label="Students Pagination">
                     <ul className="pagination">
                     <li className="page-item">
-                        <a className="page-link" href={props.nextPage} onClick={props.previousPage} disabled={!props.canPreviousPage}>
+                        <a className="page-link" onClick={props.previousPage} disabled={!props.canPreviousPage}>
                             Previous
                         </a>
                     </li>
@@ -55,7 +55,7 @@ const TablePagination = (props) => {
                                 return <li className="page-item" key={index}><a className="page-link" onClick={props.page}>{page + 1}</a></li>
                             })} */}
                     <li className="page-item">
-                        <a className="page-link" href={props.nextPage} onClick={props.nextPage} disabled={!props.canNextPage}>
+                        <a className="page-link" onClick={props.nextPage} disabled={!props.canNextPage}>
                             Next
                         </a>
                     </li>

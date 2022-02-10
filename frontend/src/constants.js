@@ -42,6 +42,10 @@ export const USERS_EDIT_URL = "/users/:id/edit";
 export const USERS_PASSWORD_URL = "/users/:id/change-password";
 export const ROUTES_EDIT_URL = "/routes/:id/edit";
 
+export const SCHOOLS_EMAIL_URL = "/schools/:id/email";
+export const ROUTES_EMAIL_URL = "/routes/:id/email";
+export const USERS_EMAIL_URL = "/users/email";
+
 export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";
 export const PARENT_PASSWORD_URL = "/change-password";

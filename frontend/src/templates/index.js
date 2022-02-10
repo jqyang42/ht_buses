@@ -105,8 +105,9 @@ class Login extends Component {
                                             </div>
                                             <div className="form-group pb-3 mb-2">
                                                 <label for="exampleInputPassword1" className="pb-2">Password</label>
-                                                <input type="password" className="form-control pb-2" name="password" id="exampleInputPassword1" 
+                                                <input type="password" className="form-control pb-2 mb-2" name="password" id="exampleInputPassword1" 
                                                 placeholder="Password" ref={el => this.passwordField = el} onChange={this.handlePasswordChange}></input>
+                                                <a className="mt-0">Forgot your password?</a>
                                             </div>
                                             <button type="submit" className="btn btn-primary">Log In</button>
                                         </form>

@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
+import RouteMap from "../routes/route-map";
+import { StopsTable } from "../tables/stops-table";
 import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
@@ -15,7 +17,12 @@ class ParentDetail extends Component {
         student: [],
         route: [],
         error_status: false,
-        error_code: 200
+        error_code: 200,
+        stops_show_all: false
+    }
+
+    handleStopsShowAll = event => {
+        this.setState({stops_show_all: !this.state.stops_show_all})
     }
 
     componentDidMount() {
@@ -54,53 +61,72 @@ class ParentDetail extends Component {
             return <ErrorPage code={this.state.error_code} />
         }
         return (
-            <body className="overflow-hidden">
-                <div className="container-fluid mx-0 px-0">
-                    <div className="row flex-nowrap">
-                        <ParentSidebarMenu />
+            <div className="overflow-hidden container-fluid mx-0 px-0">
+                <div className="row flex-nowrap">
+                    <ParentSidebarMenu />
 
-                        <div className="col mx-0 px-0 bg-gray w-100">
-                            <HeaderMenu root="My Dashboard" isRoot={false} isSecond={true} name={this.state.student.first_name + " " + this.state.student.last_name} />
-                            <div className="container my-4 mx-0 w-100 mw-100">
-                                <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
-                                    <div className="row">
-                                        <div className="col">
-                                            <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
-                                            <h7>ID #{this.state.student.school_student_id}</h7>
-                                        </div>
-                                        <div className="col">
+                    <div className="col mx-0 px-0 bg-gray w-100">
+                        <HeaderMenu root="My Dashboard" isRoot={false} isSecond={true} name={this.state.student.first_name + " " + this.state.student.last_name} />
+                        <div className="container my-4 mx-0 w-100 mw-100">
+                            <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
+                                <div className="row">
+                                    <div className="col">
+                                        <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
+                                        <h7>ID #{this.state.student.school_student_id}</h7>
+                                    </div>
+                                    <div className="col">
+                                    </div>
+                                </div>
+                                <div className="row mt-4">
+                                    <div className="col-1">
+                                        <p className="gray-600">
+                                            School
+                                        </p>
+                                        <p className="gray-600">
+                                            Route
+                                        </p>
+                                        <p className="gray-600">
+                                            Route Description
+                                        </p>
+                                    </div>
+                                    <div className="col-5 me-4">
+                                        <p>
+                                            {this.state.student.school_name}
+                                        </p>
+                                        <p>
+                                            {this.state.route.name}
+                                        </p>
+                                        <p>
+                                            {this.state.route.description}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="row mt-4">
+                                    <div className="col-7 me-4">
+                                        <div className="bg-gray rounded mb-4">
+                                        {/* <RouteMap 
+                                            assign_mode={false} 
+                                            key={this.state.assign_mode} 
+                                            active_route={this.props.params.id} 
+                                            center={this.state.center}
+                                            markers={this.state.markers}/> */}
                                         </div>
                                     </div>
-                                    <div className="row mt-4">
-                                        <div className="col-1">
-                                            <p className="gray-600">
-                                                School
-                                            </p>
-                                            <p className="gray-600">
-                                                Route
-                                            </p>
-                                            <p className="gray-600">
-                                                Route Description
-                                            </p>
-                                        </div>
-                                        <div className="col-5 me-4">
-                                            <p>
-                                                {this.state.student.school_name}
-                                            </p>
-                                            <p>
-                                                {this.state.route.name}
-                                            </p>
-                                            <p>
-                                                {this.state.route.description}
-                                            </p>
-                                        </div>
+                                    <div className="col">
+                                        <h7>STOPS</h7>
+                                            {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                            <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                { !this.state.stops_show_all ?
+                                                    "Show All" : "Show Pages"
+                                                }
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </body>
+            </div>
         );
     }
 }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
+import { StopsTable } from "../tables/stops-table";
 import RouteMap from './route-map';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
@@ -16,21 +17,24 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
-        uppercaseSchool : '',
         center: {},
         markers: [],
         assign_mode: false,
         active_route: 0,
         redirect: false,
         delete_success: 0,
-        show_all: false,
+        students_show_all: false,
+        stops_show_all: false,
         error_status: false,
         error_code: 200
     }
 
-    handleShowAll = () => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    handleStudentsShowAll = event => {
+        this.setState({students_show_all: !this.state.students_show_all})
+    }
+
+    handleStopsShowAll = event => {
+        this.setState({stops_show_all: !this.state.stops_show_all})
     }
 
     componentDidMount() {
@@ -63,13 +67,13 @@ class BusRoutesDetail extends Component {
                 students: students,
                 route: route, 
                 school: school, 
-                uppercaseSchool: school.name.toUpperCase(),
                 center: { 
                     lat: school.lat, 
                     lng: school.long 
                 }, });
             this.setState({ delete_success: 0 })
-            this.setState({ show_all: false });
+            this.setState({ students_show_all: false });
+            this.setState({ stops_show_all: false });
             route.parents.map((parent, index) => {
                 const studentIDs = [];
                 const studentNames = [];
@@ -122,8 +126,6 @@ class BusRoutesDetail extends Component {
             }) 
     }
 
-    // uppercaseSchool = text.toUpperCase()
-
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -149,11 +151,21 @@ class BusRoutesDetail extends Component {
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
-                                        <h5>{this.state.route.name}</h5>
-                                        <h7><a href={"/schools/" + this.state.school.id}>{this.state.uppercaseSchool}</a></h7>
+                                        <h5 className="align-top">{this.state.route.name}
+                                            {/* TODO: Add conditional statement here for if route status is incomplete */}
+                                            {/* <span className="badge bg-red ms-2">Incomplete</span> */}
+                                        </h5>
+                                        <p className="mb-2"><a href={"/schools/" + this.state.school.id}>{this.state.school.name}</a></p>
+                                        {/* <span className="badge bg-red mt-0">Incomplete</span> */}
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
+                                            <Link to={"/routes/" + this.props.params.id + "/email"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
+                                                    <i className="bi bi-envelope me-2"></i>
+                                                    Send Announcement
+                                                </span>
+                                            </Link>
                                             <Link to={"/routes/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
@@ -209,13 +221,23 @@ class BusRoutesDetail extends Component {
                                         </p>
                                     </div>
                                     <div className="col">
+                                        <h7>STOPS</h7>
+                                            {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                            <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                { !this.state.stops_show_all ?
+                                                    "Show All" : "Show Pages"
+                                                }
+                                        </button>
+                                        <div></div>
                                         <h7>STUDENTS</h7>
-                                        <RouteStudentsTable data={this.state.students} showAll={this.state.show_all}/>
-                                        <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
-                                            { !this.state.show_all ?
+                                        <RouteStudentsTable data={this.state.students} showAll={this.state.students_show_all}/>
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
+                                            { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"
                                             }
                                         </button>
+                                        
+                                        
                                     </div>
                                 </div>
                             </div>
