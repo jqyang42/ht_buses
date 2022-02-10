@@ -1,5 +1,6 @@
 {
     "message": "student information successfully updated",
+    "success": true,
     "student": {
         "first_name": "Mary",
         "last_name": "Cool",

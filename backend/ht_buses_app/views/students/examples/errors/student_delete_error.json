@@ -1,3 +1,4 @@
 {
-    "message": "student could not be deleted"
+    "message": "student could not be deleted",
+    "success": false
 }
