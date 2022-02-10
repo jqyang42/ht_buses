@@ -38,7 +38,7 @@ def user_edit(request):
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def valid_email_edit(request):
     data = {}
     id = request.query_params["id"]
@@ -48,13 +48,13 @@ def valid_email_edit(request):
         user = User.objects.get(email = email)
         if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
-            data["valid_email"] = False
+            data["success"] = False
             return Response(data)
         else: 
             data["message"] = "The email entered is valid"
-            data["valid_email"] = True
+            data["success"] = True
             return Response(data)
     except: 
         data["message"] = "The email entered is valid"
-        data["valid_email"] = True
+        data["success"] = True
         return Response(data)
