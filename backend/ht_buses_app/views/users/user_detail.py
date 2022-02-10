@@ -44,7 +44,7 @@ def users_detail(request):
                 student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route_name' : route_name})
             user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": student_list}
         else:
-            user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr}
+            user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": []}
         data["user"] = user_arr
         return Response(data)
     except:

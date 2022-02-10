@@ -14,17 +14,25 @@ class Users extends Component {
         show_all: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    componentDidMount() {
+        this.getUsers()
     }
 
-    componentDidMount() {
+    // api calls
+    getUsers() {
         api.get('users')
             .then(response => {
             const users = response.data.users;
-            this.setState({ users });
-            this.setState({ show_all: false })
+            this.setState({ 
+                users: users,
+            });
+        })
+    }
+    
+    // render handlers
+    handleShowAll() {
+        this.setState({
+            show_all: !this.state.show_all
         })
     }
 

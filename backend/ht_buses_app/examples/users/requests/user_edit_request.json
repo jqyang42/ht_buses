@@ -9,6 +9,6 @@
             "long": 0.0
         },
         "is_parent": false,
-        "is_admin": true
+        "is_staff": true
     }
 }
