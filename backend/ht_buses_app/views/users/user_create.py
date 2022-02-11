@@ -30,7 +30,7 @@ def user_create(request):
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=longitude)
     if is_parent:
-        for student in reqBody["students"]:
+        for student in reqBody["user"]["students"]:
             student_create.create_student(student, user.id)
     data["message"] = "user created successfully"
     user_serializer = UserSerializer(user, many=False)
