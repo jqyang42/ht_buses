@@ -25,9 +25,11 @@ def school_edit(request):
         school_object.long = reqBody["school"]["location"]["long"]
         school_object.save()
         data["message"] = "school information updated successfully"
+        data["success"] = True
         school_serializer = SchoolSerializer(school_object, many=False)
         data["school"] = school_serializer.data
         return Response(data)
     except:
         data["message"] = "school could not be updated"
+        data["success"] = False
         return Response(data, status = 400)

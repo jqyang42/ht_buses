@@ -21,9 +21,10 @@ def route_create(request):
         route = Route.routeTables.create(name=name, school_id = school, description = description)
         route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"
+        data["success"] = True
         data["route"] = route_serializer.data
-        result = data
-        return Response(result)
+        return Response(data)
     except BaseException as e:
         data["message"] = "route could not be created"
+        data["success"] = False
         return Response(data, status = 400)

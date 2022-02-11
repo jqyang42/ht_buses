@@ -1,5 +1,6 @@
 {
     "message": "route created successfully",
+    "success": true,
     "route": {
         "id": 1,
         "name": "Route 1",
