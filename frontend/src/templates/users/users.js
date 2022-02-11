@@ -19,7 +19,7 @@ class Users extends Component {
     }
 
     // api calls
-    getUsers() {
+    getUsers = () => {
         api.get('users')
             .then(response => {
             const users = response.data.users;
