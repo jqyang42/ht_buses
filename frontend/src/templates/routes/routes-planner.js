@@ -29,7 +29,6 @@ class BusRoutesPlanner extends Component {
             markers: [],
             assign_mode: false,
             active_route: 0,
-            show_stops: false,
             error_status: false,
             error_code: 200
         }
@@ -151,11 +150,8 @@ class BusRoutesPlanner extends Component {
     }
     
     handleRouteSelection = event => {
-        this.setState({ active_route: event.target.value })
+        this.setState({ active_route: parseInt(event.target.value) })
         console.log(this.state.active_route)
-        event.target.value !== 0 ? this.setState({ show_stops: true}) : this.setState({ show_stops: false})
-        console.log(this.state.active_route)
-        console.log(this.state.show_stops)
         console.log(this.state.route_dropdown)
         // this.setState({ active_route: event.target.value }, () => // console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
@@ -291,7 +287,7 @@ class BusRoutesPlanner extends Component {
                                             <div className="col justify-content-end">
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
                                                     <option selected value={0}>Select a route to assign</option>
-                                                    <option selected value={0}>No Route</option>
+                                                    <option value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.id}>{route.name}</option>
                                                     )}
@@ -375,7 +371,7 @@ class BusRoutesPlanner extends Component {
                                     </div>
                                     <div className="col">
                                         {
-                                            this.state.active_route !== 0 ?  
+                                            this.state.active_route === 0 ? "" :
                                             <>
                                                 <h7>STOPS</h7>
                                                 <div></div>
@@ -387,7 +383,6 @@ class BusRoutesPlanner extends Component {
                                                 </button>
                                                 <div></div>
                                             </>
-                                            : ""
                                         }
                                         
                                         <h7>STUDENTS</h7>
