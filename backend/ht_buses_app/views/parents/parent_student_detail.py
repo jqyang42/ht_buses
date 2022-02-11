@@ -15,7 +15,6 @@ def parent_student_detail(request):
     try:
         student = Student.studentsTable.get(pk=id)
         auth_string = "Token "+str(student.user_id.auth_token)
-        auth_string = True
         if auth_string == request.headers['Authorization']:
             student_serializer = StudentSerializer(student, many=False)
             student_arr["school_student_id"] = student_serializer.data["student_school_id"]

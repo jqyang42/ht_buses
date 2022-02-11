@@ -30,10 +30,10 @@ class Users extends Component {
     }
     
     // render handlers
-    handleShowAll() {
-        this.setState({
-            show_all: !this.state.show_all
-        })
+    handleShowAll = () => {
+        this.setState(prev => ({
+            show_all: !prev.show_all
+        }))
     }
 
     render() {

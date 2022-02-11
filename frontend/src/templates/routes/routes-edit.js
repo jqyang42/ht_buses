@@ -35,8 +35,10 @@ class BusRoutesEdit extends Component {
         event.preventDefault();
 
         const route = {
-            route_name: this.state.route_name,
-            route_description: this.state.route_description,
+            route: {
+                name: this.state.route_name,
+                description: this.state.route_description,
+            }
         }
         
         api.put(`routes/edit?id=${this.props.params.id}`, route)  // TODO: use onclick id value

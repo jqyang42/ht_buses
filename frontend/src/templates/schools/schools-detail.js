@@ -70,6 +70,7 @@ class SchoolsDetail extends Component {
             .then(res => {
                 const data = res.data
                 const school = data.school
+                console.log(data)
                 
                 if (data.students == null) {
                     this.setState({ students: []}) 

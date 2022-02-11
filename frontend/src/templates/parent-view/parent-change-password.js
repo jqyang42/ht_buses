@@ -51,13 +51,15 @@ class ParentPassword extends Component {
         }
 
         const password = {
-            password: this.state.password
+            user: {
+                password: this.state.password
+            }
         }
         
         api.put(`users/password-edit?id=${sessionStorage.getItem('user_id')}`, password) 
             .then(res => {
-                const msg = res.data.data.message
-                if (msg === 'User password updated successfully') {
+                const success = res.data.success
+                if (success) {
                     this.setState({ edit_success: 1 })    // TODO ERROR: edit_success?
                     // console.log(this.state.edit_success)
                 }
