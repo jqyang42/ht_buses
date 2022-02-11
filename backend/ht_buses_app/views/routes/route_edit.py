@@ -22,11 +22,12 @@ def route_edit(request):
         route_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["route"]["name"])
         route_object.description = reqBody["route"]["description"]
         route_object.save()
-        data["message"] = "route updated successfully"
         route_serializer = RouteSerializer(route_object, many=False)
         data["route"] = route_serializer.data
-        result = data
-        return Response(result)
+        data["edit_success"] = 1
+        data["message"] = "route updated successfully"
+        return Response(data)
     except:
+        data["edit_success"] = -1
         data["message"] = "route could not be updated"
         return Response(data, status = 400)

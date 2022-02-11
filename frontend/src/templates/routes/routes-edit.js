@@ -41,12 +41,9 @@ class BusRoutesEdit extends Component {
         
         api.put(`routes/edit?id=${this.props.params.id}`, route)  // TODO: use onclick id value
             .then(res => {
-                const msg = res.data.data.message
-                if (msg == 'route updated successfully') {
-                    this.setState({ edit_success: 1 })
+                this.setState({ edit_success: res.data.edit_success})
+                if (res.data.edit_success) {
                     this.setState({ redirect: true });
-                } else {
-                    this.setState({ edit_success: -1 })
                 }
             })
         
@@ -57,7 +54,7 @@ class BusRoutesEdit extends Component {
         
         api.get(`routes/detail?id=${this.props.params.id}`)  // TODO: use onclick id values
         .then(res => {
-            const route = res.data;
+            const route = res.data.route;
             this.setState({ 
                 route: route, 
                 route_description: route.description, 

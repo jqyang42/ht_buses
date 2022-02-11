@@ -44,19 +44,20 @@ class BusRoutesPlanner extends Component {
         
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
-                const school = res.data;
+                const data = res.data
+                const school = data.school;
                 this.setState({ school: school });
                 
-                if (school.students == null) {
+                if (data.students == null) {
                     this.setState({ students: []}) 
                 } else {
-                    this.setState({ students: school.students })
+                    this.setState({ students: data.students })
                 }
 
-                if (school.routes == null) {
+                if (data.routes == null) {
                     this.setState({ routes: []})
                 } else {
-                    this.setState({ routes: school.routes }, () => {
+                    this.setState({ routes: data.routes }, () => {
                         let routes = this.state.routes.map(route => {
                             return {
                                 id: route.id, 
@@ -81,15 +82,16 @@ class BusRoutesPlanner extends Component {
 
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
-                const locations = res.data;
+                const school_location = res.data.school.location;
                 // console.log(locations)
                 this.setState({ 
                     center: { 
-                        lat: locations.lat, 
-                        lng: locations.long 
+                        lat: school_location.lat, 
+                        lng: school_location.long 
                     }
                  });
-                locations.parents.map((parent, index) => {
+                const parents = res.data.parents
+                parents.map((parent, index) => {
                     const studentIDs = [];
                     const studentNames = [];
                     parent.students.map((student, index) => {
@@ -100,13 +102,13 @@ class BusRoutesPlanner extends Component {
                     this.setState(prevState => ({
                         markers: [...prevState.markers, {
                             position: {
-                                lat: parent.lat,
-                                lng: parent.long
+                                lat: parent.location.lat,
+                                lng: parent.location.long
                             },
-                            id: parent.parent_id,
+                            id: parent.id,
                             studentIDs: studentIDs,
                             studentNames: studentNames,
-                            routeID: parent.students[0].route_id //TODO: change markers to create per student
+                            routeID: parent.students[0].route_id //TODO: change markers to create per student //TODO: Fix 
                         }]
                     }));
                 });
@@ -154,7 +156,7 @@ class BusRoutesPlanner extends Component {
         }
         api.post(`routes/create`, route)
             .then(res => {
-                const new_route = res.data.data.route
+                const new_route = res.data.route
                 // // console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
                     id: new_route.id,
