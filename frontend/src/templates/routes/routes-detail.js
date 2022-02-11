@@ -42,13 +42,15 @@ class BusRoutesDetail extends Component {
         
         api.get(`routes/detail?id=${this.props.params.id}`)
             .then(res => {
-            const route = res.data;
+            const data = res.data;
+            const route = data.route;
             const school = route.school;
-            
+            const users = data.users;
+            console.log(users)
             let students
-            if (route.parents !== null) {
-                students = route.parents?.map(parent => {
-                    return parent.students.map(student => {
+            if (users !== null) {
+                students = users?.map(user => {
+                    return user.students.map(student => {
                         return {
                             student_school_id: student.student_school_id,
                             id: student.id,
@@ -57,7 +59,6 @@ class BusRoutesDetail extends Component {
                         }
                     })
                 })
-                // console.log(students)
                 students = [].concat.apply([], students)
             } else {
                 students = []
@@ -68,16 +69,16 @@ class BusRoutesDetail extends Component {
                 route: route, 
                 school: school, 
                 center: { 
-                    lat: school.lat, 
-                    lng: school.long 
+                    lat: school.location.lat, 
+                    lng: school.location.long 
                 }, });
             this.setState({ delete_success: 0 })
             this.setState({ students_show_all: false });
             this.setState({ stops_show_all: false });
-            route.parents.map((parent, index) => {
+            users.map((user) => {
                 const studentIDs = [];
                 const studentNames = [];
-                parent.students.map((student, index) => {
+                user.students.map((student) => {
                     studentIDs.push(student.id);
                     const fullName = student.first_name + ' ' + student.last_name;
                     studentNames.push(fullName);
@@ -85,10 +86,10 @@ class BusRoutesDetail extends Component {
                 this.setState(prevState => ({
                     markers: [...prevState.markers, {
                         position: {
-                            lat: parent.lat,
-                            lng: parent.long
+                            lat: user.location.lat,
+                            lng: user.location.long
                         },
-                        id: parent.parent_id,
+                        id: user.id,
                         studentIDs: studentIDs,
                         studentNames: studentNames,
                         routeID: this.props.params.id //TODO: change markers to create per student
@@ -108,15 +109,15 @@ class BusRoutesDetail extends Component {
         )
     }
 
-    handleDelete = event => {
+    handleDelete = event => { //TODO: Change api to boolean
         event.preventDefault()
 
         api.delete(`routes/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log("hello")
-                const msg = res.data.data.message
+                const success = res.data.success
                 // console.log(res.data)
-                if (msg === 'route successfully deleted') {
+                if (success) {
                     this.setState({ delete_success: 1})
                     this.setState({redirect: true})
                     // console.log(this.state.redirect)

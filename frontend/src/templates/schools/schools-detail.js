@@ -9,7 +9,6 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class SchoolsDetail extends Component {
@@ -17,6 +16,7 @@ class SchoolsDetail extends Component {
         school: [],
         students: [],
         routes: [],
+        address: '',
         delete_school: '',
         delete_success: 0,
         redirect: false,
@@ -48,7 +48,7 @@ class SchoolsDetail extends Component {
             api.delete(`schools/delete?id=${this.props.params.id}`)
                 .then(res => {
                     // console.log(res)
-                    const msg = res.data.data.message
+                    const msg = res.data.message
                     if (msg == 'school successfully deleted') {
                         this.setState({ delete_success: 1 })
                         this.setState({ redirect: true });
@@ -68,22 +68,27 @@ class SchoolsDetail extends Component {
 
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
-                const school = res.data;
+                const data = res.data
+                const school = data.school
+                console.log(data)
                 
-                if (school.students == null) {
+                if (data.students == null) {
                     this.setState({ students: []}) 
                 } else {
-                    this.setState({ students: school.students })
+                    this.setState({ students: data.students })
                 }
 
-                if (school.routes == null) {
+                if (data.routes == null) {
                     this.setState({ routes: []})
                 } else {
-                    this.setState({ routes: school.routes })
+                    this.setState({ routes: data.routes })
                 }
 
                 // console.log(school)
-                this.setState({ school: school });
+                this.setState({ 
+                    school: school,
+                    address: school.location.address
+                });
                 this.setState({ delete_success: 0 });
                 this.setState({ students_show_all: false, routes_show_all: false });
             })
@@ -124,7 +129,7 @@ class SchoolsDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.school.name}</h5>
-                                        <p>{this.state.school.address}</p>
+                                        <p>{this.state.address}</p>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">

@@ -49,7 +49,7 @@ class StudentsEdit extends Component {
     handleSchoolChange = event => {
         // const school_name = event.target.value
         const school_id = event.target.value
-                this.setState({ route_id : null})
+        this.setState({ route_id : null})
         // console.log(this.state.schools_dropdown)
         this.setState({ school_id: school_id }, () => {
             // console.log(this.state.school_id)
@@ -107,18 +107,21 @@ class StudentsEdit extends Component {
             return
         }
         const student = {
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            student_school_id: this.state.student_id,
-            school_id: this.state.school_id,
-            route_id: parseInt(this.state.route_id),
-            parent_id: parseInt(this.state.parent_id)
+            student: {
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                student_school_id: this.state.student_id,
+                school_id: this.state.school_id,
+                route_id: parseInt(this.state.route_id),
+                user_id: parseInt(this.state.parent_id)
+            }
+
         }
 
         api.put(`students/edit?id=${this.props.params.id}`, student)
         .then(res => {
-            const msg = res.data.data.message
-            if (msg == 'Student information successfully updated') {
+            const msg = res.data.message
+            if (msg == 'student information successfully updated') {
                 this.setState({ edit_success: 1 })
                 this.setState({ redirect: true });
                 // console.log(this.state.edit_success)
@@ -136,17 +139,20 @@ class StudentsEdit extends Component {
 
         api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
-            const student = res.data;
+            const data = res.data
+            const student = data.student
+            const school = data.school
+            const route = data.route
             this.setState({ student: student });
             init_parent_id = student.user_id
-            init_school_id = student.school.id
+            init_school_id = school.id
 
-            let init_route
-            if (student.route === null) {
-                init_route = null
-            } else {
-                init_route = student.route.id
-            }
+            // let init_route
+            // if (student.route === null) {
+            //     init_route = null
+            // } else {
+            //     init_route = student.route.id
+            // }
 
             this.setState({ 
                 init_parent_id, 
@@ -156,7 +162,7 @@ class StudentsEdit extends Component {
                 last_name: student.last_name,
                 student_id: student.student_school_id,
                 school_id: init_school_id,
-                route_id: init_route,
+                route_id: route.id,
                 parent_id: init_parent_id
             })
 
@@ -176,6 +182,7 @@ class StudentsEdit extends Component {
                         name: route.name
                     }
                 })
+                // console.log(routes)
                 this.setState({ routes_dropdown: routes })
             })
         }).catch (function(error) {

@@ -15,8 +15,9 @@ def route_delete(request):
         route_object =  Route.routeTables.get(pk=id)
         route_object.delete()
         data["message"] = "route successfully deleted"
-        result = {"data" : data}
-        return Response(result)
+        data["success"] = True
+        return Response(data)
     except BaseException as e:
+        data["message"] = "route could not be deleted"
+        data["success"] = False
         return Response(data, status = 400)
-        #raise ValidationError({"messsage": "Route could not be deleted"})

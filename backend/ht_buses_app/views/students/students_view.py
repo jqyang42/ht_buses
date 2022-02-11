@@ -43,4 +43,5 @@ def students(request):
             route_name = route_serializer.data["name"]
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
     data["students"] = student_list
+    data["success"] = True
     return Response(data)

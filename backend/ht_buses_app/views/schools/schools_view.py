@@ -19,4 +19,5 @@ def schools(request):
     #     schools = School.schoolsTable.all()[(1+10*(int(page_number)-1)):(10*int(page_number))]
     school_serializer = SchoolSerializer(schools, many=True)
     data["schools"] = school_serializer.data
+    data["success"] = True
     return Response(data)

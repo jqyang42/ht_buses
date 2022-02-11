@@ -14,12 +14,12 @@ def user_password_edit(request):
     reqBody = json.loads(request.body)
     try:
         user_object = User.objects.get(pk = id)
-        user_object.set_password(reqBody['password'])
+        user_object.set_password(reqBody['user']['password'])
         user_object.save()
-        data["message"] = "User password updated successfully"
-        result = {"data" : data}
-        return Response(result) 
+        data["message"] = "user password updated successfully"
+        data["success"] = True
+        return Response(data) 
     except:
-        data["message"] = "User's password could not be updated"
-        result = {"data" : data}
-        return Response(result, status = 400)   
+        data["message"] = "user's password could not be updated"
+        data["success"] = False
+        return Response(data, status = 400)   

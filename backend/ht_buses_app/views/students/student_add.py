@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import json
@@ -15,11 +15,10 @@ def add_new_students(request):
     try:
         for student in reqBody["students"]:
             create_student(student, user_id)
-        data["message"] = "Students created successfully"
-        print(data)
-        result = {"data" : data}
-        return Response(result)
+        data["message"] = "students created successfully"
+        data["success"] = True
+        return Response(data)
     except:
-        data["message"] = "User does not exist. You can only add students to an existing user"
-        result = {"data" : data}
-        return Response(result, status = 404) 
+        data["message"] = "user does not exist, you can only add students to an existing user"
+        data["success"] = False
+        return Response(data, status = 404) 

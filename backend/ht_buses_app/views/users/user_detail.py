@@ -1,7 +1,8 @@
+from lib2to3.pytree import Base
 from ...models import Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, UserSerializer
 
@@ -14,19 +15,19 @@ def users_detail(request):
     try:
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
-        data["first_name"] = user_serializer.data["first_name"]
-        data["last_name"] = user_serializer.data["last_name"]
-        data["email"] = user_serializer.data["email"]
-        if user_serializer.data["address"] != "":
-            data["address"] = user_serializer.data["address"]
+        if user_serializer.data["address"] != None:
+            user_address = user_serializer.data["address"]
             if user_serializer.data["lat"] == None:
-                data["lat"] = 0
+                user_lat = 0
             else:
-                data["lat"] = user_serializer.data["lat"]
+                user_lat = user_serializer.data["lat"]
             if  user_serializer.data["long"] == None:
-                data["long"] = 0
+                user_long = 0
             else:
-                data["long"] = user_serializer.data["long"]
+                user_long = user_serializer.data["long"]
+        else:
+            user_address = ""
+        location_arr = {"address": user_address, "lat": user_lat, "long": user_long}
         if user_serializer.data["is_parent"] == True:
             students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
@@ -43,10 +44,13 @@ def users_detail(request):
                     route_serializer = RouteSerializer(route_student, many=False)
                     route_name = route_serializer.data["name"]
                 student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route_name' : route_name})
-            data["students"] = student_list
-        data["is_staff"] = user_serializer.data["is_staff"]
-        data["is_parent"] = user_serializer.data["is_parent"]
+            user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": student_list}
+        else:
+            user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": []}
+        data["user"] = user_arr
+        data["success"] = True
         return Response(data)
     except:
+        data["message"] = "user does not exist"
+        data["success"] = False
         return Response(data, status = 404)
-        #raise ValidationError({"message": "User does not exist"})

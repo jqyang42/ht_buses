@@ -34,28 +34,6 @@ class BusRoutesPlanner extends Component {
         }
     }
 
-    // handleLogout = event => {
-    //     event.preventDefault();
-    //     const creds = {
-    //         user_id: sessionStorage.getItem('user_id')
-    //     }
-
-    //     axios.post(API_DOMAIN + `logout`, creds)
-    //     .then(res => {
-    //         this.setState({token: '', message: res.data.message})
-    //         sessionStorage.setItem('token', '')
-    //         sessionStorage.setItem('user_id', '')
-    //         sessionStorage.setItem('first_name', '')
-    //         sessionStorage.setItem('last_name', '')
-    //         sessionStorage.setItem('is_staff', false)
-    //         sessionStorage.setItem('logged_in', false)
-    //         // console.log(sessionStorage.getItem('logged_in'))
-    //         // console.log(sessionStorage.getItem('token'))
-    //         window.location.reload()
-    //     })
-    // }
-
-
     componentDidMount() {
         this.handleTableGet();       
         this.handleLocationsGet();     
@@ -66,19 +44,20 @@ class BusRoutesPlanner extends Component {
         
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
-                const school = res.data;
+                const data = res.data
+                const school = data.school;
                 this.setState({ school: school });
                 
-                if (school.students == null) {
+                if (data.students == null) {
                     this.setState({ students: []}) 
                 } else {
-                    this.setState({ students: school.students })
+                    this.setState({ students: data.students })
                 }
 
-                if (school.routes == null) {
+                if (data.routes == null) {
                     this.setState({ routes: []})
                 } else {
-                    this.setState({ routes: school.routes }, () => {
+                    this.setState({ routes: data.routes }, () => {
                         let routes = this.state.routes.map(route => {
                             return {
                                 id: route.id, 
@@ -103,18 +82,19 @@ class BusRoutesPlanner extends Component {
 
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
-                const locations = res.data;
-                // console.log(locations)
+                const school_location = res.data.school.location;
+                console.log(school_location)
                 this.setState({ 
                     center: { 
-                        lat: locations.lat, 
-                        lng: locations.long 
+                        lat: school_location.lat, 
+                        lng: school_location.long 
                     }
                  });
-                locations.parents.map((parent, index) => {
+                const users = res.data.users
+                users.map((user) => {
                     const studentIDs = [];
                     const studentNames = [];
-                    parent.students.map((student, index) => {
+                    user.students.map((student) => {
                         studentIDs.push(student.id);
                         const fullName = student.first_name + ' ' + student.last_name;
                         studentNames.push(fullName);
@@ -122,13 +102,13 @@ class BusRoutesPlanner extends Component {
                     this.setState(prevState => ({
                         markers: [...prevState.markers, {
                             position: {
-                                lat: parent.lat,
-                                lng: parent.long
+                                lat: user.location.lat,
+                                lng: user.location.long
                             },
-                            id: parent.parent_id,
+                            id: user.id,
                             studentIDs: studentIDs,
                             studentNames: studentNames,
-                            routeID: parent.students[0].route_id //TODO: change markers to create per student
+                            routeID: user.students[0].route_id //TODO: change markers to create per student //TODO: Fix 
                         }]
                     }));
                 });
@@ -172,13 +152,16 @@ class BusRoutesPlanner extends Component {
         event.preventDefault();
 
         const route = {
-            route_name: this.state.create_route_name,
+            name: this.state.create_route_name,
             school_name: this.state.school.name,
-            route_description: this.state.create_route_description
+            description: this.state.create_route_description
         }
-        api.post(`routes/create`, route)
+        const data = {
+            'route': route
+        }
+        api.post(`routes/create`, data)
             .then(res => {
-                const new_route = res.data.data.route
+                const new_route = res.data.route
                 // // console.log(new_route)
                 this.setState({ route_dropdown: [...this.state.routes, {
                     id: new_route.id,
