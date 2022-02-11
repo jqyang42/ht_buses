@@ -33,4 +33,5 @@ def routes(request):
         school_obj = {'id' : route["school_id"], 'name': school_name}
         routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count})
     data["routes"] = routes_filter
+    data["success"] = True
     return Response(data)

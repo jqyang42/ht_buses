@@ -1,0 +1,71 @@
+{
+    "success": true,
+    "school": {
+        "name": "Est Middle School",
+        "location": {
+            "address": "87 Sixty St",
+            "lat": 0.0,
+            "long": 0.0
+        }
+    },
+    "routes": [
+        {
+            "id": 2,
+            "name": "Route 89"
+        },
+        {
+            "id": 13,
+            "name": "New route lowercase"
+        }
+    ],
+    "parents": [
+        {
+            "id": 7,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            },
+            "student": [
+                {
+                    "id": 4,
+                    "first_name": "Mary",
+                    "last_name": "Smith",
+                    "route_id": 2
+                }
+            ]
+        },
+        {
+            "id": 28,
+            "location": {
+                "address": "90 Oregon Ave. Durham, NC",
+                "lat": 0.0,
+                "long": 0.0
+            },
+            "student": [
+                {
+                    "id": 10,
+                    "first_name": "Coy",
+                    "last_name": "Red",
+                    "route_id": 0
+                }
+            ]
+        },
+        {
+            "id": 30,
+            "location": {
+                "address": "a cool place",
+                "lat": 178.2,
+                "long": 152.1
+            },
+            "student": [
+                {
+                    "id": 11,
+                    "first_name": "my plushie",
+                    "last_name": "cat",
+                    "route_id": 2
+                }
+            ]
+        }
+    ]
+}

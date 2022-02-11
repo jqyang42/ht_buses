@@ -7,16 +7,23 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
+import { makeSchoolsDropdown } from '../components/dropdown';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class UsersDetail extends Component {
     state = {
-        id: '',
-        users : [],
+        user: {},
+        location: {},
         students: [],
-        new_student: [],
+        new_student: {
+            first_name: '',
+            last_name: '',
+            school_id: '',
+            route_id: null,
+            student_school_id: ''
+        },
         schools_dropdown: [],
         routes_dropdown: [],
         redirect: false,
@@ -28,74 +35,64 @@ class UsersDetail extends Component {
         add_student_clicked: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
-    }
-
     componentDidMount() {
-        var self = this
-        
+        this.getUserDetails()
+        makeSchoolsDropdown().then(ret => {
+            this.setState({
+                schools_dropdown: ret
+            })
+        })
+    }
+
+    // api calls
+    getUserDetails() {
         api.get(`users/detail?id=${this.props.params.id}`)
-            .then(res => {
-            const users = res.data;
-            if (users.students == null) {
-                this.setState({ students: []})
-            } else {
-                this.setState({ students: users.students })
-            }
-            this.setState({ users: users });
-            this.setState({ create_success: 0 });
-            this.setState({ delete_success: 0});
-            this.setState({ show_all: false});
-            })
-            .catch (function(error) {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.data)
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-        )
-        
-        api.get(`schools`)
-            .then(res => {            
-            let schools = res.data.schools.map(school => {
-                return {value: school.id, display: school.name}
-            })
-            this.setState({ schools_dropdown: schools})
+        .then(res => {
+            const user = res.data.user;
+            this.setState({ 
+                user: user,
+                location: user.location,
+                students: user.students
+            });
         })
-
-        this.setState({ new_student: 
-            {
-                first_name: '',
-                last_name: '',
-                school_id: '',
-                route_id: null,   //TODO: replicate?
-                student_school_id: ''
+        .catch (err => {
+            if (err.response.status !== 200) {
+                this.setState({ error_status: true });
+                this.setState({ error_code: err.response.status });
             }
         })
     }
 
-    handleDeleteSubmit = event => {
-        event.preventDefault();
-        
+    deleteUser() {
         api.delete(`users/delete?id=${this.props.params.id}`)
-            .then(res => {
-                // console.log(res)
-                const msg = res.data.data.message
-                if (msg == 'user successfully deleted') {
-                    this.setState({ delete_success: 1 })
-                    this.setState({ redirect: true });
-                    // console.log(this.state.redirect)
-                    return <Navigate to={ USERS_URL }/>;
-                } else {
-                    // console.log(this.state.redirect)
-                    this.setState({ delete_success: -1 });
-                }
-            })
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true
+                })
+                return <Navigate to={ USERS_URL }/>;
+            } else {
+                this.setState({ 
+                    delete_success: -1 
+                });
+            }
+        })
     }
+
+    // render handlers
+    handleShowAll = () => {
+        this.setState({
+            show_all: !this.state.show_all
+        })
+    }
+
+    handleDeleteSubmit = (event) => {
+        event.preventDefault();
+        this.deleteUser();
+    }
+
     studentIDValidation = () => {
         const isNumber = !isNaN(this.state.new_student.student_school_id)
         if (!isNumber ) {
@@ -106,6 +103,7 @@ class UsersDetail extends Component {
         }
         return true 
     }
+    
     handleAddStudentSubmit = event => {
         // event.preventDefault();
         if (!this.studentIDValidation()) {
@@ -193,13 +191,6 @@ class UsersDetail extends Component {
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        let UserAddress='';
-        
-        // if (this.state.users.address != null) {
-        //     UserAddress = this.state.users.address
-        // } else {
-        //     UserAddress = `-`
-        // }
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
@@ -213,16 +204,16 @@ class UsersDetail extends Component {
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root="Manage Users" isRoot={false} isSecond={true} name={this.state.users.first_name + " " + this.state.users.last_name} />
+                        <HeaderMenu root="Manage Users" isRoot={false} isSecond={true} name={this.state.user.first_name + ' ' + this.state.user.last_name} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
                                         <h5>
-                                            {this.state.users.first_name} {this.state.users.last_name}
+                                            {this.state.user.first_name} {this.state.user.last_name}
                                         </h5>
                                         <h7>
-                                        {this.state.users.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
+                                        {this.state.user.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
                                         </h7>
                                     </div>
                                     <div className="col">
@@ -233,7 +224,7 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link> */}
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.users.address ? "#addModal" : ""}onClick={this.handleClickAddStudent}>
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.location.address ? "#addModal" : ""}onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
                                             </button>
@@ -351,15 +342,15 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
-                                            {this.state.users.email}
+                                            {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.users.address ? this.state.users.address : ""}
+                                            {this.state.location.address ? this.state.location.address : ""}
                                         </p>
                                     </div>
                                 </div>
 
-                                {(!this.state.users.address && this.state.add_student_clicked) ? 
+                                {(!this.state.location.address && this.state.add_student_clicked) ? 
                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                         Please input an address before you add a student.
                                     </div>) : ""

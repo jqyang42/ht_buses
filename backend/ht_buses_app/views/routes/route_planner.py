@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 # Route Planner API
+# This needs to be rewritten, currently have 3 for loops
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
@@ -15,10 +16,9 @@ def routeplanner(request):
     try:
         school = School.schoolsTable.get(pk=id)
         school_serializer = SchoolSerializer(school, many=False)
-        data["name"] = school_serializer.data["name"]
-        data["address"] = school_serializer.data["address"]
-        data["lat"] = school_serializer.data["lat"]
-        data["long"] = school_serializer.data["long"]
+        school_address = {"address": school_serializer.data["address"], "lat": school_serializer.data["lat"], "long": school_serializer.data["long"]}
+        school_arr = {"name": school_serializer.data["name"], "location": school_address} 
+        data["school"] = school_arr
         routes = Route.routeTables.filter(school_id=id)
         routes_serializer = RouteSerializer(routes, many=True)
         routes_arr = []
@@ -42,11 +42,15 @@ def routeplanner(request):
                 parent_student_arr = []
                 for child in parent_student_serializer.data:
                     if child["route_id"] == None:
-                        parent_student_arr.append({'id' : child["id"], 'first_name': child["first_name"], 'last_name': child["last_name"], 'route_id' : 0})
+                        parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : 0})
                     else:
-                        parent_student_arr.append({'id' : child["id"], 'first_name': child["first_name"], 'last_name': child["last_name"], 'route_id' : child["route_id"]})
-                address_arr.append({'id' : student["user_id"], 'address' : parent_serializer.data["address"], 'lat': parent_serializer.data["lat"], 'long': parent_serializer.data["long"], 'students': parent_student_arr})
-        data["parents"] = address_arr
+                        parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : child["route_id"]})
+                parent_address = {"address": parent_serializer.data["address"], "lat": parent_serializer.data["lat"], "long": parent_serializer.data["long"]}
+                address_arr.append({"id" : student["user_id"], "location": parent_address, "students": parent_student_arr})
+        data["users"] = address_arr
+        data["success"] = True
         return Response(data)
     except:
+        data["message"] = "school is invalid"
+        data["success"] = False
         return Response(data, status = 404)

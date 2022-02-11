@@ -22,7 +22,7 @@ class UsersEdit extends Component {
         last_name: '',
         address: '',
         role_value: null,
-        user: [],
+        user: {},
         redirect: false,
         lat: 0,
         lng: 0,
@@ -56,7 +56,7 @@ class UsersEdit extends Component {
 
     handleAddressChange = event => {
         this.setState({ address: event.target.value });
-        console.log(this.state.address)
+        // console.log(this.state.address)
     }
 
     handleIsStaffChange = event => {
@@ -85,23 +85,26 @@ class UsersEdit extends Component {
     }
 
     sendEditRequest = () => {
-        const user = {
-            email: this.state.email,
-            password: this.state.password,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            address: this.state.address,
-            is_staff: this.state.role_value === 'administrator',
-            is_parent: this.state.user.is_parent,
-            lat: this.state.lat,
-            long: this.state.lng,
+        const request = {
+            user: {
+                email: this.state.email,
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                location: {
+                    address: this.state.address,
+                    lat: this.state.lat,
+                    long: this.state.lng
+                },
+                is_staff: this.state.role_value === 'administrator',
+                is_parent: this.state.user.is_parent,
+            }
         }
 
-        // console.log(user)
+        console.log(request)
 
-        api.put(`users/edit?id=${this.props.params.id}`, user)
+        api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
-            const success = res.data.data.sucess
+            const success = res.data.success
             if ( success ) {
                 this.setState({ edit_success: 1 })
                 // console.log(this.state.edit_success)
@@ -109,7 +112,7 @@ class UsersEdit extends Component {
             }
         })
         this.validEmail = true 
-        this.setState({ redirect: true });
+        // this.setState({ redirect: true });
     }
 
     handleSubmit = event => {
@@ -123,14 +126,16 @@ class UsersEdit extends Component {
             return 
         }
 
-        let request_body = {
-            email: this.state.email
+        const request_body = {
+            user: {
+                email: this.state.email
+            }
         }
-        
+              
         api.put(`users/edit/validate-email?id=${this.props.params.id}`, request_body)
         .then(res => {
-            const data = res.data.data
-            this.validEmail = data.validEmail
+            const data = res.data
+            this.validEmail = data.valid_email
        
             if(!this.validEmail) {
                 this.handleRefresh()
@@ -150,27 +155,28 @@ class UsersEdit extends Component {
 
         api.get(`users/detail?id=${this.props.params.id}`)
         .then(res => {
-        const user = res.data;
-        // console.log(res)
-        this.email = user.email
+            const user = res.data.user;
+            console.log(user)
 
-        let role
-        if (user.is_staff) {
-            role = 'administrator'
-        } else {
-            role = 'general'
-        }
-        this.setState({ 
-            user: user,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            email: user.email,
-            address: user.address,
-            role_value: role,
-            edit_success: 0,
-            is_parent: user.is_parent
-            });
-        })
+            this.email = user.email
+
+            let role
+            if (user.is_staff) {
+                role = 'administrator'
+            } else {
+                role = 'general'
+            }
+            this.setState({ 
+                user: user,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                address: user.location.address,
+                role_value: role,
+                edit_success: 0,
+                is_parent: user.is_parent
+                });
+            })
         .catch (function(error) {
             // console.log(error.response)
             if (error.response.status !== 200) {

@@ -1,0 +1,17 @@
+{
+    "student": {
+        "user_id": 4,
+        "student_school_id": 1,
+        "first_name": "Tester",
+        "last_name": "Cool"
+    },
+    "school": {
+        "id": 1,
+        "name": "New School Name"
+    },
+    "route": {
+        "id": 0,
+        "name": "Unassigned"
+    },
+    "success": true
+}

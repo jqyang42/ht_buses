@@ -10,7 +10,6 @@ import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
-import { API_DOMAIN } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
 
@@ -65,15 +64,19 @@ class SchoolsEdit extends Component {
         }
 
         const school = {
-            school_name: this.state.school_name,
-            school_address: this.state.school_address,
-            lat: this.state.lat,
-            long: this.state.lng,
+            school: {
+                name: this.state.school_name,
+                location: {
+                    address: this.state.school_address,
+                    lat: this.state.lat,
+                    long: this.state.lng,
+                }
+            }
         }
 
         api.put(`schools/edit?id=${this.props.params.id}`, school)
             .then(res => {
-                const msg = res.data.data.message
+                const msg = res.data.message
                 if (msg == 'school information updated successfully') {
                     this.setState({ edit_success: 1 })
                 } else {
@@ -88,8 +91,9 @@ class SchoolsEdit extends Component {
 
         api.get(`schools/detail?id=${this.props.params.id}`)
         .then(res => {
-            const school = res.data;
-            this.setState({ school: school, school_name: school.name, school_address: school.address });
+            const data = res.data
+            const school = data.school;
+            this.setState({ school: school, school_name: school.name, school_address: school.location.address });
             this.setState({ edit_success: 0 })
         }).catch (function(error) {
             // console.log(error.response)

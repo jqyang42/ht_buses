@@ -37,7 +37,7 @@ class SchoolsCreate extends Component {
             // console.log(this.state.school_address)
             Geocode.fromAddress(this.state.school_address).then(
                 (response) => {
-                    // console.log(response)
+                    console.log(response)
                     this.setState({
                         lat : parseFloat(response.results[0].geometry.location.lat),
                         lng : parseFloat(response.results[0].geometry.location.lng),
@@ -45,7 +45,7 @@ class SchoolsCreate extends Component {
                     })
                 },
                 (error) => {
-                    // console.log(error)
+                    console.log(error)
                     this.setState({ valid_address: false})
                 }
             )
@@ -61,19 +61,25 @@ class SchoolsCreate extends Component {
         }
 
         const school = {
-            school_name: this.state.school_name,
-            school_address: this.state.school_address,
-            lat: this.state.lat,
-            long: this.state.lng,
+            school: {
+                name: this.state.school_name,
+                location: {
+                    lat: this.state.lat,
+                    long: this.state.lng,
+                    address: this.state.school_address,
+                }               
+            }
         }
+
+        console.log(school)
         
         api.post(`schools/create`, school)
             .then(res => {
-                const msg = res.data.data.message
-                if (msg == 'school created successfully') {
+                const success = res.data.success
+                if (success) {
                     this.setState({ edit_success: 1 })
                     this.setState({ redirect_detail: true });
-                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.data.school.id })
+                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.school.id })
                 } else {
                     this.setState({ edit_success: -1 })
                 }
