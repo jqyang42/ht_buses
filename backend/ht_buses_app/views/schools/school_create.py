@@ -23,8 +23,10 @@ def school_create(request):
         school = School.schoolsTable.create(name=name, address=address, lat=lat, long=long)
         school_serializer = SchoolSerializer(school, many=False)
         data["message"] = "school created successfully"
+        data["success"] = True
         data["school"] = school_serializer.data
         return Response(data)
     except:
         data["message"] = "school could not be created"
+        data["success"] = False
         return Response(data, status = 400)

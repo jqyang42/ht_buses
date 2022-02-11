@@ -34,10 +34,13 @@ def parent_student_detail(request):
                 route_description = route_serializer.data["description"]
             student_arr["route"] = {'name' : route_name, 'description' : route_description}
             data["student"] = student_arr
+            data["success"] = True
             return Response(data)
         else: 
             data["route"] = {'name' : '', 'description' : ''}
+            data["success"] = False
             data["message"] = {"User is not authorized to see this page"}
             return Response(data, status = 404)
     except:
+        data["success"] = False
         return Response(data, status = 404)

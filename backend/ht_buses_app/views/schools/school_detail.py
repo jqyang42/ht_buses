@@ -33,16 +33,16 @@ def schools_detail(request):
                 student_route_serializer = RouteSerializer(student_route, many=False)
                 route_name = student_route_serializer.data["name"]
             student_list.append({'id': student["id"], 'student_school_id': student["student_school_id"], 'first_name': student["first_name"], 'last_name' : student["last_name"], 'route_name': route_name})
-        if len(student_list) != 0:
-            data["students"] = student_list
+        data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
             route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=school_route["id"]))
             route_count_serialize = StudentSerializer(route_count, many=True)
             route_list.append({'id': school_route["id"], 'name': school_route["name"], 'student_count': len(route_count_serialize.data)})
-        if len(route_list) != 0:
-            data["routes"] = route_list
+        data["routes"] = route_list
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "school could not be found"
+        data["success"] = False
         return Response(data, status = 404)

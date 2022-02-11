@@ -1,3 +1,4 @@
 {
-    "message": "invalid options were chosen, student information update was unsuccessful"
+    "message": "invalid options were chosen, student information update was unsuccessful",
+    "success": false
 }

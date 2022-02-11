@@ -20,7 +20,9 @@ def student_delete(request):
         student_object.delete()
         parent.save()
         data["message"] = "student successfully deleted"
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "student could not be deleted"
+        data["success"] = False
         return Response(data, status = 400)

@@ -22,6 +22,7 @@ def student_edit(request):
         og_student_object = Student.studentsTable.get(pk = id) 
     except: 
         data["message"] = "student was not found, update was unsucessful"
+        data["success"] = False
         return Response(data, status = 404)
     try:
         school_id = School.schoolsTable.get(pk=reqBody["student"]["school_id"])
@@ -33,6 +34,7 @@ def student_edit(request):
         og_student_object.user_id = user_id
     except:
         data["message"] = "invalid options were chosen. update was unsuccessful"
+        data["success"] = False
         return Response(data)
     try: 
         og_student_object.route_id = Route.routeTables.get(pk=reqBody["student"]["route_id"])
@@ -41,4 +43,5 @@ def student_edit(request):
     og_student_object.save()
     data["message"] = "student information successfully updated"
     data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
+    data["success"] = True
     return Response(data)

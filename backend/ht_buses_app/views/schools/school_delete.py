@@ -15,7 +15,9 @@ def school_delete(request):
         school_object = School.schoolsTable.get(pk=id)
         school_object.delete()
         data["message"] = "school successfully deleted"
+        data["success"] = True
         return Response(data)
     except:
         data["message"] = "school could not be deleted"
+        data["success"] = False
         return Response(data, status = 400)

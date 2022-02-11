@@ -1,5 +1,6 @@
 {
     "message": "school created successfully",
+    "success": true,
     "school": {
         "id": 1,
         "name": "School 1",

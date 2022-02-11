@@ -1,3 +1,4 @@
 {
-    "message": "user does not exist, you can only add students to an existing user"
+    "message": "user does not exist, you can only add students to an existing user",
+    "success": false
 }

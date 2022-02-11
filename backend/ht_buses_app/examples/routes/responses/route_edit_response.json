@@ -1,5 +1,6 @@
 {
     "message": "route updated successfully",
+    "success": true,
     "route": {
         "id": 1,
         "school_id": 1,
