@@ -1,0 +1,25 @@
+{
+    "success": true,
+    "school": {
+        "name": "School 1",
+        "location": {
+            "address": "School 1 Address"
+        }
+    },
+    "students": [
+        {
+            "id": 1,
+            "student_school_id": 1,
+            "first_name": "Mary",
+            "last_name": "Jane",
+            "route_name": "Route 1"
+        }
+    ],
+    "routes": [
+        {
+            "id": 1,
+            "name": "Route 1",
+            "student_count": 1
+        }
+    ]
+}

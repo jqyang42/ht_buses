@@ -1,0 +1,19 @@
+{
+    "email": "funny@gmail.com",
+    "password": "yellow",
+    "first_name": "Marre",
+    "last_name": "Poppy",
+    "address": "Hill St",
+    "is_staff": true,
+    "is_parent": true,
+    "students": [
+        
+        {
+            "first_name":"Not Henry",
+            "last_name": "Not Smith",
+            "school_name": "East Middle School",
+            "student_school_id": 1234,
+            "route_name": "Hilly Route"
+        }
+    ]
+}

@@ -1,0 +1,10 @@
+{
+    "school": {
+        "name": "New School Name",
+        "location": {
+            "address": "New School address",
+            "lat": 0.0,
+            "long": 0.0
+        }
+    }
+}
