@@ -29,6 +29,7 @@ class BusRoutesPlanner extends Component {
             markers: [],
             assign_mode: false,
             active_route: 0,
+            show_stops: false,
             error_status: false,
             error_code: 200
         }
@@ -151,6 +152,11 @@ class BusRoutesPlanner extends Component {
     
     handleRouteSelection = event => {
         this.setState({ active_route: event.target.value })
+        console.log(this.state.active_route)
+        event.target.value !== 0 ? this.setState({ show_stops: true}) : this.setState({ show_stops: false})
+        console.log(this.state.active_route)
+        console.log(this.state.show_stops)
+        console.log(this.state.route_dropdown)
         // this.setState({ active_route: event.target.value }, () => // console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
@@ -368,6 +374,23 @@ class BusRoutesPlanner extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
+                                        {
+                                            this.state.active_route !== 0 ?  
+                                            <>
+                                                <h7>STOPS</h7>
+                                                <div></div>
+                                                {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                                <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                    { !this.state.stops_show_all ?
+                                                        "Show All" : "Show Pages"
+                                                    }
+                                                </button>
+                                                <div></div>
+                                            </>
+                                            : ""
+                                        }
+                                        
+                                        <h7>STUDENTS</h7>
                                         <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                 </div>
@@ -384,7 +407,6 @@ function RouteSelectDropdown() {
     let routes = this.state.routes(route => {
         return {value: route.id, display: route.name}
     })
-    // console.log(routes)
     this.setState({ route_dropdown: routes })
 }
 

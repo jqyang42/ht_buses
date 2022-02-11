@@ -222,11 +222,11 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STOPS</h7>
-                                            {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
-                                            <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
-                                                { !this.state.stops_show_all ?
-                                                    "Show All" : "Show Pages"
-                                                }
+                                        {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                            { !this.state.stops_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
                                         </button>
                                         <div></div>
                                         <h7>STUDENTS</h7>
