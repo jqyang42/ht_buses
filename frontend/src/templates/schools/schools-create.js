@@ -75,8 +75,8 @@ class SchoolsCreate extends Component {
         
         api.post(`schools/create`, school)
             .then(res => {
-                const msg = res.data.message
-                if (msg == 'school created successfully') {
+                const success = res.data.success
+                if (success) {
                     this.setState({ edit_success: 1 })
                     this.setState({ redirect_detail: true });
                     this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.school.id })

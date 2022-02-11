@@ -66,8 +66,8 @@ class UsersDetail extends Component {
     deleteUser() {
         api.delete(`users/delete?id=${this.props.params.id}`)
         .then(res => {
-            const msg = res.data.message
-            if (msg == 'user successfully deleted') {
+            const success = res.data.success
+            if (success) {
                 this.setState({ 
                     delete_success: 1,
                     redirect: true
