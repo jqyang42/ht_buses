@@ -238,18 +238,20 @@ class UsersCreate extends Component {
         }
 
         const user = {
-            email: this.state.user_email,
-            password: this.state.user_password,
-            first_name: this.state.user_first_name,
-            last_name: this.state.user_last_name,
-            is_staff: this.state.user_is_staff === 'general' ? false : true,
-            is_parent: this.state.students.length !== 0,
-            students: this.state.students,
-            location: {
-                address: user_address,
-                lat: this.state.lat,
-                long: this.state.lng,
-            }
+            user: {
+                email: this.state.user_email,
+                password: this.state.user_password,
+                first_name: this.state.user_first_name,
+                last_name: this.state.user_last_name,
+                is_staff: this.state.user_is_staff === 'general' ? false : true,
+                is_parent: this.state.students.length !== 0,
+                students: this.state.students,
+                location: {
+                    address: user_address,
+                    lat: this.state.lat,
+                    long: this.state.lng,
+                }
+            }          
             
         }
 
@@ -257,11 +259,11 @@ class UsersCreate extends Component {
         api.post(`users/create`, user)
         .then(res => {
             // console.log(res)
-            const msg = res.data.data.message
-            if (msg == 'User created successfully') {
+            const msg = res.data.message
+            if (msg == 'user created successfully') {
                 this.setState({ edit_success: 1 })
                 this.setState({ redirect_detail: true });
-                this.setState({ detail_url: USERS_URL + "/" + res.data.data.id});
+                this.setState({ detail_url: USERS_URL + "/" + res.data.user.id});
             } else {
                 this.setState({ edit_success: -1 })
             }
@@ -308,15 +310,13 @@ class UsersCreate extends Component {
         api.post(`users/create/validate-email`, request_body)
         .then(res => {
             const data = res.data
-            this.validEmail = data.valid_email
+            this.validEmail = data.success
        
             if(!this.validEmail) {
                 this.handleRefresh()
                 return
             }   
-            
             this.sendCreateRequest()
-
         })
     }
 

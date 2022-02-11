@@ -7,7 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
-import { makeSchoolsDropdown } from '../components/schools-dropdown';
+import { makeSchoolsDropdown } from '../components/dropdown';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -37,8 +37,11 @@ class UsersDetail extends Component {
 
     componentDidMount() {
         this.getUserDetails()
-        const dropdown = makeSchoolsDropdown()
-        console.log(dropdown)
+        makeSchoolsDropdown().then(ret => {
+            this.setState({
+                schools_dropdown: ret
+            })
+        })
     }
 
     // api calls
@@ -59,25 +62,6 @@ class UsersDetail extends Component {
             }
         })
     }
-
-    // getSchools() {
-    //     return api.get(`schools`)        
-    // }
-
-    // makeSchoolsDropdown() {
-    //     this.getSchools()
-    //     .then(res => {            
-    //         let schools = res.data.schools.map(school => {
-    //             return {
-    //                 value: school.id, 
-    //                 display: school.name
-    //             }
-    //         })
-    //         this.setState({ 
-    //             schools_dropdown: schools,
-    //         })
-    //     })
-    // }
 
     deleteUser() {
         api.delete(`users/delete?id=${this.props.params.id}`)
