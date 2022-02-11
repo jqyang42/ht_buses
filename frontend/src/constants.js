@@ -48,4 +48,6 @@ export const USERS_EMAIL_URL = "/users/email";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";
-export const PARENT_PASSWORD_URL = "/change-password";
+
+export const PASSWORD_URL = "/change-password";
+export const ACCOUNT_URL = "/account";

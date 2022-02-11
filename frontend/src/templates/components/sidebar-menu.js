@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { HT_LOGO } from "../../constants";
 import { API_DOMAIN } from '../../constants';
 import axios from "axios";
-import { INDEX_URL, STUDENTS_URL, ROUTES_URL, SCHOOLS_URL, USERS_URL} from "../../constants";
+import { INDEX_URL, STUDENTS_URL, ROUTES_URL, SCHOOLS_URL, USERS_URL, PASSWORD_URL} from "../../constants";
 import { Link } from 'react-router-dom';
 
 class SidebarMenu extends Component {
@@ -80,7 +80,7 @@ class SidebarMenu extends Component {
                         </li>
                     </ul>
                     <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
-                        <Link to="/change-password" className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
+                        <Link to={PASSWORD_URL} className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
                             <span className="btn-text">
                                 Change Password
                             </span>

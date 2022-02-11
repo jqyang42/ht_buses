@@ -13,7 +13,8 @@ class HeaderMenu extends Component {
     render() {
         var root_url = (this.props.root === "Bus Routes") ? "/routes" : (
                        (this.props.root === "Manage Users") ? "/users" : (
-                       (this.props.root === "My Dashboard") ? "/dashboard" : "/" + this.props.root.toLowerCase() ))
+                       (this.props.root === "My Dashboard") ? "/dashboard" : (
+                       (this.props.root === "My Account") ? "/account" : "/" + this.props.root.toLowerCase() )))
 
         return (
             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
@@ -29,7 +30,11 @@ class HeaderMenu extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <a href={root_url}><h5>{this.props.root}</h5></a>
+                                                {
+                                                    sessionStorage.getItem('is_staff') == "false" && this.props.root === "My Account" ? 
+                                                    <h5>{this.props.root}</h5> :
+                                                    <a href={root_url}><h5>{this.props.root}</h5></a>
+                                                }
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
@@ -44,7 +49,11 @@ class HeaderMenu extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                <a href={root_url}><h5>{this.props.root}</h5></a>
+                                                {
+                                                    !sessionStorage.getItem('is_staff') && this.props.root === "My Account" ? 
+                                                    <h5>{this.props.root}</h5> :
+                                                    <a href={root_url}><h5>{this.props.root}</h5></a>
+                                                }
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>

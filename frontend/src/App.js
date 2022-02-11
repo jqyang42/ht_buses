@@ -10,7 +10,8 @@ import './static/custom.css';
 import Login from "./templates/index";
 import ParentDashboard from './templates/parent-view/parent-dashboard';
 import ParentDetail from './templates/parent-view/parent-detail';
-import ParentPassword from './templates/parent-view/parent-change-password';
+import ChangePassword from './templates/general/change-password';
+import Account from './templates/general/account';
 
 import Students from "./templates/students/students";
 import StudentsDetail from "./templates/students/students-detail";
@@ -27,7 +28,7 @@ import Users from "./templates/users/users";
 import UsersDetail from "./templates/users/users-detail";
 import UsersCreate from "./templates/users/users-create";
 import UsersEdit from "./templates/users/users-edit";
-import UsersPassword from './templates/users/users-password';
+// import UsersPassword from './templates/users/users-password';
 // import UsersDelete from "./templates/users-delete";
 
 import BusRoutes from "./templates/routes/routes";
@@ -39,7 +40,7 @@ import BusRoutesEdit from "./templates/routes/routes-edit";
 import Email from './templates/components/email';
 import ErrorPage from './templates/error-page';
 
-import { INDEX_URL, ROUTES_EMAIL_URL } from "./constants";
+import { ACCOUNT_URL, INDEX_URL, ROUTES_EMAIL_URL } from "./constants";
 import { LOGIN_URL } from "./constants";
 import { SCHOOLS_URL } from "./constants";
 import { STUDENTS_URL } from "./constants";
@@ -55,12 +56,12 @@ import { ROUTES_PLANNER_URL } from "./constants";
 import { SCHOOLS_EDIT_URL } from "./constants";
 import { STUDENTS_EDIT_URL } from "./constants";
 import { USERS_EDIT_URL } from "./constants";
-import { USERS_PASSWORD_URL } from './constants';
+// import { USERS_PASSWORD_URL } from './constants';
 import { ROUTES_EDIT_URL } from "./constants";
 import { SCHOOLS_EMAIL_URL } from './constants';
 import { PARENT_DASHBOARD_URL } from './constants';
 import { PARENT_DETAIL_URL } from './constants';
-import { PARENT_PASSWORD_URL } from './constants';
+import { PASSWORD_URL } from './constants';
 import { USERS_EMAIL_URL } from './constants';
 
 class App extends Component {
@@ -72,7 +73,7 @@ class App extends Component {
           <Route path={LOGIN_URL} element={<Login />} />
           <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
           <Route path={PARENT_DETAIL_URL} element={<ParentDetail />} />
-          <Route path={PARENT_PASSWORD_URL} element={<ParentPassword />} />
+          <Route path={PASSWORD_URL} element={<ChangePassword />} />
 
           <Route path={STUDENTS_URL} element={<Students />} />
           <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />
@@ -88,7 +89,6 @@ class App extends Component {
           <Route path={USERS_CREATE_URL} element={<UsersCreate />} />
           <Route path={USERS_DETAIL_URL} element={<UsersDetail />} />
           <Route path={USERS_EDIT_URL} element={<UsersEdit />} />
-          <Route path={USERS_PASSWORD_URL} element={<UsersPassword />} />
           <Route path={USERS_EMAIL_URL} element={<Email source="Users" />} />
 
           <Route path={ROUTES_URL} element={<BusRoutes />} />
@@ -97,6 +97,7 @@ class App extends Component {
           <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
           <Route path={ROUTES_EMAIL_URL} element={<Email source="Routes" />} />
 
+          <Route path={ACCOUNT_URL} element={<Account />} />
           <Route component={ErrorPage} />
         </Routes>
       </div>
