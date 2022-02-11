@@ -42,11 +42,11 @@ class BusRoutesDetail extends Component {
         
         api.get(`routes/detail?id=${this.props.params.id}`)
             .then(res => {
-            const route = res.data;
+            const route = res.data.route;
             const school = route.school;
-            
+            const parents = res.data.parents
             let students
-            if (route.parents !== null) {
+            if (parents !== null) {
                 students = route.parents?.map(parent => {
                     return parent.students.map(student => {
                         return {
@@ -68,13 +68,13 @@ class BusRoutesDetail extends Component {
                 route: route, 
                 school: school, 
                 center: { 
-                    lat: school.lat, 
-                    lng: school.long 
+                    lat: school.location.lat, 
+                    lng: school.location.long 
                 }, });
             this.setState({ delete_success: 0 })
             this.setState({ students_show_all: false });
             this.setState({ stops_show_all: false });
-            route.parents.map((parent, index) => {
+            parents.map((parent, index) => {
                 const studentIDs = [];
                 const studentNames = [];
                 parent.students.map((student, index) => {
@@ -85,10 +85,10 @@ class BusRoutesDetail extends Component {
                 this.setState(prevState => ({
                     markers: [...prevState.markers, {
                         position: {
-                            lat: parent.lat,
-                            lng: parent.long
+                            lat: parent.location.lat,
+                            lng: parent.location.long
                         },
-                        id: parent.parent_id,
+                        id: parent.id,
                         studentIDs: studentIDs,
                         studentNames: studentNames,
                         routeID: this.props.params.id //TODO: change markers to create per student
@@ -108,15 +108,15 @@ class BusRoutesDetail extends Component {
         )
     }
 
-    handleDelete = event => {
+    handleDelete = event => { //TODO: Change api to boolean
         event.preventDefault()
 
         api.delete(`routes/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log("hello")
-                const msg = res.data.data.message
+                const success = res.data.success
                 // console.log(res.data)
-                if (msg === 'route successfully deleted') {
+                if (success) {
                     this.setState({ delete_success: 1})
                     this.setState({redirect: true})
                     // console.log(this.state.redirect)

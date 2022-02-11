@@ -29,6 +29,7 @@ def route_edit(request):
         data["route"] = route_serializer.data
         return Response(data)
     except:
+        data["edit_success"] = -1
         data["message"] = "route could not be updated"
         data["success"] = False
         return Response(data, status = 400)
