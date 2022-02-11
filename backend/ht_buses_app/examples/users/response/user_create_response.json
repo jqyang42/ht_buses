@@ -10,5 +10,6 @@
         "address": "Address here",
         "lat": 0.0,
         "long": 0.0
-    }
+    },
+    "success": true
 }

@@ -35,23 +35,24 @@ def user_create(request):
     data["message"] = "user created successfully"
     user_serializer = UserSerializer(user, many=False)
     data["user"] = user_serializer.data
+    data["success"] = True
     return Response(data)
 
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser]) #TODO : very that the email is valid when sumbit button pressed in user create forms
+@permission_classes([AllowAny]) #TODO : very that the email is valid when sumbit button pressed in user create forms
 def valid_email_create(request):
     data = {}
     reqBody = json.loads(request.body)
-    email = reqBody['email']
+    email = reqBody['user']['email']
     try: 
         User.objects.get(email = email)
         data["message"] = "Please enter a different email. A user with this email already exists"
-        data["validEmail"] = False
+        data["success"] = False
         return Response(data)
     except: 
         data["message"] = "The email entered is valid"
-        data["validEmail"] = True
+        data["success"] = True
         return Response(data)
 

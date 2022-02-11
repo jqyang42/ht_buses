@@ -17,7 +17,9 @@ def user_password_edit(request):
         user_object.set_password(reqBody['user']['password'])
         user_object.save()
         data["message"] = "user password updated successfully"
+        data["success"] = True
         return Response(data) 
     except:
         data["message"] = "user's password could not be updated"
+        data["success"] = False
         return Response(data, status = 400)   
