@@ -15,7 +15,7 @@ def users_detail(request):
     try:
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
-        if user_serializer.data["address"] != "":
+        if user_serializer.data["address"] != None:
             user_address = user_serializer.data["address"]
             if user_serializer.data["lat"] == None:
                 user_lat = 0
