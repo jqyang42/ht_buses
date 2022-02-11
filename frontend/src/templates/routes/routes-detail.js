@@ -68,8 +68,8 @@ class BusRoutesDetail extends Component {
                 route: route, 
                 school: school, 
                 center: { 
-                    lat: school.lat, 
-                    lng: school.long 
+                    lat: school.location.lat, 
+                    lng: school.location.long 
                 }, });
             this.setState({ delete_success: 0 })
             this.setState({ students_show_all: false });
@@ -85,8 +85,8 @@ class BusRoutesDetail extends Component {
                 this.setState(prevState => ({
                     markers: [...prevState.markers, {
                         position: {
-                            lat: parent.lat,
-                            lng: parent.long
+                            lat: parent.location.lat,
+                            lng: parent.location.long
                         },
                         id: parent.id,
                         studentIDs: studentIDs,
@@ -114,7 +114,7 @@ class BusRoutesDetail extends Component {
         api.delete(`routes/delete?id=${this.props.params.id}`)
             .then(res => {
                 // console.log("hello")
-                const msg = res.data.data.message
+                const msg = res.data.message
                 // console.log(res.data)
                 if (msg === 'route successfully deleted') {
                     this.setState({ delete_success: 1})

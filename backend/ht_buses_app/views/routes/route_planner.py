@@ -46,7 +46,7 @@ def routeplanner(request):
                     else:
                         parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : child["route_id"]})
                 parent_address = {"address": parent_serializer.data["address"], "lat": parent_serializer.data["lat"], "long": parent_serializer.data["long"]}
-                address_arr.append({"id" : student["user_id"], "location": parent_address, "student": parent_student_arr})
+                address_arr.append({"id" : student["user_id"], "location": parent_address, "students": parent_student_arr})
         data["parents"] = address_arr
         return Response(data)
     except:

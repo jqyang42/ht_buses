@@ -83,7 +83,7 @@ class BusRoutesPlanner extends Component {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
                 const school_location = res.data.school.location;
-                // console.log(locations)
+                console.log(school_location)
                 this.setState({ 
                     center: { 
                         lat: school_location.lat, 
@@ -150,11 +150,14 @@ class BusRoutesPlanner extends Component {
         event.preventDefault();
 
         const route = {
-            route_name: this.state.create_route_name,
+            name: this.state.create_route_name,
             school_name: this.state.school.name,
-            route_description: this.state.create_route_description
+            description: this.state.create_route_description
         }
-        api.post(`routes/create`, route)
+        const data = {
+            'route': route
+        }
+        api.post(`routes/create`, data)
             .then(res => {
                 const new_route = res.data.route
                 // // console.log(new_route)

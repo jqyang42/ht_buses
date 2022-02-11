@@ -40,7 +40,7 @@ def routes_detail(request):
         data["route"] = route_arr
         if len(address_arr) != 0:
             data["parents"] = address_arr
-        return Response(data)
+        return Response(data, status = 200)
     except:
         data["message"] = "route was not found"
         return Response(data, status = 404)

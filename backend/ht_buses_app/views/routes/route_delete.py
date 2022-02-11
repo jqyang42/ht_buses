@@ -16,7 +16,7 @@ def route_delete(request):
         route_object.delete()
         data["message"] = "route successfully deleted"
         result = data
-        return Response(result)
+        return Response(result, status = 200)
     except BaseException as e:
         data["message"] = "route could not be deleted"
         return Response(data, status = 400)
