@@ -42,13 +42,15 @@ class BusRoutesDetail extends Component {
         
         api.get(`routes/detail?id=${this.props.params.id}`)
             .then(res => {
-            const route = res.data.route;
+            const data = res.data;
+            const route = data.route;
             const school = route.school;
-            const parents = res.data.parents
+            const users = data.users;
+            console.log(users)
             let students
-            if (parents !== null) {
-                students = route.parents?.map(parent => {
-                    return parent.students.map(student => {
+            if (users !== null) {
+                students = users?.map(user => {
+                    return user.students.map(student => {
                         return {
                             student_school_id: student.student_school_id,
                             id: student.id,
@@ -57,7 +59,6 @@ class BusRoutesDetail extends Component {
                         }
                     })
                 })
-                // console.log(students)
                 students = [].concat.apply([], students)
             } else {
                 students = []
@@ -74,10 +75,10 @@ class BusRoutesDetail extends Component {
             this.setState({ delete_success: 0 })
             this.setState({ students_show_all: false });
             this.setState({ stops_show_all: false });
-            parents.map((parent, index) => {
+            users.map((user) => {
                 const studentIDs = [];
                 const studentNames = [];
-                parent.students.map((student, index) => {
+                user.students.map((student) => {
                     studentIDs.push(student.id);
                     const fullName = student.first_name + ' ' + student.last_name;
                     studentNames.push(fullName);
@@ -85,10 +86,10 @@ class BusRoutesDetail extends Component {
                 this.setState(prevState => ({
                     markers: [...prevState.markers, {
                         position: {
-                            lat: parent.location.lat,
-                            lng: parent.location.long
+                            lat: user.location.lat,
+                            lng: user.location.long
                         },
-                        id: parent.id,
+                        id: user.id,
                         studentIDs: studentIDs,
                         studentNames: studentNames,
                         routeID: this.props.params.id //TODO: change markers to create per student

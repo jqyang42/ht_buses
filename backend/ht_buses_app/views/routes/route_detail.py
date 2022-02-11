@@ -39,7 +39,7 @@ def routes_detail(request):
                 address_arr.append({"id" : parent_id, "location" : parent_address, "students": parent_student_arr})
         data["route"] = route_arr
         if len(address_arr) != 0:
-            data["parents"] = address_arr
+            data["users"] = address_arr
         data["success"] = True
         return Response(data)
     except:

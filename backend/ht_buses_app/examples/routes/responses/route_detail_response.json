@@ -12,7 +12,7 @@
         },
         "description": "Route 1 description"
     },
-    "parents": [
+    "users": [
         {
             "id": 1,
             "location": {

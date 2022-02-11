@@ -90,11 +90,11 @@ class BusRoutesPlanner extends Component {
                         lng: school_location.long 
                     }
                  });
-                const parents = res.data.parents
-                parents.map((parent, index) => {
+                const users = res.data.users
+                users.map((user) => {
                     const studentIDs = [];
                     const studentNames = [];
-                    parent.students.map((student, index) => {
+                    user.students.map((student) => {
                         studentIDs.push(student.id);
                         const fullName = student.first_name + ' ' + student.last_name;
                         studentNames.push(fullName);
@@ -102,13 +102,13 @@ class BusRoutesPlanner extends Component {
                     this.setState(prevState => ({
                         markers: [...prevState.markers, {
                             position: {
-                                lat: parent.location.lat,
-                                lng: parent.location.long
+                                lat: user.location.lat,
+                                lng: user.location.long
                             },
-                            id: parent.id,
+                            id: user.id,
                             studentIDs: studentIDs,
                             studentNames: studentNames,
-                            routeID: parent.students[0].route_id //TODO: change markers to create per student //TODO: Fix 
+                            routeID: user.students[0].route_id //TODO: change markers to create per student //TODO: Fix 
                         }]
                     }));
                 });
