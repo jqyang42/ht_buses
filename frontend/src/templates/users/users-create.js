@@ -305,7 +305,6 @@ class UsersCreate extends Component {
                 email: this.email
             }            
         }
-        console.log(request_body)
 
         api.post(`users/create/validate-email`, request_body)
         .then(res => {
