@@ -34,7 +34,6 @@ import BusRoutesEdit from "./templates/routes/routes-edit";
 
 import Email from './templates/components/email';
 import EmailReset from './templates/general/email-reset';
-import EmailConfirmation from './templates/general/email-confirmation';
 import ErrorPage from './templates/error-page';
 import ResetPassword from './templates/general/reset-password';
 
@@ -64,7 +63,6 @@ import { PARENT_DETAIL_URL } from './constants';
 import { PASSWORD_URL } from './constants';
 import { USERS_EMAIL_URL } from './constants';
 import { EMAIL_RESET_URL } from './constants';
-import { EMAIL_CONFIRMATION_URL } from './constants';
 import { RESET_PASSWORD_URL } from './constants';
 
 class App extends Component {
@@ -103,7 +101,6 @@ class App extends Component {
           <Route path={ACCOUNT_URL} element={<Account />} />
           <Route path={EMAIL_RESET_URL} element={<EmailReset />} />
           <Route path={RESET_PASSWORD_URL} element={<ResetPassword />} />
-          <Route path={EMAIL_CONFIRMATION_URL} element={<EmailConfirmation />} />
           <Route component={ErrorPage} />
         </Routes>
       </div>
