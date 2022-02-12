@@ -130,7 +130,9 @@ class BusRoutesPlanner extends Component {
     }
     
     handleRouteSelection = event => {
-        this.setState({ active_route: event.target.value })
+        this.setState({ active_route: parseInt(event.target.value) })
+        console.log(this.state.active_route)
+        console.log(this.state.route_dropdown)
         // this.setState({ active_route: event.target.value }, () => // console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
@@ -268,7 +270,7 @@ class BusRoutesPlanner extends Component {
                                             <div className="col justify-content-end">
                                                 <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
                                                     <option selected value={0}>Select a route to assign</option>
-                                                    <option selected value={0}>No Route</option>
+                                                    <option value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.id}>{route.name}</option>
                                                     )}
@@ -351,6 +353,22 @@ class BusRoutesPlanner extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
+                                        {
+                                            this.state.active_route === 0 ? "" :
+                                            <>
+                                                <h7>STOPS</h7>
+                                                <div></div>
+                                                {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                                <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                    { !this.state.stops_show_all ?
+                                                        "Show All" : "Show Pages"
+                                                    }
+                                                </button>
+                                                <div></div>
+                                            </>
+                                        }
+                                        
+                                        <h7>STUDENTS</h7>
                                         <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                 </div>
@@ -367,7 +385,6 @@ function RouteSelectDropdown() {
     let routes = this.state.routes(route => {
         return {value: route.id, display: route.name}
     })
-    // console.log(routes)
     this.setState({ route_dropdown: routes })
 }
 

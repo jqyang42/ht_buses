@@ -135,6 +135,7 @@ class UsersCreate extends Component {
         this.setState({ new_user: user });
     }
 
+    // Called when onBlur (when user clicks out of input box) to reduce Geocoding API calls.
     handleAddressValidation = () => {
         const address = this.state.new_user.location.address
         if (address !== '') {
@@ -430,7 +431,7 @@ class UsersCreate extends Component {
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
                                                 <div>
-                                                    <button type="add student test" className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
+                                                    <button className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
                                                         <i className="bi bi-plus-circle me-2"></i>
                                                         Add a student
                                                     </button>
