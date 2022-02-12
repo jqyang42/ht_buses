@@ -431,7 +431,7 @@ class UsersCreate extends Component {
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
                                                 <div>
-                                                    <button type="add student test" className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
+                                                    <button className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
                                                         <i className="bi bi-plus-circle me-2"></i>
                                                         Add a student
                                                     </button>
