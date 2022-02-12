@@ -7,7 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
-import { studentIDValidation } from '../components/helper';
+import { studentIDValidation } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 
 import { LOGIN_URL } from "../../constants";

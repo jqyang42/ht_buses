@@ -8,7 +8,7 @@ import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import ErrorPage from "../error-page";
 import api from "../components/api";
-import { emailValidation } from "../components/helper";
+import { emailValidation } from "../components/validation";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -112,8 +112,9 @@ class UsersEdit extends Component {
     }
 
     handleAddressValidation = () => {
-        if (this.state.edited_user.location.address != '') {
-            Geocode.fromAddress(this.state.edited_user.location.address).then(
+        const address = this.state.edited_user.location.address
+        if (address != '') {
+            Geocode.fromAddress(address).then(
                 (response) => {
                     let user = this.state.edited_user
                     user.location.lat = parseFloat(response.results[0].geometry.location.lat)

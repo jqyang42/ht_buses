@@ -1,4 +1,12 @@
-import { emailRegex } from "../regex/input-validation"
+import { emailRegex, passwordRegex } from "../regex/input-validation"
+
+export function emailValidation({ email }) {
+    return emailRegex.test(email)
+}
+
+export function passwordValidation({ password }) {
+    return passwordRegex.test(password)
+}
 
 export function studentIDValidation({ student_id }) {
     const isNumber = !isNaN(student_id)
@@ -9,8 +17,4 @@ export function studentIDValidation({ student_id }) {
         return false
     }
     return true 
-}
-
-export function emailValidation({ email }) {
-    return emailRegex.test(email)
 }
