@@ -62,7 +62,7 @@ class RouteMap extends Component {
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
     console.log(coords)
-    if (this.props.assignMode ) {
+    if (this.props.assign_mode ) {
       this.setState({
         stops: [...this.state.stops, {
           position: coords,
