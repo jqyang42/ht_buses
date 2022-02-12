@@ -50,4 +50,6 @@ export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";
 
 export const PASSWORD_URL = "/change-password";
+export const EMAIL_RESET_URL = "/email-reset";
+export const EMAIL_CONFIRMATION_URL = "/email-confirmation";
 export const ACCOUNT_URL = "/account";
