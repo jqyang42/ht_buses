@@ -1,4 +1,6 @@
-export function studentIDValidation( {student_id} ) {
+import { emailRegex } from "../regex/input-validation"
+
+export function studentIDValidation({ student_id }) {
     const isNumber = !isNaN(student_id)
     if (!isNumber ) {
         return false
@@ -7,4 +9,8 @@ export function studentIDValidation( {student_id} ) {
         return false
     }
     return true 
+}
+
+export function emailValidation({ email }) {
+    return emailRegex.test(email)
 }
