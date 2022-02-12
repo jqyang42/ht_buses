@@ -1,3 +1,4 @@
+from ...serializers import SchoolSerializer
 from ...models import School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -8,6 +9,7 @@ import re
 from ..resources import capitalize_reg
 
 # Schools PUT API
+# Refactor to be a PUT request
 @csrf_exempt
 @api_view(["PUT"])
 @permission_classes([IsAdminUser])
@@ -17,15 +19,17 @@ def school_edit(request):
     reqBody = json.loads(request.body)
     try:
         school_object =  School.schoolsTable.get(pk = id)
-        school_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody['school_name'])
-        school_object.address = reqBody['school_address']
-        school_object.lat = reqBody['lat']
-        school_object.long = reqBody['long']
+        school_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["school"]["name"])
+        school_object.address = reqBody["school"]["location"]["address"]
+        school_object.lat = reqBody["school"]["location"]["lat"]
+        school_object.long = reqBody["school"]["location"]["long"]
         school_object.save()
         data["message"] = "school information updated successfully"
-        result = {"data" : data}
-        return Response(result)
+        data["success"] = True
+        school_serializer = SchoolSerializer(school_object, many=False)
+        data["school"] = school_serializer.data
+        return Response(data)
     except:
-        data["message"] = "School could not be updated "
-        result = {"data" : data}
-        return Response(result, status = 400)
+        data["message"] = "school could not be updated"
+        data["success"] = False
+        return Response(data, status = 400)

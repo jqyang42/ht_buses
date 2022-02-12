@@ -1,0 +1,13 @@
+{
+    "message": "school created successfully",
+    "success": true,
+    "school": {
+        "id": 1,
+        "name": "School 1",
+        "location": {
+            "address": "Somewhere in the world",
+            "lat": 0.0,
+            "long": 0.0
+        }
+    }
+}

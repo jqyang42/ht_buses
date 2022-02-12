@@ -26,23 +26,20 @@ class ParentDetail extends Component {
     }
 
     componentDidMount() {
-
-        var self = this
-
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
             .then(res => {
-                const student = res.data
+                const student = res.data.student
                 const route = student.route
                 this.setState({ student: student, route: route })
                 this.setState({error_status: false})
                 this.setState({error_code: 200})
-            }).catch (function(error) {
+            }).catch (error => {
                 // console.log(error.response)
                 if (error.response.status !== 200) {
                     // console.log(error.response.status)
-                    self.setState({ error_status: true });
+                    this.setState({ error_status: true });
                     // console.log(self.state.error_status)
-                    self.setState({ error_code: error.response.status });
+                    this.setState({ error_code: error.response.status });
                     // console.log(self.state.error_code)
                 }
             } 

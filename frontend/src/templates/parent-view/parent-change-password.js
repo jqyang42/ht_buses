@@ -12,7 +12,6 @@ class ParentPassword extends Component {
     state = {
         password: '',
         confirm_password: '',
-        user: [],
         redirect: false,
         edit_success: 0
     }
@@ -22,11 +21,11 @@ class ParentPassword extends Component {
     validPassword = false;
     samePassword = false;
     
-    passwordValidation = function() {
+    passwordValidation() {
         return (passwordRegex.test(this.state.password))
     }
 
-    handlePasswordChange = event => {
+    handlePasswordChange = (event) => {
         this.password2 = '';
         this.password2Field.value = '';
         this.samePassword = false;
@@ -52,13 +51,15 @@ class ParentPassword extends Component {
         }
 
         const password = {
-            password: this.state.password
+            user: {
+                password: this.state.password
+            }
         }
         
         api.put(`users/password-edit?id=${sessionStorage.getItem('user_id')}`, password) 
             .then(res => {
-                const msg = res.data.data.message
-                if (msg === 'User password updated successfully') {
+                const success = res.data.success
+                if (success) {
                     this.setState({ edit_success: 1 })    // TODO ERROR: edit_success?
                     // console.log(this.state.edit_success)
                 }

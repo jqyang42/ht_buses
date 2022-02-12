@@ -1,0 +1,17 @@
+{
+    "success": true,
+    "user": {
+        "first_name": "Emmy",
+        "last_name": "Beans",
+        "students": [
+            {
+                "id": 11,
+                "student_school_id": 11111,
+                "first_name": "my plushie",
+                "last_name": "cat",
+                "school_name": "Est Middle School",
+                "route_name": "Route 90"
+            }
+        ]
+    }
+}

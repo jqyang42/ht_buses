@@ -57,7 +57,9 @@ class UsersPassword extends Component {
         }
 
         const password = {
-            password: this.state.password
+            user: {
+                password: this.state.password
+            }            
         }
         
         api.put(`users/password-edit?id=${this.props.params.id}`, password) 
@@ -76,7 +78,7 @@ class UsersPassword extends Component {
 
         api.get(`users/detail?id=${this.props.params.id}`)
             .then(res => {
-            const user = res.data;
+            const user = res.data.user;
             if (user.students == null) {
                 this.setState({ students: []})
             } else {

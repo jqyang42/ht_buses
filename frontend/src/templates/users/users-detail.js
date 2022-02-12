@@ -7,126 +7,103 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
+import { studentIDValidation } from '../components/validation';
+import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class UsersDetail extends Component {
     state = {
-        id: '',
-        users : [],
-        students: [],
-        new_student: [],
+        user: {},
+        new_student: {
+            first_name: '',
+            last_name: '',
+            school_id: '',
+            route_id: null,
+            student_school_id: ''
+        },
         schools_dropdown: [],
         routes_dropdown: [],
-        redirect: false,
-        create_success: 0,
-        delete_success: 0,
         show_all: false,
+        redirect: false,
+        add_student_clicked: false,
+        create_success: 0,
+        delete_success: 0,    
         error_status: false,
         error_code: 200,
-        add_student_clicked: false
+        
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
-    }
-
+    // initialize page
     componentDidMount() {
-        var self = this
+        this.getUserDetails()
         
+        makeSchoolsDropdown().then(ret => {
+            this.setState({ schools_dropdown: ret })
+        })
+    }
+
+    // api calls
+    getUserDetails = () => {
         api.get(`users/detail?id=${this.props.params.id}`)
-            .then(res => {
-            const users = res.data;
-            if (users.students == null) {
-                this.setState({ students: []})
-            } else {
-                this.setState({ students: users.students })
-            }
-            this.setState({ users: users });
-            this.setState({ create_success: 0 });
-            this.setState({ delete_success: 0});
-            this.setState({ show_all: false});
-            })
-            .catch (function(error) {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.data)
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-        )
-        
-        api.get(`schools`)
-            .then(res => {            
-            let schools = res.data.schools.map(school => {
-                return {value: school.id, display: school.name}
-            })
-            this.setState({ schools_dropdown: schools})
+        .then(res => {
+            const user = res.data.user;
+            this.setState({ user: user });
         })
-
-        this.setState({ new_student: 
-            {
-                first_name: '',
-                last_name: '',
-                school_id: '',
-                route_id: null,   //TODO: replicate?
-                student_school_id: ''
+        .catch (err => {
+            if (err.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: err.response.status
+                 });
             }
         })
     }
 
-    handleDeleteSubmit = event => {
-        event.preventDefault();
-        
+    deleteUser() {
         api.delete(`users/delete?id=${this.props.params.id}`)
-            .then(res => {
-                // console.log(res)
-                const msg = res.data.data.message
-                if (msg == 'user successfully deleted') {
-                    this.setState({ delete_success: 1 })
-                    this.setState({ redirect: true });
-                    // console.log(this.state.redirect)
-                    return <Navigate to={ USERS_URL }/>;
-                } else {
-                    // console.log(this.state.redirect)
-                    this.setState({ delete_success: -1 });
-                }
-            })
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true
+                })
+                return <Navigate to={ USERS_URL }/>;
+            } else {
+                this.setState({ delete_success: -1 });
+            }
+        })
     }
-    studentIDValidation = () => {
-        const isNumber = !isNaN(this.state.new_student.student_school_id)
-        if (!isNumber ) {
-            return false
-        }
-        else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
-            return false
-        }
-        return true 
-    }
-    handleAddStudentSubmit = event => {
-        // event.preventDefault();
-        if (!this.studentIDValidation()) {
-            this.setState({ create_success: -1 })  
-            return
-        }
 
-        const student = {
-            students: [this.state.new_student]
-        }
-
+    addStudent = (student) => {
         api.post(`users/add-students?id=${this.props.params.id}`, student)
-            .then(res => {
-                const msg = res.data.data.message
-                if (msg === 'Students created successfully') {
-                    this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
-                    // console.log(this.state.create_success)
-                } else {
-                    this.setState({ create_success: -1 })      // TODO ERROR
-                }
-            })
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
+            } else {
+                this.setState({ create_success: -1 })      // TODO ERROR
+            }
+        })
+    } 
+
+    // render handlers
+    handleShowAll = () => {
+        this.setState({ show_all: !this.state.show_all })
+    }
+
+    handleDeleteSubmit = (event) => {
+        event.preventDefault();
+        this.deleteUser();
+    }
+    
+    handleClickAddStudent = () => {
+        // this.setState({ add_student_clicked: !this.state.add_student_clicked });
+        this.setState(prevState => ({
+            add_student_clicked: !prevState.add_student_clicked
+        }))
     }
 
     handleStudentFirstNameChange = (event) => {
@@ -134,7 +111,6 @@ class UsersDetail extends Component {
         let student = this.state.new_student
         student.first_name = first_name
         this.setState({ new_student: student })
-        // console.log(this.state.new_student)
     }
 
     handleStudentLastNameChange = (event) => {
@@ -157,22 +133,9 @@ class UsersDetail extends Component {
         student.school_id = school_id
         this.setState({ new_student: student })
 
-        api.get(`schools/detail?id=${school_id}`)
-            .then(res => {
-                let routes_data
-                if (res.data.routes == null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        value: route.id,
-                        display: route.name
-                    }
-                })
-                this.setState({ routes_dropdown: routes })
-            })
+        makeRoutesDropdown({ school_id: school_id}).then(ret => {
+            this.setState({ routes_dropdown: ret })
+        })
     }
 
     handleRouteChange = (event) => {
@@ -182,8 +145,17 @@ class UsersDetail extends Component {
         this.setState({ new_student: student })
     }
 
-    handleClickAddStudent = (event) => {
-        this.setState({add_student_clicked: !this.state.add_student_clicked});
+    handleAddStudentSubmit = () => {
+        if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
+            this.setState({ create_success: -1 })  
+            return
+        }
+
+        const student = {
+            students: [this.state.new_student]
+        }
+
+        this.addStudent(student)
     }
 
     render() {
@@ -193,13 +165,6 @@ class UsersDetail extends Component {
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        let UserAddress='';
-        
-        // if (this.state.users.address != null) {
-        //     UserAddress = this.state.users.address
-        // } else {
-        //     UserAddress = `-`
-        // }
         const { redirect } = this.state;
         if (redirect) {
             return <Navigate to={USERS_URL}/>;
@@ -213,16 +178,16 @@ class UsersDetail extends Component {
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root="Manage Users" isRoot={false} isSecond={true} name={this.state.users.first_name + " " + this.state.users.last_name} />
+                        <HeaderMenu root="Manage Users" isRoot={false} isSecond={true} name={this.state.user.first_name + ' ' + this.state.user.last_name} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
                                         <h5>
-                                            {this.state.users.first_name} {this.state.users.last_name}
+                                            {this.state.user.first_name} {this.state.user.last_name}
                                         </h5>
                                         <h7>
-                                        {this.state.users.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
+                                        {this.state.user.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
                                         </h7>
                                     </div>
                                     <div className="col">
@@ -233,7 +198,7 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link> */}
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.users.address ? "#addModal" : ""}onClick={this.handleClickAddStudent}>
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.user.location?.address ? "#addModal" : ""} onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
                                             </button>
@@ -261,7 +226,7 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
-                                                                    {(!this.studentIDValidation()) ? 
+                                                                    {(!studentIDValidation({ student_id: this.state.new_student.student_school_id})) ? 
                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                         The Student ID value is invalid. Please edit and try again.
                                                                     </div>) : ""
@@ -351,15 +316,15 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
-                                            {this.state.users.email}
+                                            {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.users.address ? this.state.users.address : ""}
+                                            {this.state.user.location?.address}
                                         </p>
                                     </div>
                                 </div>
 
-                                {(!this.state.users.address && this.state.add_student_clicked) ? 
+                                {(!this.state.user.location?.address && this.state.add_student_clicked) ? 
                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                         Please input an address before you add a student.
                                     </div>) : ""
@@ -367,7 +332,7 @@ class UsersDetail extends Component {
 
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable data={this.state.students} showAll={this.state.show_all}/>
+                                    <UserStudentsTable data={this.state.user?.students || []} showAll={this.state.show_all}/>
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"

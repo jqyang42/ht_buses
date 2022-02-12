@@ -13,19 +13,26 @@ class Students extends Component {
         students : [],
         show_all: false
     }
+    
+    componentDidMount() {
+        // initialize states
+        this.setState({ show_all: false });
+        this.apiGetStudents()
+    }
 
+    // api calls
+    apiGetStudents = () => {
+        api.get(`students`)
+        .then(res => {
+            const students = res.data.students;
+            this.setState({ students });
+    })
+    }
+
+    // render handlers
     handleShowAll = () => {
         this.setState({show_all: !this.state.show_all})
-    }
-
-    componentDidMount() {
-        api.get('students')
-            .then(res => {
-                const students = res.data.students;
-                this.setState({ students });
-                this.setState({ show_all: false });
-        })
-    }
+    }  
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
