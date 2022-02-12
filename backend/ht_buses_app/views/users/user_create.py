@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from ..students import student_create
+from ..email import account_creation
 import re
 from ..resources import capitalize_reg
 
@@ -29,6 +30,7 @@ def user_create(request):
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, long=longitude)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=longitude)
+    account_creation.account_creation_email(user)
     if is_parent:
         for student in reqBody["user"]["students"]:
             student_create.create_student(student, user.id)
