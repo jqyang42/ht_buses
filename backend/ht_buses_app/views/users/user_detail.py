@@ -4,30 +4,19 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, UserSerializer
+from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, UserSerializer
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
-        if user_serializer.data["address"] != None:
-            user_address = user_serializer.data["address"]
-            if user_serializer.data["lat"] == None:
-                user_lat = 0
-            else:
-                user_lat = user_serializer.data["lat"]
-            if  user_serializer.data["long"] == None:
-                user_long = 0
-            else:
-                user_long = user_serializer.data["long"]
-        else:
-            user_address = ""
-        location_arr = {"address": user_address, "lat": user_lat, "long": user_long}
+        location_serializer = LocationSerializer(user.location, many=False)
+        location_arr = location_serializer.data
         if user_serializer.data["is_parent"] == True:
             students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
