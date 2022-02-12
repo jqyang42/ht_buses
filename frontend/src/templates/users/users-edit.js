@@ -180,7 +180,7 @@ class UsersEdit extends Component {
         api.put(`users/edit/validate-email?id=${this.props.params.id}`, request_body)
         .then(res => {
             const data = res.data
-            this.validEmail = data.valid_email
+            this.validEmail = data.success
        
             if(!this.validEmail) {
                 this.handleRefresh()
