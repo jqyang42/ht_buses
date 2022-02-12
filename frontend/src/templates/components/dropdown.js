@@ -1,5 +1,17 @@
 import api from "./api"
 
+export async function makeParentsDropdown() {
+    const res = await api.get(`users`)
+    return res.data.users.filter(user => {
+        return user.is_parent === true
+    }).map(parent => {
+        return { 
+            user_id: parent.id, 
+            name: `${parent.first_name} ${parent.last_name}` 
+        }
+    })
+}
+
 export async function makeSchoolsDropdown() {
     const res = await api.get(`schools`)
     return res.data.schools.map(school => {
