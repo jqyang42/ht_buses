@@ -12,8 +12,6 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeParentsDropdown, makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
 import { studentIDValidation } from "../components/validation";
 
-// TODO: use studentIDValidation helper function
-
 class StudentsEdit extends Component {
     state = {
         student: {},
@@ -118,7 +116,6 @@ class StudentsEdit extends Component {
         let student = this.state.edited_student
         student.student_school_id = student_school_id
         this.setState({ edited_student: student });  
-        // this.setState({ edit_success: 1 })
     }
 
     handleSchoolChange = (event) => {
