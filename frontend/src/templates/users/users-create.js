@@ -14,8 +14,6 @@ import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
 
-// TODO: use studentIDValidation, newEmailValidation helper function
-
 class UsersCreate extends Component {
     state = {
         new_user: {
@@ -75,7 +73,6 @@ class UsersCreate extends Component {
                     detail_url: USERS_URL + "/" + res.data.user.id
                 });
             } else {
-                console.log('i failed in createuser')
                 this.setState({ edit_success: -1 })
             }
         })
@@ -269,7 +266,6 @@ class UsersCreate extends Component {
         event.preventDefault();
 
         if (!emailValidation({ email: this.state.new_user.email }) || !this.state.valid_password || !this.state.valid_address || !this.studentIDValidation()) {
-            console.log('i failed in handlesubmit')
             this.setState({ edit_success: -1 })
             return 
         }
@@ -287,6 +283,7 @@ class UsersCreate extends Component {
         })
     }
 
+    // helper functions
     sendCreateRequest = () => {
         let new_user = this.state.new_user
         new_user.students = this.state.students
@@ -305,6 +302,10 @@ class UsersCreate extends Component {
             return studentIDValidation({ student_id: id })
         }
         return true 
+    }
+
+    accordionIndex = (count) => {
+        return this.state.added_students_list.indexOf(count)
     }
 
     render() {
@@ -447,21 +448,21 @@ class UsersCreate extends Component {
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputFirstName" + count} className="control-label pb-2">First Name</label>
                                                                                 <input type="name" className="form-control pb-2" id={"exampleInputFirstName" + count}
-                                                                                    placeholder="Enter first name" required onChange={(e) => this.handleStudentFirstNameChange(e, count)}></input>
+                                                                                value={this.state.students[this.accordionIndex(count)].first_name} placeholder="Enter first name" required onChange={(e) => this.handleStudentFirstNameChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputLastName" + count} className="control-label pb-2">Last Name</label>
                                                                                 <input type="name" className="form-control pb-2" id={"exampleInputLastName" + count}
-                                                                                    placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e, count)}></input>
+                                                                                value={this.state.students[this.accordionIndex(count)].last_name} placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputID" + count} className="control-label pb-2">Student ID</label>
                                                                                 <input type="id" className="form-control pb-2" id={"exampleInputID" + count} 
-                                                                                placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e, count)}></input>
+                                                                                value={this.state.students[this.accordionIndex(count)].student_school_id} placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e, count)}></input>
                                                                             </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
-                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" 
+                                                                                <select className="form-select" placeholder="Select a School" aria-label="Select a School" value={this.state.students[this.accordionIndex(count)].school_id} 
                                                                                 onChange={(e) => this.handleSchoolChange(e, count)} required>
                                                                                     <option value="" disabled selected>Select a School</option>
                                                                                     {this.state.schools_dropdown.map(school => 
@@ -471,10 +472,10 @@ class UsersCreate extends Component {
                                                                             </div>
                                                                             <div className="form-group pb-3">
                                                                                 <label for={"exampleInputRoute" + count} className="control-label pb-2">Route</label>
-                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
+                                                                                <select className="form-select" placeholder="Select a Route" aria-label="Select a Route" value={this.state.students[this.accordionIndex(count)].route_id} 
                                                                                 onChange={(e) => this.handleRouteChange(e, count)} required>
                                                                                     <option selected>Select a Route</option>
-                                                                                    {this.state.routes_dropdowns[this.state.added_students_list.indexOf(count)].map(route => 
+                                                                                    {this.state.routes_dropdowns[this.accordionIndex(count)].map(route => 
                                                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                                                     )}
                                                                                 </select>
