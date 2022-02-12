@@ -36,8 +36,52 @@ class UsersEdit extends Component {
     validEmail = true;
     email = '';
 
+    // initialize page
+    componentDidMount() {
+        this.getUserDetails()
+    }
+
+    // api calls
+    getUserDetails = () => {
+        api.get(`users/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const user = res.data.user;
+            console.log(user)
+
+            this.email = user.email
+
+            let role
+            if (user.is_staff) {
+                role = 'administrator'
+            } else {
+                role = 'general'
+            }
+            this.setState({ 
+                user: user,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                email: user.email,
+                address: user.location.address,
+                role_value: role,
+                edit_success: 0,
+                is_parent: user.is_parent
+                });
+            })
+        .catch ( err => {
+            // console.log(error.response)
+            if (err.response.status !== 200) {
+                // console.log(error.response.data)
+                this.setState({ error_status: true });
+                this.setState({ error_code: err.response.status });
+            }
+        })
+    }
+
+    // render handlers
+
     emailValidation = function() {
         return (emailRegex.test(this.email))
+        // return (emailRegex.test(this.state.email))
     }
 
     handleEmailChange = event => {
@@ -62,6 +106,7 @@ class UsersEdit extends Component {
     handleIsStaffChange = event => {
         let role_value = event.target.value
         this.setState({ role_value });
+        this.setState({ is_staff: role_value === 'administrator' })
     }
 
     handleAddressValidation = event => {
@@ -149,44 +194,6 @@ class UsersEdit extends Component {
     handleRefresh = () => {
         this.setState({});
     };
-
-    componentDidMount() {
-        var self = this
-
-        api.get(`users/detail?id=${this.props.params.id}`)
-        .then(res => {
-            const user = res.data.user;
-            console.log(user)
-
-            this.email = user.email
-
-            let role
-            if (user.is_staff) {
-                role = 'administrator'
-            } else {
-                role = 'general'
-            }
-            this.setState({ 
-                user: user,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                address: user.location.address,
-                role_value: role,
-                edit_success: 0,
-                is_parent: user.is_parent
-                });
-            })
-        .catch (function(error) {
-            // console.log(error.response)
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
-            }
-        } 
-        )
-    }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -283,12 +290,12 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    checked={this.state.role_value === "administrator" } onChange={this.handleIsStaffChange}></input>
+                                                    checked={this.state.is_staff} onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
-                                                    checked={this.state.role_value === "general" } onChange={this.handleIsStaffChange}></input>
+                                                    checked={!this.state.is_staff} onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
