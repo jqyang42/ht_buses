@@ -5,6 +5,8 @@
             "address": "Somewhere in the world",
             "lat": 0.0,
             "long": 0.0
-        }
+        },
+        "arrival": "8:00 am",
+        "departure": "3:00 pm"
     }
 }

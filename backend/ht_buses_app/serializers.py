@@ -14,7 +14,7 @@ class RouteSerializer(serializers.ModelSerializer):
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fields = ('id', 'name', 'address', 'lat', 'long')
+        fields = ('id', 'name', 'location_id', 'arrival', 'departure')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
