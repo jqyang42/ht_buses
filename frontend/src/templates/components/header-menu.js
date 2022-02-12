@@ -30,11 +30,7 @@ class HeaderMenu extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                {
-                                                    sessionStorage.getItem('is_staff') == "false" && this.props.root === "My Account" ? 
-                                                    <h5>{this.props.root}</h5> :
-                                                    <a href={root_url}><h5>{this.props.root}</h5></a>
-                                                }
+                                                <a href={root_url}><h5>{this.props.root}</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>
@@ -49,11 +45,7 @@ class HeaderMenu extends Component {
                                     <div className="col-md-auto mx-2 py-2">
                                         <div className="row d-flex align-middle">
                                             <div className="w-auto px-2 ps-3">
-                                                {
-                                                    !sessionStorage.getItem('is_staff') && this.props.root === "My Account" ? 
-                                                    <h5>{this.props.root}</h5> :
-                                                    <a href={root_url}><h5>{this.props.root}</h5></a>
-                                                }
+                                                <a href={root_url}><h5>{this.props.root}</h5></a>
                                             </div>
                                             <div className="w-auto px-2">
                                                 <i className="bi bi-chevron-right"></i>

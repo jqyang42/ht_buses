@@ -62,11 +62,11 @@ class ParentSidebarMenu extends Component {
                         </li>
                     </ul>
                     <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
-                            <Link to={PASSWORD_URL} className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
+                            {/* <Link to={PASSWORD_URL} className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
                                 <span className="btn-text">
                                     Change Password
                                 </span>
-                            </Link>
+                            </Link> */}
                             <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                 Log Out
                             </button> 

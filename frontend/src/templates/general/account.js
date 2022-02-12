@@ -7,7 +7,7 @@ import HeaderMenu from "../components/header-menu";
 import api from "../components/api";
 import { makeSchoolsDropdown } from "../components/dropdown";
 
-import { LOGIN_URL, USERS_URL } from "../../constants";
+import { LOGIN_URL, PASSWORD_URL } from "../../constants";
 import SidebarMenu from "../components/sidebar-menu";
 
 class Account extends Component {
@@ -72,6 +72,16 @@ class Account extends Component {
                                         </h7>
                                     </div>
                                     <div className="col">
+                                        <div className="row d-inline-flex float-end">
+                                            <Link to={PASSWORD_URL} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <span className="btn-text">
+                                                    Change Password
+                                                </span>
+                                            </Link>
+                                            {/* <button className="btn btn-primary float-end w-auto me-3" role="button" onClick={this.handleLogout}>
+                                                Log Out
+                                            </button> */}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="row mt-4">

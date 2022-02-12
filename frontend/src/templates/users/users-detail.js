@@ -29,6 +29,7 @@ class UsersDetail extends Component {
         redirect: false,
         create_success: 0,
         delete_success: 0,
+        modal_dismiss: false,
         show_all: false,
         error_status: false,
         error_code: 200,
@@ -120,6 +121,7 @@ class UsersDetail extends Component {
                 const msg = res.data.data.message
                 if (msg === 'Students created successfully') {
                     this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
+                    this.setState({ modal_dismiss: true})
                     // console.log(this.state.create_success)
                 } else {
                     this.setState({ create_success: -1 })      // TODO ERROR
@@ -281,7 +283,7 @@ class UsersDetail extends Component {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal" onClick={this.handleClickAddStudent}>Create</button>
+                                                                <button type="submit" className="btn btn-primary" data-bs-dismiss={this.state.modal_dismiss ? "modal" : ""} onClick={this.handleClickAddStudent}>Create</button>
                                                             </div>
                                                         </form>
                                                     </div>
