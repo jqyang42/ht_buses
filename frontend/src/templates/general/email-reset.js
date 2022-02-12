@@ -17,6 +17,10 @@ class EmailReset extends Component {
         console.log(sessionStorage.getItem('is_staff'))
     }
 
+    handleEmailValidation() {
+        // TODO: add email validation check for if email exists in DB
+    }
+
     handleSubmit = event => {
         
         event.preventDefault();
@@ -72,7 +76,7 @@ class EmailReset extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="email" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="email" 
-                                                placeholder="Enter email" required onChange={this.handlePasswordChange}></input>
+                                                placeholder="Enter email" required onChange={this.handleEmailValidation}></input>
                                                 {/* {(!this.passwordValidation() && this.state.password !== "") ? 
                                                     (<div class="alert alert-danger mt-3 mb-0" role="alert">
                                                         Invalid email.
