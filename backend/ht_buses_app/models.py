@@ -1,17 +1,37 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+import datetime
 
-class School(models.Model):
-    name = models.CharField(max_length=100)
+class Location(models.Model):
     address = models.CharField(max_length=100)
     lat = models.FloatField(default=0)
     long = models.FloatField(default=0)
+    locationTables = models.Manager()
+
+class School(models.Model):
+    name = models.CharField(max_length=100)
+    location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
+    arrival = models.TimeField(default=datetime.time(00,00))
+    departure = models.TimeField(default=datetime.time(00,00))
     schoolsTable = models.Manager()
+
+class Route(models.Model):
+    name = models.CharField(max_length=50)
+    school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
+    description = models.CharField(max_length=500)
+    is_complete = models.BooleanField(default=False)
+    arrival = models.TimeField(default=datetime.time(00,00))
+    departure = models.TimeField(default=datetime.time(00,00))
+    routeTables = models.Manager()
+    class Meta:
+        indexes = [
+            models.Index(fields=['school_id'])
+        ]
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    school_id = models.ForeignKey(School, default=None, on_delete=models.CASCADE)
+    school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=None, on_delete=models.SET(None), blank=True, null=True)
     user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE) 
@@ -23,17 +43,19 @@ class Student(models.Model):
             models.Index(fields=['user_id'])
         ]
 
-class Route(models.Model):
+class Stop(models.Model):
+    location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
+    route_id = models.ForeignKey('Route', default=None, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    school_id = models.ForeignKey(School, default=0, on_delete=models.CASCADE)
-    description = models.CharField(max_length=500)
-    routeTables = models.Manager()
+    order_by = models.IntegerField(default=None)
+    arrival = models.TimeField(default=datetime.time(00,00))
+    departure = models.TimeField(default=datetime.time(00,00))
+    stopTables = models.Manager()
     class Meta:
         indexes = [
-            models.Index(fields=['school_id'])
+            models.Index(fields=['route_id'])
         ]
 
-# Relook at this
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name,is_parent, address, password, lat, long):
         if not email:
@@ -44,15 +66,14 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a last name')
         if is_parent is True and not address:
                 raise ValueError('Users must have an address')
+        location_obj = Location.locationTables.create(address=address, lat=lat, long=long)
         user = self.model(
             email= self.normalize_email(email),
             first_name = first_name,
             last_name = last_name,
-            address = address,
             is_parent = is_parent,
-            lat = lat,
-            long = long
             )
+        user.location_id = location_obj.id
         user.set_password(password)
         user.save(using= self._db)
         return user 
@@ -69,12 +90,9 @@ class User(AbstractBaseUser):
     email = models.EmailField(verbose_name='email',unique=True,max_length=128)
     is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
-    address = models.CharField(max_length=100, default= '')
-    lat = models.FloatField(default=0)
-    long = models.FloatField(default=0)
+    location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
-    
     objects = UserManager()
 
 
