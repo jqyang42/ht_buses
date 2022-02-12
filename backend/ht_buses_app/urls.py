@@ -37,5 +37,6 @@ urlpatterns = [
     path('api/students/edit', student_edit.student_edit, name = "edit_student"),
     path('api/dashboard', parent_dashboard.parent_dashboard, name= "parent_dashboard"),
     path('api/dashboard/students/detail', parent_student_detail.parent_student_detail, name = "parent_student_detail"),
-    path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit')
+    path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit'),
+    path('api/account', user_detail.user_account, name='user_account')
 ]

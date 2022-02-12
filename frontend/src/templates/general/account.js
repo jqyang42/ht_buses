@@ -14,44 +14,23 @@ class Account extends Component {
     state = {
         user: {},
         location: {},
-        students: [],
-        new_student: {
-            first_name: '',
-            last_name: '',
-            school_id: '',
-            route_id: null,
-            student_school_id: ''
-        },
-        schools_dropdown: [],
-        routes_dropdown: [],
-        redirect: false,
-        create_success: 0,
-        delete_success: 0,
-        show_all: false,
-        error_status: false,
-        error_code: 200,
-        add_student_clicked: false
+        redirect: false
     }
 
     componentDidMount() {
         this.getUserDetails()
-        makeSchoolsDropdown().then(ret => {
-            this.setState({
-                schools_dropdown: ret
-            })
-        })
     }
 
     // api calls
     getUserDetails() {
         console.log(sessionStorage.getItem('user_id'))
-        api.get(`users/detail?id=${sessionStorage.getItem('user_id')}`)
+        api.get(`account?id=${sessionStorage.getItem('user_id')}`)
         .then(res => {
             const user = res.data.user;
+            console.log(user)
             this.setState({ 
                 user: user,
-                location: user.location,
-                students: user.students
+                location: user.location
             });
         })
         .catch (err => {
@@ -62,126 +41,6 @@ class Account extends Component {
         })
     }
 
-    deleteUser() {
-        api.delete(`users/delete?id=${this.props.params.id}`)
-        .then(res => {
-            const success = res.data.success
-            if (success) {
-                this.setState({ 
-                    delete_success: 1,
-                    redirect: true
-                })
-                return <Navigate to={ USERS_URL }/>;
-            } else {
-                this.setState({ 
-                    delete_success: -1 
-                });
-            }
-        })
-    }
-
-    // render handlers
-    handleShowAll = () => {
-        this.setState({
-            show_all: !this.state.show_all
-        })
-    }
-
-    handleDeleteSubmit = (event) => {
-        event.preventDefault();
-        this.deleteUser();
-    }
-
-    studentIDValidation = () => {
-        const isNumber = !isNaN(this.state.new_student.student_school_id)
-        if (!isNumber ) {
-            return false
-        }
-        else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
-            return false
-        }
-        return true 
-    }
-    
-    handleAddStudentSubmit = event => {
-        // event.preventDefault();
-        if (!this.studentIDValidation()) {
-            this.setState({ create_success: -1 })  
-            return
-        }
-
-        const student = {
-            students: [this.state.new_student]
-        }
-
-        api.post(`users/add-students?id=${this.props.params.id}`, student)
-            .then(res => {
-                const msg = res.data.data.message
-                if (msg === 'Students created successfully') {
-                    this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
-                    // console.log(this.state.create_success)
-                } else {
-                    this.setState({ create_success: -1 })      // TODO ERROR
-                }
-            })
-    }
-
-    handleStudentFirstNameChange = (event) => {
-        const first_name = event.target.value
-        let student = this.state.new_student
-        student.first_name = first_name
-        this.setState({ new_student: student })
-        // console.log(this.state.new_student)
-    }
-
-    handleStudentLastNameChange = (event) => {
-        const last_name = event.target.value
-        let student = this.state.new_student
-        student.last_name = last_name
-        this.setState({ new_student: student })
-    }
-
-    handleStudentIDChange = (event) => {
-        const student_school_id = event.target.value
-        let student = this.state.new_student
-        student.student_school_id = student_school_id
-        this.setState({ new_student: student })
-    }
-
-    handleSchoolChange = (event) => {
-        const school_id = event.target.value
-        let student = this.state.new_student
-        student.school_id = school_id
-        this.setState({ new_student: student })
-
-        api.get(`schools/detail?id=${school_id}`)
-            .then(res => {
-                let routes_data
-                if (res.data.routes == null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        value: route.id,
-                        display: route.name
-                    }
-                })
-                this.setState({ routes_dropdown: routes })
-            })
-    }
-
-    handleRouteChange = (event) => {
-        const route_id = event.target.value
-        let student = this.state.new_student
-        student.route_id = route_id
-        this.setState({ new_student: student })
-    }
-
-    handleClickAddStudent = (event) => {
-        this.setState({add_student_clicked: !this.state.add_student_clicked});
-    }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
