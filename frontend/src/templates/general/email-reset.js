@@ -27,8 +27,9 @@ class EmailReset extends Component {
     handleSubmit = (event) => {
         
         event.preventDefault();
-        console.log(this.state.email_success)
-        this.setState({email_success: 1})
+        // console.log(this.state.email_success)
+        // this.setState({email_success: 1})
+        
         // if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
         //     this.setState({ email_success: -1 })
         //     // console.log(this.state.email_success)
