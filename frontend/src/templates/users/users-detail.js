@@ -7,7 +7,8 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
-import { makeSchoolsDropdown } from '../components/dropdown';
+import { studentIDValidation } from '../components/validation';
+import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -15,8 +16,6 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 class UsersDetail extends Component {
     state = {
         user: {},
-        location: {},
-        students: [],
         new_student: {
             first_name: '',
             last_name: '',
@@ -26,40 +25,39 @@ class UsersDetail extends Component {
         },
         schools_dropdown: [],
         routes_dropdown: [],
-        redirect: false,
-        create_success: 0,
-        delete_success: 0,
-        modal_dismiss: false,
         show_all: false,
+        redirect: false,
+        add_student_clicked: false,
+        create_success: 0,
+        modal_dismiss: false,
+        delete_success: 0,    
         error_status: false,
         error_code: 200,
-        add_student_clicked: false
+        
     }
 
+    // initialize page
     componentDidMount() {
         this.getUserDetails()
+        
         makeSchoolsDropdown().then(ret => {
-            this.setState({
-                schools_dropdown: ret
-            })
+            this.setState({ schools_dropdown: ret })
         })
     }
 
     // api calls
-    getUserDetails() {
+    getUserDetails = () => {
         api.get(`users/detail?id=${this.props.params.id}`)
         .then(res => {
             const user = res.data.user;
-            this.setState({ 
-                user: user,
-                location: user.location,
-                students: user.students
-            });
+            this.setState({ user: user });
         })
         .catch (err => {
             if (err.response.status !== 200) {
-                this.setState({ error_status: true });
-                this.setState({ error_code: err.response.status });
+                this.setState({ 
+                    error_status: true,
+                    error_code: err.response.status
+                 });
             }
         })
     }
@@ -75,58 +73,39 @@ class UsersDetail extends Component {
                 })
                 return <Navigate to={ USERS_URL }/>;
             } else {
-                this.setState({ 
-                    delete_success: -1 
-                });
+                this.setState({ delete_success: -1 });
             }
         })
     }
 
+    addStudent = (student) => {
+        api.post(`users/add-students?id=${this.props.params.id}`, student)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
+                this.setState({ modal_dismiss: true})
+            } else {
+                this.setState({ create_success: -1 })      // TODO ERROR
+            }
+        })
+    } 
+
     // render handlers
     handleShowAll = () => {
-        this.setState({
-            show_all: !this.state.show_all
-        })
+        this.setState({ show_all: !this.state.show_all })
     }
 
     handleDeleteSubmit = (event) => {
         event.preventDefault();
         this.deleteUser();
     }
-
-    studentIDValidation = () => {
-        const isNumber = !isNaN(this.state.new_student.student_school_id)
-        if (!isNumber ) {
-            return false
-        }
-        else if(isNumber && Math.sign(this.state.new_student.student_school_id) === -1)   {
-            return false
-        }
-        return true 
-    }
     
-    handleAddStudentSubmit = event => {
-        // event.preventDefault();
-        if (!this.studentIDValidation()) {
-            this.setState({ create_success: -1 })  
-            return
-        }
-
-        const student = {
-            students: [this.state.new_student]
-        }
-
-        api.post(`users/add-students?id=${this.props.params.id}`, student)
-            .then(res => {
-                const msg = res.data.data.message
-                if (msg === 'Students created successfully') {
-                    this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
-                    this.setState({ modal_dismiss: true})
-                    // console.log(this.state.create_success)
-                } else {
-                    this.setState({ create_success: -1 })      // TODO ERROR
-                }
-            })
+    handleClickAddStudent = () => {
+        // this.setState({ add_student_clicked: !this.state.add_student_clicked });
+        this.setState(prevState => ({
+            add_student_clicked: !prevState.add_student_clicked
+        }))
     }
 
     handleStudentFirstNameChange = (event) => {
@@ -134,7 +113,6 @@ class UsersDetail extends Component {
         let student = this.state.new_student
         student.first_name = first_name
         this.setState({ new_student: student })
-        // console.log(this.state.new_student)
     }
 
     handleStudentLastNameChange = (event) => {
@@ -157,22 +135,9 @@ class UsersDetail extends Component {
         student.school_id = school_id
         this.setState({ new_student: student })
 
-        api.get(`schools/detail?id=${school_id}`)
-            .then(res => {
-                let routes_data
-                if (res.data.routes == null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        value: route.id,
-                        display: route.name
-                    }
-                })
-                this.setState({ routes_dropdown: routes })
-            })
+        makeRoutesDropdown({ school_id: school_id}).then(ret => {
+            this.setState({ routes_dropdown: ret })
+        })
     }
 
     handleRouteChange = (event) => {
@@ -182,8 +147,17 @@ class UsersDetail extends Component {
         this.setState({ new_student: student })
     }
 
-    handleClickAddStudent = (event) => {
-        this.setState({add_student_clicked: !this.state.add_student_clicked});
+    handleAddStudentSubmit = () => {
+        if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
+            this.setState({ create_success: -1 })  
+            return
+        }
+
+        const student = {
+            students: [this.state.new_student]
+        }
+
+        this.addStudent(student)
     }
 
     render() {
@@ -226,7 +200,7 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link> */}
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.location.address ? "#addModal" : ""}onClick={this.handleClickAddStudent}>
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.user.location?.address ? "#addModal" : ""} onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
                                             </button>
@@ -254,7 +228,7 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
-                                                                    {(!this.studentIDValidation()) ? 
+                                                                    {(!studentIDValidation({ student_id: this.state.new_student.student_school_id})) ? 
                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                         The Student ID value is invalid. Please edit and try again.
                                                                     </div>) : ""
@@ -347,12 +321,12 @@ class UsersDetail extends Component {
                                             {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.location.address ? this.state.location.address : ""}
+                                            {this.state.user.location?.address}
                                         </p>
                                     </div>
                                 </div>
 
-                                {(!this.state.location.address && this.state.add_student_clicked) ? 
+                                {(!this.state.user.location?.address && this.state.add_student_clicked) ? 
                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                         Please input an address before you add a student.
                                     </div>) : ""
@@ -360,7 +334,7 @@ class UsersDetail extends Component {
 
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable data={this.state.students} showAll={this.state.show_all}/>
+                                    <UserStudentsTable data={this.state.user?.students || []} showAll={this.state.show_all}/>
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"
