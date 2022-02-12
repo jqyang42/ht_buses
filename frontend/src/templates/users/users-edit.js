@@ -8,184 +8,152 @@ import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import ErrorPage from "../error-page";
 import api from "../components/api";
+import { emailValidation } from "../components/validation";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
-import { emailRegex } from "../regex/input-validation";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class UsersEdit extends Component {
     state = {
-        email: '',
-        first_name: '',
-        last_name: '',
-        address: '',
-        role_value: null,
         user: {},
+        edited_user: {},
         redirect: false,
-        lat: 0,
-        lng: 0,
         valid_address: true,
+        valid_email: true,
         edit_success: 0,
-        is_parent: false,
         error_status: false,
-        error_code: 200
+        error_code: 200,
     }
 
-    validEmail = true;
-    email = '';
-
-    emailValidation = function() {
-        return (emailRegex.test(this.email))
+    // initialize page
+    componentDidMount() {
+        this.getUserDetails()
     }
 
-    handleEmailChange = event => {
-        this.setState( { email: event.target.value })
-        this.email = event.target.value
-        this.validEmail = true
+    // api calls
+    getUserDetails = () => {
+        api.get(`users/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const user = res.data.user;
+            this.setState({ 
+                user: user,
+                edited_user: user
+            });
+        })
+        .catch(err => {
+            if (err.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: err.response.status 
+                });
+            }
+        })
     }
 
-    handleFirstNameChange = event => {
-        this.setState({ first_name: event.target.value });
+    validateNewEmail = async (request) => {
+        const res = await api.put(`users/edit/validate-email?id=${this.props.params.id}`, request);
+        const success = res.data.success;
+        this.setState({ valid_email: success });
+        return success; 
     }
 
-    handleLastNameChange = event => {
-        this.setState({ last_name: event.target.value });
+    editUser = (request) => {
+        api.put(`users/edit?id=${this.props.params.id}`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    edit_success: 1,
+                    redirect: true 
+                });
+            }
+        })
     }
 
-    handleAddressChange = event => {
-        this.setState({ address: event.target.value });
-        // console.log(this.state.address)
+    // render handlers
+    handleFirstNameChange = (event) => {
+        const first_name = event.target.value
+        let user = this.state.edited_user
+        user.first_name = first_name
+        this.setState({ edited_user: user });
     }
 
-    handleIsStaffChange = event => {
-        let role_value = event.target.value
-        this.setState({ role_value });
+    handleLastNameChange = (event) => {
+        const last_name = event.target.value
+        let user = this.state.edited_user
+        user.last_name = last_name
+        this.setState({ edited_user: user });
     }
 
-    handleAddressValidation = event => {
-        if (this.state.address != '') {
-            // console.log(this.state.address)
-            Geocode.fromAddress(this.state.address).then(
+    handleEmailChange = (event) => {
+        const email = event.target.value
+        let user = this.state.edited_user
+        user.email = email
+        this.setState({ 
+            edited_user: user,
+            // valid_email: true
+        });
+    }
+
+    handleAddressChange = (input) => {
+        const address = input.target?.value || input.formatted_address  // accept address from onChange and from autocomplete
+        let user = this.state.edited_user 
+        user.location.address = address
+        this.setState({ edited_user: user });
+    }
+
+    handleIsStaffChange = (event) => {
+        const role_value = event.target.value
+        let user = this.state.edited_user
+        user.is_staff = role_value === 'administrator'
+        this.setState({ edited_user: user });
+    }
+
+    handleAddressValidation = () => {
+        const address = this.state.edited_user.location.address
+        if (address != '') {
+            Geocode.fromAddress(address).then(
                 (response) => {
-                    // console.log(response)
+                    let user = this.state.edited_user
+                    user.location.lat = parseFloat(response.results[0].geometry.location.lat)
+                    user.location.long = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
-                        lat : parseFloat(response.results[0].geometry.location.lat),
-                        lng : parseFloat(response.results[0].geometry.location.lng),
-                        valid_address : true,
+                        edited_user: user,
+                        valid_address: true,
                     })
                 },
-                (error) => {
-                    // console.log(error)
-                    this.setState({ valid_address: false})
+                (error) => {        
+                    // todo error logging for google
+                    this.setState({ valid_address: false })
                 }
             )
         }
     }
 
-    sendEditRequest = () => {
-        const request = {
-            user: {
-                email: this.state.email,
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                location: {
-                    address: this.state.address,
-                    lat: this.state.lat,
-                    long: this.state.lng
-                },
-                is_staff: this.state.role_value === 'administrator',
-                is_parent: this.state.user.is_parent,
-            }
-        }
-
-        console.log(request)
-
-        api.put(`users/edit?id=${this.props.params.id}`, request)
-        .then(res => {
-            const success = res.data.success
-            if ( success ) {
-                this.setState({ edit_success: 1 })
-                // console.log(this.state.edit_success)
-                this.setState({ redirect: true });
-            }
-        })
-        this.validEmail = true 
-        // this.setState({ redirect: true });
-    }
-
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
-        this.email = this.emailField.value
-        // console.log(this.email)
 
-
-        if (!this.emailValidation() || !this.state.valid_address ) {
+        if (!emailValidation({ email: this.state.edited_user?.email }) || !this.state.valid_address ) {
             this.setState({ edit_success: -1 })
             return 
         }
 
-        const request_body = {
+        const request = {
             user: {
-                email: this.state.email
+                email: this.state.edited_user?.email
             }
         }
-              
-        api.put(`users/edit/validate-email?id=${this.props.params.id}`, request_body)
-        .then(res => {
-            const data = res.data
-            this.validEmail = data.success
-       
-            if(!this.validEmail) {
-                this.handleRefresh()
-                return
-            }     
-           this.sendEditRequest()
+
+        this.validateNewEmail(request).then(success => {
+            if (success) {
+                const user = {
+                    user: this.state.edited_user
+                }
+                this.editUser(user)
+            }
         })
-        
-    }
-
-    handleRefresh = () => {
-        this.setState({});
-    };
-
-    componentDidMount() {
-        var self = this
-
-        api.get(`users/detail?id=${this.props.params.id}`)
-        .then(res => {
-            const user = res.data.user;
-            console.log(user)
-
-            this.email = user.email
-
-            let role
-            if (user.is_staff) {
-                role = 'administrator'
-            } else {
-                role = 'general'
-            }
-            this.setState({ 
-                user: user,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                address: user.location.address,
-                role_value: role,
-                edit_success: 0,
-                is_parent: user.is_parent
-                });
-            })
-        .catch (function(error) {
-            // console.log(error.response)
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
-            }
-        } 
-        )
     }
 
     render() {
@@ -246,35 +214,31 @@ class UsersEdit extends Component {
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
-                                                    {(!this.emailValidation()) ? 
+                                                    {(!emailValidation({ email: this.state.edited_user?.email})) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
                                                 }
-                                                 {(!this.validEmail) ? 
+                                                 {(!this.state.valid_email) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Update unsuccessful. Please enter a different email, a user with this email already exists
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className={"form-group pb-3 w-75 " + (this.state.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={(place) => {
-                                                        this.setState({
-                                                            address: place.formatted_address
-                                                        })
-                                                    }}
+                                                    onPlaceSelected={this.handleAddressChange}
                                                     options={{
                                                         types: ['address']
                                                     }}
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    value={this.state.address}
+                                                    value={this.state.edited_user?.location?.address}
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.is_parent}/>
+                                                    required={this.state.edited_user.is_parent}/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div className="form-group required pb-3 w-75">
@@ -283,12 +247,12 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    checked={this.state.role_value === "administrator" } onChange={this.handleIsStaffChange}></input>
+                                                    checked={this.state.edited_user.is_staff} onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
-                                                    checked={this.state.role_value === "general" } onChange={this.handleIsStaffChange}></input>
+                                                    checked={!this.state.edited_user.is_staff} onChange={this.handleIsStaffChange}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
