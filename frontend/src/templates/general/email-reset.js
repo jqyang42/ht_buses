@@ -8,7 +8,9 @@ import api from "../components/api";
 class EmailReset extends Component {
     state = {
         redirect: false,
-        email_success: 0
+        email_success: 0,
+        email: ""
+
     }
 
     validEmail = false;
@@ -17,13 +19,26 @@ class EmailReset extends Component {
         console.log(sessionStorage.getItem('is_staff'))
     }
 
-    handleEmailValidation() {
-        // TODO: add email validation check for if email exists in DB
+    checkEmail() {
+        const data = {
+            email: this.state.email
+        }
+        api.post(`password-reset/valid-email`, data)
+        .then(res => {
+            this.setState({ email_success: res.data.success ? 1 : -1 })
+         })
+    }
+
+    handleEmailChange = event => {
+        const email = event.target.value
+        this.setState({ email: email })
     }
 
     handleSubmit = event => {
         
         event.preventDefault();
+
+        this.checkEmail()
 
         // if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
         //     this.setState({ email_success: -1 })
@@ -76,7 +91,7 @@ class EmailReset extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="email" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="email" 
-                                                placeholder="Enter email" required onChange={this.handleEmailValidation}></input>
+                                                placeholder="Enter email" required onChange={this.handleEmailChange}></input>
                                                 {/* {(!this.passwordValidation() && this.state.password !== "") ? 
                                                     (<div class="alert alert-danger mt-3 mb-0" role="alert">
                                                         Invalid email.
