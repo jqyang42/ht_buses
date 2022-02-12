@@ -8,22 +8,23 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
-import { SCHOOLS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
-
-// TODO: use studentIDValidation helper function
+import { makeParentsDropdown, makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
+import { studentIDValidation } from "../components/validation";
 
 class StudentsEdit extends Component {
     state = {
-        first_name: '',
-        last_name: '',
-        student_id: '',
-        school_id: '',
-        route_id: null,
-        parent_id: '',
-        student: [],
-        init_school_id: 0,
-        init_parent_id: 0,
+        student: {},
+        school: {},
+        route: {},
+        edited_student: {
+            first_name: '',
+            last_name: '',
+            student_school_id: null,
+            school_id: null,
+            route_id: null,
+            user_id: null
+        },
         schools_dropdown: [],
         routes_dropdown: [],
         parents_dropdown: [],
@@ -33,190 +34,128 @@ class StudentsEdit extends Component {
         error_code: 200
     }
 
-    edit_success = 0
+    componentDidMount() {
+        this.getStudentDetails()
 
-    handleFirstNameChange = event => {
-        this.setState({ first_name: event.target.value });
+        makeSchoolsDropdown().then(ret => {
+            this.setState({ schools_dropdown: ret })
+        })
+        
+        makeParentsDropdown().then(ret => {
+            this.setState({ parents_dropdown: ret })
+        })
     }
 
-    handleLastNameChange = event => {
-        this.setState({ last_name: event.target.value });
-    }
-
-    handleStudentIDChange = event => {
-        this.setState({ student_id: event.target.value });
-        this.setState({ edit_success: 1 })
-    }
-
-    handleSchoolChange = event => {
-        // const school_name = event.target.value
-        const school_id = event.target.value
-        this.setState({ route_id : null})
-        // console.log(this.state.schools_dropdown)
-        this.setState({ school_id: school_id }, () => {
-            // console.log(this.state.school_id)
-            api.get(`schools/detail?id=${this.state.school_id}`)
-                .then(res => {
-                    let routes_data
-                    if (res.data.routes == null) {
-                        routes_data = []
-                    } else {
-                        routes_data = res.data.routes
-                    }
-                    let routes = routes_data.map(route => {
-                        return {
-                            id: route.id,
-                            name: route.name
-                        }
-                    })
-                    this.setState({ routes_dropdown: routes })
-                })
+    // api calls
+    getStudentDetails = () => {
+        api.get(`students/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const student = res.data.student
+            const school = res.data.school
+            const route = res.data.route
+            let edited_student = {
+                first_name: student.first_name,
+                last_name: student.last_name,
+                student_school_id: student.student_school_id,
+                school_id: school.id,
+                route_id: route.id,
+                user_id: student.user_id
             }
-        )
+            this.setState({ 
+                student: student,
+                school: school,
+                route: route,
+                edited_student: edited_student
+            })
 
-        this.setState({ route_id: null })
+            makeRoutesDropdown({ school_id: school.id }).then(ret => {
+                this.setState({ routes_dropdown: ret })
+            })
+        }).catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        })
+    }
+
+    editStudent = (request) => {
+        api.put(`students/edit?id=${this.props.params.id}`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    edit_success: 1,
+                    redirect: true 
+                });
+            } else {
+                this.setState({ edit_success: -1 })
+            }
+        })
+    }
+
+    // render handlers
+    handleFirstNameChange = (event) => {
+        const first_name = event.target.value
+        let student = this.state.edited_student
+        student.first_name = first_name
+        this.setState({ edited_student: student });
+    }
+
+    handleLastNameChange = (event) => {
+        const last_name = event.target.value
+        let student = this.state.edited_student
+        student.last_name = last_name
+        this.setState({ edited_student: student });    
+    }
+
+    handleStudentIDChange = (event) => {
+        const student_school_id = event.target.value
+        let student = this.state.edited_student
+        student.student_school_id = student_school_id
+        this.setState({ edited_student: student });  
+    }
+
+    handleSchoolChange = (event) => {
+        const school_id = event.target.value
+        let student = this.state.edited_student
+        student.school_id = school_id
+        student.route_id = null
+        this.setState({ edited_student: student });
+
+        makeRoutesDropdown({ school_id: school_id }).then(ret => {
+            this.setState({ routes_dropdown: ret })
+        })
     } 
     
-    handleRouteChange = event => {
+    handleRouteChange = (event) => {
         const route_id = event.target.value
-        // console.log(this.state.routes_dropdown)
-        this.setState({ route_id })
-        // console.log(this.state.route_id)
+        let student = this.state.edited_student
+        student.route_id = route_id
+        this.setState({ edited_student: student });
     }
 
-    handleParentIDChange = event => {
+    handleParentIDChange = (event) => {
         const parent_id = event.target.value
-        this.setState({ parent_id: parent_id })
-        // console.log(this.state.parent_id)
-    }
-    
-    studentIDValidation = () => {
-        const isNumber = !isNaN(this.state.student_id)
-        if (!isNumber ) {
-            return false
-        }
-        else if(isNumber && Math.sign(this.state.student_id) === -1)   {
-            return false
-        }
-        return true 
+        let student = this.state.edited_student
+        student.user_id = parent_id
+        this.setState({ edited_student: student });
     }
 
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
-        // console.log(this.state.route_id)
-        if(!this.studentIDValidation()) {
+        if(!studentIDValidation({ student_id: this.state.edited_student.student_school_id })) {
             this.setState({ edit_success: -1 })
             return
         }
+        
         const student = {
-            student: {
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                student_school_id: this.state.student_id,
-                school_id: this.state.school_id,
-                route_id: parseInt(this.state.route_id),
-                user_id: parseInt(this.state.parent_id)
-            }
-
+            student: this.state.edited_student
         }
 
-        api.put(`students/edit?id=${this.props.params.id}`, student)
-        .then(res => {
-            const msg = res.data.message
-            if (msg == 'student information successfully updated') {
-                this.setState({ edit_success: 1 })
-                this.setState({ redirect: true });
-                // console.log(this.state.edit_success)
-            } else {
-                this.setState({ edit_success: -1 })
-                // console.log(this.state.edit_success)
-            }
-        })
-        // this.setState({ redirect: true });
-    }
-
-    async componentDidMount() {
-        let init_parent_id, init_school_id
-        var self = this
-
-        api.get(`students/detail?id=${this.props.params.id}`)
-        .then(res => {
-            const data = res.data
-            const student = data.student
-            const school = data.school
-            const route = data.route
-            this.setState({ student: student });
-            init_parent_id = student.user_id
-            init_school_id = school.id
-
-            // let init_route
-            // if (student.route === null) {
-            //     init_route = null
-            // } else {
-            //     init_route = student.route.id
-            // }
-
-            this.setState({ 
-                init_parent_id, 
-                // init_route_id, 
-                init_school_id,
-                first_name: student.first_name,
-                last_name: student.last_name,
-                student_id: student.student_school_id,
-                school_id: init_school_id,
-                route_id: route.id,
-                parent_id: init_parent_id
-            })
-
-            // console.log(this.state)
-
-            api.get(`schools/detail?id=${init_school_id}`)
-            .then(res => {
-                let routes_data
-                if (res.data.routes == null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        id: route.id,
-                        name: route.name
-                    }
-                })
-                // console.log(routes)
-                this.setState({ routes_dropdown: routes })
-            })
-        }).catch (function(error) {
-            // console.log(error.response)
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
-            }
-        } 
-        )
-
-        api.get(`schools`)
-        .then(res => {            
-            let schools = res.data.schools.map(school => {
-                return {
-                    id: school.id, 
-                    name: school.name
-                }
-            })
-            this.setState({ schools_dropdown: schools})
-        })
-        
-        api.get('users')
-        .then(res => {
-            let parents = res.data.users.filter(user => {
-                return user.is_parent === true
-            }).map(parent => {
-                return { user_id: parent.id, name: `${parent.first_name} ${parent.last_name}` }
-            })
-            this.setState({ parents_dropdown: parents})
-        })
+        this.editStudent(student)
     }
 
     render() {
@@ -275,7 +214,7 @@ class StudentsEdit extends Component {
                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
                                                 defaultValue={this.state.student.student_school_id} placeholder="Enter student ID" required
                                                 onChange={this.handleStudentIDChange}></input>
-                                                 {(!this.studentIDValidation()) ? 
+                                                 {(!studentIDValidation({ student_id: this.state.student.student_school_id })) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                            The Student ID value is invalid. Please edit and try again.
                                                       </div>) : ""
@@ -288,10 +227,10 @@ class StudentsEdit extends Component {
                                                 onChange={this.handleSchoolChange}>
                                                    <option value="" disabled selected>Select a School</option>
                                                     {this.state.schools_dropdown.map(school => {
-                                                        if (this.state.init_school_id == school.id) {     //TODO: CHANGE TO USE STUDENT_ID?
-                                                            return <option selected value={school.id}>{school.name}</option>
+                                                        if (this.state.school.id == school.value) {
+                                                            return <option selected value={school.value}>{school.display}</option>
                                                         } else {
-                                                            return <option value={school.id}>{school.name}</option>
+                                                            return <option value={school.value}>{school.display}</option>
                                                         }
                                                     })}
                                                 </select>
@@ -299,13 +238,13 @@ class StudentsEdit extends Component {
                                             <div className="form-group pb-3 w-75">
                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
-                                                onChange={this.handleRouteChange} value={this.state.route_id}>
+                                                onChange={this.handleRouteChange} value={this.state.edited_student.route_id}>
                                                     <option>Select a Route</option>
                                                     {this.state.routes_dropdown.map(route => {
-                                                        if (this.state.route_id == route.id) { 
-                                                            return <option selected value={route.id}>{route.name}</option>
+                                                        if (this.state.route.id == route.value) { 
+                                                            return <option selected value={route.value}>{route.display}</option>
                                                         } else {
-                                                            return <option value={route.id}>{route.name}</option>
+                                                            return <option value={route.value}>{route.display}</option>
                                                         }
                                                     })}
                                                 </select>
@@ -316,7 +255,7 @@ class StudentsEdit extends Component {
                                                 onChange={this.handleParentIDChange}>
                                                     <option>Select a Parent</option>
                                                     {this.state.parents_dropdown.map(parent => {
-                                                        if (this.state.init_parent_id == parent.user_id) {
+                                                        if (this.state.student.user_id == parent.user_id) {
                                                             return <option selected value={parent.user_id}>{parent.name}</option>
                                                         } else {
                                                             return <option value={parent.user_id}>{parent.name}</option>

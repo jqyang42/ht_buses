@@ -12,55 +12,61 @@ import ErrorPage from '../error-page';
 
 class StudentsDetail extends Component {
     state = {
-        student: [],
-        route: [],
-        school: [],
+        student: {},
+        route: {},
+        school: {},
         redirect: false,
         delete_success: 0,
         error_status: false,
         error_code: 200
     }
     
+    // initialize
     componentDidMount() {
-        var self = this
+        this.getStudentDetails()
 
-        api.get(`students/detail?id=${this.props.params.id}`)
-            .then(res => {
-                const data = res.data
-                const student = data.student;
-                const route = data.route;
-                const school = data.school;
-                this.setState({ 
-                    student: student, 
-                    route: route, 
-                    school: school 
-                });
-                this.setState({ delete_success: 0 })
-                })
-            .catch (function(error) {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.data)
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-        )
     }
 
-    handleDeleteSubmit = event => {
-        event.preventDefault()
+    // api calls
+    getStudentDetails = () => {
+        api.get(`students/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const data = res.data
+            this.setState({ 
+                student: data.student, 
+                route: data.route, 
+                school: data.school 
+            });
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        } 
+    )}
 
+    deleteStudent = () => {
         api.delete(`students/delete?id=${this.props.params.id}`)
-            .then(res => {
-                const msg = res.data.message
-                if (msg == 'student successfully deleted') {
-                    this.setState({ delete_success: 1 })
-                    this.setState({ redirect: true });
-                } else {
-                    this.setState({ delete_success: -1 });
-                }
-            })
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true 
+                });
+            } else {
+                this.setState({ delete_success: -1 });
+            }
+        })
+    }
+
+    // render handlers
+    handleDeleteSubmit = (event) => {
+        event.preventDefault()
+        this.deleteStudent()
     }
 
     render() {

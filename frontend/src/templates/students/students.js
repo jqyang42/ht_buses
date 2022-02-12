@@ -15,8 +15,6 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        // initialize states
-        this.setState({ show_all: false });
         this.apiGetStudents()
     }
 
@@ -25,13 +23,15 @@ class Students extends Component {
         api.get(`students`)
         .then(res => {
             const students = res.data.students;
-            this.setState({ students });
+            this.setState({ students: students });
     })
     }
 
     // render handlers
     handleShowAll = () => {
-        this.setState({show_all: !this.state.show_all})
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }))
     }  
 
     render() {
