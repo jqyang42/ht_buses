@@ -214,7 +214,7 @@ class StudentsEdit extends Component {
                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
                                                 defaultValue={this.state.student.student_school_id} placeholder="Enter student ID" required
                                                 onChange={this.handleStudentIDChange}></input>
-                                                 {(!studentIDValidation({ student_id: this.state.student.student_school_id })) ? 
+                                                 {(!studentIDValidation({ student_id: this.state.edited_student.student_school_id })) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                            The Student ID value is invalid. Please edit and try again.
                                                       </div>) : ""
