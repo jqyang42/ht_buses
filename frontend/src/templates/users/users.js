@@ -23,9 +23,7 @@ class Users extends Component {
         api.get('users')
             .then(response => {
             const users = response.data.users;
-            this.setState({ 
-                users: users,
-            });
+            this.setState({ users: users });
         })
     }
     
