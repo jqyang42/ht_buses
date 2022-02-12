@@ -7,11 +7,12 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
-import { emailValidation, passwordValidation } from "../components/validation";
+import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
 
 // TODO: use studentIDValidation, newEmailValidation helper function
 
@@ -23,7 +24,7 @@ class UsersCreate extends Component {
             first_name: '',
             last_name: '',
             is_staff: null,
-            is_parent: null,
+            is_parent: false,
             location: {
                 address: '',
                 lat: 0.0,
@@ -35,7 +36,7 @@ class UsersCreate extends Component {
         added_students_list: [],
         students: [],
         schools_dropdown: [],
-        routes_dropdown: [],
+        routes_dropdowns: [],
         redirect: false,
         valid_password: false,
         same_password: false,
@@ -48,6 +49,39 @@ class UsersCreate extends Component {
         error404: false
     }
 
+    // initialize
+    componentDidMount() {
+        makeSchoolsDropdown().then(ret => {
+            this.setState({ schools_dropdown: ret })
+        })
+    }
+
+    // api calls
+    validateNewEmail = async (request) => {
+        const res = await api.post(`users/create/validate-email`, request)
+        const success = res.data.success
+        this.setState({ valid_email: success })
+        return success
+    }
+
+    createUser = (request) => {
+        api.post(`users/create`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    edit_success: 1,
+                    redirect_detail: true,
+                    detail_url: USERS_URL + "/" + res.data.user.id
+                });
+            } else {
+                console.log('i failed in createuser')
+                this.setState({ edit_success: -1 })
+            }
+        })
+    }
+
+    // render handlers
     handleFirstNameChange = (event) => {
         const first_name = event.target.value
         let user = this.state.new_user
@@ -67,7 +101,6 @@ class UsersCreate extends Component {
         let user = this.state.new_user
         user.email = email
         this.setState({ new_user: user })
-        // this.validEmail = true
     }
 
     handlePasswordChange = (event) => {
@@ -76,7 +109,7 @@ class UsersCreate extends Component {
         user.password = password
         this.setState({
             new_user: user,
-            same_password: false
+            same_password: false,
         })
     }
 
@@ -162,22 +195,11 @@ class UsersCreate extends Component {
         students[index] = student
         this.setState({ students: students })
 
-        api.get(`schools/detail?id=${school_id}`)
-            .then(res => {
-                let routes_data
-                if (res.data.routes === null) {
-                    routes_data = []
-                } else {
-                    routes_data = res.data.routes
-                }
-                let routes = routes_data.map(route => {
-                    return {
-                        value: route.id,
-                        display: route.name
-                    }
-                })
-                this.setState({ routes_dropdown: routes })
-            })
+        makeRoutesDropdown({ school_id: school_id}).then(ret => {
+            let routes_dropdowns = this.state.routes_dropdowns
+            routes_dropdowns[index] = ret
+            this.setState({ routes_dropdowns: routes_dropdowns })
+        })
     }
 
     handleRouteChange = (event, student_num) => {
@@ -191,20 +213,16 @@ class UsersCreate extends Component {
     }
 
     handleAddStudent = () => {      
-        let last_element_index
         let new_list
         if (this.state.added_students_list.length === 0) {
             new_list =  [...this.state.added_students_list, 0]
         } else {
-            last_element_index = this.state.added_students_list.length - 1
+            const last_element_index = this.state.added_students_list.length - 1
             new_list = [...this.state.added_students_list, this.state.added_students_list[last_element_index] + 1]
         }
-        // // console.log(new_list)
-        this.setState({ added_students_list: new_list })
-        const user = this.state.new_user
+        
+        let user = this.state.new_user
         user.is_parent = true
-        this.setState({ new_user: user })
-        // console.log(this.state.user_is_parent)
         
         const student_field = {
             first_name: '',
@@ -213,34 +231,63 @@ class UsersCreate extends Component {
             route_id: null,   //TODO: replicate?
             student_school_id: ''
         }
-        this.setState({ students: [...this.state.students, student_field] })
+
+        // update is_parent, add empty student field, individual routes
+        this.setState({
+            new_user: user,
+            added_students_list: new_list,
+            students: [...this.state.students, student_field],
+            routes_dropdowns: [...this.state.routes_dropdowns, []]
+        })
     }
 
     handleDeleteStudent = (student_num) => {       
-        const new_list = this.state.added_students_list
-        const index = new_list.indexOf(student_num)
+        const index = this.state.added_students_list.indexOf(student_num)
+        let new_list = this.state.added_students_list
         new_list.splice(index, 1)
-        this.setState({ added_students_list: new_list })
-        if (this.state.added_students_list.length === 0) {
-            const user = this.state.new_user
+        
+        let new_students = this.state.students
+        new_students.splice(index, 1)
+
+        let new_routes_dropdowns = this.state.routes_dropdowns
+        new_routes_dropdowns.splice(index, 1)
+
+        this.setState({ 
+            added_students_list: new_list,
+            students: new_students,
+            routes_dropdowns: new_routes_dropdowns
+        })
+
+        if (new_list.length === 0) {
+            let user = this.state.new_user
             user.is_parent = false
             this.setState({ new_user: user })
         }
-
-        const new_students = this.state.students
-        new_students.splice(index, 1)
-        this.setState({ students: new_students })
     }
 
-    sendCreateRequest =  () => {
-        let user_address
+    handleSubmit = (event) => {        
+        event.preventDefault();
 
-        if (this.state.user_address === null) {
-            user_address = ''
-        } else {
-            user_address = this.state.user_address;
+        if (!emailValidation({ email: this.state.new_user.email }) || !this.state.valid_password || !this.state.valid_address || !this.studentIDValidation()) {
+            console.log('i failed in handlesubmit')
+            this.setState({ edit_success: -1 })
+            return 
         }
 
+        const request = {
+            user: {
+                email: this.state.new_user.email
+            }            
+        }
+
+        this.validateNewEmail(request).then(success => {
+            if (success) {
+                this.sendCreateRequest()
+            }
+        })
+    }
+
+    sendCreateRequest = () => {
         let new_user = this.state.new_user
         new_user.students = this.state.students
         new_user.is_parent = !(this.state.added_students_list.length === 0)
@@ -249,85 +296,15 @@ class UsersCreate extends Component {
             user: new_user            
         }
 
-        console.log(request)
-        api.post(`users/create`, request)
-        .then(res => {
-            // console.log(res)
-            const msg = res.data.message
-            if (msg == 'user created successfully') {
-                this.setState({ edit_success: 1 })
-                this.setState({ redirect_detail: true });
-                this.setState({ detail_url: USERS_URL + "/" + res.data.user.id});
-            } else {
-                this.setState({ edit_success: -1 })
-            }
-        })
+        this.createUser(request)
     }
-
-    handleRefresh = () => {
-        this.setState({});
-    };
-
 
     studentIDValidation = () => {
-        // console.log(this.state.students.length)
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
-            const isNumber = !isNaN(id)
-            if (!isNumber ) {
-                return false
-            }
-            else if(isNumber && Math.sign(id) === -1)   {
-                return false
-            }
+            return studentIDValidation({ student_id: id })
         }
         return true 
-    }
-
-
-    handleSubmit = event => {
-        
-        event.preventDefault();
-
-        if (!emailValidation({ email: this.state.new_user.email }) || !this.state.valid_password || !this.state.valid_address || !this.studentIDValidation()) {
-            console.log(!emailValidation({ email: this.state.new_user.email }))
-            console.log(!this.state.valid_password)
-            console.log(!this.state.valid_address)
-            console.log(!this.studentIDValidation())
-            this.setState({ edit_success: -1 })
-            return 
-        }
-
-        let request_body = {
-            user: {
-                email: this.state.new_user.email
-            }            
-        }
-
-        api.post(`users/create/validate-email`, request_body)
-        .then(res => {
-            const success = res.data.success
-            this.setState({ valid_email: success })
-       
-            if(!success) {
-                this.handleRefresh()
-                return
-            }   
-            this.sendCreateRequest()
-        })
-    }
-
-    componentDidMount() {
-        api.get(`schools`)
-            .then(res => {            
-            let schools = res.data.schools.map(school => {
-                return {value: school.id, display: school.name}
-            })
-            this.setState({ schools_dropdown: schools})
-            this.setState({ edit_success: 0 })
-            this.setState({ user_is_parent: false })
-            // console.log(this.state.schools_dropdown)
-        })
     }
 
     render() {
@@ -451,15 +428,7 @@ class UsersCreate extends Component {
                                         <div className="col mt-2">
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
-                                                {/* <button type="add student test" className="btn w-auto justify-content-end" onClick={this.handleAddStudent}>
-                                                    <i className="bi bi-plus-circle me-2"></i>
-                                                    Add a student
-                                                </button> */}
                                                 <div>
-                                                    {/* <a className="btn px-0 py-1" data-bs-toggle="collapse" href="#accordionExample" role="button" aria-expanded="false" aria-controls="accordionExample">
-                                                        <i className="bi bi-plus-circle me-2"></i>
-                                                    Students
-                                                    </a> */}
                                                     <button type="add student test" className="btn w-auto px-0 mb-3" onClick={this.handleAddStudent}>
                                                         <i className="bi bi-plus-circle me-2"></i>
                                                         Add a student
@@ -505,7 +474,7 @@ class UsersCreate extends Component {
                                                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
                                                                                 onChange={(e) => this.handleRouteChange(e, count)} required>
                                                                                     <option selected>Select a Route</option>
-                                                                                    {this.state.routes_dropdown.map(route => 
+                                                                                    {this.state.routes_dropdowns[this.state.added_students_list.indexOf(count)].map(route => 
                                                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                                                     )}
                                                                                 </select>

@@ -134,9 +134,7 @@ class UsersDetail extends Component {
         this.setState({ new_student: student })
 
         makeRoutesDropdown({ school_id: school_id}).then(ret => {
-            this.setState({
-                routes_dropdown: ret
-            })
+            this.setState({ routes_dropdown: ret })
         })
     }
 
