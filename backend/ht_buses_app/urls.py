@@ -5,6 +5,7 @@ from . views.routes import route_delete, route_edit, route_planner, routes_view,
 from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
 from . views.auth import auth_valid, login, logout
 from . views.parents import parent_dashboard, parent_student_detail
+from . views.accounts import password_reset
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
     path('api/users/edit/validate-email', user_edit.valid_email_edit, name="validate_email_edit"),
+    path('api/password-reset/valid-email', password_reset.valid_email, name="valid_email"),
     path('api/users/create/validate-email', user_create.valid_email_create, name="validate_email_create"),
     path('api/users/delete', user_delete.user_delete, name = "delete_user"),
     path('api/validAccess', auth_valid.validAccess, name = "validAccess"),
@@ -37,5 +39,6 @@ urlpatterns = [
     path('api/students/edit', student_edit.student_edit, name = "edit_student"),
     path('api/dashboard', parent_dashboard.parent_dashboard, name= "parent_dashboard"),
     path('api/dashboard/students/detail', parent_student_detail.parent_student_detail, name = "parent_student_detail"),
-    path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit')
+    path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit'),
+    path('api/account', user_detail.user_account, name='user_account')
 ]

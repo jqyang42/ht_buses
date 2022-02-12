@@ -7,8 +7,9 @@ import HeaderMenu from "../components/header-menu";
 import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
+import SidebarMenu from "../components/sidebar-menu";
 
-class ParentPassword extends Component {
+class ChangePassword extends Component {
     state = {
         password: '',
         confirm_password: '',
@@ -20,6 +21,10 @@ class ParentPassword extends Component {
     validEmail = false;
     validPassword = false;
     samePassword = false;
+
+    componentDidMount() {
+        console.log(sessionStorage.getItem('is_staff'))
+    }
     
     passwordValidation() {
         return (passwordRegex.test(this.state.password))
@@ -79,7 +84,9 @@ class ParentPassword extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
-                    <ParentSidebarMenu />
+                    {
+                        sessionStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
+                    }
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Account" isRoot={false} isSecond={true} name="Change Password" />
@@ -152,7 +159,7 @@ class ParentPassword extends Component {
 }
 
 export default (props) => (
-    <ParentPassword
+    <ChangePassword
         {...props}
         params={useParams()}
     />
