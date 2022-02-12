@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
 import { Data, GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { Link , Navigate} from "react-router-dom";
-import { GOOGLE_API_KEY } from '../../constants';
-import { MARKER_COLORS } from '../../constants';
-import { MARKER_ICONS } from '../../constants';
+import { STOP_MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 
 class StopMarker extends Component {
     state = {
         currentRoute: this.props.routeID,
-        icon: MARKER_ICONS[this.props.routeID],
+        icon: STOP_MARKER_ICONS[this.props.routeID],
         location: this.props.location,
         id: this.props.id,
         name: this.props.name,
