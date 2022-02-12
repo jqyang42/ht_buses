@@ -6,7 +6,8 @@ import { MARKER_COLORS } from '../../constants';
 import { MARKER_ICONS } from '../../constants';
 
 import Geocode from "react-geocode";
-import StudentMarker from './map-marker';
+import StudentMarker from './student-marker';
+import StopMarker from './stop-marker';
 import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
 
 const containerStyle = {
@@ -39,6 +40,7 @@ class RouteMap extends Component {
     latLngs: [],
     center: {},
     markers: [],
+    stops: [],
   }
 
   students = [];
@@ -54,6 +56,19 @@ class RouteMap extends Component {
     }
     if(this.props.onChange) {
       this.props.onChange(this.students);
+    }
+  }
+
+  createStopMarker = (event) => {
+    const coords = event.latLng.toJSON() 
+    console.log(coords)
+    if (this.props.assignMode ) {
+      this.setState({
+        stops: [...this.state.stops, {
+          position: coords,
+          routeID: this.props.active_route,
+        }]
+      })
     }
   }
 
@@ -80,6 +95,7 @@ class RouteMap extends Component {
               styles: hidePOIs
             }}
             zoom={13}
+            onClick={this.createStopMarker}
           >
             <Marker position={this.props.center}  />
             {this.props.markers?.map((value, index) => {
@@ -93,6 +109,15 @@ class RouteMap extends Component {
                 studentIDs={value.studentIDs}
                 studentNames={value.studentNames}
                 onChange={this.handleRouteIDChange} />
+            })}
+            {this.state.stops?.map((value, index) => {
+              return <StopMarker 
+              key={index}
+              id={index}
+              location={value.position}
+              assignMode={this.props.assign_mode} 
+              routeID={value.routeID}
+              active_route={this.props.active_route} />
             })}
           </GoogleMap>
         </LoadScript>

@@ -83,7 +83,9 @@ class UsersCreate extends Component {
     handleAddressChange = event => {
         this.setState({ user_address: event.target.value });
     }
-
+    /* 
+    Called onBlur (when user clicks out of input box) to reduce Geocoding API calls.
+    */
     handleAddressValidation = event => {
         if (this.state.user_address !== '') {
             // console.log(this.state.user_address)
