@@ -60,7 +60,7 @@ class ParentDetail extends Component {
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-nowrap">
-                    <ParentSidebarMenu />
+                    <ParentSidebarMenu activeTab="Dashboard"/>
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Dashboard" isRoot={false} isSecond={true} name={this.state.student.first_name + " " + this.state.student.last_name} />

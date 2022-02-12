@@ -47,7 +47,7 @@ class ParentDashboard extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
-                    <ParentSidebarMenu />
+                    <ParentSidebarMenu activeTab="Dashboard"/>
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Dashboard" isRoot={true} />
