@@ -2,6 +2,7 @@
     "success": true,
     "route": {
         "id": 1,
+        "name": "route",
         "school": {
             "id": 1,
             "name": "School 1",

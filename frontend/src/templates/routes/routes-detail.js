@@ -11,12 +11,12 @@ import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
+import { studentsFromUsers } from "../components/table-processing";
 
 class BusRoutesDetail extends Component {
     state = {
-        route : [],
+        route : {},
         students : [],
-        school : [],
         center: {},
         markers: [],
         assign_mode: false,
@@ -29,102 +29,96 @@ class BusRoutesDetail extends Component {
         error_code: 200
     }
 
-    handleStudentsShowAll = event => {
-        this.setState({students_show_all: !this.state.students_show_all})
-    }
-
-    handleStopsShowAll = event => {
-        this.setState({stops_show_all: !this.state.stops_show_all})
-    }
-
     componentDidMount() {
-        var self = this
+       this.getRouteDetails()
         
+    }
+
+    // api calls
+    getRouteDetails = () => {
         api.get(`routes/detail?id=${this.props.params.id}`)
-            .then(res => {
+        .then(res => {
             const data = res.data;
             const route = data.route;
-            const school = route.school;
             const users = data.users;
-            console.log(users)
-            let students
-            if (users !== null) {
-                students = users?.map(user => {
-                    return user.students.map(student => {
-                        return {
-                            student_school_id: student.student_school_id,
-                            id: student.id,
-                            first_name: student.first_name,
-                            last_name: student.last_name
-                        }
-                    })
-                })
-                students = [].concat.apply([], students)
-            } else {
-                students = []
-            }
+            const students = studentsFromUsers({ users_data: users })
             
             this.setState({ 
                 students: students,
                 route: route, 
-                school: school, 
                 center: { 
-                    lat: school.location.lat, 
-                    lng: school.location.long 
-                }, });
-            this.setState({ delete_success: 0 })
-            this.setState({ students_show_all: false });
-            this.setState({ stops_show_all: false });
-            users.map((user) => {
-                const studentIDs = [];
-                const studentNames = [];
-                user.students.map((student) => {
-                    studentIDs.push(student.id);
-                    const fullName = student.first_name + ' ' + student.last_name;
-                    studentNames.push(fullName);
-                });
-                this.setState(prevState => ({
-                    markers: [...prevState.markers, {
-                        position: {
-                            lat: user.location.lat,
-                            lng: user.location.long
-                        },
-                        id: user.id,
-                        studentIDs: studentIDs,
-                        studentNames: studentNames,
-                        routeID: this.props.params.id //TODO: change markers to create per student
-                    }]
-                }));
-            });
+                    lat: route.school.location.lat, 
+                    lng: route.school.location.long 
+                }, 
+            });       
             
+            this.setMarkers(users)
         })
-        .catch (function(error) {
-            // console.log(error.response)
+        .catch (error => {
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
             }
-        } 
-        )
+        })
     }
 
-    handleDelete = event => { //TODO: Change api to boolean
-        event.preventDefault()
-
+    deleteRoute = () => {
         api.delete(`routes/delete?id=${this.props.params.id}`)
-            .then(res => {
-                // console.log("hello")
-                const success = res.data.success
-                // console.log(res.data)
-                if (success) {
-                    this.setState({ delete_success: 1})
-                    this.setState({redirect: true})
-                    // console.log(this.state.redirect)
-                } else {
-                    this.setState({ delete_success: -1})
-                }
-            }) 
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true
+                })
+            } else {
+                this.setState({ delete_success: -1})
+            }
+        }) 
+    }
+
+    // render handlers
+    handleStudentsShowAll = () => {
+        this.setState(prevState => ({
+            students_show_all: !prevState.students_show_all
+        }))
+    }
+
+    handleStopsShowAll = () => {
+        this.setState(prevState => ({
+            stops_show_all: !prevState.stops_show_all
+        }))
+    }
+
+    handleDelete = (event) => {
+        event.preventDefault()
+        this.deleteRoute()
+    }
+
+    setMarkers = (users) => {
+        users.map((user) => {
+            const studentIDs = [];
+            const studentNames = [];
+            user.students.map((student) => {
+                studentIDs.push(student.id);
+                const fullName = student.first_name + ' ' + student.last_name;
+                studentNames.push(fullName);
+            });
+            this.setState(prevState => ({
+                markers: [...prevState.markers, {
+                    position: {
+                        lat: user.location.lat,
+                        lng: user.location.long
+                    },
+                    id: user.id,
+                    studentIDs: studentIDs,
+                    studentNames: studentNames,
+                    routeID: this.props.params.id //TODO: change markers to create per student
+                }]
+            }));
+        }); 
     }
 
     render() {
@@ -156,7 +150,7 @@ class BusRoutesDetail extends Component {
                                             {/* TODO: Add conditional statement here for if route status is incomplete */}
                                             {/* <span className="badge bg-red ms-2">Incomplete</span> */}
                                         </h5>
-                                        <p className="mb-2"><a href={"/schools/" + this.state.school.id}>{this.state.school.name}</a></p>
+                                        <p className="mb-2"><a href={"/schools/" + this.state.route.school?.id}>{this.state.route.school?.name}</a></p>
                                         {/* <span className="badge bg-red mt-0">Incomplete</span> */}
                                     </div>
                                     <div className="col">
