@@ -13,7 +13,7 @@ from rest_framework.response import Response
 def valid_email(request):
     data = {}
     reqBody = json.loads(request.body)
-    email = reqBody['email']
+    email = reqBody['user']['email']
     try: 
         User.objects.get(email = email)
         data["message"] = "User email exists"
