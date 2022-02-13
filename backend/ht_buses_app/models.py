@@ -73,7 +73,7 @@ class UserManager(BaseUserManager):
             last_name = last_name,
             is_parent = is_parent,
             )
-        user.location_id = location_obj
+        user.location_id = location_obj.id
         user.set_password(password)
         user.save(using= self._db)
         return user 
