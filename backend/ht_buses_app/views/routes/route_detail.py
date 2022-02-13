@@ -1,9 +1,9 @@
-from ...models import Route, School, Student, User
+from ...models import Route, School, Student, User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 # Need to rethink logic, honestly not sure how to get rid of double for loop :(
 @csrf_exempt
@@ -34,11 +34,12 @@ def routes_detail(request):
                 parent_student_serializer = StudentSerializer(parent_student, many=True)
                 for child in parent_student_serializer.data:
                     parent_student_arr.append({"id" : child["id"], "student_school_id": child["student_school_id"], "first_name": child["first_name"], "last_name" : child["last_name"]})
-                parent_address = {"address": parent.location_id.address, "lat": parent.location_id.lat, "long": parent.location_id.long}
+                location = Location.locationTables.get(pk=parent.location_id)
+                location_serializer = LocationSerializer(location, many=False)
+                parent_address = {"address": location_serializer.data["address"], "lat": location_serializer.data["lat"], "long": location_serializer.data["long"]}
                 address_arr.append({"id" : parent_id, "location" : parent_address, "students": parent_student_arr})
         data["route"] = route_arr
-        if len(address_arr) != 0:
-            data["users"] = address_arr
+        data["users"] = address_arr
         data["success"] = True
         return Response(data)
     except:
