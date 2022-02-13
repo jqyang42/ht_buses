@@ -14,18 +14,25 @@ class BusRoutes extends Component {
         show_all: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    // initialize
+    componentDidMount() {
+        this.getRoutes()
     }
 
-    componentDidMount() {
+    // api calls
+    getRoutes = () => {
         api.get('routes')
-            .then(res => {
-                const routes = res.data.routes
-                this.setState({ routes });
-                this.setState({ show_all: false });
+        .then(res => {
+            const routes = res.data.routes
+            this.setState({ routes });
         })
+    }
+    
+    // render handlers
+    handleShowAll = () => {
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }))
     }
 
     render() {
