@@ -29,7 +29,6 @@ class EmailReset extends Component {
         .then(res => {
             console.log(res.data.success)
             this.setState({ email_success: res.data.success ? 1 : -1 })
-            console.log(this.state.email_success)
          })
     }
 
@@ -39,26 +38,8 @@ class EmailReset extends Component {
     }
 
     handleSubmit = (event) => {
-        
         event.preventDefault();
-
         this.checkEmail()
-
-        // if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
-        //     this.setState({ email_success: -1 })
-        //     // console.log(this.state.email_success)
-        //     return 
-        // }
-        
-        // api.put(`users/password-edit?id=${sessionStorage.getItem('user_id')}`, password) 
-        //     .then(res => {
-        //         const success = res.data.success
-        //         if (success) {
-        //             this.setState({ email_success: 1 })    // TODO ERROR: email_success?
-        //             // console.log(this.state.email_success)
-        //         }
-        //     })
-        // // this.setState({ redirect: true });
     }
 
     render() {

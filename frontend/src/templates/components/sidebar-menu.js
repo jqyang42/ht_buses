@@ -3,7 +3,6 @@ import { HT_LOGO } from "../../constants";
 import { API_DOMAIN } from '../../constants';
 import axios from "axios";
 import { INDEX_URL, STUDENTS_URL, ROUTES_URL, SCHOOLS_URL, USERS_URL, PASSWORD_URL} from "../../constants";
-import { Link } from 'react-router-dom';
 
 class SidebarMenu extends Component {
     state = {
