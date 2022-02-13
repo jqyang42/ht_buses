@@ -12,18 +12,21 @@ import api from "../components/api";
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { makeRoutesDropdown } from "../components/dropdown";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            school: [],
+            school: {},
             students: [],
             routes: [],
-            create_route_name: '',
-            create_school_name: '',
-            create_route_description: '',
+            new_route: {
+                name: '',
+                school_name: '',
+                description: ''
+            },
             route_dropdown: [],
             center: {},
             markers: [],
@@ -34,52 +37,58 @@ class BusRoutesPlanner extends Component {
         }
     }
 
+    // initialize
     componentDidMount() {
-        this.handleTableGet();       
+        this.getSchoolDetail()
+
+        makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
+            this.setState({ route_dropdown: ret })
+        })
+
         this.handleLocationsGet();     
     }
 
-    handleTableGet = () => {
-        var self = this
-        
+    // api calls
+    getSchoolDetail = () => {
         api.get(`schools/detail?id=${this.props.params.id}`)
-            .then(res => {
-                const data = res.data
-                const school = data.school;
-                this.setState({ school: school });
-                
-                if (data.students == null) {
-                    this.setState({ students: []}) 
-                } else {
-                    this.setState({ students: data.students })
-                }
-
-                if (data.routes == null) {
-                    this.setState({ routes: []})
-                } else {
-                    this.setState({ routes: data.routes }, () => {
-                        let routes = this.state.routes.map(route => {
-                            return {
-                                id: route.id, 
-                                name: route.name
-                            }
-                        })
-                        this.setState({ route_dropdown: routes })
-                    })
-                }                                
-            }).catch (function(error) {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.data)
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-            )        
+        .then(res => {
+            const data = res.data
+            let route = this.state.new_route
+            route.school_name = data.school.name
+            this.setState({ 
+                school: data.school,
+                students: data.students,
+                routes: data.routes,
+                new_route: route
+            });                                              
+        }).catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        })
     }
-    handleLocationsGet = () => {
-        var self = this
 
+    createRoute = (request) => {
+        api.post(`routes/create`, request)
+        .then(res => {
+            const new_route = res.data.route
+            this.setState({ route_dropdown: [...this.state.routes, {
+                id: new_route.id,
+                name: new_route.name
+            }]})
+            this.handleLocationsGet()
+
+            makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
+                this.setState({ route_dropdown: ret })
+            })
+        })
+    }
+
+    // render handlers
+    handleLocationsGet = () => {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
                 const school_location = res.data.school.location;
@@ -112,66 +121,50 @@ class BusRoutesPlanner extends Component {
                         }]
                     }));
                 });
-            }).catch (function(error) {
+            }).catch (error => {
                 // console.log(error.response)
                 if (error.response.status === 404) {
                     // console.log(error.response.data)
-                    self.setState({ error_status: true });
+                    this.setState({ error_status: true });
                 }
-            } 
-            );
+            });
     }
 
-    handleAssignMode = event => {
+    handleAssignMode = () => {
         this.setState(prevState => ({ 
             assign_mode: !prevState.assign_mode
         }));
-        // console.log(this.state.assign_mode);
     }
     
-    handleRouteSelection = event => {
+    handleRouteSelection = (event) => {
         this.setState({ active_route: parseInt(event.target.value) })
-        console.log(this.state.active_route)
-        console.log(this.state.route_dropdown)
+        // console.log(this.state.active_route)
+        // console.log(this.state.route_dropdown)
         // this.setState({ active_route: event.target.value }, () => // console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
-    handleRouteNameChange = event => {
-        this.setState({ create_route_name: event.target.value });
+    handleRouteNameChange = (event) => {
+        const name = event.target.value
+        let route = this.state.new_route
+        route.name = name
+        this.setState({ new_route: route });
     }
 
-    // handleSchoolNameChange = event => {
-    //     this.setState({ create: { school_name: event.target.value }});
-    // }
+    handleRouteDescriptionChange = (event) => {
+        const description = event.target.value
+        let route = this.state.new_route
+        route.description = description
+        this.setState({ new_route: route });    }
 
-    handleRouteDescriptionChange = event => {
-        this.setState({ create_route_description: event.target.value });
-    }
-
-    handleRouteCreateSubmit = event => {
+    handleRouteCreateSubmit = (event) => {
         event.preventDefault();
 
         const route = {
-            name: this.state.create_route_name,
-            school_name: this.state.school.name,
-            description: this.state.create_route_description
+            route: this.state.new_route
         }
-        const data = {
-            'route': route
-        }
-        api.post(`routes/create`, data)
-            .then(res => {
-                const new_route = res.data.route
-                // // console.log(new_route)
-                this.setState({ route_dropdown: [...this.state.routes, {
-                    id: new_route.id,
-                    name: new_route.name
-                }]})
-                this.handleLocationsGet()
-            })
+        
+        this.createRoute(route)
     }
-
-
     
     students = {"students":[]};
 
@@ -216,7 +209,7 @@ class BusRoutesPlanner extends Component {
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
                                     <h5>{this.state.school.name}</h5>
-                                    <p>{this.state.school.address}</p>
+                                    <p>{this.state.school.location?.address}</p>
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
@@ -272,7 +265,7 @@ class BusRoutesPlanner extends Component {
                                                     <option selected value={0}>Select a route to assign</option>
                                                     <option value={0}>No Route</option>
                                                     {this.state.route_dropdown.map(route => 
-                                                        <option value={route.id}>{route.name}</option>
+                                                        <option value={route.value}>{route.display}</option>
                                                     )}
                                                 </select>
                                             </div>
@@ -379,13 +372,6 @@ class BusRoutesPlanner extends Component {
             </div>
         );
     }
-}
-
-function RouteSelectDropdown() { 
-    let routes = this.state.routes(route => {
-        return {value: route.id, display: route.name}
-    })
-    this.setState({ route_dropdown: routes })
 }
 
 export default (props) => (
