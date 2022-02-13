@@ -28,7 +28,7 @@ def school_create(request):
         location_serializer = LocationSerializer(location, many=False)
         data["message"] = "school created successfully"
         data["success"] = True
-        data["school"] = {"id": school.id, "arrival": arrival, "departure": departure, "location": location_serializer.data}
+        data["school"] = {"id": school.id, "name": name, "arrival": school.arrival, "departure": school.departure, "location": location_serializer.data}
         return Response(data)
     except:
         data["message"] = "school could not be created"

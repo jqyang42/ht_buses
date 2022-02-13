@@ -10,7 +10,7 @@ class Location(models.Model):
 
 class School(models.Model):
     name = models.CharField(max_length=100)
-    location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
+    location_id = models.ForeignKey('Location', default=None, on_delete=models.SET(None), blank=True, null=True)
     arrival = models.TimeField(default=datetime.time(00,00))
     departure = models.TimeField(default=datetime.time(00,00))
     schoolsTable = models.Manager()
@@ -73,7 +73,7 @@ class UserManager(BaseUserManager):
             last_name = last_name,
             is_parent = is_parent,
             )
-        user.location_id = location_obj.id
+        user.location_id = location_obj
         user.set_password(password)
         user.save(using= self._db)
         return user 
