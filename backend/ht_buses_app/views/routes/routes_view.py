@@ -1,14 +1,14 @@
 from ...models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routes(request):
     data = {}
     routes_filter = []
@@ -31,7 +31,7 @@ def routes(request):
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
         school_obj = {'id' : route["school_id"], 'name': school_name}
-        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count})
+        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count, "arrival": route["arrival"], "departure": route["departure"], "is_complete": route["is_complete"]})
     data["routes"] = routes_filter
     data["success"] = True
     return Response(data)
