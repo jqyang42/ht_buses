@@ -34,6 +34,7 @@ class Student(models.Model):
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=None, on_delete=models.SET(None), blank=True, null=True)
+    stop_id = models.ForeignKey('Stop', default=None, on_delete=models.SET(None), blank=True, null=True)
     user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE) 
     studentsTable = models.Manager()
     class Meta:
