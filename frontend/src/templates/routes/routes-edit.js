@@ -13,67 +13,84 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class BusRoutesEdit extends Component {
     state = {
-        route_name: '',
-        route_description: '',
-        school_id: '',
-        route: [],
+        route: {},
+        edited_route: {
+            name: '',
+            description: ''
+        },
         redirect: false,
         edit_success: 0,
         error_status: false,
         error_code: 200
     }
 
-    handleRouteNameChange = event => {
-        this.setState({ route_name: event.target.value });
+    // initialize
+    componentDidMount() {        
+        this.getRouteDetails()
     }
 
-    handleDescriptionChange = event => {
-        this.setState({ route_description: event.target.value });
-    }
-
-    handleSubmit = event => {
-        event.preventDefault();
-
-        const route = {
-            route: {
-                name: this.state.route_name,
-                description: this.state.route_description,
-            }
-        }
-        
-        api.put(`routes/edit?id=${this.props.params.id}`, route)  // TODO: use onclick id value
-            .then(res => {
-                const success = res.data.success
-                this.setState({ edit_success: success})
-                if (success) {
-                    this.setState({ redirect: true });
-                }
-            })
-        
-    }
-
-    componentDidMount() {
-        var self = this
-        
+    // api calls
+    getRouteDetails = () => {
         api.get(`routes/detail?id=${this.props.params.id}`)  // TODO: use onclick id values
         .then(res => {
             const route = res.data.route;
+            const edited_route = {
+                name: route.name,
+                description: route.description
+            }
+
             this.setState({ 
                 route: route, 
-                route_description: route.description, 
-                route_name: route.name,
-                school_id: route.school.id,
-                edit_success: 0
-            });
-        }).catch (function(error) {
-            // console.log(error.response)
+                edited_route: edited_route
+            })
+        }).catch (error => {
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
             }
-        } 
-        )
+        })
+    }
+
+    editRoute = (request) => {
+        api.put(`routes/edit?id=${this.props.params.id}`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    redirect: true,
+                    edit_success: success
+                });
+            } else {
+                this.setState({ edit_success: success })
+            }
+        })
+    }
+
+    // render handlers
+    handleRouteNameChange = (event) => {
+        const name = event.target.value
+        let route = this.state.edited_route
+        route.name = name
+        this.setState({ edited_route: route });
+    }
+
+    handleDescriptionChange = (event) => {
+        const description = event.target.value
+        let route = this.state.edited_route
+        route.description = description
+        this.setState({ edited_route: route });
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+
+        const route = {
+            route: this.state.edited_route
+        }
+        
+        this.editRoute(route)        
     }
 
     render() {
@@ -109,7 +126,7 @@ class BusRoutesEdit extends Component {
                                         <div className="row d-inline-flex float-end">
 
                                             {/* TODO: change this.props.params.id to SCHOOL id, not ROUTE id */}
-                                            <Link to={"/schools/" + this.state.school_id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                            <Link to={"/schools/" + this.state.route.school?.id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
                                                     Route Planner
