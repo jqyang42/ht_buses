@@ -13,7 +13,7 @@ from datetime import datetime
 # Refactor to be a PUT request
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def school_edit(request):
     data = {}
     id = request.query_params["id"]

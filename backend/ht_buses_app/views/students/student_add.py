@@ -7,7 +7,7 @@ from .student_create import create_student
 
 @api_view(["POST"])
 @csrf_exempt
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def add_new_students(request):
     data = {}
     user_id = request.query_params["id"]

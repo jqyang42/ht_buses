@@ -9,7 +9,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 # This needs to be rewritten, currently have 3 for loops
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
@@ -31,7 +31,6 @@ def routeplanner(request):
             routes_arr.append({"id" : route_id, "name" : name, "arrival": arrival, "departure": departure, "is_complete": is_complete})
         data["routes"] = routes_arr
         students = Student.studentsTable.filter(school_id=id)
-        print(students)
         student_serializer = StudentSerializer(students, many=True)
         address_arr = []
         parent_id_arr = []

@@ -12,7 +12,7 @@ from ..resources import capitalize_reg
 # User POST API
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)

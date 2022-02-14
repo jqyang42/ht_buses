@@ -12,7 +12,7 @@ from datetime import datetime
 # Schools POST API
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def school_create(request):
     data = {}
     try:

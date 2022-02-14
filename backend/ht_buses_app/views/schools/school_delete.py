@@ -7,7 +7,7 @@ from rest_framework.response import Response
 # Schools DELETE API
 @csrf_exempt
 @api_view(["DELETE"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def school_delete(request):
     data = {}
     id = request.query_params["id"]
