@@ -15,6 +15,8 @@ class SchoolsCreate extends Component {
     state = {
         new_school: {
             name: '',
+            arrival: '08:00 am',    // TODO LINK TO FRONTEND FORM
+            departure: '03:00 pm',  // TODO LINK TO FRONTEND FORM
             location: {
                 address: '',
                 lat: 0,
