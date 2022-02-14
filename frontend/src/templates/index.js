@@ -34,10 +34,10 @@ class Login extends Component {
             email: this.emailField.value,
             password: this.passwordField.value
         }
-          
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
+            console.log(data)
             this.setState({message: data.message, valid_login: data.valid_login})
             sessionStorage.setItem('token', data.token)
             if (data.valid_login) {

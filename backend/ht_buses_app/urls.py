@@ -6,6 +6,7 @@ from . views.users import user_create, user_delete, user_detail, user_edit, user
 from . views.auth import auth_valid, login, logout
 from . views.parents import parent_dashboard, parent_student_detail
 from . views.accounts import password_reset
+from . views.general import general_apis
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -26,10 +27,8 @@ urlpatterns = [
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
     path('api/users/edit/validate-email', user_edit.valid_email_edit, name="validate_email_edit"),
-    path('api/password-reset/valid-email', password_reset.valid_email, name="valid_email"),
-    path('api/users/create/validate-email', user_create.valid_email_create, name="validate_email_create"),
+    path('api/email_exists', general_apis.email_exists, name="email_exists"),
     path('api/users/delete', user_delete.user_delete, name = "delete_user"),
-    path('api/validAccess', auth_valid.validAccess, name = "validAccess"),
     path('api/routeplanner', route_planner.routeplanner, name="routeplanner"),
     path('api/logout', logout.user_logout, name="logout"),
     path('api/login', login.user_login, name="login"),
