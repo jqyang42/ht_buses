@@ -9,7 +9,6 @@ import { ParentDashboardTable } from "../tables/parent-dashboard-table";
 
 class ParentDashboard extends Component {
     state = {
-        id: 0,
         user: {},
         students: [],
         show_all: false
@@ -34,7 +33,9 @@ class ParentDashboard extends Component {
     
     // render handlers
     handleShowAll() {
-        this.setState({show_all: !this.state.show_all})
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }))
     }    
 
     render() {
