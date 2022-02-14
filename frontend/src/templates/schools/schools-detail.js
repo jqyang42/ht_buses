@@ -13,10 +13,9 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class SchoolsDetail extends Component {
     state = {
-        school: [],
+        school: {},
         students: [],
         routes: [],
-        address: '',
         delete_school: '',
         delete_success: 0,
         redirect: false,
@@ -26,81 +25,71 @@ class SchoolsDetail extends Component {
         error_code: 200
     }
 
-    handleStudentsShowAll = event => {
-        this.setState({students_show_all: !this.state.students_show_all})
-        // console.log(this.state.students_show_all)
+    // initialize
+    componentDidMount() {
+        this.getSchoolDetails()
+    }
+    
+    // api calls
+    getSchoolDetails = () => {
+        api.get(`schools/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const data = res.data
+            this.setState({ 
+                school: data.school,
+                students: data.students,
+                routes: data.routes,
+            });
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ error_status: true });
+                this.setState({ error_code: error.response.status });
+            }
+        })
     }
 
-
-    handleRoutesShowAll = event => {
-        this.setState({routes_show_all: !this.state.routes_show_all})
-        // console.log(this.state.routes_show_all)
+    deleteSchool = () => {
+        api.delete(`schools/delete?id=${this.props.params.id}`)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true 
+                });
+                return <Navigate to={ SCHOOLS_URL }/>;
+            } else {
+                this.setState({ delete_success: -1 })
+            }
+        })
     }
 
-    handleDeleteSchool = event => {
+    // render handlers
+    handleStudentsShowAll = () => {
+        this.setState(prevState => ({
+            students_show_all: !prevState.students_show_all
+        }))
+    }
+
+    handleRoutesShowAll = () => {
+        this.setState(prevState => ({
+            routes_show_all: !prevState.routes_show_all
+        }))
+    }
+
+    handleDeleteSchool = (event) => {
         this.setState({ delete_school: event.target.value })
     }
 
-    handleDeleteSubmit = event => {
+    handleDeleteSubmit = (event) => {
         event.preventDefault();
 
         if (this.state.delete_school == this.state.school.name) {
-            api.delete(`schools/delete?id=${this.props.params.id}`)
-                .then(res => {
-                    // console.log(res)
-                    const msg = res.data.message
-                    if (msg == 'school successfully deleted') {
-                        this.setState({ delete_success: 1 })
-                        this.setState({ redirect: true });
-                        // console.log(this.state.redirect)
-                        return <Navigate to={ SCHOOLS_URL }/>;
-                    } else {
-                        this.setState({ delete_success: -1 })
-                    }
-                })
+            this.deleteSchool()
         } else {
             this.setState({ delete_success: -1 })
         }
-    }
-
-    componentDidMount() {
-        var self = this
-
-        api.get(`schools/detail?id=${this.props.params.id}`)
-            .then(res => {
-                const data = res.data
-                const school = data.school
-                console.log(data)
-                
-                if (data.students == null) {
-                    this.setState({ students: []}) 
-                } else {
-                    this.setState({ students: data.students })
-                }
-
-                if (data.routes == null) {
-                    this.setState({ routes: []})
-                } else {
-                    this.setState({ routes: data.routes })
-                }
-
-                // console.log(school)
-                this.setState({ 
-                    school: school,
-                    address: school.location.address
-                });
-                this.setState({ delete_success: 0 });
-                this.setState({ students_show_all: false, routes_show_all: false });
-            })
-            .catch (function(error) {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.data)
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-            )
     }
 
     render() {
@@ -123,13 +112,13 @@ class SchoolsDetail extends Component {
                     <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root="Schools" isRoot={false} isSecond={true} id={this.state.school.id} name={this.state.school.name} />
+                        <HeaderMenu root="Schools" isRoot={false} isSecond={true} id={this.props.params.id} name={this.state.school.name} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.school.name}</h5>
-                                        <p>{this.state.address}</p>
+                                        <p>{this.state.school.location?.address}</p>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">

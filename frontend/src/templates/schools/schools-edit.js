@@ -15,47 +15,106 @@ import { GOOGLE_API_KEY } from "../../constants";
 
 class SchoolsEdit extends Component {
     state = {
-        school_name: '',
-        school_address: '',
-        school: [],
+        edited_school: {
+            name: '',
+            location: {
+                address: '',
+                lat: 0.0,
+                long: 0.0
+            }
+        },
+        school: {},
         redirect: false,
-        lat: 0,
-        lng: 0,
         valid_address: true,
         edit_success: 0,
         error_status: false,
         error_code: 200
     }
 
-    handleSchoolNameChange = event => {
-        this.setState({ school_name: event.target.value });
+    // initialize
+    componentDidMount() {
+        this.getSchoolDetails()
     }
 
-    handleSchoolAddressChange = event => {
-        this.setState({ school_address: event.target.value });
+    // api calls
+    getSchoolDetails = () => {
+        api.get(`schools/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const school = res.data.school
+            const edited_school = {
+                name: school.name,
+                location: {
+                    address: school.location.address,
+                    lat: 0.0,
+                    long: 0.0
+                }
+            }
+            this.setState({ 
+                school: school,
+                edited_school: edited_school
+            });
+        }).catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        })
     }
 
-        handleAddressValidation = event => {
-        if (this.state.school_address != '') {
-            // console.log(this.state.school_address)
-            Geocode.fromAddress(this.state.school_address).then(
+    editSchool = (request) => {
+        api.put(`schools/edit?id=${this.props.params.id}`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    edit_success: 1,
+                    redirect: true
+                })
+            } else {
+                this.setState({ edit_success: -1 })
+            }
+        })
+    }
+    
+    // render handlers
+    handleSchoolNameChange = (event) => {
+        const new_name = event.target.value
+        let school = this.state.edited_school
+        school.name = new_name
+        this.setState({ edited_school: school });
+    }
+
+    handleSchoolAddressChange = (input) => {
+        const address = input.target?.value || input.formatted_address  // accept address from onChange and from autocomplete        let school = this.state.new_school
+        let school = this.state.edited_school
+        school.location.address = address
+        this.setState({ edited_school: school })
+    }
+
+    handleAddressValidation = () => {
+        const address = this.state.edited_school.location.address
+        if (address != '') {
+            Geocode.fromAddress(address).then(
                 (response) => {
-                    // console.log(response)
+                    let school = this.state.edited_school
+                    school.location.lat = parseFloat(response.results[0].geometry.location.lat)
+                    school.location.long = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
-                        lat : parseFloat(response.results[0].geometry.location.lat),
-                        lng : parseFloat(response.results[0].geometry.location.lng),
-                        valid_address : true,
+                        edited_school: school,
+                        valid_address: true
                     })
                 },
                 (error) => {
-                    // console.log(error)
+                    // todo error logging for google
                     this.setState({ valid_address: false})
                 }
             )
         }
     }
 
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
 
         if ( !this.state.valid_address ) {
@@ -64,48 +123,12 @@ class SchoolsEdit extends Component {
         }
 
         const school = {
-            school: {
-                name: this.state.school_name,
-                location: {
-                    address: this.state.school_address,
-                    lat: this.state.lat,
-                    long: this.state.lng,
-                }
-            }
+            school: this.state.edited_school
         }
 
-        api.put(`schools/edit?id=${this.props.params.id}`, school)
-            .then(res => {
-                const msg = res.data.message
-                if (msg == 'school information updated successfully') {
-                    this.setState({ edit_success: 1 })
-                } else {
-                    this.setState({ edit_success: -1 })
-                }
-            })
-        this.setState({ redirect: true });
+        this.editSchool(school)
     }
-
-    componentDidMount() {
-        var self = this
-
-        api.get(`schools/detail?id=${this.props.params.id}`)
-        .then(res => {
-            const data = res.data
-            const school = data.school;
-            this.setState({ school: school, school_name: school.name, school_address: school.location.address });
-            this.setState({ edit_success: 0 })
-        }).catch (function(error) {
-            // console.log(error.response)
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
-            }
-        } 
-        )
-    }
-    
+   
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -156,24 +179,16 @@ class SchoolsEdit extends Component {
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={(place) => {
-                                                        this.setState({
-                                                            school_address: place.formatted_address
-                                                        })
-                                                    }}
+                                                    onPlaceSelected={this.handleSchoolAddressChange}
                                                     options={{
                                                         types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    value={this.state.school_address} 
-                                                    onChange={this.handleSchoolAddressChange}
+                                                    value={this.state.edited_school.location.address} 
+                                                    onChange={this.handleSchoolAddressChange.address}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                defaultValue={this.state.school.address} placeholder="Enter school address"
-                                                onChange={this.handleSchoolAddressChange}></input> */}
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
