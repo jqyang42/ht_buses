@@ -8,7 +8,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routes(request):
     data = {}
     routes_filter = []

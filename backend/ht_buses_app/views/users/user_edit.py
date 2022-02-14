@@ -10,7 +10,7 @@ from ..resources import capitalize_reg
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def user_edit(request):
     data = {}
     try:
