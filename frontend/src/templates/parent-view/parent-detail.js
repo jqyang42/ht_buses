@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { API_DOMAIN } from "../../constants";
 import { Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import ParentSidebarMenu from '../components/parent-sidebar-menu';
@@ -14,36 +13,38 @@ import { STUDENTS_URL } from "../../constants";
 
 class ParentDetail extends Component {
     state = {
-        student: [],
-        route: [],
+        student: {},
+        // route: [],
         error_status: false,
         error_code: 200,
         stops_show_all: false
     }
 
-    handleStopsShowAll = event => {
-        this.setState({stops_show_all: !this.state.stops_show_all})
+    componentDidMount() {
+        this.getParentStudentDetail()
     }
 
-    componentDidMount() {
+    // api calls
+    getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
-            .then(res => {
-                const student = res.data.student
-                const route = student.route
-                this.setState({ student: student, route: route })
-                this.setState({error_status: false})
-                this.setState({error_code: 200})
-            }).catch (error => {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.status)
-                    this.setState({ error_status: true });
-                    // console.log(self.state.error_status)
-                    this.setState({ error_code: error.response.status });
-                    // console.log(self.state.error_code)
-                }
-            } 
-            )
+        .then(res => {
+            const student = res.data.student
+            this.setState({ student: student })
+        }).catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status
+                });
+            }
+        })
+    }
+
+    // render handler
+    handleStopsShowAll = () => {
+        this.setState(prevState => ({
+            stops_show_all: !prevState.stops_show_all
+        }))
     }
 
     render() {
@@ -91,10 +92,10 @@ class ParentDetail extends Component {
                                             {this.state.student.school_name}
                                         </p>
                                         <p>
-                                            {this.state.route.name}
+                                            {this.state.student.route?.name}
                                         </p>
                                         <p>
-                                            {this.state.route.description}
+                                            {this.state.student.route?.description}
                                         </p>
                                     </div>
                                 </div>
