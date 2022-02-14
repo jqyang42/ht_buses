@@ -6,6 +6,7 @@ from . views.users import user_create, user_delete, user_detail, user_edit, user
 from . views.auth import auth_valid, login, logout
 from . views.parents import parent_dashboard, parent_student_detail
 from . views.accounts import password_reset
+from . views.announcements import announcements
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -40,5 +41,6 @@ urlpatterns = [
     path('api/dashboard', parent_dashboard.parent_dashboard, name= "parent_dashboard"),
     path('api/dashboard/students/detail', parent_student_detail.parent_student_detail, name = "parent_student_detail"),
     path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit'),
+     path('api/general_announcement', announcements.general_all_users, name='general_announcement'),
     path('api/account', user_detail.user_account, name='user_account')
 ]
