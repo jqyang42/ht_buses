@@ -55,7 +55,7 @@ def user_account(request):
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
         location_arr = {"address": user.location.address}
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "location": location_arr}
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "location": location_arr}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)

@@ -31,6 +31,7 @@ def routeplanner(request):
             routes_arr.append({"id" : route_id, "name" : name, "arrival": arrival, "departure": departure, "is_complete": is_complete})
         data["routes"] = routes_arr
         students = Student.studentsTable.filter(school_id=id)
+        print(students)
         student_serializer = StudentSerializer(students, many=True)
         address_arr = []
         parent_id_arr = []
@@ -47,7 +48,7 @@ def routeplanner(request):
                         parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : 0})
                     else:
                         parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : child["route_id"]})
-                parent_address = {"address": parent.location_id.address, "lat": parent.location_id.lat, "long": parent.location_id.long}
+                parent_address = {"address": parent.location.address, "lat": parent.location.lat, "long": parent.location.long}
                 address_arr.append({"id" : student["user_id"], "location": parent_address, "students": parent_student_arr})
         data["users"] = address_arr
         data["success"] = True
