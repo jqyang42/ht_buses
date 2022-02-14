@@ -23,7 +23,9 @@ class EmailReset extends Component {
 
     checkEmail() {
         const data = {
-            email: this.state.email
+            user: {
+                email: this.state.email
+            }
         }
         api.post(`password-reset/valid-email`, data)
         .then(res => {
