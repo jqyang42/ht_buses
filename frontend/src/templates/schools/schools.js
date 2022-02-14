@@ -15,18 +15,28 @@ class Schools extends Component {
         show_all: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    // initialize
+    componentDidMount() {
+        this.getSchools()
     }
 
-    componentDidMount() {
+    // api calls
+    getSchools = () => {
         api.get('schools')
-            .then(res => {
-                const schools = res.data.schools;
-                this.setState({ schools });
-                this.setState({ show_all: false });
+        .then(res => {
+            const schools = res.data.schools;
+            this.setState({ 
+                schools: schools,
+                show_all: false 
+            });
         })
+    }
+
+    // render handlers 
+    handleShowAll = () => {
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }))
     }
     
     render() {
