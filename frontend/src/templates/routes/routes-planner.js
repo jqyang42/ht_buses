@@ -78,8 +78,6 @@ class BusRoutesPlanner extends Component {
             )        
     }
     handleLocationsGet = () => {
-        var self = this
-
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
                 const school_location = res.data.school.location;
@@ -112,9 +110,10 @@ class BusRoutesPlanner extends Component {
                         }]
                     }));
                 });
-            }).catch (function(error) {
+            }).catch ( error => {
+                console.log(error.response)
                 if (error.response.status === 404) {
-                    self.setState({ error_status: true });
+                    this.setState({ error_status: true });
                 }
             } 
             );

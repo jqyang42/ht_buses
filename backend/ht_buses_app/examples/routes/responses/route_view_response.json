@@ -6,7 +6,10 @@
             "name": "Route 89",
             "school_name": {
                 "id": 2,
-                "name": "Est Middle School"
+                "name": "Est Middle School",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 2
         },
@@ -15,7 +18,10 @@
             "name": "Routes 1",
             "school_name": {
                 "id": 3,
-                "name": "Duke School"
+                "name": "Duke School",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -24,7 +30,10 @@
             "name": "Routes 2",
             "school_name": {
                 "id": 3,
-                "name": "Duke School"
+                "name": "Duke School",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 1
         },
@@ -33,7 +42,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 1
         },
@@ -42,7 +54,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -51,7 +66,11 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
+
             },
             "student_count": 0
         },
@@ -60,7 +79,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 3,
-                "name": "Duke School"
+                "name": "Duke School",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -69,7 +91,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -78,7 +103,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -87,7 +115,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -96,7 +127,10 @@
             "name": "Cool route",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -105,7 +139,10 @@
             "name": "New route lowercase",
             "school_name": {
                 "id": 2,
-                "name": "Est Middle School"
+                "name": "Est Middle School",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         },
@@ -114,7 +151,10 @@
             "name": "ROute TESTING",
             "school_name": {
                 "id": 1,
-                "name": "WCHS"
+                "name": "WCHS",
+                "arrival": "10:00 am",
+                "departure": "12:00 pm",
+                "is_complete": true
             },
             "student_count": 0
         }

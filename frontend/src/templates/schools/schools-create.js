@@ -13,46 +13,77 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class SchoolsCreate extends Component {
     state = {
-        school_name: '',
-        school_address: '',
+        new_school: {
+            name: '',
+            arrival: '08:00 am',    // TODO LINK TO FRONTEND FORM
+            departure: '03:00 pm',  // TODO LINK TO FRONTEND FORM
+            location: {
+                address: '',
+                lat: 0,
+                long: 0,
+            }
+        },
         redirect: false,
-        lat: 0,
-        lng: 0,
         valid_address: true,
         edit_success: 0,
         redirect_detail: false,
         detail_url: ''
     }
 
-    handleSchoolNameChange = event => {
-        this.setState({ school_name: event.target.value });
+    // api calls
+    createSchool = (request) => {
+        api.post(`schools/create`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    edit_success: 1,
+                    redirect_detail: true,
+                    detail_url: SCHOOLS_URL + "/" + res.data.school.id 
+                })
+            } else {
+                this.setState({ edit_success: -1 })
+            }
+        })
+    }
+    
+    // render handlers
+    handleSchoolNameChange = (event) => {
+        const school_name = event.target.value
+        let school = this.state.new_school
+        school.name = school_name
+        this.setState({ new_school: school });
     }
 
-    handleSchoolAddressChange = event => {
-        this.setState({ school_address: event.target.value });
+    handleSchoolAddressChange = (input) => {
+        const address = input.target?.value || input.formatted_address  // accept address from onChange and from autocomplete        let school = this.state.new_school
+        let school = this.state.new_school
+        school.location.address = address
+        this.setState({ new_school: school });
     }
 
-    handleAddressValidation = event => {
-        if (this.state.school_address != '') {
-            // console.log(this.state.school_address)
-            Geocode.fromAddress(this.state.school_address).then(
+    handleAddressValidation = () => {
+        const address = this.state.new_school.location.address
+        if (address != '') {
+            Geocode.fromAddress(address).then(
                 (response) => {
-                    console.log(response)
+                    let school = this.state.new_school
+                    school.location.lat = parseFloat(response.results[0].geometry.location.lat)
+                    school.location.long = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
-                        lat : parseFloat(response.results[0].geometry.location.lat),
-                        lng : parseFloat(response.results[0].geometry.location.lng),
-                        valid_address : true,
+                        new_school: school,
+                        valid_address: true
                     })
                 },
                 (error) => {
-                    console.log(error)
+                    // todo error logging for google
                     this.setState({ valid_address: false})
                 }
             )
         }
     }
 
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
 
         if (!this.state.valid_address ) {
@@ -61,29 +92,10 @@ class SchoolsCreate extends Component {
         }
 
         const school = {
-            school: {
-                name: this.state.school_name,
-                location: {
-                    lat: this.state.lat,
-                    long: this.state.lng,
-                    address: this.state.school_address,
-                }               
-            }
+            school: this.state.new_school
         }
 
-        console.log(school)
-        
-        api.post(`schools/create`, school)
-            .then(res => {
-                const success = res.data.success
-                if (success) {
-                    this.setState({ edit_success: 1 })
-                    this.setState({ redirect_detail: true });
-                    this.setState({ detail_url: SCHOOLS_URL + "/" + res.data.school.id })
-                } else {
-                    this.setState({ edit_success: -1 })
-                }
-            })
+        this.createSchool(school)
     }
 
     render() {
@@ -135,21 +147,14 @@ class SchoolsCreate extends Component {
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
                                                     apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={(place) => {
-                                                        this.setState({
-                                                            school_address: place.formatted_address
-                                                        })
-                                                    }}
+                                                    onPlaceSelected={this.handleSchoolAddressChange}
                                                     options={{
                                                         types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    value={this.state.school_address} 
+                                                    value={this.state.new_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    placeholder="Enter school address"
-                                                    onChange={this.handleSchoolAddressChange}></input> */}
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
@@ -157,11 +162,6 @@ class SchoolsCreate extends Component {
                                                         Cancel
                                                     </span>
                                                 </Link>
-                                                {/* <Link to={SCHOOLS_URL} className="btn btn-primary w-auto me-0 justify-content-end" role="button" type="submit">
-                                                    <span className="btn-text">
-                                                        Create
-                                                    </span>
-                                                </Link> */}
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                             </div>
                                         </div>

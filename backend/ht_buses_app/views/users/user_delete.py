@@ -12,6 +12,7 @@ def user_delete(request):
     id = request.query_params["id"]
     try:
         user_object =  User.objects.get(pk=id)
+        user_object.location.delete()
         user_object.delete()
         data["message"] = "user successfully deleted"
         data["success"] = True
