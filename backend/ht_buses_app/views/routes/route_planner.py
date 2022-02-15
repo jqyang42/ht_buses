@@ -25,10 +25,8 @@ def routeplanner(request):
         for route in routes_serializer.data:
             route_id = route["id"]
             name = route["name"]
-            arrival = route["arrival"]
-            departure = route["departure"]
             is_complete = route["is_complete"]
-            routes_arr.append({"id" : route_id, "name" : name, "arrival": arrival, "departure": departure, "is_complete": is_complete})
+            routes_arr.append({"id" : route_id, "name" : name, "is_complete": is_complete})
         data["routes"] = routes_arr
         students = Student.studentsTable.filter(school_id=id)
         student_serializer = StudentSerializer(students, many=True)

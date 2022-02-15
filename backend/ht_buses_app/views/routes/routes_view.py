@@ -31,7 +31,7 @@ def routes(request):
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
         school_obj = {'id' : route["school_id"], 'name': school_name}
-        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count, "arrival": route["arrival"], "departure": route["departure"], "is_complete": route["is_complete"]})
+        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count, "is_complete": route["is_complete"]})
     data["routes"] = routes_filter
     data["success"] = True
     return Response(data)
