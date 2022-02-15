@@ -21,8 +21,8 @@ def school_edit(request):
     try:
         school_object =  School.schoolsTable.get(pk = id)
         school_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["school"]["name"])
-        school_object.arrival = datetime.time(datetime.strptime(reqBody["school"]["arrival"], "%I:%M %p"))
-        school_object.departure = datetime.time(datetime.strptime(reqBody["school"]["departure"], "%I:%M %p"))
+        school_object.arrival = datetime.time(datetime.strptime(reqBody["school"]["arrival"], "%H:%M %p"))
+        school_object.departure = datetime.time(datetime.strptime(reqBody["school"]["departure"], "%H:%M %p"))
         school_object.location_id.address = reqBody["school"]["location"]["address"]
         school_object.location_id.lat = reqBody["school"]["location"]["lat"]
         school_object.location_id.long = reqBody["school"]["location"]["long"]
