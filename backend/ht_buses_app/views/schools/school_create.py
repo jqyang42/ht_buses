@@ -1,12 +1,13 @@
-from ...models import School
-from ...serializers import SchoolSerializer
+from ...models import School, Location
+from ...serializers import LocationSerializer, SchoolSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
+from datetime import datetime
 
 # Schools POST API
 @csrf_exempt
@@ -20,11 +21,14 @@ def school_create(request):
         address = reqBody["school"]["location"]["address"]
         lat = reqBody["school"]["location"]["lat"]
         long = reqBody["school"]["location"]["long"]
-        school = School.schoolsTable.create(name=name, address=address, lat=lat, long=long)
-        school_serializer = SchoolSerializer(school, many=False)
+        arrival = reqBody["school"]["arrival"]
+        departure = reqBody["school"]["departure"]
+        location = Location.locationTables.create(address=address, lat=lat, long=long)
+        school = School.schoolsTable.create(name=name, location_id=location, arrival=datetime.time(datetime.strptime(arrival, "%I:%M %p")), departure=datetime.time(datetime.strptime(departure, "%I:%M %p")))
+        location_serializer = LocationSerializer(location, many=False)
         data["message"] = "school created successfully"
         data["success"] = True
-        data["school"] = school_serializer.data
+        data["school"] = {"id": school.id, "name": name, "arrival": school.arrival, "departure": school.departure, "location": location_serializer.data}
         return Response(data)
     except:
         data["message"] = "school could not be created"

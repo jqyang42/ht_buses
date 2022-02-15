@@ -2,6 +2,9 @@
     "route": {
         "name": "Route 1",
         "school_name": "School 1",
+        "arrival": "09:30 am",
+        "departure": "11:20 am",
+        "is_complete": false,
         "description": "Route 1 description"
     }
 }
