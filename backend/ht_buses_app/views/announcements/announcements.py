@@ -6,27 +6,25 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import json
 from django.core.mail import send_mail
-#from sendgrid.helpers.mail import *
-#from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import *
+from sendgrid import SendGridAPIClient
 from django.conf import settings
 
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def announcement_users(request):
     data={}
     subject, body, include_route_info = email_request_parser(request.data)
-    print(subject)
-    recipients = User.objects.all()
-    return send_mass_announcement(subject, body, recipients, include_route_info)
-    """
+    try:
+        recipients = User.objects.all()
+        return send_mass_announcement(subject, body, recipients, include_route_info)
     except:
         data["message"] = "no users found"
         data["success"] = False
         return Response(data, status = 404) 
 
-    """
 
 @csrf_exempt
 @api_view(["POST"])
@@ -109,17 +107,14 @@ def send_mass_announcement(subject, body, recipients, include_route_info):
 
     message.reply_to = ReplyTo(settings.DEFAULT_NO_REPLY_EMAIL)
     message.template_id = constants.ROUTE_ANNOUNCEMENT_TEMPLATE if include_route_info else constants.GENERAL_ANNOUNCEMENT_TEMPLATE
-    
-    sg = SendGridAPIClient(settings.EMAIL_HOST_PASSWORD)
-    response = sg.send(message)
-    code, body, headers = response.status_code, response.body, response.headers
-    data["message"] = "messages successfully sent"
-    data["success"] = True
-    return Response(data) 
-    """
+    try:
+        sg = SendGridAPIClient(settings.EMAIL_HOST_PASSWORD)
+        response = sg.send(message)
+        code, body, headers = response.status_code, response.body, response.headers
+        data["message"] = "messages successfully sent"
+        data["success"] = True
+        return Response(data) 
     except:
         data["message"] = "messages not successfully sent"
         data["success"] = False
         return Response(data) 
-
-    """
