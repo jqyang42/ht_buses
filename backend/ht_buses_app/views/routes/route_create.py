@@ -11,7 +11,7 @@ from datetime import datetime
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)

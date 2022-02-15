@@ -9,7 +9,7 @@ from ...serializers import LocationSerializer, UserSerializer
 # User GET API: All Users for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def users(request):
     data = {}
     users = User.objects.all()
