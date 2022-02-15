@@ -195,12 +195,12 @@ class SchoolsEdit extends Component {
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>
                                                 <input type="time" id="default-picker" className="form-control pb-2"
-                                                    placeholder="Select arrival time" value={this.state.edited_school.arrival} required></input>
+                                                    placeholder="Select arrival time" defaultValue={this.state.edited_school.arrival} required></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="default-picker-2" className="control-label pb-2">Departure Time</label>
                                                 <input type="time" id="default-picker-2" className="form-control pb-2"
-                                                    placeholder="Select departure time"  value={this.state.edited_school.departure} required></input>
+                                                    placeholder="Select departure time" defaultValue={this.state.edited_school.departure} required></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
