@@ -101,7 +101,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         {row.cells.map(cell => {
                         return (navUrl==="/students/" || "/routes/") ? 
                         <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned" || row.original.route_name === "Out of Range" || row.original.route_name === "Incomplete") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td> : 
-                        <td {...cell.getCellProps()}> {cell.render('Cell')} </td>
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}
                     </tr>
                     )
@@ -114,7 +114,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         {row.cells.map(cell => {
                         return (navUrl==="/students/") ?
                         <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned" || row.original.route_name === "Out of Range" || row.original.route_name === "Incomplete") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td> :
-                        <td {...cell.getCellProps()}> {cell.render('Cell')} </td>
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}
                     </tr>
                     )
