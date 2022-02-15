@@ -204,3 +204,15 @@ td.unassigned {
     margin-top: 2px;
     padding-top: 5px;
 }
+
+#default-picker a {
+    color: #CC9A06;
+}
+
+/* input[type="time"]:focus {
+    background-color: #CC9A06;
+} */
+
+.datepicker-input::-webkit-calendar-picker-indicator {
+    background-color: #CC9A06;
+}

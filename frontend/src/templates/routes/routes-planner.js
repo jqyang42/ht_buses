@@ -28,6 +28,7 @@ class BusRoutesPlanner extends Component {
             center: {},
             markers: [],
             assign_mode: false,
+            assign_mode_warning: false,
             active_route: 0,
             error_status: false,
             error_code: 200
@@ -77,6 +78,7 @@ class BusRoutesPlanner extends Component {
             } 
             )        
     }
+
     handleLocationsGet = () => {
         var self = this
 
@@ -123,13 +125,21 @@ class BusRoutesPlanner extends Component {
     }
 
     handleAssignMode = event => {
+        this.setState({assign_mode_warning: false})
         this.setState(prevState => ({ 
             assign_mode: !prevState.assign_mode
         }));
         // console.log(this.state.assign_mode);
     }
+
+    triggerAssignModeWarning = event => {
+        this.setState({ 
+            assign_mode_warning: true
+        });
+    }
     
     handleRouteSelection = event => {
+        if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
         this.setState({ active_route: parseInt(event.target.value) })
         console.log(this.state.active_route)
         console.log(this.state.route_dropdown)
@@ -268,9 +278,9 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
+                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
                                                     <option selected value={0}>Select a route to assign</option>
-                                                    <option value={0}>No Route</option>
+                                                    {/* <option value={0}>No Route</option> */}
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.id}>{route.name}</option>
                                                     )}
@@ -279,7 +289,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* Assign button */}
                                             <div className="col-auto">
-                                                <button type="button" className="btn btn-primary" onClick={this.handleAssignMode}>Switch to Assign Mode</button>
+                                                <button type="button" className="btn btn-primary" onClick={this.state.active_route === 0 ? this.triggerAssignModeWarning : this.handleAssignMode}>Switch to Assign Mode</button>
                                             </div>
                                         </div>
                                         :
@@ -293,7 +303,7 @@ class BusRoutesPlanner extends Component {
                                             <div className="col justify-content-end align-self-center">
                                                 <select className="form-select float-end me-1" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} disabled>
                                                     <option selected value={0}>No Route</option>
-                                                    <option selected value={0}>No Route</option>
+                                                    {/* <option selected value={0}>No Route</option> */}
                                                     {this.state.route_dropdown.map(route => 
                                                         <option value={route.value} id={route.display}>{route.display}</option>
                                                     )}
@@ -330,6 +340,14 @@ class BusRoutesPlanner extends Component {
                                                 </div>
                                             </div> */}
                                         </div>
+                                        }
+
+                                        {(this.state.assign_mode_warning) ? 
+                                            (<div>
+                                                <div class="alert alert-danger mt-3 mb-2" role="alert">
+                                                    Please select a route before switching to assign mode.
+                                                </div>
+                                            </div>) : ""
                                         }
 
                                         {(this.state.assign_mode) ? 

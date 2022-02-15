@@ -62,7 +62,7 @@ class SchoolsCreate extends Component {
 
     handleAddressValidation = () => {
         const address = this.state.new_school.location.address
-        if (address != '') {
+        if (address !== '') {
             Geocode.fromAddress(address).then(
                 (response) => {
                     let school = this.state.new_school
@@ -153,6 +153,16 @@ class SchoolsCreate extends Component {
                                                     value={this.state.new_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                            </div>
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="default-picker" className="control-label pb-2">Arrival Time</label>
+                                                <input type="time" id="default-picker" className="form-control pb-2"
+                                                    placeholder="Select arrival time" required></input>
+                                            </div>
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="default-picker-2" className="control-label pb-2">Departure Time</label>
+                                                <input type="time" id="default-picker-2" className="form-control pb-2"
+                                                    placeholder="Select departure time" required></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

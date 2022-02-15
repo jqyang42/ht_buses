@@ -37,7 +37,7 @@ export function RoutesTable({ data, showAll }) {
             },
             {
                 Header: 'Status',
-                accessor: 'status',
+                accessor: 'is_complete',
                 disableFilter: true,
                 className: 'unassigned'
             },
