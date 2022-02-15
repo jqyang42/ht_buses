@@ -85,7 +85,7 @@ class SchoolsDetail extends Component {
     handleDeleteSubmit = (event) => {
         event.preventDefault();
 
-        if (this.state.delete_school == this.state.school.name) {
+        if (this.state.delete_school === this.state.school.name) {
             this.deleteSchool()
         } else {
             this.setState({ delete_success: -1 })
@@ -177,6 +177,26 @@ class SchoolsDetail extends Component {
                                         Unable to delete school. Please correct all errors before deleting.
                                     </div>) : ""
                                 }
+                                <div className="row mt-2">
+                                    <div className="col-auto">
+                                        <p className="gray-600">
+                                            Arrival Time
+                                        </p>
+                                        <p className="gray-600">
+                                            Departure Time
+                                        </p>
+                                    </div>
+                                    <div className="col-5 ms-2 me-4">
+                                        <p>
+                                            {/* TODO: connect school arrival time */}
+                                            {this.state.school.arrival}
+                                        </p>
+                                        <p>
+                                            {/* TODO: connect school departure time */}
+                                            {this.state.school.departure}
+                                        </p>
+                                    </div>
+                                </div>
                                 <div className="row mt-4">
                                     <div className="col me-4">
                                         <h7>STUDENTS</h7>

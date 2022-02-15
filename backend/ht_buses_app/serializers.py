@@ -9,7 +9,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ('id', 'name', 'school_id','description', 'arrival', 'departure', 'is_complete')
+        fields = ('id', 'name', 'school_id','description', 'is_complete')
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:

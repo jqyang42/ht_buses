@@ -20,9 +20,7 @@ def route_create(request):
         school = School.schoolsTable.filter(name = reqBody["route"]["school_name"])[0]
         description = reqBody["route"]["description"]
         is_complete = reqBody["route"]["is_complete"]
-        arrival = reqBody["route"]["arrival"]
-        departure = reqBody["route"]["departure"]
-        route = Route.routeTables.create(name=name, school_id = school, description = description, is_complete=is_complete, arrival=datetime.time(datetime.strptime(arrival, "%I:%M %p")), departure=datetime.time(datetime.strptime(departure, "%I:%M %p")))
+        route = Route.routeTables.create(name=name, school_id = school, description = description, is_complete=is_complete)
         route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"
         data["success"] = True

@@ -39,7 +39,7 @@ export function UsersTable({ data, showAll }) {
             },            
             {
                 Header: 'Address',
-                accessor: 'address',
+                accessor: 'location.address',
                 disableFilter: true
             },
         ],
