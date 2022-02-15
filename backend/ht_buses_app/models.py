@@ -20,8 +20,6 @@ class Route(models.Model):
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
     is_complete = models.BooleanField(default=False)
-    arrival = models.TimeField(default=datetime.time(00,00))
-    departure = models.TimeField(default=datetime.time(00,00))
     routeTables = models.Manager()
     class Meta:
         indexes = [

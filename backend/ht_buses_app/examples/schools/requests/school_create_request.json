@@ -1,8 +1,8 @@
 {
     "school": {
         "name": "School 1",
-        "arrival": "09:00 am",
-        "departure": "3:00 pm",
+        "arrival": "09:00",
+        "departure": "15:00",
         "location": {
             "address": "Somewhere in the world",
             "lat": 0.0,
