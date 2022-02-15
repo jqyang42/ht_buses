@@ -1,7 +1,6 @@
 {
     "success": true,
     "route": {
-        "id": 1,
         "school": {
             "id": 1,
             "name": "School 1",
@@ -10,7 +9,9 @@
                 "long": 0.0
             }
         },
-        "description": "Route 1 description"
+        "description": "Route 1 description",
+        "arrival": "11:00:00",
+        "departure": "03:00:00"
     },
     "users": [
         {

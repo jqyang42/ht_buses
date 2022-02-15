@@ -1,9 +1,9 @@
-from ...models import User
+from ...models import User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import UserSerializer
+from ...serializers import LocationSerializer, UserSerializer
 
 
 # User GET API: All Users for Admin
@@ -29,16 +29,9 @@ def users(request):
         email = user["email"]
         is_staff = user["is_staff"]
         is_parent = user["is_parent"]
-        address = user["address"]
-        if user["lat"] == None:
-            lat = 0
-        else:
-            lat = user["lat"]
-        if user["long"] == None:
-            long = 0
-        else:
-            long = user["long"]
-        location_arr = {'address': address, 'lat': lat, 'long': long}
+        location = Location.locationTables.get(pk=user["location"])
+        location_serializer = LocationSerializer(location, many=False)
+        location_arr = location_serializer.data
         users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'location' : location_arr})
     data["users"] = users_arr
     data["success"] = True

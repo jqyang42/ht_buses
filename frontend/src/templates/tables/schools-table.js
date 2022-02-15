@@ -27,7 +27,7 @@ export function SchoolsTable({ data, showAll }) {
             },
             {
                 Header: 'Address',
-                accessor: 'address',
+                accessor: 'location.address',
                 disableFilter: true
             },
             {

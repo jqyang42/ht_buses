@@ -11,11 +11,17 @@
     "routes": [
         {
             "id": 2,
-            "name": "Route 89"
+            "name": "Route 89",
+            "arrival": "10:00 am",
+            "departure": "12:00 pm",
+            "is_complete": true
         },
         {
             "id": 13,
-            "name": "New route lowercase"
+            "name": "New route lowercase",
+            "arrival": "10:00 am",
+            "departure": "12:00 pm",
+            "is_complete": true
         }
     ],
     "parents": [
