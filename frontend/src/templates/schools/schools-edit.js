@@ -188,7 +188,7 @@ class SchoolsEdit extends Component {
                                                         types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    value={this.state.edited_school.location.address} 
+                                                    defaultValue={this.state.edited_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange.address}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
                                             </div>
