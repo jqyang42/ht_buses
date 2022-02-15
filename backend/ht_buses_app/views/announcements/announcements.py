@@ -100,10 +100,11 @@ def send_mass_announcement(subject, body, recipients, include_route_info):
         to_emails=to_emails, is_multiple=True)
     
     for user in recipients:
-        personalization = Personalization()
-        personalization.add_to(Email(user.email))
-        personalization.dynamic_template_data = announcement_substitutions(subject, body, user, include_route_info)
-        message.add_personalization(personalization)
+        if "@example.com" not in user.email:  
+            personalization = Personalization()
+            personalization.add_to(Email(user.email))
+            personalization.dynamic_template_data = announcement_substitutions(subject, body, user, include_route_info)
+            message.add_personalization(personalization)
 
     message.reply_to = ReplyTo(settings.DEFAULT_NO_REPLY_EMAIL)
     message.template_id = constants.ROUTE_ANNOUNCEMENT_TEMPLATE if include_route_info else constants.GENERAL_ANNOUNCEMENT_TEMPLATE
