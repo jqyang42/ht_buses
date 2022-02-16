@@ -24,10 +24,16 @@ export function SchoolStudentsTable({ data, showAll }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
-                // accessor: d => `${d.route_name} ${<span className={"circle"}></span>}`,
-                className: 'unassigned',
                 Cell: ({ cell: { value } }) => (
-                    value === "Unassigned" || value === "Out of Range" ? <>{value}</> : <><span className="circle me-2" />{value}</>
+                    value === "Unassigned" ? <><div className="unassigned">{value}</div></> : <><span className="circle me-2" />{value}</>
+                )
+            },     
+            {
+                Header: 'Bus Stop',
+                accessor: 'in_range',
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
                 )
             },
         ],
