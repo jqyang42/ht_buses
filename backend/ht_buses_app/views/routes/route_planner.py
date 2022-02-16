@@ -9,7 +9,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 # This needs to be rewritten, currently have 3 for loops
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
@@ -26,7 +26,8 @@ def routeplanner(request):
             route_id = route["id"]
             name = route["name"]
             is_complete = route["is_complete"]
-            routes_arr.append({"id" : route_id, "name" : name, "is_complete": is_complete})
+            color_id = route["color_id"]
+            routes_arr.append({"id" : route_id, "name" : name, "is_complete": is_complete, "color_id": color_id})
         data["routes"] = routes_arr
         students = Student.studentsTable.filter(school_id=id)
         student_serializer = StudentSerializer(students, many=True)
@@ -42,9 +43,9 @@ def routeplanner(request):
                 parent_student_arr = []
                 for child in parent_student_serializer.data:
                     if child["route_id"] == None:
-                        parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : 0})
+                        parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : 0, "in_range": child["in_range"]})
                     else:
-                        parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : child["route_id"]})
+                        parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : child["route_id"], "in_range": child["in_range"]})
                 parent_address = {"address": parent.location.address, "lat": parent.location.lat, "long": parent.location.long}
                 address_arr.append({"id" : student["user_id"], "location": parent_address, "students": parent_student_arr})
         data["users"] = address_arr

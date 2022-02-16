@@ -21,7 +21,8 @@ def routes_detail(request):
         students_serializer = StudentSerializer(students, many=True)
         route_address = {"lat": school.location_id.lat, "long": school.location_id.long}
         route_school = {"id" : route_serializer.data["school_id"], "name" : school_serializer.data["name"], "location": route_address}
-        route_arr = {"name": route_serializer.data["name"], "school": route_school, "description": route_serializer.data["description"], "is_complete": route_serializer.data["is_complete"]}
+        # route_arr = {"name": route_serializer.data["name"], "school": route_school, "description": route_serializer.data["description"], "is_complete": route_serializer.data["is_complete"]}
+        route_arr = {"name": route_serializer.data["name"], "school": route_school, "description": route_serializer.data["description"], "is_complete": route_serializer.data["is_complete"], "color_id": route_serializer.data["color_id"]}
         parent_id_arr = []
         address_arr = []
         for student in students_serializer.data:
