@@ -20,7 +20,7 @@ def schools_detail(request):
         route = Route.routeTables.filter(school_id=id)
         route_serializer = RouteSerializer(route, many=True)
         location_serializer = LocationSerializer(school.location_id, many=False)
-        school_arr = {"name": school_serializer.data["name"], "arrival": school_serializer.data["arrival"], "departure": school_serializer.data["departure"], "location": location_serializer.data}
+        school_arr = {"name": school_serializer.data["name"], "arrival": school_serializer.data["arrival"][:-3], "departure": school_serializer.data["departure"][:-3], "location": location_serializer.data}
         data["school"] = school_arr
         student_list = []
         for student in students_serializer.data:
