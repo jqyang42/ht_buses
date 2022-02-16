@@ -21,7 +21,7 @@ class StopMarker extends Component {
 
     state = {
         currentRoute: this.props.routeID,
-        icon: STOP_MARKER_ICONS[this.props.routeID],
+        icon: STOP_MARKER_ICONS[this.props.routeID % 51],
         location: this.props.location,
         name: this.props.name,
         updated: false,
