@@ -21,7 +21,7 @@ def route_create(request):
         description = reqBody["route"]["description"]
         is_complete = reqBody["route"]["is_complete"]
         color_id = reqBody["route"]["color_id"]
-        route = Route.routeTables.create(name=name, school_id = school, description = description, is_complete=is_complete, color_id = color_id)
+        route = Route.routeTables.create(name=name, school_id = school, description = description, is_complete=is_complete, color_id=color_id)
         route_serializer = RouteSerializer(route, many=False)
         data["message"] = "route created successfully"
         data["success"] = True

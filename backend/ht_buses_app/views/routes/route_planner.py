@@ -9,7 +9,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 # This needs to be rewritten, currently have 3 for loops
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
