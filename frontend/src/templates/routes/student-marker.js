@@ -9,7 +9,7 @@ import Geocode from "react-geocode";
 class StudentMarker extends Component {
     state = {
         currentRoute: this.props.routeID,
-        icon: MARKER_ICONS[this.props.routeID % 51],
+        icon: MARKER_ICONS[this.props.routeID % MARKER_ICONS.length],
         updated: false,
         showInfoWindow: false
       };
@@ -30,7 +30,7 @@ class StudentMarker extends Component {
       if (this.props.assign_mode ){
         if (this.state.currentRoute != this.props.active_route) {
           this.setState({
-            icon: MARKER_ICONS[this.props.active_route % 51],
+            icon: MARKER_ICONS[this.props.active_route % MARKER_ICONS.length],
             currentRoute: this.props.active_route
           })
         } else {

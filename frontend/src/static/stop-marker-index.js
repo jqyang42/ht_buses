@@ -1,3 +1,4 @@
+import bus_stops0 from './img/bus-stops/bus_stops-00.png';
 import bus_stops1 from './img/bus-stops/bus_stops-01.png';
 import bus_stops2 from './img/bus-stops/bus_stops-02.png';
 import bus_stops3 from './img/bus-stops/bus_stops-03.png';
@@ -51,6 +52,7 @@ import bus_stops50 from './img/bus-stops/bus_stops-50.png';
 
 
 export const stop_marker_icons = [
+    bus_stops0,
     bus_stops1, 
     bus_stops2, 
     bus_stops3, 
