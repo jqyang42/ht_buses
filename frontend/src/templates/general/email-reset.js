@@ -27,10 +27,9 @@ class EmailReset extends Component {
                 email: this.state.email
             }
         }
-        api.post(`password-reset/valid-email`, data)
+        api.post(`email_exists`, data)
         .then(res => {
-            console.log(res.data.success)
-            this.setState({ email_success: res.data.success ? 1 : -1 })
+            this.setState({ email_success: res.data.user_email_exists ? 1 : -1 })
          })
     }
 

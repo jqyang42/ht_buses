@@ -56,10 +56,10 @@ class UsersCreate extends Component {
 
     // api calls
     validateNewEmail = async (request) => {
-        const res = await api.post(`users/create/validate-email`, request)
-        const success = res.data.success
-        this.setState({ valid_email: success })
-        return success
+        const res = await api.post(`email_exists`, request)
+        const valid_email = !res.data.user_email_exists
+        this.setState({ valid_email: valid_email })
+        return valid_email
     }
 
     createUser = (request) => {
