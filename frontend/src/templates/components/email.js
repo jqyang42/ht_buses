@@ -33,7 +33,8 @@ class Email extends Component {
         axios.get(API_DOMAIN + this.props.source.toLowerCase() + `/detail?id=` + this.props.params.id, config)
         .then(res => {
             const details = res.data;
-            this.setState({ name: details.name });
+            const name = this.props.source === "Routes" ? details.route.name : (this.props.source === "Schools" ? details.school.name : "")
+            this.setState({ name: name });
             this.setState({ edit_success: 0 })
         }).catch (function(error) {
             // console.log(error.response)
@@ -53,7 +54,6 @@ class Email extends Component {
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        console.log(this.props.source)
 
         var root = (this.props.source === "Users") ? "Manage Users" : (this.props.source === "Routes" ? "Bus Routes" : this.props.source)
         var name = (this.props.source === "Users") ? "Send Announcement" : this.state.name
@@ -64,7 +64,7 @@ class Email extends Component {
                     <SidebarMenu activeTab={this.props.source.toLowerCase()} />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root={root} isRoot={false} isSecond={this.props.source === "Users"} id={!this.props.source ? "" : this.props.params.id} name={name} page="Send Announcement" />
+                        <HeaderMenu root={root} isRoot={false} isSecond={this.props.source === "Users" ? true : false} id={this.props.source === "Routes" ? this.props.params.id : ""} name={name} page="Send Announcement" />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
@@ -82,7 +82,19 @@ class Email extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            
+                                            <div  className="form-group required pb-3 w-75">
+                                                <div>
+                                                    <label for="announcementType" className="control-label pb-2">Announcement Type</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="announcementType" id="general" value="general"></input>
+                                                    <label className="form-check-label" for="general">General</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="announcementType" id="route" value="route" ></input>
+                                                    <label className="form-check-label" for="route">Route</label>
+                                                </div>
+                                            </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="subject" className="control-label pb-2">Subject</label>
                                                 <input type="text" className="form-control pb-2" id="subject" 

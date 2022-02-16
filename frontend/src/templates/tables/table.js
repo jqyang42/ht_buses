@@ -54,6 +54,8 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         usePagination,
     )
 
+    console.log(data)
+
     return (
         <>
             { searchOn ?

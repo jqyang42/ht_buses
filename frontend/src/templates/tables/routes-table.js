@@ -15,12 +15,6 @@ export function RoutesTable({ data, showAll }) {
 
     const columns = React.useMemo(
         () => [
-            // {
-            //     Header: '#',
-            //     accessor: 'id', // accessor is the "key" in the data
-            //     disableSortBy: true,
-            //     disableFilter: true
-            // },
             {
                 Header: 'Name',
                 accessor: 'name',
@@ -37,9 +31,12 @@ export function RoutesTable({ data, showAll }) {
             },
             {
                 Header: 'Status',
-                accessor: 'is_complete',
+                accessor:  'is_complete',
+                // accessor: 'is_complete',
                 disableFilter: true,
-                className: 'unassigned'
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>
+                )
             },
         ],
         []
