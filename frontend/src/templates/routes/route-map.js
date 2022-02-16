@@ -40,23 +40,29 @@ class RouteMap extends Component {
     showModal: false
   }
 
-  students = [];
+  markersChanged = {
+    "students" : [],
+    "stops" : [],
+  };
 
   // onChange
-  handleRouteIDChange = (routeID, studentIDs) => {
+  handleRouteChanges = (routeID, studentIDs) => {
     for (let i = 0; i < studentIDs.length; i++) {
-      this.students.push({
+      this.markersChanged["students"].push({
         "id": studentIDs[i],
         "route_id": parseInt(routeID)
       })
     }
-    if(this.props.onChange) {
-      this.props.onChange(this.students);
+    this.markersChanged["stops"] = this.state.stops
+    if (this.props.onChange) {
+      this.props.onChange(this.markersChanged);
     }
   }
 
-  handleStopCreate = (stopName, location) => {
-
+  handleStopCreate = () => {
+    if (this.props.onCreate) {
+      this.props.onCreate(this.state.stops)
+    }
   }
 
   // Handles onClick
@@ -66,6 +72,7 @@ class RouteMap extends Component {
     if (this.props.assign_mode ) {
       this.setState({
         stops: [...this.state.stops, {
+          name: "placeholder",
           position: coords,
           routeID: this.props.active_route,
         }]
@@ -112,7 +119,7 @@ class RouteMap extends Component {
                 id={value.id}
                 studentIDs={value.studentIDs}
                 studentNames={value.studentNames}
-                onChange={this.handleRouteIDChange} 
+                onChange={this.handleRouteChanges} 
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"/>
             })}
