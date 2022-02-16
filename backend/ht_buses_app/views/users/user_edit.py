@@ -1,4 +1,4 @@
-from ...serializers import UserSerializer
+from ...serializers import LocationSerializer
 from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -20,16 +20,17 @@ def user_edit(request):
         user_object.email = reqBody["user"]["email"]
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])
-        user_object.address = reqBody["user"]["location"]["address"]
-        user_object.lat = reqBody["user"]["location"]["lat"]
-        user_object.long = reqBody["user"]["location"]["long"]
+        user_object.location.address = reqBody["user"]["location"]["address"]
+        user_object.location.lat = reqBody["user"]["location"]["lat"]
+        user_object.location.long = reqBody["user"]["location"]["long"]
+        user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
         user_object.is_staff = reqBody["user"]["is_staff"]
         user_object.save()
-        user_serializer = UserSerializer(user_object, many=False)
         data["message"] = "user information was successfully updated"
         data["success"] = True
-        data["user"] = user_serializer.data
+        location_serializer = LocationSerializer(user_object.location, many=False)
+        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'is_staff' : reqBody["user"]["is_staff"], 'is_parent' : reqBody["user"]["is_parent"], 'location' : location_serializer.data}
         return Response(data)
     except:
         data["message"] = "user information could not be updated"

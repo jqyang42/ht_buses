@@ -1,9 +1,9 @@
-from ...models import School
+from ...models import School, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import SchoolSerializer
+from ...serializers import LocationSerializer, SchoolSerializer
 
 @csrf_exempt
 @api_view(['GET'])
@@ -18,6 +18,15 @@ def schools(request):
     # else:
     #     schools = School.schoolsTable.all()[(1+10*(int(page_number)-1)):(10*int(page_number))]
     school_serializer = SchoolSerializer(schools, many=True)
-    data["schools"] = school_serializer.data
+    schools_arr = []
+    for school in school_serializer.data:
+        id = school["id"]
+        name = school["name"]
+        arrival = school["arrival"]
+        departure = school["departure"]
+        location = Location.locationTables.get(pk=school["location_id"])
+        location_serializer = LocationSerializer(location, many=False)
+        schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
+    data["schools"] = schools_arr
     data["success"] = True
     return Response(data)

@@ -21,7 +21,9 @@ class SchoolsEdit extends Component {
                 address: '',
                 lat: 0.0,
                 long: 0.0
-            }
+            },
+            arrival: '',
+            departure: '',
         },
         school: {},
         redirect: false,
@@ -47,7 +49,9 @@ class SchoolsEdit extends Component {
                     address: school.location.address,
                     lat: 0.0,
                     long: 0.0
-                }
+                },
+                arrival: school.arrival,
+                departure: school.departure
             }
             this.setState({ 
                 school: school,
@@ -95,7 +99,7 @@ class SchoolsEdit extends Component {
 
     handleAddressValidation = () => {
         const address = this.state.edited_school.location.address
-        if (address != '') {
+        if (address !== '') {
             Geocode.fromAddress(address).then(
                 (response) => {
                     let school = this.state.edited_school
@@ -112,6 +116,20 @@ class SchoolsEdit extends Component {
                 }
             )
         }
+    }
+
+    handleArrivalChange = (event) => {
+        const arrival = event.target.value
+        let school = this.state.edited_school
+        school.arrival = arrival
+        this.setState({ edited_school: school })
+    }
+
+    handleDepartureChange = (event) => {
+        const departure = event.target.value
+        let school = this.state.edited_school
+        school.departure = departure
+        this.setState({ edited_school: school })
     }
 
     handleSubmit = (event) => {
@@ -184,9 +202,21 @@ class SchoolsEdit extends Component {
                                                         types: ['address']
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    value={this.state.edited_school.location.address} 
+                                                    defaultValue={this.state.edited_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange.address}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                            </div>
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="default-picker" className="control-label pb-2">Arrival Time</label>
+                                                <input type="time" id="default-picker" className="form-control pb-2"
+                                                    placeholder="Select arrival time" defaultValue={this.state.edited_school.arrival} required
+                                                    onChange={this.handleArrivalChange}></input>
+                                            </div>
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="default-picker-2" className="control-label pb-2">Departure Time</label>
+                                                <input type="time" id="default-picker-2" className="form-control pb-2"
+                                                    placeholder="Select departure time" defaultValue={this.state.edited_school.departure} required
+                                                    onChange={this.handleDepartureChange}></input>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

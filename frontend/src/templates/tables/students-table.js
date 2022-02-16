@@ -43,7 +43,10 @@ export function StudentsTable( {data, showAll} ) {
                 Header: 'Route',
                 accessor: 'route_name',
                 disableFilter: true,
-                className: 'unassigned'
+                className: 'unassigned',
+                Cell: ({ cell: { value } }) => (
+                    value === "Unassigned" || value === "Out of Range" ? <>{value}</> : <><span className="circle me-2" />{value}</>
+                )
             },            
             {
                 Header: 'Parent Name',

@@ -2,6 +2,7 @@
     "route": {
         "name": "Route 1",
         "school_name": "School 1",
+        "is_complete": false,
         "description": "Route 1 description"
     }
 }

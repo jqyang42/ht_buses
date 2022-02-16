@@ -41,6 +41,7 @@ class RouteMap extends Component {
     center: {},
     markers: [],
     stops: [],
+    showModal: false
   }
 
   students = [];
@@ -70,6 +71,9 @@ class RouteMap extends Component {
         }]
       })
     }
+    this.setState({ showModal: true })
+    console.log(this.state.showModal)
+    // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
   render() {
@@ -108,7 +112,9 @@ class RouteMap extends Component {
                 id={value.id}
                 studentIDs={value.studentIDs}
                 studentNames={value.studentNames}
-                onChange={this.handleRouteIDChange} />
+                onChange={this.handleRouteIDChange} 
+                data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop"/>
             })}
             {this.state.stops?.map((value, index) => {
               return <StopMarker 
@@ -121,6 +127,34 @@ class RouteMap extends Component {
             })}
           </GoogleMap>
         </LoadScript>
+
+        {/* Modal for Add Stop form */}
+        {this.state.showModal ?
+          <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="staticBackdropLabel">Add Stop</h5>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.resetAddRouteSuccess}></button>
+                </div>
+                <form id="add-stop-form" onSubmit={this.handleRouteCreateSubmit}>
+                    <div className="modal-body">
+                        <div className="form-group pb-3 required">
+                            <label for="stop-name" className="control-label pb-2">Name</label>
+                            <input type="name" className="form-control" id="stop-name" required defaultValue=""
+                            placeholder="Enter stop name" onChange={this.handleStopNameChange}></input>
+                        </div> 
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={this.resetAddStopSuccess}>Cancel</button>
+                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div> : ""
+        }
+        
       </div>
     )
   }

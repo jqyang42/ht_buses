@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Route, School, Student, User
+from .models import Location, Route, School, Student, User
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,14 +9,19 @@ class StudentSerializer(serializers.ModelSerializer):
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ('id', 'name', 'school_id','description')
+        fields = ('id', 'name', 'school_id','description', 'is_complete')
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fields = ('id', 'name', 'address', 'lat', 'long')
+        fields = ('id', 'name', 'location_id', 'arrival', 'departure')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'is_staff', 'is_parent', 'address', 'lat', 'long')
+        fields = ('id', 'first_name', 'last_name', 'email', 'is_staff', 'is_parent', 'location')
+
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ('id', 'address', 'lat', 'long')

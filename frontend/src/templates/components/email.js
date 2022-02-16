@@ -22,15 +22,21 @@ class Email extends Component {
     handleSubjectChange = (input) => {
         const subject = input.target?.value 
         this.setState({ subject: subject});
+        this.setState({ message_sent: 0 })
     }
 
     handleBodyChange = (input) => {
         const body = input.target?.value 
         this.setState({ body: body});
+        this.setState({ message_sent: 0 })
     }
 
     handleSubmit = event => {
         event.preventDefault();
+        if (this.state.body === "" || this.state.subject === "") {
+            this.setState({ message_sent: -1 })
+            return
+        }
         var self = this
         const data = {
             email: {
@@ -40,11 +46,15 @@ class Email extends Component {
             include_route_info: false
         }
         const id_param_string = this.props.source.toLowerCase() === 'users' ? '' : (`?id=` + this.props.params.id)
-        console.log(api)
+
         api.post(API_DOMAIN + 'announcement/' + this.props.source.toLowerCase() + id_param_string, data)
         .then(res => {
-            this.setState({ message_sent: res.data.success ? 1 : -1 })
-            
+            self.setState({ message_sent: res.data.success ? 1 : -1 })
+            self.bodyField.value = ''
+            self.subjectField.value = ''
+            self.setState({ subject: ''})
+            self.setState({ body: ''})
+    
         }).catch (function(error) {
             if (error.response.status !== 200) {
                 self.setState({ error_status: true });
@@ -83,9 +93,14 @@ class Email extends Component {
                                     </div>
                                 </div>
                                 <div className="w-50 pe-2 me-2">
-                                    {(this.state.edit_success === -1) ? 
+                                    {(this.state.message_sent === -1) ? 
                                         (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
                                             Unable to send announcement. Please correct all errors before sending.
+                                        </div>) : ""
+                                    }
+                                    {(this.state.message_sent === 1) ? 
+                                        (<div class="alert alert-success mt-2 mb-2 w-75" role="alert">
+                                            Your message was sent.
                                         </div>) : ""
                                     }
                                 </div>
@@ -95,12 +110,12 @@ class Email extends Component {
                                             
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="subject" className="control-label pb-2">Subject</label>
-                                                <input type="text" className="form-control pb-2" onChange={this.handleSubjectChange} id="subject" 
+                                                <input type="text" className="form-control pb-2"   ref={el => this.subjectField = el}  onChange={this.handleSubjectChange} id="subject" 
                                                 placeholder="Add a subject" required></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="email-body" className="control-label pb-2">Message</label>
-                                                <textarea type="text" className="form-control textarea-autosize pb-2" onChange={this.handleBodyChange} id="email-body"></textarea>
+                                                <textarea type="text" className="form-control textarea-autosize pb-2"  ref={el => this.bodyField = el}  onChange={this.handleBodyChange} id="email-body"></textarea>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={"/" + this.props.source + "/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

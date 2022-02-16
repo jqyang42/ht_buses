@@ -63,6 +63,7 @@ class UsersCreate extends Component {
     }
 
     createUser = (request) => {
+        console.log(request)
         api.post(`users/create`, request)
         .then(res => {
             const success = res.data.success
