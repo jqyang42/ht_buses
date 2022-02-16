@@ -20,6 +20,7 @@ class Route(models.Model):
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
     description = models.CharField(max_length=500)
     is_complete = models.BooleanField(default=False)
+    color_id = models.IntegerField(default=0)
     routeTables = models.Manager()
     class Meta:
         indexes = [
@@ -33,6 +34,7 @@ class Student(models.Model):
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=None, on_delete=models.SET(None), blank=True, null=True)
     user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE) 
+    in_range = models.BooleanField(default=False)
     studentsTable = models.Manager()
     class Meta:
         indexes = [
