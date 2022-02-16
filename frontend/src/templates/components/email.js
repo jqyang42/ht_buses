@@ -55,7 +55,7 @@ class Email extends Component {
             this.setState({ subject: ''})
             this.setState({ body: ''})
     
-        }).catch (function(error) {
+        }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ error_status: true });
                 this.setState({ error_code: error.response.status });
