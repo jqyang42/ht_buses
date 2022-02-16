@@ -66,11 +66,8 @@ class Email extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.source.toLowerCase() + "/detail?id=" + this.props.params.id)
         api.get(`${this.props.source.toLowerCase()}/detail?id=${this.props.params.id}`).then(res => {
-            console.log(res)
             const details = res.data;
-            console.log(details)
             const name = this.props.source === "Routes" ? details.route.name : (this.props.source === "Schools" ? details.school.name : "")
             this.setState({ name: name })
         })
