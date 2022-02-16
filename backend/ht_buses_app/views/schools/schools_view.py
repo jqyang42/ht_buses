@@ -26,7 +26,7 @@ def schools(request):
         departure = school["departure"]
         location = Location.locationTables.get(pk=school["location_id"])
         location_serializer = LocationSerializer(location, many=False)
-        schools_arr.append({"id": id, "name": name, "arrival": arrival, "departure": departure, "location": location_serializer.data})
+        schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
     data["schools"] = schools_arr
     data["success"] = True
     return Response(data)
