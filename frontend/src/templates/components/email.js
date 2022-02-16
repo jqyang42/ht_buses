@@ -92,7 +92,7 @@ class Email extends Component {
                     <SidebarMenu activeTab={this.props.source.toLowerCase()} />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root={root} isRoot={false} isSecond={this.props.source === "Users" ? true : false} id={this.props.source === "Routes" ? this.props.params.id : ""} name={name} page="Send Announcement" />
+                        <HeaderMenu root={root} isRoot={false} isSecond={this.props.source === "Users"} id={this.props.source !== "Users" ? this.props.params.id : ""} name={name} page="Send Announcement" />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
