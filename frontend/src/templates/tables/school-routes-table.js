@@ -28,6 +28,17 @@ export function SchoolRoutesTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={false} showAll={showAll} navUrl={"/routes/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={false}
+            showAll={showAll}
+            navUrl={"/routes/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

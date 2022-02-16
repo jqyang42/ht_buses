@@ -34,6 +34,17 @@ export function UserStudentsTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={false} showAll={showAll} navUrl={"/students/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={false}
+            showAll={showAll}
+            navUrl={"/students/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

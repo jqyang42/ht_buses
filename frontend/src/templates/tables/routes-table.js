@@ -43,6 +43,19 @@ export function RoutesTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by name..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/routes/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by name..."
+            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/routes/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }
