@@ -20,8 +20,11 @@ export function SchoolRoutesTable({ data, showAll }) {
             },
             {
                 Header: 'Status',
-                accessor: 'status',
-                className: 'unassigned'
+                accessor: 'is_complete',
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>
+                )
             },
         ],
         []

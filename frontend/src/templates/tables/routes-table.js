@@ -32,7 +32,6 @@ export function RoutesTable({ data, showAll }) {
             {
                 Header: 'Status',
                 accessor:  'is_complete',
-                // accessor: 'is_complete',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>

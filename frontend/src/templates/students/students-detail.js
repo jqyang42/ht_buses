@@ -32,6 +32,7 @@ class StudentsDetail extends Component {
         api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
             const data = res.data
+            console.log(data)
             this.setState({ 
                 student: data.student, 
                 route: data.route, 
@@ -138,12 +139,15 @@ class StudentsDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-1">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             School
                                         </p>
                                         <p className="gray-600">
                                             Route
+                                        </p>
+                                        <p className="gray-600">
+                                            Bus Stops
                                         </p>
                                     </div>
                                     <div className="col-5 me-6">
@@ -153,14 +157,21 @@ class StudentsDetail extends Component {
                                             </p>
                                         </a>
                                         {(this.state.route.name === "Unassigned") ?
-                                            <p>
-                                                {this.state.route.name}
-                                            </p> :
+                                            <p>{this.state.route.name}</p> :
                                             <a href={"/routes/" + this.state.route.id}>
                                                 <p>
                                                     {this.state.route.name}
                                                 </p>
                                             </a>
+                                        }
+                                        {
+                                            (this.state.student.in_range ?
+                                                <p>
+                                                    In Range
+                                                </p> :
+                                                <p>
+                                                   Out of Range
+                                                </p>)
                                         }
                                     </div>
                                 </div>

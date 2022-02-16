@@ -22,7 +22,7 @@ export function UserStudentsTable({ data, showAll }) {
                 )
             },     
             {
-                Header: 'Bus Stop',
+                Header: 'Bus Stops',
                 accessor: 'in_range',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
