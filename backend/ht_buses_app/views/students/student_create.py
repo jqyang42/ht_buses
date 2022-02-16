@@ -19,6 +19,7 @@ def create_student(student_info, id=None):
     try:
         route_id = Route.routeTables.get(pk = student_info['route_id'])
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id=route_id)
+        in_range = student_info["in_range"]
     except:
         route_id = None
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id = route_id)

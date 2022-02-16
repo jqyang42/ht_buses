@@ -32,6 +32,7 @@ def student_edit(request):
         og_student_object.school_id = school_id
         og_student_object.student_school_id = student_school_id
         og_student_object.user_id = user_id
+        og_student_object.in_range = reqBody["student"]["in_range"]
     except:
         data["message"] = "invalid options were chosen. update was unsuccessful"
         data["success"] = False

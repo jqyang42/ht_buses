@@ -8,7 +8,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def students(request):
     data = {}
     # COMMENTED OUT CODE FOR PAGINATION
@@ -34,6 +34,7 @@ def students(request):
         school = School.schoolsTable.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
+        in_range = student["in_range"]
         if student["route_id"] == None:
             route = 0
             route_name = "Unassigned"
@@ -41,7 +42,7 @@ def students(request):
             route = Route.routeTables.get(pk=student["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_name = route_serializer.data["name"]
-        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
+        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'in_range': in_range, 'parent' : parent_name})
     data["students"] = student_list
     data["success"] = True
     return Response(data)
