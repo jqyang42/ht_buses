@@ -1,10 +1,24 @@
 import React, { Component } from 'react'
-import { Data, GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { Data, GoogleMap, LoadScript, Marker, InfoWindow, Circle } from '@react-google-maps/api';
 import { Link , Navigate} from "react-router-dom";
 import { STOP_MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 
+const options = {
+  fillColor: "#FFC107",
+  strokeColor: "#FFC107",
+  strokeOpacity: 1,
+  strokeWeight: 1.5,
+  fillOpacity: 0.35,
+  clickable: false,
+  draggable: false,
+  editable: false,
+  visible: true,
+  zIndex: 1
+}
+
 class StopMarker extends Component {
+
     state = {
         currentRoute: this.props.routeID,
         icon: STOP_MARKER_ICONS[this.props.routeID],
@@ -32,6 +46,7 @@ class StopMarker extends Component {
     }
     const { showInfoWindow } = this.state;
     return (
+      <>
       <Marker 
       position={this.state.location} 
       className={this.state.currentRoute} 
@@ -46,6 +61,11 @@ class StopMarker extends Component {
           </InfoWindow>
         )}
       </Marker>
+      
+      <Circle
+      center={this.state.location}
+      radius={482.8032}
+      options={options}/></>
     )
   }
 }

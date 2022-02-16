@@ -1,4 +1,5 @@
 import React from "react";
+import { colors } from "../../static/colors";
 import { Table } from "./table";
     
 export function SchoolStudentsTable({ data, showAll }) {
@@ -23,7 +24,11 @@ export function SchoolStudentsTable({ data, showAll }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
-                className: 'unassigned'
+                // accessor: d => `${d.route_name} ${<span className={"circle"}></span>}`,
+                className: 'unassigned',
+                Cell: ({ cell: { value } }) => (
+                    value === "Unassigned" || value === "Out of Range" ? <>{value}</> : <><span className="circle me-2" />{value}</>
+                )
             },
         ],
         []

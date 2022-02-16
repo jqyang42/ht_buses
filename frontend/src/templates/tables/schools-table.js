@@ -32,12 +32,12 @@ export function SchoolsTable({ data, showAll }) {
             },
             {
                 Header: 'Bus Arrival Time',
-                accessor: 'arrival_time',
+                accessor: 'arrival',
                 disableFilter: true
             },
             {
                 Header: 'Bus Departure Time',
-                accessor: 'departure_time',
+                accessor: 'departure',
                 disableFilter: true
             },
         ],

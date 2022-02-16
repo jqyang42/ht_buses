@@ -30,6 +30,7 @@ class BusRoutesPlanner extends Component {
             assign_mode: false,
             assign_mode_warning: false,
             active_route: 0,
+            add_route_success: false,
             error_status: false,
             error_code: 200
         }
@@ -149,6 +150,11 @@ class BusRoutesPlanner extends Component {
         this.setState({ create_route_description: event.target.value });
     }
 
+    resetAddRouteSuccess = event => {
+        this.setState({ add_route_success: false })
+        this.clearAddRouteForm()
+    }
+
     handleRouteCreateSubmit = event => {
         event.preventDefault();
 
@@ -165,14 +171,19 @@ class BusRoutesPlanner extends Component {
             .then(res => {
                 const new_route = res.data.route
                 // // console.log(new_route)
+                this.setState({ add_route_success: true })
                 this.setState({ route_dropdown: [...this.state.routes, {
                     id: new_route.id,
                     name: new_route.name
                 }]})
                 this.handleLocationsGet()
             })
+        this.clearAddRouteForm()
     }
 
+    clearAddRouteForm = (event) => {
+        document.getElementById("add-route-form").reset();
+    }
 
     
     students = {"students":[]};
@@ -237,29 +248,22 @@ class BusRoutesPlanner extends Component {
                                                         <div className="modal-content">
                                                             <div className="modal-header">
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Add Route</h5>
-                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.resetAddRouteSuccess}></button>
                                                             </div>
-                                                            <form onSubmit={this.handleRouteCreateSubmit}>
+                                                            <form id="add-route-form" onSubmit={this.handleRouteCreateSubmit}>
                                                                 <div className="modal-body">
                                                                     <div className="form-group pb-3 required">
                                                                         <label for="route-name" className="control-label pb-2">Name</label>
-                                                                        <input type="name" className="form-control" id="route-name" required
+                                                                        <input type="name" className="form-control" id="route-name" required defaultValue=""
                                                                         placeholder="Enter route name" onChange={this.handleRouteNameChange}></input>
-                                                                    </div>
-                                                                    <div className="form-group pb-3 required">
-                                                                        <label for="route-school" className="control-label pb-2">School</label>
-                                                                        <select className="form-select" id="route-school" placeholder="Select a School" aria-label="Select a School" disabled>
-                                                                        <option value="" disabled selected>Select a School</option>
-                                                                            <option selected value="1">{this.state.school.name}</option>
-                                                                        </select>
                                                                     </div>
                                                                     <div className="form-group">
                                                                         <label for="route-description" className="control-label pb-2">Description</label>
-                                                                        <textarea type="description" className="form-control textarea-autosize pb-2" id="route-description" placeholder="Enter route description" onChange={this.handleRouteDescriptionChange}></textarea>
+                                                                        <textarea type="description" className="form-control textarea-autosize pb-2" id="route-description"  defaultValue="" placeholder="Enter route description" onChange={this.handleRouteDescriptionChange}></textarea>
                                                                     </div>   
                                                                 </div>
                                                                 <div className="modal-footer">
-                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={this.resetAddRouteSuccess}>Cancel</button>
                                                                     <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
                                                                 </div>
                                                             </form>
@@ -332,6 +336,14 @@ class BusRoutesPlanner extends Component {
                                                 </div>
                                             </div> */}
                                         </div>
+                                        }
+
+                                        {(this.state.add_route_success) ? 
+                                            (<div>
+                                                <div class="alert alert-success mt-3 mb-2" role="alert">
+                                                    Route successfully added to {this.state.school.name}
+                                                </div>
+                                            </div>) : ""
                                         }
 
                                         {(this.state.assign_mode_warning) ? 

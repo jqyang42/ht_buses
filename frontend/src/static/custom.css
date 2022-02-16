@@ -214,5 +214,16 @@ td.unassigned {
 } */
 
 .datepicker-input::-webkit-calendar-picker-indicator {
-    background-color: #CC9A06;
+    background-color: #FFC107;
+}
+
+.circle {
+    width: 9px;
+    height: 9px;
+    font-size: 12px;
+    line-height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color:#FFC107;
+    margin-bottom: 1px;
 }

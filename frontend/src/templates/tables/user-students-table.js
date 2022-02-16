@@ -17,7 +17,10 @@ export function UserStudentsTable({ data, showAll }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
-                className: 'unassigned'
+                className: 'unassigned',
+                Cell: ({ cell: { value } }) => (
+                    value === "Unassigned" || value === "Out of Range" ? <>{value}</> : <><span className="circle me-2" />{value}</>
+                )
             },
         ],
         []

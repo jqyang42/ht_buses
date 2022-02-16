@@ -39,6 +39,8 @@ class UsersDetail extends Component {
     // initialize page
     componentDidMount() {
         this.getUserDetails()
+        console.log(this.props.params.id)
+        console.log(sessionStorage.getItem("user_id"))
         
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
@@ -269,11 +271,14 @@ class UsersDetail extends Component {
                                                     Edit
                                                 </span>
                                             </Link>
-
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                <i className="bi bi-trash me-2"></i>
-                                                Delete
-                                            </button>
+                                            
+                                            {
+                                                sessionStorage.getItem("user_id") === this.props.params.id ? "" :
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                    <i className="bi bi-trash me-2"></i>
+                                                    Delete
+                                                </button>
+                                            }
 
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
