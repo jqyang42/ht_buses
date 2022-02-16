@@ -3,47 +3,70 @@ import { Navigate } from "react-router";
 import { Link, useParams } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
+import api from "../components/api";
 import axios from "axios";
 import { API_DOMAIN } from "../../constants";
-
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 
 class Email extends Component {
     state = {
         name: '',
-        edit_success: 0,
+        subject: '',
+        body: '',
         error_status: false,
+        message_sent: 0,
         error_code: 200
+    }
+
+    handleSubjectChange = (input) => {
+        const subject = input.target?.value 
+        this.setState({ subject: subject});
+        this.setState({ message_sent: 0 })
+    }
+
+    handleBodyChange = (input) => {
+        const body = input.target?.value 
+        this.setState({ body: body});
+        this.setState({ message_sent: 0 })
     }
 
     handleSubmit = event => {
         event.preventDefault();
-    }
-
-    componentDidMount() {
-        const config = {
-            headers: {
-              Authorization: `Token ${sessionStorage.getItem('token')}`
-            }
+        if (this.state.body === "" || this.state.subject === "") {
+            this.setState({ message_sent: -1 })
+            return
         }
-
         var self = this
+        const data = {
+            email: {
+                subject: this.state.subject,
+                body: this.state.body
+            },
+            include_route_info: false
+        }
+        const id_param_string = this.props.source.toLowerCase() === 'users' ? '' : (`?id=` + this.props.params.id)
 
-        axios.get(API_DOMAIN + this.props.source.toLowerCase() + `/detail?id=` + this.props.params.id, config)
+        api.post(API_DOMAIN + 'announcement/' + this.props.source.toLowerCase() + id_param_string, data)
         .then(res => {
-            const details = res.data;
-            this.setState({ name: details.name });
-            this.setState({ edit_success: 0 })
+            self.setState({ message_sent: res.data.success ? 1 : -1 })
+            self.bodyField.value = ''
+            self.subjectField.value = ''
+            self.setState({ subject: ''})
+            self.setState({ body: ''})
+    
         }).catch (function(error) {
-            // console.log(error.response)
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
+                self.setState({ message_sent: -1 })
             }
         } 
         )
+    }
+
+    componentDidMount() {
+
     }
     
     render() {
@@ -53,8 +76,6 @@ class Email extends Component {
         else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        console.log(this.props.source)
-
         var root = (this.props.source === "Users") ? "Manage Users" : (this.props.source === "Routes" ? "Bus Routes" : this.props.source)
         var name = (this.props.source === "Users") ? "Send Announcement" : this.state.name
 
@@ -73,9 +94,14 @@ class Email extends Component {
                                     </div>
                                 </div>
                                 <div className="w-50 pe-2 me-2">
-                                    {(this.state.edit_success === -1) ? 
+                                    {(this.state.message_sent === -1) ? 
                                         (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
                                             Unable to send announcement. Please correct all errors before sending.
+                                        </div>) : ""
+                                    }
+                                    {(this.state.message_sent === 1) ? 
+                                        (<div class="alert alert-success mt-2 mb-2 w-75" role="alert">
+                                            Your message was sent.
                                         </div>) : ""
                                     }
                                 </div>
@@ -85,12 +111,12 @@ class Email extends Component {
                                             
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="subject" className="control-label pb-2">Subject</label>
-                                                <input type="text" className="form-control pb-2" id="subject" 
+                                                <input type="text" className="form-control pb-2"   ref={el => this.subjectField = el}  onChange={this.handleSubjectChange} id="subject" 
                                                 placeholder="Add a subject" required></input>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="email-body" className="control-label pb-2">Message</label>
-                                                <textarea type="text" className="form-control textarea-autosize pb-2" id="email-body"></textarea>
+                                                <textarea type="text" className="form-control textarea-autosize pb-2"  ref={el => this.bodyField = el}  onChange={this.handleBodyChange} id="email-body"></textarea>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={"/" + this.props.source + "/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

@@ -84,7 +84,7 @@ class App extends Component {
           <Route path={SCHOOLS_CREATE_URL} element={<SchoolsCreate />} />
           <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail  route={this.props.route} />} />
           <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
-          <Route path={SCHOOLS_EMAIL_URL} element={<Email source="Schools" />} />
+          <Route path={SCHOOLS_EMAIL_URL} element={<Email source="School" />} />
 
           <Route path={USERS_URL} element={<Users />} />
           <Route path={USERS_CREATE_URL} element={<UsersCreate />} />
@@ -96,7 +96,7 @@ class App extends Component {
           <Route path={ROUTES_DETAIL_URL} element={<BusRoutesDetail />} />
           <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
           <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
-          <Route path={ROUTES_EMAIL_URL} element={<Email source="Routes" />} />
+          <Route path={ROUTES_EMAIL_URL} element={<Email source="Route" />} />
 
           <Route path={ACCOUNT_URL} element={<Account />} />
           <Route path={EMAIL_RESET_URL} element={<EmailReset />} />
