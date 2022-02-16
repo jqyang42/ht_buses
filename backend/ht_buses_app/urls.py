@@ -41,7 +41,7 @@ urlpatterns = [
     path('api/dashboard/students/detail', parent_student_detail.parent_student_detail, name = "parent_student_detail"),
     path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit'),
     path('api/announcement/users', announcements.announcement_users, name='announcement_users'),
-    path('api/announcement/school', announcements.announcement_school, name='announcement_school'),
-    path('api/announcement/route', announcements.announcement_route, name='announcement_route'),
+    path('api/announcement/schools', announcements.announcement_school, name='announcement_school'),
+    path('api/announcement/routes', announcements.announcement_route, name='announcement_route'),
     path('api/account', user_detail.user_account, name='user_account')
 ]
