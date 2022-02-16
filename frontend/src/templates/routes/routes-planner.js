@@ -116,7 +116,6 @@ class BusRoutesPlanner extends Component {
             }).catch ( error => {
                 console.log(error.response)
                 if (error.response.status === 404) {
-                    // console.log(error.response.data)
                     this.setState({ error_status: true });
                 }
             } 
@@ -128,7 +127,6 @@ class BusRoutesPlanner extends Component {
         this.setState(prevState => ({ 
             assign_mode: !prevState.assign_mode
         }));
-        // console.log(this.state.assign_mode);
     }
 
     triggerAssignModeWarning = event => {
@@ -142,16 +140,11 @@ class BusRoutesPlanner extends Component {
         this.setState({ active_route: parseInt(event.target.value) })
         console.log(this.state.active_route)
         console.log(this.state.route_dropdown)
-        // this.setState({ active_route: event.target.value }, () => // console.log("onHandleRouteSelection active_route: " + this.state.active_route))
     }
 
     handleRouteNameChange = event => {
         this.setState({ create_route_name: event.target.value });
     }
-
-    // handleSchoolNameChange = event => {
-    //     this.setState({ create: { school_name: event.target.value }});
-    // }
 
     handleRouteDescriptionChange = event => {
         this.setState({ create_route_description: event.target.value });

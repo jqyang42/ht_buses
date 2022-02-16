@@ -10,9 +10,6 @@ class StudentMarker extends Component {
     state = {
         currentRoute: this.props.routeID,
         icon: MARKER_ICONS[this.props.routeID],
-        location: this.props.location,
-        id: this.props.id,
-        name: this.props.name,
         updated: false,
         showInfoWindow: false
       };
@@ -30,8 +27,8 @@ class StudentMarker extends Component {
 
     handleClick = (e) => {
       // console.log("map marker on handle click: " + this.props.active_route)
-      if (this.props.assignMode ){
-        if (this.state.currentRoute == 0) {
+      if (this.props.assign_mode ){
+        if (this.state.currentRoute != this.props.active_route) {
           this.setState({
             icon: MARKER_ICONS[this.props.active_route],
             currentRoute: this.props.active_route
@@ -55,12 +52,12 @@ class StudentMarker extends Component {
     const { showInfoWindow } = this.state;
     return (
       <Marker 
-      position={this.state.location} 
+      position={this.props.location} 
       className={this.state.currentRoute} 
       icon={this.state.icon} 
       onClick={this.handleClick} 
-      id={this.state.id} 
-      key={this.state.id} 
+      id={this.props.id} 
+      key={this.props.id} 
       onMouseOver={this.handleMouseOver}
       onMouseOut={this.handleMouseExit}>
         {showInfoWindow && (
