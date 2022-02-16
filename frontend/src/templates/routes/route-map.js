@@ -55,6 +55,10 @@ class RouteMap extends Component {
     }
   }
 
+  handleStopCreate = (stopName, location) => {
+
+  }
+
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
@@ -118,6 +122,7 @@ class RouteMap extends Component {
               id={index}
               location={value.position}
               assign_mode={this.props.assign_mode} 
+              name="placeholder" //TODO: Change to stop name
               routeID={value.routeID}/>
             })}
           </GoogleMap>
