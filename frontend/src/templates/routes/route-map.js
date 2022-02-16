@@ -36,30 +36,26 @@ const hidePOIs = [{
 
 class RouteMap extends Component {
   state = {
-    locations: [],
-    latLngs: [],
-    center: {},
-    markers: [],
     stops: [],
     showModal: false
   }
 
   students = [];
 
+  // onChange
   handleRouteIDChange = (routeID, studentIDs) => {
     for (let i = 0; i < studentIDs.length; i++) {
       this.students.push({
         "id": studentIDs[i],
         "route_id": parseInt(routeID)
       })
-      // console.log(this.students)
-      // console.log("Map onHandleRouteIDChange Active Route: " + this.props.active_route)
     }
     if(this.props.onChange) {
       this.props.onChange(this.students);
     }
   }
 
+  // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
     console.log(coords)
@@ -106,7 +102,7 @@ class RouteMap extends Component {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 
-                assignMode={this.props.assign_mode} 
+                assign_mode={this.props.assign_mode} 
                 routeID={value.routeID} 
                 active_route={this.props.active_route}
                 id={value.id}
@@ -121,9 +117,8 @@ class RouteMap extends Component {
               key={index}
               id={index}
               location={value.position}
-              assignMode={this.props.assign_mode} 
-              routeID={value.routeID}
-              active_route={this.props.active_route} />
+              assign_mode={this.props.assign_mode} 
+              routeID={value.routeID}/>
             })}
           </GoogleMap>
         </LoadScript>

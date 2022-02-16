@@ -23,8 +23,7 @@ class EmailReset extends Component {
 
     checkEmail() {
         const data = {
-            user: { 
-
+            user: {
                 email: this.state.email
             }
         }
