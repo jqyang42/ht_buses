@@ -185,12 +185,13 @@ class BusRoutesPlanner extends Component {
         document.getElementById("add-route-form").reset();
     }
 
-    
-    students = {"students":[]};
-
-    handleRouteIDChange = (students) => {
-      this.students["students"] = students
+    handleChanges = (markers) => {
+      this.markers["students"] = markers;
       // console.log(this.students)
+    }
+
+    handleRouteStopChange = (stops) => {
+        this.stops["stops"] = stops;
     }
 
     handleRouteAssignSubmit = event => {
@@ -371,7 +372,8 @@ class BusRoutesPlanner extends Component {
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
                                             markers={this.state.markers}
-                                            onChange={this.handleRouteIDChange}/>
+                                            onChange={this.handleRouteIDChange}
+                                            onCreate={this.handleRouteStopChange}/>
                                         </div>
                                     </div>
                                     <div className="col">
