@@ -21,17 +21,21 @@ class Email extends Component {
 
     handleSubjectChange = (input) => {
         const subject = input.target?.value 
-        this.setState({ subject: subject});
-        this.setState({ message_sent: 0 })
+        this.setState({ 
+            subject: subject,
+            message_sent: 0 
+        })
     }
 
     handleBodyChange = (input) => {
         const body = input.target?.value 
-        this.setState({ body: body});
-        this.setState({ message_sent: 0 })
+        this.setState({ 
+            body: body,
+            message_sent: 0 
+        })
     }
 
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.body === "" || this.state.subject === "") {
             this.setState({ message_sent: -1 })
@@ -49,17 +53,20 @@ class Email extends Component {
 
         api.post(API_DOMAIN + 'announcement/' + this.props.source.toLowerCase() + id_param_string, data)
         .then(res => {
-            this.setState({ message_sent: res.data.success ? 1 : -1 })
+            this.setState({ 
+                message_sent: res.data.success ? 1 : -1,
+                subject: '',
+                body: ''
+             })
             this.bodyField.value = ''
-            this.subjectField.value = ''
-            this.setState({ subject: ''})
-            this.setState({ body: ''})
-    
+            this.subjectField.value = ''    
         }).catch (error => {
             if (error.response.status !== 200) {
-                this.setState({ error_status: true });
-                this.setState({ error_code: error.response.status });
-                this.setState({ message_sent: -1 })
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status,
+                    message_sent: -1 
+                })
             }
         } 
         )
