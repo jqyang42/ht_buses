@@ -1,7 +1,7 @@
 from ...models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
@@ -23,9 +23,10 @@ def students_detail(request):
             route_serializer = RouteSerializer(route, many=False)
             route_id = route_serializer.data["id"]
             route_name = route_serializer.data["name"]
+        in_range = student_serializer.data["in_range"]
         school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
-        student_arr = {"user_id": student_serializer.data["user_id"], "student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"]}
+        student_arr = {"user_id": student_serializer.data["user_id"], "student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "in_range": in_range}
         data["student"] = student_arr
         data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
         data["route"] = {'id' : route_id, 'name' : route_name}
