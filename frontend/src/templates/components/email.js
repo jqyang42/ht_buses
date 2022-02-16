@@ -59,6 +59,7 @@ class Email extends Component {
             if (error.response.status !== 200) {
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
+                self.setState({ message_sent: -1 })
             }
         } 
         )

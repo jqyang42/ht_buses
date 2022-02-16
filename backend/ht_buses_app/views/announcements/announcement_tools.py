@@ -1,6 +1,5 @@
 from ...models import User, Student, Route, School
 from ...constants import constants
-from rest_framework.response import Response
 from rest_framework.parsers import json
 from django.core.mail import *
 from django.template.loader import render_to_string
@@ -8,8 +7,6 @@ from django.template.loader import get_template
 from django.utils.html import strip_tags
 from django.core.mail import get_connection, EmailMultiAlternatives
 from django.conf import settings
-
-
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
@@ -50,8 +47,8 @@ def send_mass_announcement(subject, body, recipients, include_route_info):
         connection.send_messages(messages)
         data["message"] = "messages successfully sent"
         data["success"] = True
-        return Response(data) 
+        return data
     except:
         data["message"] = "messages not successfully sent"
         data["success"] = False
-        return Response(data) 
+        return data
