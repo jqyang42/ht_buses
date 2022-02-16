@@ -9,7 +9,7 @@ from django.conf import settings
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def announcement_users(request):
     data={}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
@@ -25,7 +25,7 @@ def announcement_users(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def announcement_school(request):
     data = {}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
@@ -43,7 +43,7 @@ def announcement_school(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def announcement_route(request):
     data = {}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)

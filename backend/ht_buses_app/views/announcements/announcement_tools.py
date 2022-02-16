@@ -26,7 +26,7 @@ def announcement_substitutions(user, subject, body, include_route_info = False):
     text_content = """
     {}
     """.format(body)
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [user.email], reply_to=['no-reply@beesquared.com'])
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [user.email], reply_to=[constants.DEFAULT_NO_REPLY_EMAIL])
     #template = get_template('basic-email.html')
     #dynamic_data = { 'user_first': user.first_name, 'user_last': user.last_name } #TODO add route customization
     #html_content = html_c.render(dynamic_data)
