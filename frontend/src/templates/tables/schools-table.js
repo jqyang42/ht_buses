@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { twelveHourTime } from "../components/table-formatting";
 import { Table } from "./table";
     
 export function SchoolsTable({ data, showAll }) {
@@ -33,12 +34,18 @@ export function SchoolsTable({ data, showAll }) {
             {
                 Header: 'Bus Arrival Time',
                 accessor: 'arrival',
-                disableFilter: true
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    twelveHourTime({ twentyfour_time: value })
+                )
             },
             {
                 Header: 'Bus Departure Time',
                 accessor: 'departure',
-                disableFilter: true
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    twelveHourTime({ twentyfour_time: value })
+                )
             },
         ],
         []
