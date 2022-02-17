@@ -40,36 +40,25 @@ class RouteMap extends Component {
     showModal: false
   }
 
-  markersChanged = {
-    "students" : [],
-    "stops" : [],
-  };
+  studentsChanged = []
 
   // onChange
   handleRouteChanges = (routeID, studentIDs) => {
     for (let i = 0; i < studentIDs.length; i++) {
-      this.markersChanged["students"].push({
+      this.studentsChanged.push({
         "id": studentIDs[i],
-        "route_id": parseInt(routeID)
+        "route_id": parseInt(routeID),
+        "in_range": false
       })
     }
-    this.markersChanged["stops"] = this.state.stops;
     if (this.props.onChange) {
-      this.props.onChange(this.markersChanged);
-    }
-  }
-
-  handleStopCreate = () => {
-    console.log(this.state.stops)
-    if (this.props.onCreate) {
-      this.props.onCreate(this.state.stops)
+      this.props.onChange(this.studentsChanged);
     }
   }
 
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
-    console.log(coords)
     if (this.props.assign_mode ) {
       this.setState({
         stops: [...this.state.stops, {
@@ -79,9 +68,17 @@ class RouteMap extends Component {
         }]
       })
     }
+    this.handleStopCreate()
     this.setState({ showModal: true })
     console.log(this.state.showModal)
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
+  }
+
+  handleStopCreate = () => {
+    console.log(this.state.stops)
+    if (this.props.onCreate) {
+      this.props.onCreate(this.state.stops)
+    }
   }
 
   render() {

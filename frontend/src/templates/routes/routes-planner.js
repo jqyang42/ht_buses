@@ -200,6 +200,8 @@ class BusRoutesPlanner extends Component {
         this.setState({
             assign_mode: false
         })
+        console.log("payload:")
+        console.log(this.students)
 
         api.put('routeplanner/edit', this.students)
         .then(res => {
