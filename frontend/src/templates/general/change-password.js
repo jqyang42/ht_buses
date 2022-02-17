@@ -12,6 +12,13 @@ import PasswordForm from "../components/password-form";
 
 class ChangePassword extends Component {
 
+    state = {
+        valid_url: false
+    }
+
+    sendApiRequest = () => {
+    }
+
     componentDidMount() {
         console.log(sessionStorage.getItem('is_staff'))
     }
@@ -35,7 +42,7 @@ class ChangePassword extends Component {
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Account" isRoot={false} isSecond={true} name="Change Password" />
                         <div className="container my-4 mx-0 w-100 mw-100">
-                            <PasswordForm type="Change"/>
+                            <PasswordForm type="Change" sendApiRequest={this.sendApiRequest} validUrl={this.state.valid_url}/>
                         </div>
                     </div>
                 </div>

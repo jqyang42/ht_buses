@@ -21,7 +21,8 @@ class UsersDetail extends Component {
             last_name: '',
             school_id: '',
             route_id: null,
-            student_school_id: ''
+            student_school_id: '',
+            in_range: false // TODO USE REAL VALUE
         },
         schools_dropdown: [],
         routes_dropdown: [],
