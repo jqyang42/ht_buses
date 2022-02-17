@@ -10,8 +10,7 @@
         "name": "New School Name"
     },
     "route": {
-        "id": 0,
-        "name": "Unassigned"
+        "id": 0
     },
     "success": true
 }
