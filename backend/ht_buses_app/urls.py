@@ -5,8 +5,8 @@ from . views.routes import route_delete, route_edit, route_planner, routes_view,
 from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
 from . views.auth import auth_valid, login, logout
 from . views.parents import parent_dashboard, parent_student_detail
-from . views.accounts import password_reset
 from . views.announcements import announcements
+from . views.accounts import reset_password
 from . views.general import general_apis
 
 urlpatterns = [
@@ -43,5 +43,8 @@ urlpatterns = [
     path('api/announcement/users', announcements.announcement_users, name='announcement_users'),
     path('api/announcement/schools', announcements.announcement_school, name='announcement_school'),
     path('api/announcement/routes', announcements.announcement_route, name='announcement_route'),
-    path('api/account', user_detail.user_account, name='user_account')
+    path('api/account', user_detail.user_account, name='user_account'),
+    path('api/send-reset-password-email', reset_password.send_reset_password_email, name='reset_password_email'),
+    path('api/reset-password', reset_password.reset_password, name='reset_password'),
+    path('api/reset-password-valid-url', reset_password.valid_password_reset_url, name='reset_password_valid_url')
 ]

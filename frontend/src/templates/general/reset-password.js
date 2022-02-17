@@ -1,21 +1,47 @@
 import React, { Component } from "react";
 import { useParams } from "react-router-dom";
+import api from "../components/api";
 
 import UnauthenticatedSidebarMenu from "../components/unauthenticated-sidebar-menu";
 import UnauthenticatedHeaderMenu from "../components/unauthenticated-header-menu";
 import PasswordForm from "../components/password-form";
 
 class ResetPassword extends Component {
+
     
     state = {
         valid_url: false
     }
 
+    change_password = async () => { 
+        const data = {
+            password: this.state.password
+        }
+        const res = await api.post(`reset-password?uuid=${this.props.params.uuid}&token=${this.props.params.token}`, data)
+        const password_changed = res.data.success 
+        this.setState({ edit_success: password_changed ? 1 : -1 })
+        return password_changed
+    }
+   
+    send_api_request = event => {
+      
+        this.change_password().then(password_changed => {
+           //Show that password was successfully reset 
+        })
+    }
+    
     sendApiRequest = () => {
+
     }
 
     componentDidMount() {
-        console.log(sessionStorage.getItem('is_staff'))
+        api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`) 
+        .then(res => {
+            const valid_url = res.data.success
+            if (!valid_url) {
+                console.log("invalid") //TODO show bad request page 
+            }
+        })
     }
 
     render() {
