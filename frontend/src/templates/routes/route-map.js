@@ -53,13 +53,14 @@ class RouteMap extends Component {
         "route_id": parseInt(routeID)
       })
     }
-    this.markersChanged["stops"] = this.state.stops
+    this.markersChanged["stops"] = this.state.stops;
     if (this.props.onChange) {
       this.props.onChange(this.markersChanged);
     }
   }
 
   handleStopCreate = () => {
+    console.log(this.state.stops)
     if (this.props.onCreate) {
       this.props.onCreate(this.state.stops)
     }

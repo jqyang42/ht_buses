@@ -185,8 +185,10 @@ class BusRoutesPlanner extends Component {
         document.getElementById("add-route-form").reset();
     }
 
-    handleChanges = (markers) => {
-      this.markers["students"] = markers;
+    students = {"students":[]};
+    stops = {"stops": []};
+    handleRouteIDChange = (students) => {
+      this.students["students"] = students;
       // console.log(this.students)
     }
 
@@ -207,6 +209,7 @@ class BusRoutesPlanner extends Component {
             this.handleTableGet() 
             this.handleLocationsGet()
         })
+        console.log(this.stops)
     }
 
     render() {
