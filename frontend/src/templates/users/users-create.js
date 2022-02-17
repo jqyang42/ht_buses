@@ -40,6 +40,7 @@ class UsersCreate extends Component {
         same_password: false,
         create_success: 0,
         valid_email: true,
+        valid_student_ids: 0,
         valid_address: true,
         edit_success: 0,
         redirect_detail: false,
@@ -183,6 +184,7 @@ class UsersCreate extends Component {
         student.student_school_id = event.target.value
         students[index] = student
         this.setState({ students: students })
+        this.setState({ valid_student_ids: this.studentIDValidation( student.student_school_id ) ? 1 : -1 })
     }
 
     handleSchoolChange = (event, student_num) => {
@@ -492,10 +494,10 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    {(!this.studentIDValidation()) ? 
+                                                    {(this.state.valid_student_ids === 1) ? "" :
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           The Student ID value for at least one student is invalid. Please edit and try again.
-                                                      </div>) : ""
+                                                      </div>)
                                                       }
                                                 </div>
                                             </div>

@@ -13,7 +13,7 @@ export function studentIDValidation({ student_id }) {
     if (!isNumber ) {
         return false
     }
-    else if(isNumber && Math.sign(student_id) === -1)   {
+    else if(isNumber && (Math.sign(student_id) === -1 || Math.sign(student_id) === 0))   {
         return false
     }
     return true 
