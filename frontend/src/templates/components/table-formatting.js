@@ -9,5 +9,7 @@ export function twelveHourTime({ twentyfour_time }) {
 function timeLeadingZeroes({ time }) {
     if (time < 10) {
         return `0${time.toString()}`
+    } else {
+        return time.toString()
     }
 }
