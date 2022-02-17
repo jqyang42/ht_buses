@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from ..students import student_create
-from ..accounts import account_setup
+from ..accounts import activate_account
 import re
 from ..resources import capitalize_reg
 
