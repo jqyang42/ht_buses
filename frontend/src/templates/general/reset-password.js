@@ -12,6 +12,24 @@ class ResetPassword extends Component {
 
     }
 
+    change_password = async () => { 
+        const data = {
+            password: this.state.password
+        }
+        const res = await api.post(`reset-password?uuid=${this.props.params.uuid}&token=${this.props.params.token}`, data)
+        const password_changed = res.data.success 
+        this.setState({ edit_success: password_changed ? 1 : -1 })
+        return password_changed
+    }
+   
+    send_api_request = event => {
+      
+        this.change_password().then(password_changed => {
+           //Show that password was successfully reset 
+        })
+        
+    }
+
     componentDidMount() {
         api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`) 
         .then(res => {
