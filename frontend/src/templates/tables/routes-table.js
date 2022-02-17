@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";  
+import { colors } from "../../static/colors";
 import { Table } from "./table";
 
 export function RoutesTable({ data, showAll }) {
@@ -16,8 +17,19 @@ export function RoutesTable({ data, showAll }) {
     const columns = React.useMemo(
         () => [
             {
+                Header: 'Color',
+                accessor: 'color_id',
+                disableSortBy: true,
+                Cell: ({ cell: { value } }) => (
+                    <><span className={"circle me-2"} style={{backgroundColor: colors[value]}}/></>
+                )
+            },
+            {
                 Header: 'Name',
                 accessor: 'name',
+                // Cell: ({ cell: { value } }) => (
+                //     <><span className="circle me-2" />{value}</>
+                // )
             },
             {
                 Header: 'School',
