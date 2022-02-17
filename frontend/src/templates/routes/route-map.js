@@ -75,14 +75,12 @@ class RouteMap extends Component {
   }
 
   handleStopCreate = () => {
-    console.log(this.state.stops)
     if (this.props.onCreate) {
       this.props.onCreate(this.state.stops)
     }
   }
 
   render() {
-    // console.log("Map onRender Active Route: " + this.props.active_route)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }

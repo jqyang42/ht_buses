@@ -70,9 +70,7 @@ class BusRoutesPlanner extends Component {
                     })
                 }                                
             }).catch (function(error) {
-                // console.log(error.response)
                 if (error.response.status !== 200) {
-                    // console.log(error.response.data)
                     self.setState({ error_status: true });
                     self.setState({ error_code: error.response.status });
                 }
@@ -84,7 +82,6 @@ class BusRoutesPlanner extends Component {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
                 const school_location = res.data.school.location;
-                console.log(school_location)
                 this.setState({ 
                     center: { 
                         lat: school_location.lat, 
@@ -114,7 +111,6 @@ class BusRoutesPlanner extends Component {
                     }));
                 });
             }).catch ( error => {
-                console.log(error.response)
                 if (error.response.status === 404) {
                     this.setState({ error_status: true });
                 }
@@ -139,7 +135,6 @@ class BusRoutesPlanner extends Component {
         if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
         this.setState({ active_route: parseInt(event.target.value) })
         console.log(this.state.active_route)
-        console.log(this.state.route_dropdown)
     }
 
     handleRouteNameChange = event => {
@@ -170,7 +165,6 @@ class BusRoutesPlanner extends Component {
         api.post(`routes/create`, data)
             .then(res => {
                 const new_route = res.data.route
-                // // console.log(new_route)
                 this.setState({ add_route_success: true })
                 this.setState({ route_dropdown: [...this.state.routes, {
                     id: new_route.id,
@@ -189,7 +183,6 @@ class BusRoutesPlanner extends Component {
     stops = {"stops": []};
     handleRouteIDChange = (students) => {
       this.students["students"] = students;
-      // console.log(this.students)
     }
 
     handleRouteStopChange = (stops) => {
@@ -200,18 +193,14 @@ class BusRoutesPlanner extends Component {
         this.setState({
             assign_mode: false
         })
-        console.log("payload:")
-        console.log(this.students)
 
         api.put('routeplanner/edit', this.students)
         .then(res => {
-            // console.log(res.data);
             this.students = {"students":[]};
             this.setState({markers: []})
             this.handleTableGet() 
             this.handleLocationsGet()
         })
-        console.log(this.stops)
     }
 
     render() {
