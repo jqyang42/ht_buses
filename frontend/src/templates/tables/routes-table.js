@@ -32,7 +32,6 @@ export function RoutesTable({ data, showAll }) {
             {
                 Header: 'Status',
                 accessor:  'is_complete',
-                // accessor: 'is_complete',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>
@@ -43,6 +42,19 @@ export function RoutesTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by name..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/routes/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by name..."
+            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/routes/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

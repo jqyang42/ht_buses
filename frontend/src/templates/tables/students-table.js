@@ -43,11 +43,18 @@ export function StudentsTable( {data, showAll} ) {
                 Header: 'Route',
                 accessor: 'route_name',
                 disableFilter: true,
-                className: 'unassigned',
                 Cell: ({ cell: { value } }) => (
-                    value === "Unassigned" || value === "Out of Range" ? <>{value}</> : <><span className="circle me-2" />{value}</>
+                    value === "Unassigned" ? <><div className="unassigned">{value}</div></> : <><span className="circle me-2" />{value}</>
                 )
-            },            
+            },     
+            {
+                Header: 'Bus Stops',
+                accessor: 'in_range',
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
+                )
+            },     
             {
                 Header: 'Parent Name',
                 accessor: d => `${d.parent.first_name} ${d.parent.last_name}`,
@@ -58,6 +65,19 @@ export function StudentsTable( {data, showAll} ) {
     )
          
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by id or name..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/students/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by id or name..."
+            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/students/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

@@ -4,12 +4,12 @@ from .models import Location, Route, School, Student, User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('id', 'first_name', 'last_name', 'school_id', 'student_school_id', 'route_id', 'user_id')
+        fields = ('id', 'first_name', 'last_name', 'school_id', 'student_school_id', 'route_id', 'user_id', 'in_range')
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Route
-        fields = ('id', 'name', 'school_id','description', 'is_complete')
+        fields = ('id', 'name', 'school_id','description', 'is_complete', 'color_id')
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:

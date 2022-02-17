@@ -47,6 +47,19 @@ export function UsersTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by name or email..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/users/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by name or email..."
+            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/users/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }
