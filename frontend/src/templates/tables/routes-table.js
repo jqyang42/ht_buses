@@ -16,20 +16,21 @@ export function RoutesTable({ data, showAll }) {
 
     const columns = React.useMemo(
         () => [
-            {
-                Header: 'Color',
-                accessor: 'color_id',
-                disableSortBy: true,
-                Cell: ({ cell: { value } }) => (
-                    <><span className={"circle me-2"} style={{backgroundColor: colors[value]}}/></>
-                )
-            },
+            // {
+            //     Header: 'Color',
+            //     accessor: 'color_id',
+            //     disableSortBy: true,
+            //     Cell: ({ cell: { value } }) => (
+            //         <><span className={"circle me-2"} style={{backgroundColor: colors[value]}}/></>
+            //     )
+            // },
             {
                 Header: 'Name',
-                accessor: 'name',
-                // Cell: ({ cell: { value } }) => (
-                //     <><span className="circle me-2" />{value}</>
-                // )
+                // accessor: 'name',
+                accessor: d => Array(`${d.color_id}`,`${d.name}`),
+                Cell: ({ cell: { value } }) => (
+                    <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[1]}</>
+                )
             },
             {
                 Header: 'School',
