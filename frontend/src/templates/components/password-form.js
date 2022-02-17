@@ -86,7 +86,7 @@ class PasswordForm extends Component {
                         </div>) : ""
                     }
                 </div>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.props.handleSubmit}>
                     <div className="row">
                         <div className="col mt-2">
                             {/* <div className="form-group required pb-3 w-75">

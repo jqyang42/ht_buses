@@ -5,12 +5,11 @@ import UnauthenticatedSidebarMenu from "../components/unauthenticated-sidebar-me
 import UnauthenticatedHeaderMenu from "../components/unauthenticated-header-menu";
 import PasswordForm from "../components/password-form";
 
-class ResetPassword extends Component {
-    
+class SetupPassword extends Component {
     state = {
         valid_url: false
     }
-
+    
     sendApiRequest = () => {
     }
 
@@ -37,7 +36,7 @@ class ResetPassword extends Component {
 }
 
 export default (props) => (
-    <ResetPassword
+    <SetupPassword
         {...props}
         params={useParams()}
     />
