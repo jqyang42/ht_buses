@@ -40,7 +40,7 @@ class UsersCreate extends Component {
         same_password: false,
         create_success: 0,
         valid_email: true,
-        valid_student_ids: 0,
+        student_ids_changed: false,
         valid_address: true,
         edit_success: 0,
         redirect_detail: false,
@@ -184,7 +184,7 @@ class UsersCreate extends Component {
         student.student_school_id = event.target.value
         students[index] = student
         this.setState({ students: students })
-        this.setState({ valid_student_ids: this.studentIDValidation( student.student_school_id ) ? 1 : -1 })
+        this.setState({  student_ids_changed : true })
     }
 
     handleSchoolChange = (event, student_num) => {
@@ -302,9 +302,14 @@ class UsersCreate extends Component {
     }
 
     studentIDValidation = () => {
+        if(!this.state.student_ids_changed) {
+            return true
+        }
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
-            return studentIDValidation({ student_id: id })
+            if (!studentIDValidation({ student_id: id })) {
+                return false
+            }
         }
         return true 
     }
@@ -494,10 +499,10 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    {(this.state.valid_student_ids === 1) ? "" :
+                                                    {(!this.studentIDValidation()) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           The Student ID value for at least one student is invalid. Please edit and try again.
-                                                      </div>)
+                                                      </div>) : ""
                                                       }
                                                 </div>
                                             </div>
