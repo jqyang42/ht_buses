@@ -228,7 +228,8 @@ class UsersCreate extends Component {
             last_name: '',
             school_id: '',
             route_id: null,   //TODO: replicate?
-            student_school_id: ''
+            student_school_id: '',
+            in_range: false // TODO USE REAL VALUE
         }
 
         // update is_parent, add empty student field, individual routes
