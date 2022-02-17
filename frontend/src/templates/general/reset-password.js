@@ -28,6 +28,7 @@ class ResetPassword extends Component {
         this.change_password().then(password_changed => {
            //Show that password was successfully reset 
         })
+    }
 
     sendApiRequest = () => {
 
