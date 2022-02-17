@@ -3,6 +3,8 @@ import { passwordRegex } from "../regex/input-validation";
 import api from './api';
 import { Link } from 'react-router-dom';
 import PasswordForm from "../components/password-form";
+
+
 /*
 class PasswordResetForm extends PasswordForm {
 
