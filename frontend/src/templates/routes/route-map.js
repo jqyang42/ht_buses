@@ -47,7 +47,8 @@ class RouteMap extends Component {
     for (let i = 0; i < studentIDs.length; i++) {
       this.students.push({
         "id": studentIDs[i],
-        "route_id": parseInt(routeID)
+        "route_id": parseInt(routeID),
+        "in_range": false
       })
     }
     if(this.props.onChange) {
