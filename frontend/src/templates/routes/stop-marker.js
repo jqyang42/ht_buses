@@ -77,7 +77,7 @@ class StopMarker extends Component {
                 <div className='form-group mt-1'>
                   <span>
                     <input type='name' className="d-inline form-control w-auto ms-1 me-2" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
-                    <button className='d-inline btn btn-primary mb-1'><i className='bi bi-check'></i></button>
+                    <button onSubmit={this.handleSubmit} className='d-inline btn btn-primary mb-1'><i className='bi bi-check'></i></button>
                   </span>
                 </div>
               </form>
