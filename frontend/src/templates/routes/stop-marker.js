@@ -28,16 +28,11 @@ class StopMarker extends Component {
         showInfoWindow: false
       };
 
-    handleMouseOver = (event) => {
-        this.setState({
-            showInfoWindow: true
-        });
-    };
-    handleMouseExit = (event) => {
-        this.setState({
-            showInfoWindow: false
-        });
-    };
+    handleClick = (event) => {
+      this.setState(prevState => ({
+        showInfoWindow: !prevState.showInfoWindow
+      }))
+    }
 
     editName = (event) => {
       console.log(event.target.value)
@@ -67,9 +62,7 @@ class StopMarker extends Component {
       icon={this.state.icon} 
       id={this.props.id} 
       key={this.props.id} 
-      onMouseOver={this.handleMouseOver}
-      onMouseOut={this.handleMouseExit}
-      onClick={this.handleMouseOver}>
+      onClick={this.handleClick}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>
             <>
