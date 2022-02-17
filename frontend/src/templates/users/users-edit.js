@@ -171,6 +171,7 @@ class UsersEdit extends Component {
         if (this.state.error_status) {
             return <ErrorPage />
         }
+
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -247,12 +248,12 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                    checked={this.state.edited_user.is_staff} onChange={this.handleIsStaffChange}></input>
+                                                        checked={this.state.edited_user.is_staff} onChange={this.handleIsStaffChange} disabled={sessionStorage.getItem("is_staff") && sessionStorage.getItem("user_id") == this.props.params.id}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
-                                                    checked={!this.state.edited_user.is_staff} onChange={this.handleIsStaffChange}></input>
+                                                        checked={!this.state.edited_user.is_staff} onChange={this.handleIsStaffChange} disabled={sessionStorage.getItem("is_staff") && sessionStorage.getItem("user_id") == this.props.params.id}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>

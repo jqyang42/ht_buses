@@ -202,7 +202,6 @@ li.page-item a[disabled]:hover {
     font-weight: 500;
     vertical-align: text-top;
     margin-top: 2px;
-    padding-top: 5px;
 }
 
 #default-picker a {

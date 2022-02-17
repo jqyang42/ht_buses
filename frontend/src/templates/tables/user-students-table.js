@@ -17,9 +17,16 @@ export function UserStudentsTable({ data, showAll }) {
             {
                 Header: 'Bus Route',
                 accessor: 'route_name',
-                className: 'unassigned',
                 Cell: ({ cell: { value } }) => (
-                    value === "Unassigned" || value === "Out of Range" ? <>{value}</> : <><span className="circle me-2" />{value}</>
+                    value === "Unassigned" ? <><div className="unassigned">{value}</div></> : <><span className="circle me-2" />{value}</>
+                )
+            },     
+            {
+                Header: 'Bus Stops',
+                accessor: 'in_range',
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
                 )
             },
         ],
@@ -27,6 +34,17 @@ export function UserStudentsTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={false} showAll={showAll} navUrl={"/students/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={false}
+            showAll={showAll}
+            navUrl={"/students/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }
