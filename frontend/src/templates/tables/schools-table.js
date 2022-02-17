@@ -45,6 +45,19 @@ export function SchoolsTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by name..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/schools/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by name..."
+            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/schools/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

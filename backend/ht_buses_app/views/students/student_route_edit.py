@@ -18,11 +18,13 @@ def student_route_edit(request):
         for student in reqBody["students"]:
             student_id = student["id"]
             route_id = student["route_id"]
+            in_range = student["in_range"]
             student_obj = Student.studentsTable.get(pk=student_id)
             if route_id == 0:
                 student_obj.route_id = None
             else:
                  student_obj.route_id = Route.routeTables.get(pk=student["route_id"])
+                 student.obj.in_range = in_range
             student_obj.save()
         data["message"] = "student's route information was successfully updated"
         student_serializer = StudentSerializer(student_obj, many=False)

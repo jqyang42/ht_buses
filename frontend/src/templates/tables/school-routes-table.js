@@ -20,14 +20,28 @@ export function SchoolRoutesTable({ data, showAll }) {
             },
             {
                 Header: 'Status',
-                accessor: 'status',
-                className: 'unassigned'
+                accessor: 'is_complete',
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>
+                )
             },
         ],
         []
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={false} showAll={showAll} navUrl={"/routes/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={false}
+            showAll={showAll}
+            navUrl={"/routes/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }
