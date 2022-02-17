@@ -23,7 +23,8 @@ class StudentsEdit extends Component {
             student_school_id: null,
             school_id: null,
             route_id: null,
-            user_id: null
+            user_id: null,
+            in_range: null
         },
         schools_dropdown: [],
         routes_dropdown: [],
@@ -59,7 +60,8 @@ class StudentsEdit extends Component {
                 student_school_id: student.student_school_id,
                 school_id: school.id,
                 route_id: route.id,
-                user_id: student.user_id
+                user_id: student.user_id,
+                in_range: false // TODO USE CLACLUATED VALUE
             }
             this.setState({ 
                 student: student,
