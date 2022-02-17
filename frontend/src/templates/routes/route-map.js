@@ -116,6 +116,7 @@ class RouteMap extends Component {
               return <StopMarker 
               key={index}
               id={index}
+              name={""}
               location={value.position}
               assign_mode={this.props.assign_mode} 
               routeID={value.routeID}/>

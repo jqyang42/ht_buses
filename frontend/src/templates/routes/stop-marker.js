@@ -28,16 +28,29 @@ class StopMarker extends Component {
         showInfoWindow: false
       };
 
-      handleMouseOver = e => {
-          this.setState({
-              showInfoWindow: true
-          });
-      };
-      handleMouseExit = e => {
-          this.setState({
-              showInfoWindow: false
-          });
-      };
+    handleMouseOver = (event) => {
+        this.setState({
+            showInfoWindow: true
+        });
+    };
+    handleMouseExit = (event) => {
+        this.setState({
+            showInfoWindow: false
+        });
+    };
+
+    editName = (event) => {
+      console.log(event.target.value)
+      this.setState({
+        name: event.target.value
+      });
+    }
+
+    handleSubmit = (event) => {
+      this.setState({
+        // TODO: ask thomas how to pass info to routeMap
+      })
+    }
 
   render () {
     let stringData
@@ -45,6 +58,7 @@ class StopMarker extends Component {
       stringData = this.state.name;
     }
     const { showInfoWindow } = this.state;
+    console.log(this.state.name)
     return (
       <>
       <Marker 
@@ -54,10 +68,21 @@ class StopMarker extends Component {
       id={this.props.id} 
       key={this.props.id} 
       onMouseOver={this.handleMouseOver}
-      onMouseOut={this.handleMouseExit}>
+      onMouseOut={this.handleMouseExit}
+      onClick={this.handleMouseOver}>
         {showInfoWindow && (
-          <InfoWindow>
-              <h6 className='text-center ms-1 me-0 mt-0 mb-1'>{stringData}</h6>
+          <InfoWindow options={{maxWidth:300}}>
+            <>
+              <form>
+                <div className='form-group mt-1'>
+                  <span>
+                    <input type='name' className="d-inline form-control w-auto ms-1 me-2" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
+                    <button className='d-inline btn btn-primary mb-1'><i className='bi bi-check'></i></button>
+                  </span>
+                </div>
+              </form>
+            </>
+              
           </InfoWindow>
         )}
       </Marker>
