@@ -46,27 +46,25 @@ def send_reset_password_email(request): #to actually send email to reset
         return Response(data)
 
 @csrf_exempt
-@api_view(['POST'])
+@api_view(['PUT'])
 @permission_classes([AllowAny]) 
 def reset_password(request): #to save the password used 
     data = {}
     reqBody  = request.data
-    valid_url_response = valid_password_reset_url(request) 
-    print(valid_url_response.data.success)
-    if not valid_url_response.data.success:
-        return valid_url_response
     uuid = request.query_params["uuid"]
     password_reset_token = request.query_params["token"]
-    user = User.objects.get(pk = decode_user(uuid))
-    user.set_password(reqBody['password'])
-    user.save()
-    data["message"] = 'password was successfully saved'
-    data["success"] = True
-    """
+    data = password_reset_message(uuid, password_reset_token)
+    if not data["success"]:
+        return Response(data)
+    try:
+        user = User.objects.get(pk = decode_user(uuid))
+        user.set_password(reqBody['password'])
+        user.save()
+        data["message"] = 'password was successfully saved'
+        data["success"] = True
     except:
-        data["message"] = 'password was not saved'
+        data["message"] = 'password for this user could not be saved'
         data["success"] = False
-    """
     return Response(data)
     
     
@@ -77,14 +75,20 @@ def valid_password_reset_url(request):
     data = {}
     uuid = request.query_params["uuid"]
     password_reset_token = request.query_params["token"]
+    data = password_reset_message(uuid, password_reset_token)
+    return Response(data)
+
+        
+def password_reset_message(uuid, password_reset_token):
+    data={}
     if password_reset_params_valid(uuid, password_reset_token):
         data["message"] = 'url is valid'
         data["success"] = True
     else:
         data["message"] = 'url is not valid'
         data["success"] = False
-    return Response(data)
-         
+    return data
+
 
 
 
