@@ -41,6 +41,19 @@ export function ParentDashboardTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by id or name..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/dashboard/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by id or name..."
+            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/dashboard/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

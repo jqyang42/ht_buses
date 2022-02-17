@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from './search-bar';
 import TablePagination from "./pagination";
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl }) {
+export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, rowProps = () => ({}) }) {
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
@@ -99,11 +99,9 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     // Prepare the row for display
                     prepareRow(row)
                     return (
-                    <tr {...row.getRowProps()} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                    <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
                         {row.cells.map(cell => {
-                        return (navUrl==="/students/" || "/routes/") ? 
-                        <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned" || row.original.route_name === "Out of Range" || row.original.route_name === "Incomplete") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td> : 
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )
@@ -112,11 +110,9 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     // Prepare the row for display
                     prepareRow(row)
                     return (
-                    <tr {...row.getRowProps()} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                    <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
                         {row.cells.map(cell => {
-                        return (navUrl==="/students/") ?
-                        <td {...cell.getCellProps()} className={(row.original.route_name === "Unassigned" || row.original.route_name === "Out of Range" || row.original.route_name === "Incomplete") ? `${cell.column.className ?? ""}` : ""}> {cell.render('Cell')}</td> :
-                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                        return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
                         })}
                     </tr>
                     )

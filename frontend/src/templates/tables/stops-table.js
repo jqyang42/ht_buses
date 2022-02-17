@@ -24,6 +24,16 @@ export function StopsTable({ data, showAll }) {
     )
 
     return (
-        <Table columns={columns} data={data} searchOn={false} showAll={showAll}/>
+        <Table 
+            columns={columns}
+            data={data}
+            searchOn={false}
+            showAll={showAll}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+        />
     )
 }

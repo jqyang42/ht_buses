@@ -21,17 +21,21 @@ class Email extends Component {
 
     handleSubjectChange = (input) => {
         const subject = input.target?.value 
-        this.setState({ subject: subject});
-        this.setState({ message_sent: 0 })
+        this.setState({ 
+            subject: subject,
+            message_sent: 0 
+        })
     }
 
     handleBodyChange = (input) => {
         const body = input.target?.value 
-        this.setState({ body: body});
-        this.setState({ message_sent: 0 })
+        this.setState({ 
+            body: body,
+            message_sent: 0 
+        })
     }
 
-    handleSubmit = event => {
+    handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.body === "" || this.state.subject === "") {
             this.setState({ message_sent: -1 })
@@ -49,28 +53,28 @@ class Email extends Component {
 
         api.post(API_DOMAIN + 'announcement/' + this.props.source.toLowerCase() + id_param_string, data)
         .then(res => {
-            this.setState({ message_sent: res.data.success ? 1 : -1 })
+            this.setState({ 
+                message_sent: res.data.success ? 1 : -1,
+                subject: '',
+                body: ''
+             })
             this.bodyField.value = ''
-            this.subjectField.value = ''
-            this.setState({ subject: ''})
-            this.setState({ body: ''})
-    
-        }).catch (function(error) {
+            this.subjectField.value = ''    
+        }).catch (error => {
             if (error.response.status !== 200) {
-                this.setState({ error_status: true });
-                this.setState({ error_code: error.response.status });
-                this.setState({ message_sent: -1 })
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status,
+                    message_sent: -1 
+                })
             }
         } 
         )
     }
 
     componentDidMount() {
-        console.log(this.props.source.toLowerCase() + "/detail?id=" + this.props.params.id)
         api.get(`${this.props.source.toLowerCase()}/detail?id=${this.props.params.id}`).then(res => {
-            console.log(res)
             const details = res.data;
-            console.log(details)
             const name = this.props.source === "Routes" ? details.route.name : (this.props.source === "Schools" ? details.school.name : "")
             this.setState({ name: name })
         })
@@ -92,7 +96,7 @@ class Email extends Component {
                     <SidebarMenu activeTab={this.props.source.toLowerCase()} />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root={root} isRoot={false} isSecond={this.props.source === "Users" ? true : false} id={this.props.source === "Routes" ? this.props.params.id : ""} name={name} page="Send Announcement" />
+                        <HeaderMenu root={root} isRoot={false} isSecond={this.props.source === "Users"} id={this.props.source !== "Users" ? this.props.params.id : ""} name={name} page="Send Announcement" />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
