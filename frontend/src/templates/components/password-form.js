@@ -17,7 +17,7 @@ class PasswordForm extends Component {
     samePassword = false;
 
     componentDidMount() {
-        console.log(sessionStorage.getItem('is_staff'))
+       console.log("here")
     }
     
     passwordValidation() {

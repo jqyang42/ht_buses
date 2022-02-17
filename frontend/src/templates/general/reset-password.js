@@ -12,19 +12,14 @@ class ResetPassword extends Component {
 
     }
 
-    validate_url = async () => {
-        const res = await api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`)
-        this.setState({ valid_url: res.data.success ? 1 : -1 }) 
-        return res.data.success
-    }
-
     componentDidMount() {
-        this.valid_url().then(valid_url => {
+        api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`) 
+        .then(res => {
+            const valid_url = res.data.success
             if (!valid_url) {
-                console.log("invalid page")
-               //TODO show bad request page 
+                console.log("invalid") //TODO show bad request page 
             }
-        }) 
+        })
     }
 
     render() {

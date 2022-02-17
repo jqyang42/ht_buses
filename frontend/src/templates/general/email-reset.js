@@ -21,7 +21,6 @@ class EmailReset extends Component {
         this.setState({ email: '' })
     }
 
-    
     validate_email = async () => { 
         const data = {
             user: {
