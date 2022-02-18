@@ -23,7 +23,7 @@ export function SchoolStudentsTable({ data, showAll }) {
             },
             {
                 Header: 'Bus Route',
-                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id ? d.route.name : ''}`),
+                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
                 Cell: ({ cell: { value } }) => (
                     value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
                 ),
