@@ -73,11 +73,14 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
               [hoverIndex, 0, dragRecord],
           ],
         })
+        // console.log(records)
+        // records.map(row => {
+        //     return row.id
+        // })
         // console.log(new_records)
         setRecords(new_records)
     }
 
-    console.log(rows)
     // console.log(dnd)
     // console.log(searchOn)
 
@@ -195,8 +198,6 @@ const Row = ({ row, index, moveRow, navUrl }) => {
   const dropRef = React.useRef(null)
   const dragRef = React.useRef(null)
   const navigate = useNavigate();
-
-  console.log('at row class')
 
   const [, drop] = useDrop({
     accept: DND_ITEM_TYPE,
