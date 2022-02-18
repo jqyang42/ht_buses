@@ -12,7 +12,7 @@ from django.core.mail import send_mail
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny]) 
-def send_reset_password_email(request): #to actually send email to reset 
+def send_reset_password_email(request): #to actually send email with reset link 
     data = {}
     reqBody  = request.data
     email = reqBody['email']
@@ -35,7 +35,6 @@ def send_reset_password_email(request): #to actually send email to reset
     """.format(user.first_name,user.last_name,url)
     subject = "Activate Your Account"
     send_mail(subject, text_content, from_email, [user.email],fail_silently=False)
-    #reply_to=[constants.DEFAULT_NO_REPLY_EMAIL]
     try:
         data["message"] = "message successfully sent"
         data["success"] = True
@@ -48,7 +47,7 @@ def send_reset_password_email(request): #to actually send email to reset
 @csrf_exempt
 @api_view(['PATCH'])
 @permission_classes([AllowAny]) 
-def reset_password(request): #to save the password used 
+def reset_password(request): #to update password
     data = {}
     reqBody  = request.data
     uuid = request.query_params["uuid"]
