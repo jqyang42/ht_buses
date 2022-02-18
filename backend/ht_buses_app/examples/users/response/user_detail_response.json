@@ -28,7 +28,8 @@
                 "first_name": "Evelyn",
                 "last_name": "Cupil Garcia",
                 "route": {
-                    "id": 0
+                    "id": 0,
+                    "color_id": 0
                 }
             }
         ]
