@@ -51,5 +51,5 @@ urlpatterns = [
     path('api/stops/create', stops_create.stops_create, name='stops_create'),
     path('api/stops', stops_view.stops_view, name='stops_view'),
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
-    path('api/stops/delete', stops_delete.stops_edit, name='stops_delete')
+    path('api/stops/delete', stops_delete.stops_delete, name='stops_delete')
 ]

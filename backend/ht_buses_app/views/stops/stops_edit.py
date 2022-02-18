@@ -7,10 +7,10 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 from datetime import datetime
 
-# Stops POST API
+# Stops PUT API
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def stops_edit(request):
     data = {}
     try:
