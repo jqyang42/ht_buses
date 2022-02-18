@@ -37,10 +37,18 @@ const hidePOIs = [{
 class RouteMap extends Component {
   state = {
     stops: [],
-    showModal: false
+    showModal: false,
+    center: {
+      lat: parseFloat(this.props.center.lat),
+      lng: parseFloat(this.props.center.lng)
+    },
   }
 
   studentsChanged = []
+
+  handleCenterChange = (event) => {
+    //TODO: update state with new center
+  }
 
   // onChange
   handleRouteChanges = (routeID, studentIDs) => {
@@ -74,11 +82,20 @@ class RouteMap extends Component {
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
+  handleStopNameChange = (name, key) => {
+    const newStops = [...this.state.stops];
+    const newStop = {...newStops[key]};
+    newStop.name = name;
+    newStops[key] = newStop;
+    this.setState({stops: newStops});
+  }
+
   handleStopCreate = () => {
     if (this.props.onCreate) {
       this.props.onCreate(this.state.stops)
     }
   }
+
   handleDeleteMarker = (event) => {
     // TODO: delete marker @thomas
   }
@@ -106,6 +123,7 @@ class RouteMap extends Component {
             }}
             zoom={13}
             onClick={this.createStopMarker}
+            onCenterChanged={this.handleCenterChange}
           >
             <Marker position={this.props.center}  />
             {this.props.markers?.map((value, index) => {
@@ -130,7 +148,8 @@ class RouteMap extends Component {
               location={value.position}
               assign_mode={this.props.assign_mode} 
               routeID={value.routeID}
-              handleDeleteMarker={this.handleDeleteMarker}/>
+              handleDeleteMarker={this.handleDeleteMarker}
+              handleStopNameChange={this.handleStopNameChange}/>
             })}
           </GoogleMap>
         </LoadScript>

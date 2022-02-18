@@ -35,16 +35,16 @@ class StopMarker extends Component {
     }
 
     editName = (event) => {
-      console.log(event.target.value)
       this.setState({
         name: event.target.value
       });
     }
 
     handleSubmit = (event) => {
-      this.setState({
-        // TODO: ask thomas how to pass info to routeMap
-      })
+      event.preventDefault();
+      if (this.props.handleStopNameChange) {
+        this.props.handleStopNameChange(this.state.name, this.props.id)
+      }
     }
 
   render () {
@@ -53,7 +53,6 @@ class StopMarker extends Component {
       stringData = this.state.name;
     }
     const { showInfoWindow } = this.state;
-    console.log(this.state.name)
     return (
       <>
       <Marker 
@@ -61,7 +60,7 @@ class StopMarker extends Component {
       className={this.state.currentRoute} 
       icon={this.state.icon} 
       id={this.props.id} 
-      key={this.props.id} 
+      key={this.props.key} 
       onClick={this.handleClick}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>
@@ -93,7 +92,7 @@ class StopMarker extends Component {
                           <button onClick={this.props.handleDeleteMarker} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
                         </div>
                         <div className='float-end w-auto text-align-end align-items-end pb-0'>
-                          <button onSubmit={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>
+                          <button onClick={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>
                             Save
                           </button>
                         </div>
