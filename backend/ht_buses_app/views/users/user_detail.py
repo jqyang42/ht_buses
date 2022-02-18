@@ -1,10 +1,10 @@
 from lib2to3.pytree import Base
-from ...models import Route, Student, User
+from ...models import Route, Student, User, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, UserSerializer
+from ...serializers import LocationSerializer, SchoolSerializer, StudentSerializer, RouteSerializer, UserSerializer
 
 @csrf_exempt
 @api_view(["GET"])
@@ -24,6 +24,7 @@ def users_detail(request):
             for student in students_serializer.data:
                 student_id = student["id"]
                 student_school_id = student["student_school_id"]
+                student_school = School.schoolsTable.get(pk=student["school_id"])
                 student_first_name = student["first_name"]
                 student_last_name = student["last_name"]
                 if student["route_id"] == None:
@@ -32,7 +33,7 @@ def users_detail(request):
                     route_student = Route.routeTables.get(pk=student["route_id"])
                     route_serializer = RouteSerializer(route_student, many=False)
                     route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
-                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route' : route_arr})
+                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route' : route_arr, 'school': {'id': student_school.id, 'name': student_school.name}})
             user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": student_list}
         else:
             user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": []}
