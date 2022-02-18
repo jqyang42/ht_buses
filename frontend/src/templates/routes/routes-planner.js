@@ -37,7 +37,8 @@ class BusRoutesPlanner extends Component {
             error_status: false,
             error_code: 200,
             stops_edit_mode: false,
-            dnd: false
+            dnd: false,
+            stops_order: [],
         }
     }
 
@@ -69,6 +70,14 @@ class BusRoutesPlanner extends Component {
         this.setState(prevState => ({
             dnd: !prevState.dnd
         }))
+    }
+
+    handleReorder = (new_order) => {
+        this.setState({ stops_order: new_order })
+    }
+
+    submitStopsOrder = () => {
+        // TODO: add axios get for stops reordering @jessica
     }
 
     handleTableGet = () => {        
@@ -434,7 +443,7 @@ class BusRoutesPlanner extends Component {
                                                     <div className="col float-end">
                                                         {
                                                             this.state.stops_edit_mode ?
-                                                            <button className="btn btn-primary float-end w-auto" onClick={this.switchStopsEditMode}>
+                                                            <button className="btn btn-primary float-end w-auto" onClick={this.submitStopsOrder}>
                                                                 <span className="btn-text">
                                                                     Save
                                                                 </span>
@@ -449,7 +458,7 @@ class BusRoutesPlanner extends Component {
                                                         }
                                                     </div> 
                                                 </div>
-                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd}/>
+                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd} handleReorder={this.handleReorder}/>
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"

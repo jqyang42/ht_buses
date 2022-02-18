@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";  
 import { Table } from "./table";
 
-export function StopsTable({ data, showAll, dnd }) {
+export function StopsTable({ data, showAll, dnd, handleReorder }) {
 
     const columns = React.useMemo(
         () => [
@@ -38,6 +38,7 @@ export function StopsTable({ data, showAll, dnd }) {
                     cursor: "pointer"
                 }
             })}
+            handleReorder={handleReorder}
         />
     )
 }
