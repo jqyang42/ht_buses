@@ -29,6 +29,7 @@ export function StopsTable({ data, showAll }) {
             data={data}
             searchOn={false}
             showAll={showAll}
+            dnd={true}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
