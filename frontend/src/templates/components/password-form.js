@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { passwordRegex } from "../regex/input-validation";
 import api from './api';
 import { Link } from 'react-router-dom';
+import PasswordResetConfirmation from "../general/password-reset-confirmation";
 
 class PasswordForm extends Component {
     state = {
@@ -17,7 +18,8 @@ class PasswordForm extends Component {
     samePassword = false;
 
     componentDidMount() {
-        console.log(sessionStorage.getItem('is_staff'))
+        this.setState({ edit_success: 0 })
+      
     }
     
     passwordValidation() {
@@ -25,6 +27,7 @@ class PasswordForm extends Component {
     }
 
     handlePasswordChange = (event) => {
+        this.props.onChange()
         this.password2 = '';
         this.password2Field.value = '';
         this.samePassword = false;
@@ -32,6 +35,7 @@ class PasswordForm extends Component {
     }
     
     handleConfirmPasswordChange = event => {
+        this.props.onChange()
         this.setState({ confirm_password: event.target.value });
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
@@ -42,32 +46,31 @@ class PasswordForm extends Component {
     handleSubmit = event => {
         
         event.preventDefault();
-
         if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
             this.setState({ edit_success: -1 })
-            // console.log(this.state.edit_success)
             return 
         }
 
-        const password = {
+        const data = {
             user: {
                 password: this.state.password
             }
         }
-        
-        api.put(`users/password-edit?id=${sessionStorage.getItem('user_id')}`, password) 
-            .then(res => {
-                const success = res.data.success
-                if (success) {
-                    this.setState({ edit_success: 1 })    // TODO ERROR: edit_success?
-                    // console.log(this.state.edit_success)
-                }
-            })
-        // this.setState({ redirect: true });
+        this.props.sendApiRequest(data).then(password_changed => {
+            this.setState({ edit_success: password_changed ? 1 : -1 })
+            if (password_changed) {
+                this.password2Field.value = '';
+                this.password1Field.value = '';
+            }
+        })
+
     }
 
     render() {
         return (
+             <div className="container my-4 mx-0 w-100 mw-100">
+            {this.state.edit_success === 1 && this.props.source === "ResetPassword" ? 
+                                <PasswordResetConfirmation /> : 
             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                 <div className="row">
                     <div className="col">
@@ -136,9 +139,14 @@ class PasswordForm extends Component {
                         </div>
                     </div>
                 </form>
-            </div>
-        )
+                </div>
+                }
+             </div>
+                    
+        );
+            
     }
+
 }
 
 export default React.memo(PasswordForm)

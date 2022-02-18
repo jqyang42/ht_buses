@@ -17,7 +17,7 @@ def students_detail(request):
         student_serializer = StudentSerializer(student, many=False)
         if student_serializer.data["route_id"] == None:
             route_id = 0
-            route_name = "Unassigned"
+            route_name = ""
         else:
             route = Route.routeTables.get(pk=student_serializer.data["route_id"])
             route_serializer = RouteSerializer(route, many=False)

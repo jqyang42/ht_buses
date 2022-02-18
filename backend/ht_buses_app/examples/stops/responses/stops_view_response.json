@@ -1,0 +1,31 @@
+{
+    "stops": [
+        {
+            "id": 1,
+            "name": "Stop 1",
+            "arrival": "10:00",
+            "departure": "11:00",
+            "location": {
+                "id": 34,
+                "address": "",
+                "lat": 3.0,
+                "long": 2.0
+            },
+            "order_by": 1
+        },
+        {
+            "id": 2,
+            "name": "Stop 2",
+            "arrival": "11:00",
+            "departure": "12:00",
+            "location": {
+                "id": 35,
+                "address": "",
+                "lat": 4.0,
+                "long": 5.0
+            },
+            "order_by": 2
+        }
+    ],
+    "success": true
+}

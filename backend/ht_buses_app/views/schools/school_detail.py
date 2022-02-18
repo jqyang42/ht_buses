@@ -1,3 +1,4 @@
+from multiprocessing import allow_connection_pickling
 from ...models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -26,13 +27,13 @@ def schools_detail(request):
         for student in students_serializer.data:
             if student["route_id"] == None:
                 route_id = 0
-                route_name = "Unassigned"
+                route_arr = {"id": 0, "color_id": 0}
             else:
                 route_id = student["route_id"]
                 student_route = Route.routeTables.get(pk=route_id)
                 student_route_serializer = RouteSerializer(student_route, many=False)
-                route_name = student_route_serializer.data["name"]
-            student_list.append({'id': student["id"], 'student_school_id': student["student_school_id"], 'first_name': student["first_name"], 'last_name' : student["last_name"], 'route_name': route_name})
+                route_arr = {"id": student["route_id"], "name": student_route_serializer.data["name"], "color_id": student_route_serializer.data["color_id"], }
+            student_list.append({'id': student["id"], 'student_school_id': student["student_school_id"], 'first_name': student["first_name"], 'last_name' : student["last_name"], 'route': route_arr})
         data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:

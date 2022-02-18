@@ -28,16 +28,24 @@ class StopMarker extends Component {
         showInfoWindow: false
       };
 
-      handleMouseOver = e => {
-          this.setState({
-              showInfoWindow: true
-          });
-      };
-      handleMouseExit = e => {
-          this.setState({
-              showInfoWindow: false
-          });
-      };
+    handleClick = (event) => {
+      this.setState(prevState => ({
+        showInfoWindow: !prevState.showInfoWindow
+      }))
+    }
+
+    editName = (event) => {
+      this.setState({
+        name: event.target.value
+      });
+    }
+
+    handleSubmit = (event) => {
+      event.preventDefault();
+      if (this.props.handleStopNameChange) {
+        this.props.handleStopNameChange(this.state.name, this.props.id)
+      }
+    }
 
   render () {
     let stringData
@@ -54,11 +62,48 @@ class StopMarker extends Component {
       icon={this.state.icon} 
       id={this.props.id} 
       key={this.props.id} 
-      onMouseOver={this.handleMouseOver}
-      onMouseOut={this.handleMouseExit}>
+      onClick={this.handleClick}>
         {showInfoWindow && (
-          <InfoWindow>
-              <h6 className='text-center ms-1 me-0 mt-0 mb-1'>{stringData}</h6>
+          <InfoWindow options={{maxWidth:300}}>
+            {/* <>
+              <form>
+                <div className='form-group mt-1'>
+                  <span>
+                    <input type='name' className="d-inline form-control w-auto ms-1 me-2" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
+                    <button onSubmit={this.handleSubmit} className='h-100 d-inline btn btn-primary mb-1'>
+                      Save
+                    </button>
+                  </span>
+                </div>
+              </form>
+              <button onClick={this.deleteMarker} className='btn btn-danger ms-1 mt-2 mb-1'>Delete</button>
+            </> */}
+            {
+              !this.props.assign_mode ? 
+              <>
+                <h6>{this.state.name}</h6>
+              </>
+              :
+              <>
+                <form>
+                  <div className='form-group mt-1 me-0 pe-0 px-0 overflow-hidden'>
+                      <input type='name' className="d-inline form-control w-auto ms-1 me-0" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
+                      <div className='row mt-3 mb-1 ms-1 w-auto d-flex justify-content-between'>
+                        <div className='float-start ms-0 ps-0 w-auto'>
+                          <button onClick={this.props.handleDeleteMarker} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
+                        </div>
+                        <div className='float-end w-auto text-align-end align-items-end pb-0'>
+                          <button onClick={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+                </form>
+              </>
+            }
+            
+              
           </InfoWindow>
         )}
       </Marker>

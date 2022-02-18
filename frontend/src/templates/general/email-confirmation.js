@@ -1,9 +1,18 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import { STUDENTS_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL } from "../../constants";
+
 
 class EmailConfirmation extends Component {
 
     render() {
+        if (JSON.parse(sessionStorage.getItem('logged_in')) && JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
+        else if (JSON.parse(sessionStorage.getItem('logged_in')) && !JSON.parse(sessionStorage.getItem('is_staff'))) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
         return (
             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                 <div className="row">

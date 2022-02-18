@@ -1,5 +1,6 @@
 import React from "react";
 import { Table } from "./table";
+import { colors } from "../../static/colors";
     
 export function UserStudentsTable({ data, showAll }) {
 
@@ -14,12 +15,16 @@ export function UserStudentsTable({ data, showAll }) {
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name'
             },
+            // {
+            //     Header: 'School',
+            //     accessor: 'school'
+            // },
             {
                 Header: 'Bus Route',
-                accessor: 'route_name',
+                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
                 Cell: ({ cell: { value } }) => (
-                    value === "Unassigned" ? <><div className="unassigned">{value}</div></> : <><span className="circle me-2" />{value}</>
-                )
+                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
+                ),
             },     
             {
                 Header: 'Bus Stops',

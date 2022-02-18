@@ -17,6 +17,7 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
+        stops: null,
         center: {},
         markers: [],
         assign_mode: false,
@@ -107,6 +108,21 @@ class BusRoutesDetail extends Component {
             }
         } 
         )
+
+        api.get(`stops?id=${this.props.params.id}`)
+            .then(res => {
+            const data = res.data;
+            this.setState({ stops: data.stops })
+            console.log(this.state.stops)
+        })
+        .catch (function(error) {
+            if (error.response.status !== 200) {
+                // console.log(error.response.data)
+                self.setState({ error_status: true });
+                self.setState({ error_code: error.response.status });
+            }
+        } 
+        )
     }
 
     handleDelete = event => { //TODO: Change api to boolean
@@ -153,7 +169,6 @@ class BusRoutesDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5 className="align-top">{this.state.route.name}
-                                            {/* TODO: Add conditional statement here for if route status is incomplete */}
                                             { this.state.route.is_complete ? "" :
                                                 <span className="badge bg-red ms-2">Incomplete</span>
                                             }
@@ -225,7 +240,7 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STOPS</h7>
-                                        {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                        {this.state.stops ? <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> : ""}
                                         <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                             { !this.state.stops_show_all ?
                                                 "Show All" : "Show Pages"
