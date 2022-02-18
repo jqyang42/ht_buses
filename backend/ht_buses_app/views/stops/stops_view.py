@@ -10,7 +10,7 @@ from datetime import datetime
 # Stops GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def stops_view(request):
     data = {}
     id = request.query_params["id"] # this is route id
