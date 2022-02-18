@@ -100,7 +100,7 @@ class RouteMap extends Component {
   }
 
   handleDeleteMarker = (event) => {
-    // TODO: delete marker @thomas
+    const to_delete =
   }
 
   render() {
