@@ -17,7 +17,7 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
-        stops: [],
+        stops: null,
         center: {},
         markers: [],
         assign_mode: false,
@@ -240,7 +240,7 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STOPS</h7>
-                                        <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/>
+                                        {this.state.stops ? <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> : ""}
                                         <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                             { !this.state.stops_show_all ?
                                                 "Show All" : "Show Pages"
