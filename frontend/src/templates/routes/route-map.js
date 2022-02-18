@@ -99,8 +99,14 @@ class RouteMap extends Component {
     }
   }
 
-  handleDeleteMarker = (event) => {
-    const to_delete =
+  handleDeleteMarker = (id) => {
+    console.log(this.state.stops)
+    console.log(id)
+    const new_stops = this.state.stops
+    const delete_index = new_stops.indexOf(id)
+    new_stops.splice(delete_index, 1)
+    console.log(new_stops)
+    this.setState({ stops: new_stops })
   }
 
   render() {
