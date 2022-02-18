@@ -16,6 +16,8 @@
     "bootstrap-icons": "^1.7.2",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.0-rc.1",
+    "react-dnd": "^15.1.1",
+    "react-dnd-html5-backend": "^15.1.2",
     "react-dom": "^17.0.2",
     "react-geocode": "^0.2.3",
     "react-google-autocomplete": "^2.6.1",
