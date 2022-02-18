@@ -26,7 +26,6 @@ class StudentMarker extends Component {
       };
 
     handleClick = (e) => {
-      // console.log("map marker on handle click: " + this.props.active_route)
       if (this.props.assign_mode ){
         if (this.state.currentRoute != this.props.active_route) {
           this.setState({

@@ -37,40 +37,66 @@ const hidePOIs = [{
 class RouteMap extends Component {
   state = {
     stops: [],
-    showModal: false
+    showModal: false,
+    center: {
+      lat: parseFloat(this.props.center.lat),
+      lng: parseFloat(this.props.center.lng)
+    },
   }
 
-  students = [];
+  studentsChanged = []
+
+  handleCenterChange = (event) => {
+    //TODO: update state with new center
+  }
 
   // onChange
-  handleRouteIDChange = (routeID, studentIDs) => {
+  handleRouteChanges = (routeID, studentIDs) => {
     for (let i = 0; i < studentIDs.length; i++) {
-      this.students.push({
+      this.studentsChanged.push({
         "id": studentIDs[i],
         "route_id": parseInt(routeID),
         "in_range": false
       })
     }
-    if(this.props.onChange) {
-      this.props.onChange(this.students);
+    if (this.props.onChange) {
+      this.props.onChange(this.studentsChanged);
     }
   }
 
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
-    console.log(coords)
     if (this.props.assign_mode ) {
       this.setState({
         stops: [...this.state.stops, {
-          position: coords,
-          routeID: this.props.active_route,
+          name: "placeholder",
+          lat: coords.lat,
+          long: coords.lng,
+          route_id: this.props.active_route,
+          arrival: "00:00",
+          departure: "00:00"
         }]
       })
     }
+    this.handleStopCreate()
     this.setState({ showModal: true })
     console.log(this.state.showModal)
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
+  }
+
+  handleStopNameChange = (name, key) => {
+    const newStops = [...this.state.stops];
+    const newStop = {...newStops[key]};
+    newStop.name = name;
+    newStops[key] = newStop;
+    this.setState({stops: newStops});
+  }
+
+  handleStopCreate = () => {
+    if (this.props.onCreate) {
+      this.props.onCreate(this.state.stops)
+    }
   }
 
   handleDeleteMarker = (event) => {
@@ -78,7 +104,6 @@ class RouteMap extends Component {
   }
 
   render() {
-    // console.log("Map onRender Active Route: " + this.props.active_route)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -101,9 +126,10 @@ class RouteMap extends Component {
             }}
             zoom={13}
             onClick={this.createStopMarker}
+            onCenterChanged={this.handleCenterChange}
           >
             <Marker position={this.props.center}  />
-            {this.props.markers?.map((value, index) => {
+            {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 
@@ -113,7 +139,7 @@ class RouteMap extends Component {
                 id={value.id}
                 studentIDs={value.studentIDs}
                 studentNames={value.studentNames}
-                onChange={this.handleRouteIDChange} 
+                onChange={this.handleRouteChanges} 
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"/>
             })}
@@ -122,10 +148,14 @@ class RouteMap extends Component {
               key={index}
               id={index}
               name={""}
-              location={value.position}
+              location={{
+                lat: value.lat,
+                lng: value.long
+              }}
               assign_mode={this.props.assign_mode} 
-              routeID={value.routeID}
-              handleDeleteMarker={this.handleDeleteMarker}/>
+              routeID={value.route_id}
+              handleDeleteMarker={this.handleDeleteMarker}
+              handleStopNameChange={this.handleStopNameChange}/>
             })}
           </GoogleMap>
         </LoadScript>
