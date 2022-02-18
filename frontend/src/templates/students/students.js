@@ -22,6 +22,7 @@ class Students extends Component {
     apiGetStudents = () => {
         api.get(`students`)
         .then(res => {
+            console.log(res.data)
             const students = res.data.students;
             this.setState({ students: students });
     })

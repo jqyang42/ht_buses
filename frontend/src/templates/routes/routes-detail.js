@@ -153,7 +153,6 @@ class BusRoutesDetail extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5 className="align-top">{this.state.route.name}
-                                            {/* TODO: Add conditional statement here for if route status is incomplete */}
                                             { this.state.route.is_complete ? "" :
                                                 <span className="badge bg-red ms-2">Incomplete</span>
                                             }
