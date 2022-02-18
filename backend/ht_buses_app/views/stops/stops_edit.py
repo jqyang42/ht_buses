@@ -10,7 +10,7 @@ from datetime import datetime
 # Stops POST API
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def stops_edit(request):
     data = {}
     try:
@@ -22,7 +22,10 @@ def stops_edit(request):
             print(stop_obj)
             route = Route.routeTables.get(pk=stop["route_id"])
             stop_obj.route_id = route
-            stop_obj.name = stop["name"]
+            if stop["name"] == "" or stop["name"] == None:
+                stop_obj.name = "Stop " + str(count)
+            else:
+                stop_obj.name = stop["name"]
             stop_obj.order_by = count
             arrival = stop["arrival"]
             stop_obj.arrival = datetime.time(datetime.strptime(arrival,"%H:%M"))

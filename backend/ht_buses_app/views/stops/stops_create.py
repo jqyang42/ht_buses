@@ -19,7 +19,10 @@ def stops_create(request):
         stops = []
         for stop in reqBody["stops"]:
             route = Route.routeTables.get(pk=stop["route_id"])
-            name = stop["name"]
+            if stop["name"] == "" or stop["name"] == None:
+                name = "Stop "+ str(count)
+            else:
+                name = stop["name"]
             order_by = count
             arrival = stop["arrival"]
             departure = stop["departure"]
