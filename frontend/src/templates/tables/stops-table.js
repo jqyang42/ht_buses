@@ -11,12 +11,12 @@ export function StopsTable({ data, showAll }) {
             },
             {
                 Header: 'Pickup Time',
-                accessor: 'pickup_time',
+                accessor: 'arrival',
                 disableFilter: true
             },
             {
                 Header: 'Dropoff Time',
-                accessor: 'dropoff_time',
+                accessor: 'departure',
                 disableFilter: true
             }
         ],

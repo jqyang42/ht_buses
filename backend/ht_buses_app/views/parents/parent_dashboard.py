@@ -26,12 +26,13 @@ def parent_dashboard(request):
             school_serializer = SchoolSerializer(school, many=False)
             school_name = school_serializer.data["name"]
             if student["route_id"] == None:
-                route_name = "Unassigned" # Config after credentials
+                route_arr = {"id": 0, "color_id": 0}
             else:
                 route = Route.routeTables.get(pk=student["route_id"])
                 route_serializer = RouteSerializer(route, many=False)
                 route_name = route_serializer.data["name"]
-            parent_kids.append({'id' : id, 'student_school_id': student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name})
+                route_arr = {"id": student["route_id"], "name": route_name, "color_id": route_serializer.data["color_id"]}
+            parent_kids.append({'id' : id, 'student_school_id': student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr})
         data["user"] = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "students": parent_kids}
         data["success"] = True
         return Response(data)

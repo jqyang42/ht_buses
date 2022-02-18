@@ -1,7 +1,7 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 
@@ -24,14 +24,14 @@ def parent_student_detail(request):
             school_serializer = SchoolSerializer(school, many=False)
             student_arr["school_name"] = school_serializer.data["name"]
             if student_serializer.data["route_id"] == None:
-                route_name = "Unassigned"
-                route_description = ""
+                route_arr = {"id": 0, "color_id": 0}
             else:
                 route = Route.routeTables.get(pk=student_serializer.data["route_id"])
                 route_serializer = RouteSerializer(route, many=False)
                 route_name = route_serializer.data["name"]
                 route_description = route_serializer.data["description"]
-            student_arr["route"] = {'name' : route_name, 'description' : route_description}
+                route_arr = {'id': route_serializer.data["id"], 'name' : route_name, 'description' : route_description, 'color_id': route_serializer.data['color_id']}
+            student_arr["route"] = route_arr
             data["student"] = student_arr
             data["success"] = True
             return Response(data)
