@@ -42,10 +42,10 @@ export function StudentsTable( {data, showAll} ) {
             },
             {
                 Header: 'Route',
-                accessor: d => Array(`${d.color_id}`,`${d.route_name}`),
+                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
-                    value[1] === "Unassigned" ? <><div className="unassigned">{value[1]}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[1]}</>
+                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
                 ),
             },     
             {

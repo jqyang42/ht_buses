@@ -37,10 +37,11 @@ def students(request):
         in_range = student["in_range"]
         if student["route_id"] == None:
             route = 0
+            route_arr = {"id": 0, "color_id": 0}
         else:
             route = Route.routeTables.get(pk=student["route_id"])
             route_serializer = RouteSerializer(route, many=False)
-        route_arr = {"name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
+            route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
     data["students"] = student_list
     data["success"] = True

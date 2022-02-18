@@ -1,0 +1,21 @@
+{
+    "stops": [
+        {
+            "route_id": 1,
+            "name": "Stop 1",
+            "arrival": "10:00",
+            "departure": "11:00",
+            "lat": 3.0,
+            "long": 2.0
+        },
+        {
+            "route_id": 1,
+            "name": "Stop 2",
+            "arrival": "11:00",
+            "departure": "12:00",
+            "lat": 4.0,
+            "long": 5.0
+        }
+
+    ]
+}
