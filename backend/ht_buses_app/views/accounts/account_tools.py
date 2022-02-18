@@ -39,6 +39,7 @@ def password_reset_params_valid(uuid, token):
     try:
         user = User.objects.get(pk=decode_user(uuid))
         valid_token = password_reset_token_generator.check_token(user, token) 
+        print(valid_token)
         return valid_token
     except:
         return False

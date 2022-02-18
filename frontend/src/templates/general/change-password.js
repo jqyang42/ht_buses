@@ -12,26 +12,24 @@ import PasswordForm from "../components/password-form";
 
 class ChangePassword extends Component {
 
-    state = {
-        valid_url: false
+    onChange = () => {
+        //placeholder don't delete
     }
-
-    sendApiRequest = () => {
+    
+    sendApiRequest = async (data) => {
+        const res = await api.put(`users/password-edit?id=${sessionStorage.getItem('user_id')}`, data) 
+        const password_changed = res.data.success
+        return password_changed
     }
-
+   
     componentDidMount() {
-        console.log(sessionStorage.getItem('is_staff'))
+    
     }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        // const { redirect } = this.state;
-        // const redirect_url = USERS_URL + '/' + this.props.params.id;
-        // if (redirect) {
-        //     return <Navigate to={ PARENT_DASHBOARD_URL }/>;
-        // }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -42,7 +40,7 @@ class ChangePassword extends Component {
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Account" isRoot={false} isSecond={true} name="Change Password" />
                         <div className="container my-4 mx-0 w-100 mw-100">
-                            <PasswordForm type="Change" sendApiRequest={this.sendApiRequest} validUrl={this.state.valid_url}/>
+                            <PasswordForm type="Change" source="ChangePassword" sendApiRequest={this.sendApiRequest} onChange={this.onChange}/>
                         </div>
                     </div>
                 </div>
