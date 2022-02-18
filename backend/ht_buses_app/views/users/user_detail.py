@@ -27,7 +27,7 @@ def users_detail(request):
                 student_first_name = student["first_name"]
                 student_last_name = student["last_name"]
                 if student["route_id"] == None:
-                    route_arr = {"id": 0}
+                    route_arr = {"id": 0, "color_id": 0}
                 else:
                     route_student = Route.routeTables.get(pk=student["route_id"])
                     route_serializer = RouteSerializer(route_student, many=False)
