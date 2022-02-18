@@ -74,11 +74,12 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
           ],
         })
         // console.log(records)
-        // records.map(row => {
-        //     return row.id
-        // })
-        // console.log(new_records)
-        this.handleReorder(new_order)
+        const new_order = new_records.map(row => {
+            return row.id
+        })
+        console.log(new_records)
+        console.log(new_order)
+        handleReorder(new_order)
         setRecords(new_records)
     }
 

@@ -78,6 +78,7 @@ class BusRoutesPlanner extends Component {
 
     submitStopsOrder = () => {
         // TODO: add axios get for stops reordering @jessica
+        
     }
 
     handleTableGet = () => {        
