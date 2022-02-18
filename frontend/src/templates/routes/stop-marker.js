@@ -60,7 +60,7 @@ class StopMarker extends Component {
       className={this.state.currentRoute} 
       icon={this.state.icon} 
       id={this.props.id} 
-      key={this.props.key} 
+      key={this.props.id} 
       onClick={this.handleClick}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>

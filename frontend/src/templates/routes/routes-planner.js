@@ -194,7 +194,7 @@ class BusRoutesPlanner extends Component {
             this.handleTableGet() 
             this.handleLocationsGet()
         })
-        api.put('stops/create', this.stops)
+        api.post('stops/create', this.stops)
         .then(res => {
             this.stops = {"stops":[]};
             this.handleTableGet() 

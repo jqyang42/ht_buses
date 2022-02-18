@@ -71,8 +71,11 @@ class RouteMap extends Component {
       this.setState({
         stops: [...this.state.stops, {
           name: "placeholder",
-          position: coords,
-          routeID: this.props.active_route,
+          lat: coords.lat,
+          long: coords.lng,
+          route_id: this.props.active_route,
+          arrival: "00:00",
+          departure: "00:00"
         }]
       })
     }
@@ -145,9 +148,12 @@ class RouteMap extends Component {
               key={index}
               id={index}
               name={""}
-              location={value.position}
+              location={{
+                lat: value.lat,
+                lng: value.long
+              }}
               assign_mode={this.props.assign_mode} 
-              routeID={value.routeID}
+              routeID={value.route_id}
               handleDeleteMarker={this.handleDeleteMarker}
               handleStopNameChange={this.handleStopNameChange}/>
             })}
