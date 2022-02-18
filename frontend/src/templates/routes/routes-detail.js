@@ -17,6 +17,7 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
+        stops: null,
         center: {},
         markers: [],
         assign_mode: false,
@@ -100,6 +101,21 @@ class BusRoutesDetail extends Component {
         })
         .catch (function(error) {
             // console.log(error.response)
+            if (error.response.status !== 200) {
+                // console.log(error.response.data)
+                self.setState({ error_status: true });
+                self.setState({ error_code: error.response.status });
+            }
+        } 
+        )
+
+        api.get(`stops?id=${this.props.params.id}`)
+            .then(res => {
+            const data = res.data;
+            this.setState({ stops: data.stops })
+            console.log(this.state.stops)
+        })
+        .catch (function(error) {
             if (error.response.status !== 200) {
                 // console.log(error.response.data)
                 self.setState({ error_status: true });
@@ -224,7 +240,7 @@ class BusRoutesDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STOPS</h7>
-                                        {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                        {this.state.stops ? <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> : ""}
                                         <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                             { !this.state.stops_show_all ?
                                                 "Show All" : "Show Pages"

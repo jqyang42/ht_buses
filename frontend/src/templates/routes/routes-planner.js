@@ -13,6 +13,7 @@ import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
+import { StopsTable }  from "../tables/stops-table";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
@@ -22,6 +23,7 @@ class BusRoutesPlanner extends Component {
             school: [],
             students: [],
             routes: [],
+            stops: null,
             create_route_name: '',
             create_school_name: '',
             create_route_description: '',
@@ -40,6 +42,7 @@ class BusRoutesPlanner extends Component {
     componentDidMount() {
         this.handleTableGet();       
         this.handleLocationsGet();     
+        if (this.state.active_route !== 0) { this.handleStopsGet() };
         makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
             this.setState({ route_dropdown: ret })
         })
@@ -106,6 +109,23 @@ class BusRoutesPlanner extends Component {
             );
     }
 
+    handleStopsGet = (active_route) => {
+        api.get(`stops?id=${active_route}`)
+            .then(res => {
+            const data = res.data;
+            this.setState({ stops: data.stops })
+            console.log(this.state.stops)
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                // console.log(error.response.data)
+                this.setState({ error_status: true });
+                this.setState({ error_code: error.response.status });
+            }
+        } 
+        )
+    }
+
     handleAssignMode = event => {
         this.setState({assign_mode_warning: false})
         this.setState(prevState => ({ 
@@ -123,6 +143,8 @@ class BusRoutesPlanner extends Component {
         if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
         this.setState({ active_route: parseInt(event.target.value) })
         console.log(this.state.active_route)
+
+        this.handleStopsGet(parseInt(event.target.value))
     }
 
     handleRouteNameChange = event => {
@@ -143,7 +165,7 @@ class BusRoutesPlanner extends Component {
 
         const route = {
             name: this.state.create_route_name,
-            school_name: this.state.school.name,
+            school_id: this.props.params.id,
             description: this.state.create_route_description,
             is_complete: false  // TODO ACTUALLY CALCULATE
         }
@@ -212,6 +234,8 @@ class BusRoutesPlanner extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+        console.log(this.state.active_route)
+        console.log(this.state.stops)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -371,18 +395,18 @@ class BusRoutesPlanner extends Component {
                                     </div>
                                     <div className="col">
                                         {
-                                            this.state.active_route === 0 ? "" :
+                                            this.state.active_route === 0 ? "" : this.state.stops ?
                                             <>
                                                 <h7>STOPS</h7>
                                                 <div></div>
-                                                {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all}/>
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
                                                 </button>
                                                 <div></div>
-                                            </>
+                                            </> : ""
                                         }
                                         
                                         <h7>STUDENTS</h7>
