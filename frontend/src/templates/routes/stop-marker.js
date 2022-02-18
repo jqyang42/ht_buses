@@ -53,7 +53,6 @@ class StopMarker extends Component {
       stringData = this.state.name;
     }
     const { showInfoWindow } = this.state;
-    console.log(this.props.routeID % STOP_MARKER_ICONS.length)
     return (
       <>
       <Marker 

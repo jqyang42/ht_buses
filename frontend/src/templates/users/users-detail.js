@@ -231,10 +231,10 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
-                                                                    {(!studentIDValidation({ student_id: this.state.new_student.student_school_id})) ? 
+                                                                    {(studentIDValidation({ student_id: this.state.new_student.student_school_id}) || (this.state.new_student.student_school_id === '')) ? "" :
                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                         The Student ID value is invalid. Please edit and try again.
-                                                                    </div>) : ""
+                                                                    </div>)
                                                                     }
                                                                 </div>
                                                                 <div className="form-group required pb-3">
