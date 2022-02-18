@@ -51,7 +51,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
             searchInput: "",
             pageIndex: 0,
             pageSize: 10,
-            sortBy: [
+            sortBy: dnd ? [] : [
                 {
                     id: 'name',
                     desc: false
@@ -78,13 +78,15 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     }
 
     console.log(rows)
+    // console.log(dnd)
+    // console.log(searchOn)
 
     return (
         <>
             { searchOn ?
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> : "" }
 
-            {/* <DndProvider backend={HTML5Backend}> */}
+            <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
@@ -121,7 +123,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 showAll ?
                 rows.map((row, i) => {
                     // Prepare the row for display
-                    {dnd ? 
+                    {
                         prepareRow(row) || (
                             <Row
                             index={i}
@@ -130,20 +132,20 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                             navUrl={navUrl}
                             {...row.getRowProps(rowProps(row))}
                             />
-                        ) :
-                        prepareRow(row)
-                        return (
-                        <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                            {row.cells.map(cell => {
-                            return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                            })}
-                        </tr>
                         )
+                        // prepareRow(row)
+                        // return (
+                        // <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                        //     {row.cells.map(cell => {
+                        //     return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
+                        //     })}
+                        // </tr>
+                        // )
                     }
                 }) : 
                 page.map((row, i) => {
                     // Prepare the row for display
-                    {dnd ? 
+                    {
                         prepareRow(row) || (
                             <Row
                             index={i}
@@ -152,20 +154,20 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                             navUrl={navUrl}
                             {...row.getRowProps(rowProps(row))}
                             />
-                        ) :
-                        prepareRow(row)
-                        return (
-                        <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                            {row.cells.map(cell => {
-                            return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                            })}
-                        </tr>
-                        )
+                        ) 
+                        // prepareRow(row)
+                        // return (
+                        // <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                        //     {row.cells.map(cell => {
+                        //     return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
+                        //     })}
+                        // </tr>
+                        // )
                     }
                 })}
                 </tbody>
             </table>
-            {/* </DndProvider> */}
+            </DndProvider>
 
             {
                 showAll ? "" :
@@ -190,6 +192,8 @@ const Row = ({ row, index, moveRow, navUrl }) => {
   const dropRef = React.useRef(null)
   const dragRef = React.useRef(null)
   const navigate = useNavigate();
+
+  console.log('at row class')
 
   const [, drop] = useDrop({
     accept: DND_ITEM_TYPE,

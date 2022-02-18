@@ -23,7 +23,7 @@ class BusRoutesPlanner extends Component {
             school: [],
             students: [],
             routes: [],
-            stops: [],
+            stops: null,
             create_route_name: '',
             create_school_name: '',
             create_route_description: '',
@@ -109,8 +109,8 @@ class BusRoutesPlanner extends Component {
             );
     }
 
-    handleStopsGet = (event) => {
-        api.get(`stops?id=${this.state.active_route}`)
+    handleStopsGet = (active_route) => {
+        api.get(`stops?id=${active_route}`)
             .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
@@ -143,6 +143,8 @@ class BusRoutesPlanner extends Component {
         if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
         this.setState({ active_route: parseInt(event.target.value) })
         console.log(this.state.active_route)
+
+        this.handleStopsGet(parseInt(event.target.value))
     }
 
     handleRouteNameChange = event => {
@@ -232,6 +234,8 @@ class BusRoutesPlanner extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+        console.log(this.state.active_route)
+        console.log(this.state.stops)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -391,18 +395,18 @@ class BusRoutesPlanner extends Component {
                                     </div>
                                     <div className="col">
                                         {
-                                            this.state.active_route === 0 ? "" :
+                                            this.state.active_route === 0 ? "" : this.state.stops ?
                                             <>
                                                 <h7>STOPS</h7>
                                                 <div></div>
-                                                <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/>
+                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all}/>
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
                                                 </button>
                                                 <div></div>
-                                            </>
+                                            </> : ""
                                         }
                                         
                                         <h7>STUDENTS</h7>
