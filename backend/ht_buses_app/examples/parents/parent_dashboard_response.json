@@ -1,3 +1,24 @@
+[{
+    "success": true,
+    "user": {
+        "first_name": "Emmy",
+        "last_name": "Beans",
+        "students": [
+            {
+                "id": 11,
+                "student_school_id": 11111,
+                "first_name": "my plushie",
+                "last_name": "cat",
+                "school_name": "Est Middle School",
+                "route": {
+                    "id": 1,
+                    "name": "Route 90",
+                    "color_id": 1
+                }
+            }
+        ]
+    }
+},
 {
     "success": true,
     "user": {
@@ -10,8 +31,11 @@
                 "first_name": "my plushie",
                 "last_name": "cat",
                 "school_name": "Est Middle School",
-                "route_name": "Route 90"
+                "route": {
+                    "id": 0
+                }
             }
         ]
     }
 }
+]
