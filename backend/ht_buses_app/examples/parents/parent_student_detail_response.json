@@ -20,7 +20,8 @@
         "last_name": "cat",
         "school_name": "Est Middle School",
         "route": {
-            "id": 0
+            "id": 0,
+            "color_id": 0
         }
     }
 }

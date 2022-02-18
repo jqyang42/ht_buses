@@ -31,7 +31,8 @@
             "last_name": "Smith",
             "school_name": "East Middle School",
             "route": {
-                "id": 0
+                "id": 0,
+                "color_id": 0
             },
             "parent": {
                 "id": 7,
