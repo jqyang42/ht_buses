@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";  
 import { Table } from "./table";
 
-export function StopsTable({ data, showAll }) {
+export function StopsTable({ data, showAll, dnd }) {
 
     const columns = React.useMemo(
         () => [
@@ -32,7 +32,7 @@ export function StopsTable({ data, showAll }) {
             data={data}
             searchOn={false}
             showAll={showAll}
-            dnd={true}
+            dnd={dnd}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
