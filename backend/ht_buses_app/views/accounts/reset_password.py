@@ -28,12 +28,11 @@ def send_reset_password_email(request): #to actually send email with reset link
     text_content = """
     Hi {} {},
 
-    An account with this email has been created for you.
-    Please follow this link to finish setting up your account.
+    Your Hypothetical Transportation password can be reset by clicking the link below. If you did not request a new password, please ignore this email.
 
     {}
     """.format(user.first_name,user.last_name,url)
-    subject = "Activate Your Account"
+    subject = "Password Reset Request for Hypothetical Transportation"
     send_mail(subject, text_content, from_email, [user.email],fail_silently=False)
     try:
         data["message"] = "message successfully sent"
