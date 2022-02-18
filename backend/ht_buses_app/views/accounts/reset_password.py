@@ -54,14 +54,12 @@ def reset_password(request): #to save the password used
     uuid = request.query_params["uuid"]
     password_reset_token = request.query_params["token"]
     data = password_reset_message(uuid, password_reset_token)
-    print(data)
     if not data["success"]:
         return Response(data)
     try:
         user = User.objects.get(pk = decode_user(uuid))
         user.set_password(reqBody['user']['password'])
         user.save()
-        print("password saved")
         data["message"] = 'password was successfully saved'
         data["success"] = True
     except:

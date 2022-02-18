@@ -19,7 +19,6 @@ def account_activation_email(user):
     uuid = encode_user(user)
     account_activation_token = activation_token_generator.make_token(user)
     url = constants.ACCOUNT_ACTIVATION_URL_FRONTEND + str(uuid) + '&' + str(account_activation_token)
-    print(url)
     return
 
 def generate_random_password():
@@ -39,7 +38,6 @@ def password_reset_params_valid(uuid, token):
     try:
         user = User.objects.get(pk=decode_user(uuid))
         valid_token = password_reset_token_generator.check_token(user, token) 
-        print(valid_token)
         return valid_token
     except:
         return False
