@@ -15,6 +15,10 @@ export function UserStudentsTable({ data, showAll }) {
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name'
             },
+            // {
+            //     Header: 'School',
+            //     accessor: 'school'
+            // },
             {
                 Header: 'Bus Route',
                 accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
