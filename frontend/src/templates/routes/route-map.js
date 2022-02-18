@@ -42,6 +42,7 @@ class RouteMap extends Component {
       lat: parseFloat(this.props.center.lat),
       lng: parseFloat(this.props.center.lng)
     },
+    // new_stops = []
   }
 
   studentsChanged = []
@@ -99,13 +100,26 @@ class RouteMap extends Component {
     }
   }
 
-  handleDeleteMarker = (id) => {
+  // handleDeleteMarker = (id) => {
+  //   // console.log(this.state.stops)
+  //   console.log(id)
+  //   // this.setstate whatever
+
+  //   // const new_stops = this.state.stops
+  //   // const delete_index = new_stops.indexOf(id)
+  //   // new_stops.splice(delete_index, 1)
+  //   // console.log(new_stops)
+  //   // this.setState({ stops: new_stops })
+  // }
+
+  handleUpdateStops = (event, index) => {
+    event.preventDefault()
+    console.log(index)
     console.log(this.state.stops)
-    console.log(id)
+
     const new_stops = this.state.stops
-    const delete_index = new_stops.indexOf(id)
-    new_stops.splice(delete_index, 1)
-    console.log(new_stops)
+    new_stops.splice(index, 1)
+    // console.log(new_stops)
     this.setState({ stops: new_stops })
   }
 
@@ -160,7 +174,8 @@ class RouteMap extends Component {
               }}
               assign_mode={this.props.assign_mode} 
               routeID={value.route_id}
-              handleDeleteMarker={this.handleDeleteMarker}
+              // handleDeleteMarker={this.handleDeleteMarker}
+              handleUpdateStops={this.handleUpdateStops}
               handleStopNameChange={this.handleStopNameChange}/>
             })}
           </GoogleMap>
