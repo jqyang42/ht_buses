@@ -19,7 +19,6 @@ def account_activation_email(user):
     uuid = encode_user(user)
     account_activation_token = activation_token_generator.make_token(user)
     url = constants.ACCOUNT_ACTIVATION_URL_FRONTEND + str(uuid) + '&' + str(account_activation_token)
-    print(url)
     return
 
 def generate_random_password():

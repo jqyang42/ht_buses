@@ -7,14 +7,20 @@ import PasswordForm from "../components/password-form";
 
 class SetupPassword extends Component {
     state = {
-        valid_url: false
+        valid_url: 0
     }
     
-    sendApiRequest = () => {
+    sendApiRequest = async (data) => {
+        //TODO change to account activation 
+        return true
+    }
+
+    onChange = () => {
+        //placeholder don't delete
     }
 
     componentDidMount() {
-        console.log(sessionStorage.getItem('is_staff'))
+       
     }
 
     render() {
@@ -26,7 +32,7 @@ class SetupPassword extends Component {
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <UnauthenticatedHeaderMenu />
                         <div className="container my-4 mx-0 w-100 mw-100">
-                            <PasswordForm type="Reset" sendApiRequest={this.sendApiRequest} validUrl={this.state.valid_url}/>
+                            <PasswordForm type="Reset" source="AccountActivation" sendApiRequest={this.sendApiRequest} onChange={this.onChange}/>
                         </div>
                     </div>
                 </div>
