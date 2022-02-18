@@ -84,7 +84,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
             { searchOn ?
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> : "" }
 
-            <DndProvider backend={HTML5Backend}>
+            {/* <DndProvider backend={HTML5Backend}> */}
             {/* // apply the table props */}
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
@@ -165,8 +165,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 })}
                 </tbody>
             </table>
-            </DndProvider>
-
+            {/* </DndProvider> */}
 
             {
                 showAll ? "" :
