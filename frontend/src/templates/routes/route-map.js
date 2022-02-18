@@ -79,6 +79,9 @@ class RouteMap extends Component {
       this.props.onCreate(this.state.stops)
     }
   }
+  handleDeleteMarker = (event) => {
+    // TODO: delete marker @thomas
+  }
 
   render() {
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -123,10 +126,11 @@ class RouteMap extends Component {
               return <StopMarker 
               key={index}
               id={index}
+              name={""}
               location={value.position}
               assign_mode={this.props.assign_mode} 
-              name="placeholder" //TODO: Change to stop name
-              routeID={value.routeID}/>
+              routeID={value.routeID}
+              handleDeleteMarker={this.handleDeleteMarker}/>
             })}
           </GoogleMap>
         </LoadScript>

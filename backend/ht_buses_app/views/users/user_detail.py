@@ -27,12 +27,12 @@ def users_detail(request):
                 student_first_name = student["first_name"]
                 student_last_name = student["last_name"]
                 if student["route_id"] == None:
-                    route_name = "Unassigned"
+                    route_arr = {"id": 0}
                 else:
                     route_student = Route.routeTables.get(pk=student["route_id"])
                     route_serializer = RouteSerializer(route_student, many=False)
-                    route_name = route_serializer.data["name"]
-                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route_name' : route_name})
+                    route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
+                student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route' : route_arr})
             user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": student_list}
         else:
             user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr, "students": []}

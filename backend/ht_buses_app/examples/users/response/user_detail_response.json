@@ -16,14 +16,20 @@
                 "student_school_id": 1,
                 "first_name": "Evelyn",
                 "last_name": "Cupil Garcia",
-                "route_name": "Cool route"
+                "route": {
+                    "id": 1,
+                    "name": "Cool route",
+                    "color_id": 1
+                }
             },
             {
-                "id": 12,
+                "id": 1,
                 "student_school_id": 1,
-                "first_name": "Tester",
-                "last_name": "Cool",
-                "route_name": "Unassigned"
+                "first_name": "Evelyn",
+                "last_name": "Cupil Garcia",
+                "route": {
+                    "id": 0
+                }
             }
         ]
     },
