@@ -198,7 +198,7 @@ class BusRoutesPlanner extends Component {
 
         const route = {
             name: this.state.create_route_name,
-            school_name: this.state.school.name,
+            school_id: this.props.params.id,
             description: this.state.create_route_description,
             is_complete: false  // TODO ACTUALLY CALCULATE
         }
