@@ -126,7 +126,7 @@ class RouteMap extends Component {
             onCenterChanged={this.handleCenterChange}
           >
             <Marker position={this.props.center}  />
-            {this.props.markers?.map((value, index) => {
+            {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 
                 location={value.position} 
