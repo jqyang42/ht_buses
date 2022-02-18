@@ -84,7 +84,7 @@ class SidebarMenu extends Component {
                                 Change Password
                             </span>
                         </Link> */}
-                        <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
+                        <button className="btn btn-primary w-75 mb-4 mx-auto align-self-bottom" role="button" onClick={this.handleLogout}>
                             Log Out
                         </button> 
                     </div>

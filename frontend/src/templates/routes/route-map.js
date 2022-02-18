@@ -73,6 +73,10 @@ class RouteMap extends Component {
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
+  handleDeleteMarker = (event) => {
+    // TODO: delete marker @thomas
+  }
+
   render() {
     // console.log("Map onRender Active Route: " + this.props.active_route)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -117,9 +121,11 @@ class RouteMap extends Component {
               return <StopMarker 
               key={index}
               id={index}
+              name={""}
               location={value.position}
               assign_mode={this.props.assign_mode} 
-              routeID={value.routeID}/>
+              routeID={value.routeID}
+              handleDeleteMarker={this.handleDeleteMarker}/>
             })}
           </GoogleMap>
         </LoadScript>
