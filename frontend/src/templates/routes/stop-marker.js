@@ -65,13 +65,36 @@ class StopMarker extends Component {
       onClick={this.handleClick}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>
-            <>
+            {/* <>
               <form>
                 <div className='form-group mt-1'>
                   <span>
                     <input type='name' className="d-inline form-control w-auto ms-1 me-2" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
-                    <button onSubmit={this.handleSubmit} className='d-inline btn btn-primary mb-1'><i className='bi bi-check'></i></button>
+                    <button onSubmit={this.handleSubmit} className='h-100 d-inline btn btn-primary mb-1'>
+                      Save
+                    </button>
                   </span>
+                </div>
+              </form>
+              <button onClick={this.deleteMarker} className='btn btn-danger ms-1 mt-2 mb-1'>Delete</button>
+            </> */}
+            <>
+              <form>
+                <div className='form-group mt-1 me-0 pe-0 px-0 overflow-hidden'>
+                    <input type='name' className="d-inline form-control w-auto ms-1 me-0" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
+                    <div className='row mt-3 mb-1 ms-1 w-auto d-flex justify-content-between'>
+                      <div className='float-start ms-0 ps-0 w-auto'>
+                      <button onClick={this.props.handleDeleteMarker} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
+                      </div>
+                      
+                      <div className='float-end w-auto text-align-end align-items-end pb-0'>
+                      <button onSubmit={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>
+                        Save
+                      </button>
+                      </div>
+                     
+                    </div>
+                    
                 </div>
               </form>
             </>
