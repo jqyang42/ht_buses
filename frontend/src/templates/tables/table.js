@@ -120,51 +120,53 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                showAll ?
+                showAll ? (dnd ? 
+                rows.map((row, i) => 
+                    // Prepare the row for display
+                    prepareRow(row) || (
+                        <Row
+                        index={i}
+                        row={row}
+                        moveRow={moveRow}
+                        navUrl={navUrl}
+                        {...row.getRowProps(rowProps(row))}
+                        />
+                    )
+                ) :
                 rows.map((row, i) => {
                     // Prepare the row for display
-                    {
-                        prepareRow(row) || (
-                            <Row
-                            index={i}
-                            row={row}
-                            moveRow={moveRow}
-                            navUrl={navUrl}
-                            {...row.getRowProps(rowProps(row))}
-                            />
-                        )
-                        // prepareRow(row)
-                        // return (
-                        // <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                        //     {row.cells.map(cell => {
-                        //     return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                        //     })}
-                        // </tr>
-                        // )
-                    }
-                }) : 
+                    prepareRow(row)
+                    return (
+                    <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                        {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
+                        })}
+                    </tr>
+                    )
+                })) : (dnd ? 
+                page.map((row, i) => 
+                    // Prepare the row for display
+                    prepareRow(row) || (
+                        <Row
+                        index={i}
+                        row={row}
+                        moveRow={moveRow}
+                        navUrl={navUrl}
+                        {...row.getRowProps(rowProps(row))}
+                        />
+                    )
+                ) :
                 page.map((row, i) => {
                     // Prepare the row for display
-                    {
-                        prepareRow(row) || (
-                            <Row
-                            index={i}
-                            row={row}
-                            moveRow={moveRow}
-                            navUrl={navUrl}
-                            {...row.getRowProps(rowProps(row))}
-                            />
-                        ) 
-                        // prepareRow(row)
-                        // return (
-                        // <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                        //     {row.cells.map(cell => {
-                        //     return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                        //     })}
-                        // </tr>
-                        // )
-                    }
-                })}
+                    prepareRow(row)
+                    return (
+                    <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                        {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
+                        })}
+                    </tr>
+                    )
+                }))}
                 </tbody>
             </table>
             </DndProvider>
