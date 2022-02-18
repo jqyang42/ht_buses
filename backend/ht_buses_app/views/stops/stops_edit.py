@@ -10,7 +10,7 @@ from datetime import datetime
 # Stops POST API
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def stops_edit(request):
     data = {}
     try:
