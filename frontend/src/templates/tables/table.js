@@ -94,6 +94,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 headerGroups.map(headerGroup => (
                     // Apply the header row props
                     <tr {...headerGroup.getHeaderGroupProps()}>
+                    {dnd ? <th></th> : ""}
                     {// Loop over the headers in each row
                     headerGroup.headers.map(column => (
                         // Apply the header cell props
