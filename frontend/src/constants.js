@@ -55,3 +55,4 @@ export const PASSWORD_URL = "/change-password";
 export const EMAIL_RESET_URL = "/email-reset";
 export const RESET_PASSWORD_URL = "/reset-password/:uuid&:token";
 export const ACCOUNT_URL = "/account";
+export const ACCOUNT_ACTIVATION_URL = "/account-activation/:uuid&:token";
