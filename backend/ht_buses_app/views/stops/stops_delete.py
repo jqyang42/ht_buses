@@ -18,7 +18,7 @@ def stops_delete(request):
             stop_obj = Stop.stopTables.get(pk=stop["id"])
             stop_obj.location_id.delete()
             stop_obj.delete()
-        data["message"] = "stops edited successfully"
+        data["message"] = "stops deleted successfully"
         data["success"] = True
         return Response(data)
     except:
