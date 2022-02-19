@@ -77,6 +77,7 @@ class BusRoutesPlanner extends Component {
     }
 
     submitStopsOrder = () => {
+        this.switchStopsEditMode()
         // TODO: add axios get for stops reordering @jessica
         
     }
@@ -85,6 +86,7 @@ class BusRoutesPlanner extends Component {
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const data = res.data
+                console.log(this.state.students)
                 this.setState({ 
                     school: data.school,
                     students: data.students,
@@ -147,11 +149,9 @@ class BusRoutesPlanner extends Component {
             .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            console.log(this.state.stops)
         })
         .catch (error => {
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
                 this.setState({ error_status: true });
                 this.setState({ error_code: error.response.status });
             }
@@ -438,7 +438,6 @@ class BusRoutesPlanner extends Component {
                                         {
                                             this.state.active_route === 0 ? "" : this.state.stops ?
                                             <>
-                                                {/* <h7>STOPS</h7> */}
                                                 <div className="row d-flex justify-content-between align-items-center mb-2">
                                                     <h7 className="col w-auto">STOPS</h7>
                                                     <div className="col float-end">
