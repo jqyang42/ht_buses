@@ -7,8 +7,8 @@ class TimeCalculation extends Component {
 
     // destination = [{ lat: 35.80513650819991, lng: -78.86720180228771 }]
     // origin = [{ lat: 35.7966295542791, lng: -78.84261969355543 }]
-    // arrival_time = "07:20"
-    // depature_time = "14:25"
+    // arrival_time = "07:20" --> 7:11am
+    // depature_time = "14:25" --> 2:33pm
 
     calculateTime = (travel_time) => {
         let calc_time
