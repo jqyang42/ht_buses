@@ -14,7 +14,7 @@ class PasswordResetConfirmation extends Component {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
-            <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
+            <div className="container-fluid py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                 <div className="row">
                     <div className="col w-50">
                         <h5>Password Reset</h5>
