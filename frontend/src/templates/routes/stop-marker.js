@@ -45,6 +45,7 @@ class StopMarker extends Component {
       if (this.props.handleStopNameChange) {
         this.props.handleStopNameChange(this.state.name, this.props.id)
       }
+      this.handleClick()
     }
 
   render () {
