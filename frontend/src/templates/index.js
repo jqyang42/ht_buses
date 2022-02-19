@@ -81,13 +81,6 @@ class Login extends Component {
                         <div className="col mx-0 px-0 bg-gray w-100">
                             <UnauthenticatedHeaderMenu />
                             <div className="container mt-4 mx-2">
-                                <TimeCalculation
-                                    destination={[{ lat: 35.80513650819991, lng: -78.86720180228771 }]}
-                                    origin={[{ lat: 35.7966295542791, lng: -78.84261969355543 }]}
-                                    want_arrival={false}
-                                    known_time={"07:20"}
-                                    handleCalcTime={this.handleCalcTime}
-                                />
                                 <div className="row">
                                     <div className="col-6">
                                         <h2 className="pb-3">Log In</h2>

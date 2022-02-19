@@ -14,9 +14,10 @@ class BusRoutes extends Component {
         show_all: false
     }
 
-    handleShowAll = event => {
-        this.setState({show_all: !this.state.show_all})
-        // console.log(this.state.show_all)
+    handleShowAll = () => {
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }))
     }
 
     componentDidMount() {
@@ -24,7 +25,6 @@ class BusRoutes extends Component {
             .then(res => {
                 const routes = res.data.routes
                 this.setState({ routes });
-                this.setState({ show_all: false });
         })
     }
 
