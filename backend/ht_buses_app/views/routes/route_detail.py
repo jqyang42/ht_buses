@@ -33,7 +33,7 @@ def routes_detail(request):
                 parent_student = Student.studentsTable.filter(user_id=parent_id, route_id=id)
                 parent_student_serializer = StudentSerializer(parent_student, many=True)
                 for child in parent_student_serializer.data:
-                    parent_student_arr.append({"id" : child["id"], "student_school_id": child["student_school_id"], "first_name": child["first_name"], "last_name" : child["last_name"]})
+                    parent_student_arr.append({"id" : child["id"], "student_school_id": child["student_school_id"], "first_name": child["first_name"], "last_name" : child["last_name"],  "in_range": child["in_range"]})
                 location = Location.locationTables.get(pk=parent.location_id)
                 location_serializer = LocationSerializer(location, many=False)
                 parent_address = {"address": location_serializer.data["address"], "lat": location_serializer.data["lat"], "long": location_serializer.data["long"]}
