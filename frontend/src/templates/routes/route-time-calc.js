@@ -11,13 +11,22 @@ class TimeCalculation extends Component {
     // depature_time = "14:25" --> 2:33pm
 
     // <TimeCalculation
-    //     destination={[{ lat: 35.80513650819991, lng: -78.86720180228771 }]}
-    //     origin={[{ lat: 35.7966295542791, lng: -78.84261969355543 }]}
-    //     want_arrival={false}
-    //     known_time={"07:20"}
-    //     handleCalcTime={this.handleCalcTime}
+    //     origin={{ lat: 35.7966295542791, lng: -78.84261969355543 }}
+    //     destination={{ lat: 35.80513650819991, lng: -78.86720180228771 }}
+    //     stops={[
+    //         {
+    //             location: { lat: 35.78721052689135, lng: -78.86991589070445 },
+    //         },
+    //         {
+    //             location: { lat: 35.791252102220305, lng: -78.85021124623715 },
+    //         },                
+    //     ]}
+    //     want_departure={true}
+    //     arrival_time={'07:20'}
+    //     departure_time={'14:25'}
+    //     handleRouteTimes={this.handleCalcTime}
     // />
-7
+
     calculateTime = (route_legs) => {
         const leg_travel_times = route_legs.map(leg => {
             return leg.duration.value
@@ -34,14 +43,6 @@ class TimeCalculation extends Component {
     render() {
         return (
             <LoadScript googleMapsApiKey={GOOGLE_API_KEY}>
-                {/* <DistanceMatrixService 
-                options={{
-                    destinations: this.props.destination, // destination should be array of lat/lng dicts
-                    origins: this.props.origin, // same as destination
-                    travelMode: 'DRIVING'
-                }}
-                callback={(response) => this.calculateTime(response.rows[0].elements[0].duration.value)}
-                /> */}
                 <DirectionsService
                 options={{
                     origin: this.props.origin,
