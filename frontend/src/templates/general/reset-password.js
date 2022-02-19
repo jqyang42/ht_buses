@@ -13,7 +13,7 @@ class ResetPassword extends Component {
     
     state = {
         valid_url: 0,
-        type: "Rest"
+        type: "Reset Password"
     }
 
     sendApiRequest = async (data) => {

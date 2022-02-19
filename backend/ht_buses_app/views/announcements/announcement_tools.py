@@ -29,7 +29,7 @@ def announcement_substitutions(user, subject, body, include_route_info):
     text_content = """
     {}
     """.format(body)
-    if include_route_info:
+    if include_route_info and user.is_parent:
         text_content= """
         {}
         
@@ -57,7 +57,8 @@ def tailored_parent_email(user):
                 route_name = "Unassigned"
                 stop_string = "N/A"
             student_body = """{}
-            Name: {} {}\tSchool ID: {}\tSchool Name: {}\tRoute Name: {}\nRoute Stop Options: {}\n
+            Name: {} {}\tSchool ID: {}\tSchool Name: {}\tRoute Name: {}\n
+            Route Stop Options: {}\n
             """.format(student_body,student_arr["first_name"], student_arr["last_name"],student_arr["school_student_id"], student_arr["school_name"], route_name, stop_string)
         parent_body = """
         Here is your students' information:\n
