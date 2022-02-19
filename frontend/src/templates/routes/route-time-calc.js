@@ -1,4 +1,4 @@
-import { DistanceMatrixService, LoadScript } from "@react-google-maps/api";
+import { DirectionsService, DistanceMatrixService, LoadScript } from "@react-google-maps/api";
 import { GOOGLE_API_KEY } from '../../constants';
 import React, { Component } from "react";
 import { timetoArrive, timeToDepart } from "../components/time";
@@ -17,27 +17,40 @@ class TimeCalculation extends Component {
     //     known_time={"07:20"}
     //     handleCalcTime={this.handleCalcTime}
     // />
-
-    calculateTime = (travel_time) => {
-        let calc_time
-        if (this.props.want_arrival) {
-            calc_time = timetoArrive({ departure_time: this.props.known_time, travel_time: travel_time })
+7
+    calculateTime = (route_legs) => {
+        const leg_travel_times = route_legs.map(leg => {
+            return leg.duration.value
+        })
+        let calculated_times
+        if (this.props.want_departure) {
+            calculated_times = timeToDepart({ arrival_time: this.props.arrival_time, travel_times: leg_travel_times })
         } else {
-            calc_time = timeToDepart({ arrival_time: this.props.known_time, travel_time: travel_time })
+            calculated_times = timetoArrive({ departure_time: this.props.departure_time, travel_times: leg_travel_times })
         }
-        this.props.handleCalcTime(calc_time)
+        this.props.handleRouteTimes(calculated_times)
     }
 
     render() {
         return (
             <LoadScript googleMapsApiKey={GOOGLE_API_KEY}>
-                <DistanceMatrixService 
+                {/* <DistanceMatrixService 
                 options={{
                     destinations: this.props.destination, // destination should be array of lat/lng dicts
                     origins: this.props.origin, // same as destination
                     travelMode: 'DRIVING'
                 }}
                 callback={(response) => this.calculateTime(response.rows[0].elements[0].duration.value)}
+                /> */}
+                <DirectionsService
+                options={{
+                    origin: this.props.origin,
+                    destination: this.props.destination,
+                    waypoints: this.props.stops,
+                    travelMode: 'DRIVING'
+                    // arrival_time: 1645359600    // epoch time for 2/20/22 7.20am
+                }}
+                callback={(response) => this.calculateTime(response.routes[0].legs)}
                 />
             </LoadScript>
         )

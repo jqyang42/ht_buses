@@ -125,7 +125,7 @@ class BusRoutesDetail extends Component {
                 id: user.id,
                 studentIDs: studentIDs,
                 studentNames: studentNames,
-                routeID: this.props.params.id
+                routeID: this.props.params.id   //TODO: change markers to create per student
             })
             // this.setState(prevState => ({
             //     markers: [...prevState.markers, {
@@ -136,11 +136,10 @@ class BusRoutesDetail extends Component {
             //         id: user.id,
             //         studentIDs: studentIDs,
             //         studentNames: studentNames,
-            //         routeID: this.props.params.id //TODO: change markers to create per student
+            //         routeID: this.props.params.id 
             //     }]
             // }));
         });
-        console.log(markers)
         this.setState({ markers: markers })
     }
 
@@ -207,6 +206,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+        console.log(this.state.markers)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
