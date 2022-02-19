@@ -26,6 +26,13 @@ def announcement_substitutions(user, subject, body, include_route_info = False):
     text_content = """
     {}
     """.format(body)
+    if include_route_info:
+        text_content= """
+        {}
+        Here are the closest bus stops for your children:
+        {}
+        """.format(text_content, "stop")
+
     msg = EmailMultiAlternatives(subject, text_content, from_email, [user.email], reply_to=[constants.DEFAULT_NO_REPLY_EMAIL])
     #template = get_template('basic-email.html')
     #dynamic_data = { 'user_first': user.first_name, 'user_last': user.last_name } #TODO add route customization

@@ -36,7 +36,6 @@ import Email from './templates/components/email';
 import EmailReset from './templates/general/email-reset';
 import ErrorPage from './templates/error-page';
 import ResetPassword from './templates/general/reset-password';
-import SetupPassword from './templates/general/setup-password';
 
 import { ACCOUNT_URL } from "./constants";
 import { INDEX_URL } from "./constants";
@@ -102,8 +101,8 @@ class App extends Component {
 
           <Route path={ACCOUNT_URL} element={<Account />} />
           <Route path={EMAIL_RESET_URL} element={<EmailReset />} />
-          <Route path={RESET_PASSWORD_URL} element={<ResetPassword />} />
-          <Route path={ACCOUNT_ACTIVATION_URL} element={<SetupPassword />} />
+          <Route path={RESET_PASSWORD_URL} element={<ResetPassword source="Reset Password"/>} />
+          <Route path={ACCOUNT_ACTIVATION_URL} element={<ResetPassword source="Account Activation"/>}  />
           <Route component={ErrorPage} />
         </Routes>
       </div>
