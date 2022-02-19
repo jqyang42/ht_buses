@@ -41,8 +41,6 @@ class UsersDetail extends Component {
     // initialize page
     componentDidMount() {
         this.getUserDetails()
-        console.log(this.props.params.id)
-        console.log(sessionStorage.getItem("user_id"))
         this.setState({ valid_id: 0})
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
@@ -91,6 +89,7 @@ class UsersDetail extends Component {
                 this.setState({ modal_dismiss: true})
             } else {
                 this.setState({ create_success: -1 })      // TODO ERROR
+                this.setState({ modal_dismiss: true})
             }
         })
     } 
@@ -161,9 +160,8 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
-        this.event.preventDefault()
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
-            this.setState({ create_success: -1 })  
+            event.preventDefault();
             return
         }
 
@@ -219,7 +217,7 @@ class UsersDetail extends Component {
                                                 Add Student
                                             </button>
 
-                                            <div className="modal fade" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                                            <div className="modal fade" show={!this.state.modal_dismiss} id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
                                                         <form onSubmit={this.handleAddStudentSubmit}> {/* TODO: add onClick handler */}
