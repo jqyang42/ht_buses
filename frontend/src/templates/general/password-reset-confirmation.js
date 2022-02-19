@@ -17,7 +17,7 @@ class PasswordResetConfirmation extends Component {
             <div className="container-fluid py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                 <div className="row">
                     <div className="col w-50">
-                        <h5>Password Reset</h5>
+                        <h5>{this.props.type}</h5>
                         <p className="mb-3">Your password has been successfully updated. You can now try logging in with your new credentials.</p>
                         <Link to={"/login"} className="btn btn-primary w-auto me-3 mb-3" role="button">
                             <span className="btn-text">
@@ -32,3 +32,4 @@ class PasswordResetConfirmation extends Component {
 }
 
 export default React.memo(PasswordResetConfirmation)
+
