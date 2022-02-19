@@ -110,6 +110,7 @@ class UsersDetail extends Component {
         this.idField.value = ""
         this.schoolField.value = ""
         this.routeField.value = ""
+        this.setState({ valid_id: 0})
     }
     
     handleClickAddStudent = () => {
