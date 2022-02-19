@@ -48,10 +48,6 @@ class StopMarker extends Component {
     }
 
   render () {
-    let stringData
-    if (this.state.name){
-      stringData = this.state.name;
-    }
     const { showInfoWindow } = this.state;
     return (
       <>
@@ -64,19 +60,6 @@ class StopMarker extends Component {
       onClick={this.handleClick}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>
-            {/* <>
-              <form>
-                <div className='form-group mt-1'>
-                  <span>
-                    <input type='name' className="d-inline form-control w-auto ms-1 me-2" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
-                    <button onSubmit={this.handleSubmit} className='h-100 d-inline btn btn-primary mb-1'>
-                      Save
-                    </button>
-                  </span>
-                </div>
-              </form>
-              <button onClick={this.deleteMarker} className='btn btn-danger ms-1 mt-2 mb-1'>Delete</button>
-            </> */}
             {
               !this.props.assign_mode ? 
               <>

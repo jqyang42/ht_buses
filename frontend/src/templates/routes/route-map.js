@@ -147,7 +147,7 @@ class RouteMap extends Component {
               return <StopMarker 
               key={index}
               id={index}
-              name={""}
+              name={"Stop " + (index + 1)}
               location={{
                 lat: value.lat,
                 lng: value.long
