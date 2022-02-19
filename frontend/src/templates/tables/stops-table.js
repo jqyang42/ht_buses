@@ -8,16 +8,19 @@ export function StopsTable({ data, showAll }) {
             {
                 Header: 'Name',
                 accessor: 'name',
+                disableSortBy: true
             },
             {
                 Header: 'Pickup Time',
                 accessor: 'arrival',
-                disableFilter: true
+                disableFilter: true,
+                disableSortBy: true
             },
             {
                 Header: 'Dropoff Time',
                 accessor: 'departure',
-                disableFilter: true
+                disableFilter: true,
+                disableSortBy: true
             }
         ],
         []
@@ -29,6 +32,7 @@ export function StopsTable({ data, showAll }) {
             data={data}
             searchOn={false}
             showAll={showAll}
+            dnd={true}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
