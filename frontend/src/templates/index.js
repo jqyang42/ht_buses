@@ -8,6 +8,7 @@ import UnauthenticatedSidebarMenu from "./components/unauthenticated-sidebar-men
 
 import { STUDENTS_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
+import TimeCalculation from './routes/route-time-calc';
 
 class Login extends Component {
 
@@ -72,12 +73,12 @@ class Login extends Component {
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
                     <div className="row flex-nowrap">
-
                         <UnauthenticatedSidebarMenu />
-
                         <div className="col mx-0 px-0 bg-gray w-100">
                             <UnauthenticatedHeaderMenu />
                             <div className="container mt-4 mx-2">
+                            {/* <TimeCalculation/> */}
+
                                 <div className="row">
                                     <div className="col-6">
                                         <h2 className="pb-3">Log In</h2>
