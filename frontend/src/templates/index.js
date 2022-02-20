@@ -62,10 +62,6 @@ class Login extends Component {
         })
     }   
     
-    handleCalcTime = (time) => {
-        console.log(time)
-    }
-
     render() {
         if (JSON.parse(sessionStorage.getItem('logged_in')) && JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />

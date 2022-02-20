@@ -21,7 +21,6 @@ class TimeCalculation extends Component {
     //             location: { lat: 35.791252102220305, lng: -78.85021124623715 },
     //         },                
     //     ]}
-    //     want_departure={true}
     //     arrival_time={'07:20'}
     //     departure_time={'14:25'}
     //     handleRouteTimes={this.handleCalcTime}
@@ -31,17 +30,20 @@ class TimeCalculation extends Component {
         const leg_travel_times = route_legs.map(leg => {
             return leg.duration.value
         })
-        let calculated_times
-        if (this.props.want_departure) {
-            calculated_times = timeToDepart({ arrival_time: this.props.arrival_time, travel_times: leg_travel_times })
-        } else {
-            calculated_times = timetoArrive({ departure_time: this.props.departure_time, travel_times: leg_travel_times })
-        }
-        this.props.handleRouteTimes(calculated_times)
+
+        const pickup_times = timeToDepart({ arrival_time: this.props.arrival_time, travel_times: leg_travel_times })
+        const dropoff_times = timetoArrive({ departure_time: this.props.departure_time, travel_times: leg_travel_times })
+        
+        let stop_times = []
+        pickup_times.forEach((i) => stop_times[pickup_times.indexOf(i)] = {
+            pickup: pickup_times[pickup_times.indexOf(i)],
+            dropoff: dropoff_times[pickup_times.indexOf(i)]
+        })
+        this.props.handleRouteTimes(stop_times)
     }
 
     render() {
-        // TODO HANDLE MORE THAN 10 WAYPOINTS
+        // TODO @jessica HANDLE MORE THAN 10 WAYPOINTS
 
         return (
             <LoadScript googleMapsApiKey={GOOGLE_API_KEY}>
@@ -51,7 +53,6 @@ class TimeCalculation extends Component {
                     destination: this.props.destination,
                     waypoints: this.props.stops,
                     travelMode: 'DRIVING'
-                    // arrival_time: 1645359600    // epoch time for 2/20/22 7.20am
                 }}
                 callback={(response) => this.calculateTime(response.routes[0].legs)}
                 />

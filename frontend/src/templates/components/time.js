@@ -13,7 +13,7 @@ export function timeToDepart({ arrival_time, travel_times }) {
     const departure_times = travel_times.map(time => {
         const departure = prev_arrival.subtract(time, 's')
         prev_arrival = departure
-        return departure.format('hh:mm A')
+        return departure.format('HH:mm')
     })
     return departure_times.reverse()
 }
@@ -24,7 +24,7 @@ export function timetoArrive({ departure_time, travel_times }) {
     const arrival_times = travel_times.map(time => {
         const arrival = prev_departure.add(time, 's')
         prev_departure = arrival
-        return arrival.format('hh:mm A')
+        return arrival.format('HH:mm')
     })
-    return arrival_times
+    return arrival_times.reverse()
 }

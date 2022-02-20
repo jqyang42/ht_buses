@@ -224,6 +224,10 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    calculateStopTimes = () => {
+
+    }
+
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
