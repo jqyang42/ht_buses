@@ -41,6 +41,8 @@ class TimeCalculation extends Component {
     }
 
     render() {
+        // TODO HANDLE MORE THAN 10 WAYPOINTS
+
         return (
             <LoadScript googleMapsApiKey={GOOGLE_API_KEY}>
                 <DirectionsService
