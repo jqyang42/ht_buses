@@ -20,7 +20,8 @@
                 "route": {
                     "id": 1,
                     "name": "Route 1",
-                    "color_id": 0
+                    "color_id": 0,
+                    "in_range": true
                 },
                 "school": {
                     "id": 5,
