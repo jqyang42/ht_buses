@@ -75,7 +75,7 @@ class StopMarker extends Component {
                       <div className='row mt-3 mb-1 ms-1 w-auto d-flex justify-content-between'>
                         <div className='float-start ms-0 ps-0 w-auto'>
                           {/* <button onClick={showInfoWindow ? this.props.handleDeleteMarker(this.props.id) : () => {}} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button> */}
-                          <button onClick={(e) => this.props.handleUpdateStops(e, this.props.id)} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
+                          <button onClick={(e) => this.props.handleDeleteStopMarker(e, this.props.id)} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
                         </div>
                         <div className='float-end w-auto text-align-end align-items-end pb-0'>
                           <button onClick={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>

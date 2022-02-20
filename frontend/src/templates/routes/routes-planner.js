@@ -422,7 +422,7 @@ class BusRoutesPlanner extends Component {
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
                                             onChange={this.handleRouteIDChange}
-                                            handleStopCreation={this.handleRouteStopChange}/>
+                                            handleUpdateNewStops={this.handleRouteStopChange}/>
                                         </div>
                                     </div>
                                     <div className="col">

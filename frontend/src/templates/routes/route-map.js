@@ -111,41 +111,19 @@ class RouteMap extends Component {
   }
 
   handleStopCreate = () => {
-    if (this.props.handleStopCreation) {
+    if (this.props.handleUpdateNewStops) {
       console.log(this.state.newStops)
-      this.props.handleStopCreation(this.state.newStops)
+      this.props.handleUpdateNewStops(this.state.newStops)
     }
   }
 
-  // handleDeleteMarker = (id) => {
-  //   // console.log(this.state.stops)
-  //   console.log(id)
-  //   // this.setstate whatever
-
-  //   // const new_stops = this.state.stops
-  //   // const delete_index = new_stops.indexOf(id)
-  //   // new_stops.splice(delete_index, 1)
-  //   // console.log(new_stops)
-  //   // this.setState({ stops: new_stops })
-  // }
-
-  handleUpdateStops = (event, index) => {
+  handleDeleteNewStops = (event, index) => {
     event.preventDefault()
-    // console.log(this.state.stops)
-    const value = this.state.newStops[index]
-    // console.log(value)
-    const new_stops = this.state.newStops.filter(stop => stop !== value)
-
-    // console.log(index)
-
-    // const new_stops = this.state.stops
-    // console.log(new_stops)
-    // new_stops.splice(index, 1)
-    // console.log(new_stops)
-    this.setState({ newStops: new_stops })
+    const new_stops = [...this.state.newStops]
+    new_stops.splice(index, 1)
+    this.setState({ newStops: new_stops }, () => this.handleStopCreate())
   }
 
-  counter = 0
   render() {
     console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -200,7 +178,7 @@ class RouteMap extends Component {
               }}
               assign_mode={this.props.assign_mode} 
               routeID={this.props.active_route}
-              handleDeleteMarker={this.handleDeleteMarker}
+              handleDeleteStopMarker={this.handleDeleteMarker}
               handleStopNameChange={this.handleStopNameChange}/>
             })}
             {this.state.newStops?.map((value, index) => {
@@ -215,8 +193,7 @@ class RouteMap extends Component {
             }
               assign_mode={this.props.assign_mode} 
               routeID={value.route_id}
-              // handleDeleteMarker={this.handleDeleteMarker}
-              handleUpdateStops={this.handleUpdateStops}
+              handleDeleteStopMarker={this.handleDeleteNewStops}
               handleStopNameChange={this.handleStopNameChange}/>
             })}
           </GoogleMap>
