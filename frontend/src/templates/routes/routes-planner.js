@@ -45,7 +45,7 @@ class BusRoutesPlanner extends Component {
     componentDidMount() {
         this.handleTableGet();       
         this.handleLocationsGet();     
-        if (this.state.active_route !== 0) { this.handleStopsGet() };
+        if (this.state.active_route !== 0) { this.handleStopsGet(this.state.active_route) };
         makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
             this.setState({ route_dropdown: ret })
         })
@@ -124,7 +124,7 @@ class BusRoutesPlanner extends Component {
                     });
                     this.setState(prevState => ({
                         markers: [...prevState.markers, {
-                            position: {
+                            location: {
                                 lat: user.location.lat,
                                 lng: user.location.long
                             },
@@ -207,10 +207,6 @@ class BusRoutesPlanner extends Component {
             .then(res => {
                 const new_route = res.data.route
                 this.setState({ add_route_success: true })
-                // this.setState({ route_dropdown: [...this.state.routes, {
-                //     id: new_route.id,
-                //     name: new_route.name
-                // }]})
 
                 makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
                     this.setState({ route_dropdown: ret })
@@ -233,9 +229,11 @@ class BusRoutesPlanner extends Component {
 
     handleRouteStopChange = (stops) => {
         this.stops["stops"] = stops;
+        console.log("new stops")
+        console.log(this.stops)
     }
 
-    handleRouteAssignSubmit = event => {
+    handleAssignModeSave = event => {
         this.setState({
             assign_mode: false
         })
@@ -247,13 +245,14 @@ class BusRoutesPlanner extends Component {
             this.handleTableGet() 
             this.handleLocationsGet()
         })
-
+        console.log("sent stops")
         console.log(this.stops)
         api.post('stops/create', this.stops)
         .then(res => {
             this.stops = {"stops":[]};
             this.handleTableGet() 
             this.handleLocationsGet()
+            this.handleStopsGet(this.state.active_route)
         })
     }
 
@@ -368,7 +367,7 @@ class BusRoutesPlanner extends Component {
                                                     {/* TODO: Change onClick handler to dismiss */}
                                                     <button type="button" className="btn btn-secondary w-auto me-3" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
-                                                    <button type="button" className="btn btn-primary float-end w-auto me-0" onClick={this.handleRouteAssignSubmit}>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-0" onClick={this.handleAssignModeSave}>
                                                         Save
                                                     </button>
                                                 </div>
@@ -421,8 +420,9 @@ class BusRoutesPlanner extends Component {
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
                                             students={this.state.markers}
+                                            existingStops={this.state.stops}
                                             onChange={this.handleRouteIDChange}
-                                            onCreate={this.handleRouteStopChange}/>
+                                            handleStopCreation={this.handleRouteStopChange}/>
                                         </div>
                                     </div>
                                     <div className="col">

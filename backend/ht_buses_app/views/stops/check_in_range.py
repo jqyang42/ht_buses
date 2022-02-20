@@ -1,6 +1,19 @@
-from ...models import Stop, Route, User, Location
-from ...serializers import StopSerializer, UserSerializer
+from ...models import Stop, Route, User, Location, Student
+from ...serializers import StopSerializer, StudentSerializer, UserSerializer
 import math
+
+
+def update_students_in_range(student_route_id):
+    students = Student.studentsTable.filter(route_id=student_route_id)
+    students_serializer = StudentSerializer(students, many=True)
+    for student in students_serializer.data:
+        student_obj = Student.studentsTable.get(pk=student["id"])
+        if len(check_student_in_range(student["user_id"], student_route_id)) != 0:
+            student_obj.in_range = True
+            student_obj.save()
+        else:
+            student_obj.in_range = False
+            student_obj.save()
 
 
 def check_student_in_range(user_id, student_route_id):

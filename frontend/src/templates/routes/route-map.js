@@ -36,7 +36,9 @@ const hidePOIs = [{
 
 class RouteMap extends Component {
   state = {
-    stops: [],
+    newStops: [],
+    editedStops: [],
+    existingStops:this.props.existingStops,
     showModal: false,
     center: {
       lat: parseFloat(this.props.center.lat),
@@ -48,6 +50,14 @@ class RouteMap extends Component {
 
   handleCenterChange = (event) => {
     //TODO: update state with new center
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.existingStops !== prevProps.existingStops){
+      this.setState({
+        existingStops: this.props.existingStops
+      });
+    }
   }
 
   // onChange
@@ -64,38 +74,45 @@ class RouteMap extends Component {
     }
   }
 
+  // newStops = [];
+
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
     if (this.props.assign_mode ) {
-      this.setState({
-        stops: [...this.state.stops, {
-          name: "placeholder",
-          lat: coords.lat,
-          long: coords.lng,
-          route_id: this.props.active_route,
-          arrival: "00:00",
-          departure: "00:00"
-        }]
-      })
+      const newStop = {
+        name: "",
+        lat: coords.lat,
+        long: coords.lng,
+        route_id: this.props.active_route,
+        arrival: "00:00",
+        departure: "00:00"
+      }
+      // this.newStops.push(newStop)
+      this.setState(prevState => ({
+        newStops: [...prevState.newStops, newStop]
+      }), console.log(this.state.newStops))
     }
     this.handleStopCreate()
     this.setState({ showModal: true })
-    console.log(this.state.showModal)
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
   handleStopNameChange = (name, key) => {
-    const newStops = [...this.state.stops];
-    const newStop = {...newStops[key]};
+    const newStops = this.state.newStops;
+    const newStop = newStops[key];
     newStop.name = name;
     newStops[key] = newStop;
-    this.setState({stops: newStops});
+    console.log(newStops);
+    this.setState({
+      stops: newStops
+    }, this.handleStopCreate()) 
   }
 
   handleStopCreate = () => {
-    if (this.props.onCreate) {
-      this.props.onCreate(this.state.stops)
+    if (this.props.handleStopCreation) {
+      console.log(this.state.newStops)
+      this.props.handleStopCreation(this.state.newStops)
     }
   }
 
@@ -104,6 +121,7 @@ class RouteMap extends Component {
   }
 
   render() {
+    console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -132,7 +150,7 @@ class RouteMap extends Component {
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 
-                location={value.position} 
+                location={value.location} 
                 assign_mode={this.props.assign_mode} 
                 routeID={value.routeID} 
                 active_route={this.props.active_route}
@@ -143,9 +161,25 @@ class RouteMap extends Component {
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"/>
             })}
-            {this.state.stops?.map((value, index) => {
+            {this.state.existingStops?.map((value, index) => {
+              console.log("stop render")
+              console.log(value)
               return <StopMarker 
-              key={index}
+              key={`${value.location.lat}+${value.location.long}`}
+              id={index}
+              name={value.name}
+              location={{
+                lat: value.location.lat,
+                lng: value.location.long
+              }}
+              assign_mode={this.props.assign_mode} 
+              routeID={this.props.active_route}
+              handleDeleteMarker={this.handleDeleteMarker}
+              handleStopNameChange={this.handleStopNameChange}/>
+            })}
+            {this.state.newStops?.map((value, index) => {
+              return <StopMarker 
+              key={`${value.lat}+${value.long}`}
               id={index}
               name={""}
               location={{
