@@ -8,7 +8,6 @@ import UnauthenticatedSidebarMenu from "./components/unauthenticated-sidebar-men
 
 import { STUDENTS_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
-import TimeCalculation from './routes/route-time-calc';
 
 class Login extends Component {
 
