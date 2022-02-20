@@ -1,0 +1,15 @@
+{
+    "message": "stops edited successfully",
+    "success": true,
+    "stops": [
+        {
+            "id": 21,
+            "location_id": 56,
+            "route_id": 6,
+            "name": "Stop 1",
+            "order_by": 1,
+            "arrival": "00:00:00",
+            "departure": "00:00:00"
+        }
+    ]
+}

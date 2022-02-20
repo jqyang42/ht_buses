@@ -8,7 +8,7 @@ from . views.parents import parent_dashboard, parent_student_detail
 from . views.announcements import announcements
 from . views.accounts import reset_password
 from . views.general import general_apis
-from . views.stops import stops_create, stops_view, stops_edit, stops_delete
+from . views.stops import stops_create, stops_view, stops_edit, stops_delete, stops_name_edit
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -51,5 +51,6 @@ urlpatterns = [
     path('api/stops/create', stops_create.stops_create, name='stops_create'),
     path('api/stops', stops_view.stops_view, name='stops_view'),
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
-    path('api/stops/delete', stops_delete.stops_delete, name='stops_delete')
+    path('api/stops/delete', stops_delete.stops_delete, name='stops_delete'),
+    path('api/stops/edit-name', stops_name_edit.stops_name_edit, name='stops_name_edit'),
 ]

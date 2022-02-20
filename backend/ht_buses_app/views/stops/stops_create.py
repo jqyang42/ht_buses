@@ -17,10 +17,15 @@ def stops_create(request):
     data = {}
     try:
         reqBody = json.loads(request.body)
-        count = 1
         stops = []
         for stop in reqBody["stops"]:
             route = Route.routeTables.get(pk=stop["route_id"])
+            route_stops = Stop.stopTables.filter(route_id=route)
+            route_stops_serializer = StopSerializer(route_stops, many=True)
+            if len(route_stops_serializer.data) == 0:
+                count = 1
+            else:
+                count = route_stops_serializer.data[-1]["order_by"] + 1
             if stop["name"] == "" or stop["name"] == None:
                 name = "Stop "+ str(count)
             else:
