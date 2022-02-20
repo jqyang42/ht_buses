@@ -122,15 +122,21 @@ class RouteMap extends Component {
 
   handleUpdateStops = (event, index) => {
     event.preventDefault()
-    console.log(index)
-    console.log(this.state.stops)
+    // console.log(this.state.stops)
+    const value = this.state.stops[index]
+    // console.log(value)
+    const new_stops = this.state.stops.filter(stop => stop !== value)
 
-    const new_stops = this.state.stops
-    new_stops.splice(index, 1)
+    // console.log(index)
+
+    // const new_stops = this.state.stops
+    // console.log(new_stops)
+    // new_stops.splice(index, 1)
     // console.log(new_stops)
     this.setState({ stops: new_stops })
   }
 
+  counter = 0
   render() {
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
@@ -159,7 +165,7 @@ class RouteMap extends Component {
             <Marker position={this.props.center}  />
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
-                key={index} 
+                key={`${value.position.lat}+${value.position.long}`} 
                 location={value.position} 
                 assign_mode={this.props.assign_mode} 
                 routeID={value.routeID} 
@@ -173,13 +179,14 @@ class RouteMap extends Component {
             })}
             {this.state.stops?.map((value, index) => {
               return <StopMarker 
-              key={index}
+              key={`${value.lat}+${value.long}`}
               id={index}
               name={""}
               location={{
                 lat: value.lat,
                 lng: value.long
-              }}
+              }
+            }
               assign_mode={this.props.assign_mode} 
               routeID={value.route_id}
               // handleDeleteMarker={this.handleDeleteMarker}
