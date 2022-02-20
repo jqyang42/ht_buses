@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { twelveHourTime } from "../components/table-formatting";
+import { toDisplayFormat } from "../components/time";
 import { Table } from "./table";
     
 export function SchoolsTable({ data, showAll }) {
@@ -36,7 +36,7 @@ export function SchoolsTable({ data, showAll }) {
                 accessor: 'arrival',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
-                    twelveHourTime({ twentyfour_time: value })
+                    toDisplayFormat({ twentyfour_time: value })
                 )
             },
             {
@@ -44,7 +44,7 @@ export function SchoolsTable({ data, showAll }) {
                 accessor: 'departure',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
-                    twelveHourTime({ twentyfour_time: value })
+                    toDisplayFormat({ twentyfour_time: value })
                 )
             },
         ],
