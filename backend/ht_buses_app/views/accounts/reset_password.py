@@ -26,7 +26,7 @@ def send_reset_password_email(request): #to actually send email with reset link
         return Response(data)
     url = account_tools.password_reset_url(user)
     from_email = constants.FROM_DISPLAY
-    msg_plain = "" #render_to_string('templates/email.txt', {'some_params': some_params})
+    msg_plain = render_to_string(constants.PASSWORD_RESET_TEXT, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
     msg_html = render_to_string(constants.PASSWORD_RESET_TEMPLATE, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
     subject = constants.PASSWORD_RESET_SUBJECT
     try:
