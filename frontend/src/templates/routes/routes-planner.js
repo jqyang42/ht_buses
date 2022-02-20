@@ -207,10 +207,6 @@ class BusRoutesPlanner extends Component {
             .then(res => {
                 const new_route = res.data.route
                 this.setState({ add_route_success: true })
-                // this.setState({ route_dropdown: [...this.state.routes, {
-                //     id: new_route.id,
-                //     name: new_route.name
-                // }]})
 
                 makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
                     this.setState({ route_dropdown: ret })
@@ -233,6 +229,8 @@ class BusRoutesPlanner extends Component {
 
     handleRouteStopChange = (stops) => {
         this.stops["stops"] = stops;
+        console.log("new stops")
+        console.log(this.stops)
     }
 
     handleRouteAssignSubmit = event => {
@@ -247,7 +245,7 @@ class BusRoutesPlanner extends Component {
             this.handleTableGet() 
             this.handleLocationsGet()
         })
-
+        console.log("sent stops")
         console.log(this.stops)
         api.post('stops/create', this.stops)
         .then(res => {
@@ -422,7 +420,7 @@ class BusRoutesPlanner extends Component {
                                             center={this.state.center}
                                             students={this.state.markers}
                                             onChange={this.handleRouteIDChange}
-                                            onCreate={this.handleRouteStopChange}/>
+                                            handleStopCreation={this.handleRouteStopChange}/>
                                         </div>
                                     </div>
                                     <div className="col">
