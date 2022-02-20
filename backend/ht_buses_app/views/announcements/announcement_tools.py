@@ -9,7 +9,8 @@ from django.core.mail import get_connection, EmailMultiAlternatives
 from django.conf import settings
 from ..parents import parent_student_detail
 import datetime
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, StopSerializer
+from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, StopSerializer, LocationSerializer
+from ..stops import check_in_range 
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
@@ -48,18 +49,17 @@ def get_students_info(user):
             student_array = parent_student_detail.student_arr_data(student)
             route_data = student_array["route"]
             student_array["route_name"] = route_data["name"]
-            student_array["stops"] = get_stop_array(route_data["id"])
+            student_array["stops"] = get_stop_array(user,route_data["id"])
             students_array.append(student_array)
     return students_array
 
-def get_stop_array(route):
+def get_stop_array(user, route_id):
     stops_array = []
     try:
-        stops = Stop.stopTables.filter(route_id = route)
+        stops = check_in_range.check_student_in_range(user.id, route_id)
         for stop in stops:
             stop_array = {}
-            stop_serializer = StopSerializer(stop, many=False)
-            stop_data = stop_serializer.data
+            stop_data = stop
             location = Location.locationTables.get(pk = stop_data["location_id"])
             stop_array["address"] = location.address
             stop_array["name"] = stop_data["name"]

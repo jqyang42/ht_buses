@@ -43,19 +43,14 @@
                     {% for stop in student.stops %}
                         {% if forloop.counter0|divisibleby:2 %}
                             <tr style="background-color: #F3F3F3; height:48px; border-bottom: 0.8px solid #6C757D;">
-                                <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
-                                <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
-                                <td style="padding-left:16px; padding-right:16px;">{{stop.departure}}</td>
-                                <td style="padding-left:16px; padding-right:16px;">{{stop.arrival}}</td>
-                            </tr>
                         {% else %} 
                             <tr style="background-color: #ffffff; height:48px; border-bottom: 0.8px solid #6C757D;">
+                        {% endif %}
                                 <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
                                 <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
                                 <td style="padding-left:16px; padding-right:16px;">{{stop.departure}}</td>
                                 <td style="padding-left:16px; padding-right:16px;">{{stop.arrival}}</td>
-                            </tr>
-                        {% endif %} 
+                            </tr> 
                     {% endfor %}
                 </table>
                 {% endif %}
@@ -80,7 +75,7 @@
             <h3 style="font-family: Helvetica Neue; margin-bottom: 2px; color: #343A40; font-weight: 400; font-size: 1.6em; margin-top: 0%; padding-top: 0%;">Visit us at Hypothetical Transportation</h3>
             <p style="font-family: Helvetica Neue; margin-top: 8px; color: #343A40; font-size: 1.2em; padding-top: 0%; margin-bottom: 36px;"> Thank you for using our application!</p>
             <a style="background-color: #ffffff; color: #343A40; padding: 10px 20px; border-radius: 5px; border: none; text-decoration:none; font-size:15px; margin-bottom: 8px;
-            font-family: Helvetica Neue;" class="btn btn-primary" href="localhost:3000/login">
+            font-family: Helvetica Neue;" class="btn btn-primary" href={{home_url}}>
                 Login
             </a>
         </div>
