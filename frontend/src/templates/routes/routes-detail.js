@@ -27,7 +27,9 @@ class BusRoutesDetail extends Component {
         students_show_all: false,
         stops_show_all: false,
         error_status: false,
-        error_code: 200
+        error_code: 200,
+        stops_edit_mode: false,
+        dnd: false
     }
 
     componentDidMount() {
@@ -35,7 +37,25 @@ class BusRoutesDetail extends Component {
         this.getStops()
     }
 
-    // api calls
+    switchStopsEditMode = () => {
+        this.setState(prevState => ({
+            stops_edit_mode: !prevState.stops_edit_mode
+        }))
+        this.setState(prevState => ({
+            dnd: !prevState.dnd
+        }))
+    }
+
+    handleReorder = (new_order) => {
+        this.setState({ stops_order: new_order })
+    }
+
+    submitStopsOrder = () => {
+        this.switchStopsEditMode()
+        // TODO: add axios get for stops reordering @jessica
+        
+    }
+
     getRouteDetail = () => {
         api.get(`routes/detail?id=${this.props.params.id}`)
             .then(res => {
@@ -148,7 +168,6 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            console.log(this.state.stops)
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -292,14 +311,6 @@ class BusRoutesDetail extends Component {
                                         </p>
                                     </div>
                                     <div className="col">
-                                        <h7>STOPS</h7>
-                                        {this.state.stops ? <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> : ""}
-                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
-                                            { !this.state.stops_show_all ?
-                                                "Show All" : "Show Pages"
-                                            }
-                                        </button>
-                                        <div></div>
                                         <h7>STUDENTS</h7>
                                         <RouteStudentsTable data={this.state.students} showAll={this.state.students_show_all}/>
                                         <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
@@ -307,6 +318,39 @@ class BusRoutesDetail extends Component {
                                                 "Show All" : "Show Pages"
                                             }
                                         </button>
+
+                                        {
+                                            this.state.stops ?
+                                            <>
+                                                <div className="row d-flex justify-content-between align-items-center mb-2">
+                                                    <h7 className="col w-auto">STOPS</h7>
+                                                    <div className="col float-end">
+                                                        {
+                                                            this.state.stops_edit_mode ?
+                                                            <button className="btn btn-primary float-end w-auto" onClick={this.submitStopsOrder}>
+                                                                <span className="btn-text">
+                                                                    Save
+                                                                </span>
+                                                            </button>
+                                                            :
+                                                            <button className="btn btn-primary float-end w-auto" onClick={this.switchStopsEditMode}>
+                                                                <span className="btn-text">
+                                                                    <i className="bi bi-pencil-square me-2"></i>
+                                                                    Edit
+                                                                </span>
+                                                            </button>
+                                                        }
+                                                    </div> 
+                                                </div>
+                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd} handleReorder={this.handleReorder}/>
+                                                <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                    { !this.state.stops_show_all ?
+                                                        "Show All" : "Show Pages"
+                                                    }
+                                                </button>
+                                                <div></div>
+                                            </> : ""
+                                        }
                                         
                                         
                                     </div>
