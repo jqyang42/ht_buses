@@ -37,7 +37,7 @@ def announcement_substitutions(user, subject, body, include_route_info):
     if include_route_info and user.is_parent:
         students_arr = get_students_info(user)
         include_parent_info = True
-    msg_html = render_to_string('basic-email.html', ({'include_parent_info': include_parent_info,'first_name': user.first_name, 'last_name': user.last_name, 'body': body, 'students': students_arr}))
+    msg_html = render_to_string('basic-email.html', ({'include_parent_info': include_parent_info,'first_name': user.first_name, 'last_name': user.last_name, 'body': body, 'students': students_arr, 'home_url': constants.HOME_URL}))
     msg.attach_alternative(msg_html, "text/html")
     return msg
 
