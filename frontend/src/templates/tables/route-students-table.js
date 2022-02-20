@@ -25,7 +25,7 @@ export function RouteStudentsTable({ data, showAll }) {
                 accessor: 'in_range',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
-                    value == "true" ? <>{"In Range"}</> : <><div className="unassigned">{value}</div></>
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
                 )
             },
         ],
