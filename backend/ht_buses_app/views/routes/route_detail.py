@@ -8,7 +8,7 @@ from ...serializers import LocationSerializer, StudentSerializer, RouteSerialize
 # Need to rethink logic, honestly not sure how to get rid of double for loop :(
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routes_detail(request):
     data = {}
     id = request.query_params["id"]

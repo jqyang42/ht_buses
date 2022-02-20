@@ -5,6 +5,7 @@ from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from ..stops import check_in_range
+from ..routes import route_check_is_complete
 
 def create_student(student_info, id=None):
     data = {}
@@ -28,6 +29,9 @@ def create_student(student_info, id=None):
             in_range = False
         student.in_range = in_range
         student.save()
+        is_complete = route_check_is_complete.route_is_complete(student_info["route_id"])
+        route_id.is_complete = is_complete
+        route_id.save()
     except:
         route_id = None
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id = route_id)

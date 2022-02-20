@@ -7,6 +7,7 @@ from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from ..stops import check_in_range
+from ..routes import route_check_is_complete
 
 # Students PUT API
 @csrf_exempt
@@ -49,6 +50,12 @@ def student_edit(request):
         og_student_object.route_id = None
         og_student_object.in_range = False
     og_student_object.save()
+    if og_student_object.route_id != None:
+        student_route = Route.routeTables.get(pk=reqBody["student"]["route_id"])
+        is_complete = route_check_is_complete.route_is_complete(reqBody["student"]["route_id"])
+        print(is_complete)
+        student_route.is_complete = is_complete
+        student_route.save()
     data["message"] = "student information successfully updated"
     data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
     data["success"] = True
