@@ -65,20 +65,24 @@ class RouteMap extends Component {
     }
   }
 
+  // newStops = [];
+
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
     if (this.props.assign_mode ) {
-      this.setState({
-        stops: [...this.state.stops, {
-          name: "placeholder",
-          lat: coords.lat,
-          long: coords.lng,
-          route_id: this.props.active_route,
-          arrival: "00:00",
-          departure: "00:00"
-        }]
-      })
+      const newStop = {
+        name: "",
+        lat: coords.lat,
+        long: coords.lng,
+        route_id: this.props.active_route,
+        arrival: "00:00",
+        departure: "00:00"
+      }
+      // this.newStops.push(newStop)
+      this.setState(prevState => ({
+        stops: [...prevState.stops, newStop]
+      }))
     }
     this.handleStopCreate()
     this.setState({ showModal: true })
@@ -87,16 +91,20 @@ class RouteMap extends Component {
   }
 
   handleStopNameChange = (name, key) => {
-    const newStops = [...this.state.stops];
-    const newStop = {...newStops[key]};
+    const newStops = this.state.stops;
+    const newStop = newStops[key];
     newStop.name = name;
     newStops[key] = newStop;
-    this.setState({stops: newStops});
+    console.log(newStops);
+    this.setState({
+      stops: newStops
+    }, this.handleStopCreate()) 
   }
 
   handleStopCreate = () => {
-    if (this.props.onCreate) {
-      this.props.onCreate(this.state.stops)
+    if (this.props.handleStopCreation) {
+      console.log(this.state.stops)
+      this.props.handleStopCreation(this.state.stops)
     }
   }
 
