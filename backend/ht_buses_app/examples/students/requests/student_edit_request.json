@@ -5,7 +5,6 @@
         "student_school_id": 123456,
         "school_id": 1,
         "route_id": 0,
-        "user_id": 7,
-        "in_range": false
+        "user_id": 7
     }
 }

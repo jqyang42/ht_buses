@@ -6,6 +6,7 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
+from ..stops import check_in_range
 
 # Students PUT API
 @csrf_exempt
@@ -32,15 +33,21 @@ def student_edit(request):
         og_student_object.school_id = school_id
         og_student_object.student_school_id = student_school_id
         og_student_object.user_id = user_id
-        og_student_object.in_range = reqBody["student"]["in_range"]
     except:
         data["message"] = "invalid options were chosen. update was unsuccessful"
         data["success"] = False
         return Response(data)
     try: 
         og_student_object.route_id = Route.routeTables.get(pk=reqBody["student"]["route_id"])
+        stop_arr = check_in_range.check_student_in_range(reqBody["student"]["user_id"], reqBody["student"]["route_id"])
+        if len(stop_arr) != 0:
+            in_range = True
+        else:
+            in_range = False
+        og_student_object.in_range = in_range
     except: 
         og_student_object.route_id = None
+        og_student_object.in_range = False
     og_student_object.save()
     data["message"] = "student information successfully updated"
     data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
