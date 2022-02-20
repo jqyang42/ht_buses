@@ -8,6 +8,8 @@ from . import account_tools
 from ..general import general_apis
 from ...constants import constants
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -24,23 +26,17 @@ def send_reset_password_email(request): #to actually send email with reset link
         return Response(data)
     url = account_tools.password_reset_url(user)
     from_email = constants.FROM_DISPLAY
-    text_content = """
-    Hi {} {},
-
-    Your Hypothetical Transportation password can be reset by clicking the link below. If you did not request a new password, please ignore this email.
-
-    {}
-    """.format(user.first_name,user.last_name,url)
+    msg_plain = "" #render_to_string('templates/email.txt', {'some_params': some_params})
+    msg_html = render_to_string(constants.PASSWORD_RESET_TEMPLATE, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
     subject = constants.PASSWORD_RESET_SUBJECT
-    send_mail(subject, text_content, from_email, [user.email],fail_silently=False)
     try:
+        send_mail(subject, msg_plain, from_email, [user.email], html_message=msg_html, fail_silently=False)
         data["message"] = "message successfully sent"
         data["success"] = True
-        return Response(data)
     except:
         data["message"] = "message not successfully sent"
         data["success"] = False
-        return Response(data)
+    return Response(data)
 
 @csrf_exempt
 @api_view(['PATCH'])
