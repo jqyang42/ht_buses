@@ -172,6 +172,3 @@ EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 
 
 PASSWORD_RESET_TIMEOUT_DAY=1
-
-MEDIA_ROOT = "ht_buses_app/static/ht_buses_app/img"
-MEDIA_URL = "http://localhost:8000/static/"
