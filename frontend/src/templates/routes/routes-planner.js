@@ -31,7 +31,6 @@ class BusRoutesPlanner extends Component {
             route_dropdown: [],
             center: {},
             markers: [],
-            calc_route_times: false,
             assign_mode: false,
             assign_mode_warning: false,
             active_route: 0,
@@ -274,9 +273,7 @@ class BusRoutesPlanner extends Component {
     handleRouteAssignSubmit = event => {
         this.setState({
             assign_mode: false,
-            calc_route_times: true
         })
-        // this.useTimeCalculation()
 
         api.put('routeplanner/edit', this.students)
         .then(res => {
@@ -293,6 +290,8 @@ class BusRoutesPlanner extends Component {
             this.handleTableGet() 
             this.handleLocationsGet()
         })
+
+        // handle editting orig stops, creating new stops @jessica
     }
 
     render() {
