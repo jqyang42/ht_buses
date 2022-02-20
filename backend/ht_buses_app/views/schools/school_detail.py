@@ -9,7 +9,7 @@ from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer,
 # Schools Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def schools_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -32,14 +32,14 @@ def schools_detail(request):
                 route_id = student["route_id"]
                 student_route = Route.routeTables.get(pk=route_id)
                 student_route_serializer = RouteSerializer(student_route, many=False)
-                route_arr = {"id": student["route_id"], "name": student_route_serializer.data["name"], "color_id": student_route_serializer.data["color_id"], "is_complete": student_route_serializer.data["is_complete"]}
+                route_arr = {"id": student["route_id"], "name": student_route_serializer.data["name"], "color_id": student_route_serializer.data["color_id"]}
             student_list.append({'id': student["id"], 'student_school_id': student["student_school_id"], 'first_name': student["first_name"], 'last_name' : student["last_name"], 'route': route_arr, 'in_range': student["in_range"]})
         data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
             route_count = Student.studentsTable.filter(route_id=Route.routeTables.get(pk=school_route["id"]))
             route_count_serialize = StudentSerializer(route_count, many=True)
-            route_list.append({'id': school_route["id"], 'name': school_route["name"], 'student_count': len(route_count_serialize.data)})
+            route_list.append({'id': school_route["id"], 'name': school_route["name"], 'student_count': len(route_count_serialize.data), "is_complete": school_route["is_complete"]})
         data["routes"] = route_list
         data["success"] = True
         return Response(data)
