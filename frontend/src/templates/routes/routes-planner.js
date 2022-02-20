@@ -14,6 +14,7 @@ import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
+import { getStopTimes } from "./route-time-calc";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
@@ -86,7 +87,7 @@ class BusRoutesPlanner extends Component {
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const data = res.data
-                console.log(data.students)
+                console.log(data)
                 this.setState({ 
                     school: data.school,
                     students: data.students,
@@ -106,6 +107,7 @@ class BusRoutesPlanner extends Component {
     handleLocationsGet = () => {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
+                console.log(res.data)
                 const school_location = res.data.school.location;
                 this.setState({ 
                     center: { 
@@ -148,7 +150,11 @@ class BusRoutesPlanner extends Component {
         api.get(`stops?id=${this.state.active_route}`)
             .then(res => {
             const data = res.data;
-            this.setState({ stops: data.stops })
+            this.setState({ stops: data.stops }, () => {
+                if (data.stops.length !== 0) {
+                    this.handleStopTimeCalc()
+                }            
+            })
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -159,13 +165,35 @@ class BusRoutesPlanner extends Component {
         )
     }
 
-    delete_orig_stop_ids = {'stops': []}
-    handleOrigStopsDeletion = (stop_ids) => {
-        const deletion_ids = stop_ids.map(id => {
-            return { 'id': id }
+    handleStopTimeCalc = () => {
+        const school = this.state.school
+        const stops = [...this.state.stops]
+        stops.sort((a, b) => a.order_by - b.order_by)
+        const stops_latlng = stops.filter(stop => stop.order_by !== 1).map(stop => {
+            return {
+                location: { lat: stop.location.lat, lng: stop.location.long }
+            }
         })
-        console.log(deletion_ids)
-        this.delete_orig_stop_ids["stops"] = deletion_ids;
+        
+        getStopTimes({
+            first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
+            school: { lat: school.location.lat, lng: school.location.long },
+            stops: stops_latlng,
+            arrival_time: school.arrival,
+            departure_time: school.departure
+        }).then(res => this.updateStopTimes(res))
+    }
+
+    updateStopTimes = (stop_times) => {
+        const stops = [...this.state.stops]
+        const new_stops = stops.map(stop => {
+            return {
+                ...stop,
+                arrival: stop_times[stop.order_by - 1].pickup,
+                departure: stop_times[stop.order_by - 1].dropoff
+            }
+        })
+        this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
     }
 
     handleAssignMode = event => {
@@ -243,9 +271,18 @@ class BusRoutesPlanner extends Component {
         console.log(this.stops)
     }
 
+    delete_orig_stop_ids = {'stops': []}
+    handleOrigStopsDeletion = (stop_ids) => {
+        const deletion_ids = stop_ids.map(id => {
+            return { 'id': id }
+        })
+        console.log(deletion_ids)
+        this.delete_orig_stop_ids["stops"] = deletion_ids;
+    }
+
     handleAssignModeSave = event => {
         this.setState({
-            assign_mode: false
+            assign_mode: false,
         })
 
         api.put('routeplanner/edit', this.students)
@@ -275,6 +312,8 @@ class BusRoutesPlanner extends Component {
         }).catch(error => {
             console.log(error)
         })
+
+        // handle editting orig stops, creating new stops @jessica
     }
 
     render() {
@@ -287,12 +326,10 @@ class BusRoutesPlanner extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.markers)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
                     <SidebarMenu activeTab="schools" />
-
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="Schools" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.school.name} page="Route Planner" />
                         <div className="container my-4 mx-0 w-100 mw-100">

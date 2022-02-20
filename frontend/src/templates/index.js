@@ -59,8 +59,8 @@ class Login extends Component {
             }
             // console.log(sessionStorage.getItem('token'))
         })
-    }    
-
+    }   
+    
     render() {
         if (JSON.parse(sessionStorage.getItem('logged_in')) && JSON.parse(sessionStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
@@ -72,9 +72,7 @@ class Login extends Component {
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
                     <div className="row flex-nowrap">
-
                         <UnauthenticatedSidebarMenu />
-
                         <div className="col mx-0 px-0 bg-gray w-100">
                             <UnauthenticatedHeaderMenu />
                             <div className="container mt-4 mx-2">
