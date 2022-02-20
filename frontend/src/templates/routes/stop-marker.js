@@ -21,7 +21,6 @@ class StopMarker extends Component {
 
     state = {
         currentRoute: this.props.routeID,
-        props: this.props,
         icon: STOP_MARKER_ICONS[this.props.routeID % STOP_MARKER_ICONS.length],
         location: this.props.location,
         name: this.props.name,
@@ -62,7 +61,7 @@ class StopMarker extends Component {
       className={this.state.currentRoute} 
       icon={this.state.icon} 
       id={this.props.id} 
-      key={this.props.id} 
+      key={this.props.key} 
       onClick={this.handleClick}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>
@@ -117,4 +116,4 @@ class StopMarker extends Component {
     )
   }
 }
-export default StopMarker
+export default React.memo(StopMarker)
