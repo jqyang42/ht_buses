@@ -4,8 +4,8 @@
 <!doctype html>
 <html lang="en">
 <div style="background-color: #F3F3F3; padding-top: 8%; padding-bottom: 8%; padding-left: 12%; padding-right: 12%; align-items: center;">
-    <img src="../img/HT_Logo.png" style="align-self: center; text-align: center;"></img>
-    <div style="background-color: #ffffff; padding: 10%; justify-content: center; align-items: center; margin-top: 16px;">
+    <!-- <img src="../static/ht_buses_app/img/HT_Logo.png" style="align-self: center; text-align: center;"></img> -->
+    <div style="background-color: #ffffff; padding: 10%; justify-content: center; align-items: center; margin-top: 16px; margin-bottom: 0%;">
         <div style="text-align: left; margin-top: 0px; width: 100%;">
             <h3 style="font-family: Helvetica Neue; margin-top: 0px; color: #343A40; font-size: 1.6em;">Hi {{first_name}} {{last_name}},</h3>
             <p></p>
@@ -15,7 +15,7 @@
             <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Here are your students' information:</p>
             {% for student in students %}
             <div style="margin-top: 16px; width: 100%; display: flex;" class="row">
-                <div class="column" style="margin-right: 10px;">
+                <div class="column" style="margin-right: 24px;">
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Name:</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Student ID:</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">School:</p>
@@ -28,32 +28,61 @@
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">{{student.route_name}}</p>
                 </div>
             </div>
-            <div style="margin-top: 2px;">
+            <div>
                 {% if student.stops|length == 0 %}
                 <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route Stop Options: N/A</p>
                 {% else %}
-                <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route Stop Options:</p>
-                <table class="table table-striped" style="width: 100%; margin-top: 8px; font-size: 1.2em; font-family: 'Helvetica Neue'; color: #6C757D; border-collapse: collapse;">
-                    {% for stop in student.stops %}
+                <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em; padding-bottom: 4px; margin-bottom: 4px; margin-top: 8px; padding-top: 8px;">Route Stop Options:</p>
+                <table class="table table-striped" style="width: 100%; font-size: 1.2em; font-family: 'Helvetica Neue'; color: #6C757D; border-collapse: collapse;">
                     <tr style="color: #343A40; height:48px; border-bottom: 1.2px solid #343A40;">
                         <th style="padding-left:16px; padding-right:16px;">Stop Name</th>
                         <th style="padding-left:16px; padding-right:16px;">Stop Location</th>
                         <th style="padding-left:16px; padding-right:16px;">Pickup Time</th>
                         <th style="padding-left:16px; padding-right:16px;">Dropoff Time</th>
                     </tr>
-                    <tr style="background-color: #F3F3F3; height:48px; border-bottom: 0.8px solid #6C757D;">
-                        <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
-                        <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
-                        <td style="padding-left:16px; padding-right:16px;">{{stop.departure}}</td>
-                        <td style="padding-left:16px; padding-right:16px;">{{stop.arrival}}</td>
-                    </tr>
+                    {% for stop in student.stops %}
+                        {% if forloop.counter0|divisibleby:2 %}
+                            <tr style="background-color: #F3F3F3; height:48px; border-bottom: 0.8px solid #6C757D;">
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.departure}}</td>
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.arrival}}</td>
+                            </tr>
+                        {% else %} 
+                            <tr style="background-color: #ffffff; height:48px; border-bottom: 0.8px solid #6C757D;">
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.departure}}</td>
+                                <td style="padding-left:16px; padding-right:16px;">{{stop.arrival}}</td>
+                            </tr>
+                        {% endif %} 
                     {% endfor %}
                 </table>
                 {% endif %}
             </div>
-            <hr class="solid" style="border-top: 0.8px solid #6C757D; margin-top: 24px; margin-bottom: 16px;">
+            {% if not forloop.last %}
+                <hr style="background-color: #DEE2E6; height: 1.2px; border: 0px; margin-top: 54px; margin-bottom: 36px;">
+            {% endif %}
             {% endfor %}
             {% endif %}
+            <!-- <div style="width: 100%; margin-top: 10%; justify-content: center; text-align: center;">
+                <h3 style="font-family: Helvetica Neue; margin-bottom: 16px; color: #343A40; font-weight: 400; font-size: 1.6em;">Visit us at Hypothetical Transportation</h3>
+                <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em; margin-bottom: 36px;"> Thank you for using our application!</p>
+                <a style="background-color: #FFDA6A; color: #343A40; padding: 10px 20px; border-radius: 5px; border: none; text-decoration:none; font-size:15px;
+                font-family: Helvetica Neue;" class="btn btn-primary" href="localhost:3000/login">
+                    Login
+                </a>
+            </div> -->
+        </div>
+    </div>
+    <div style="background-color: #FFDA6A; margin-top: 0%; padding-top: 6%; padding-left: 6%; padding-right: 6%; padding-bottom: 8%; align-items: center;">
+        <div style="width: 100%; justify-content: center; text-align: center;">
+            <h3 style="font-family: Helvetica Neue; margin-bottom: 2px; color: #343A40; font-weight: 400; font-size: 1.6em; margin-top: 0%; padding-top: 0%;">Visit us at Hypothetical Transportation</h3>
+            <p style="font-family: Helvetica Neue; margin-top: 8px; color: #343A40; font-size: 1.2em; padding-top: 0%; margin-bottom: 36px;"> Thank you for using our application!</p>
+            <a style="background-color: #ffffff; color: #343A40; padding: 10px 20px; border-radius: 5px; border: none; text-decoration:none; font-size:15px; margin-bottom: 8px;
+            font-family: Helvetica Neue;" class="btn btn-primary" href="localhost:3000/login">
+                Login
+            </a>
         </div>
     </div>
 </div>
