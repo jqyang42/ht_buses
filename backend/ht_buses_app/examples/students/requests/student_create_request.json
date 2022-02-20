@@ -4,7 +4,6 @@
         "last_name": "Cool",
         "student_school_id": 1,
         "school_id": 1,
-        "route_id": 1,
-        "in_range": false
+        "route_id": 1
     }]
 }

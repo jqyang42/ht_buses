@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from ...serializers import StudentSerializer
+from ..stops import check_in_range
 
 # Student Route PUT API
 # Need to test
@@ -25,6 +26,11 @@ def student_route_edit(request):
                 student_obj.route_id = None
             else:
                 student_obj.route_id = Route.routeTables.get(pk=route_id)
+                stop_arr = check_in_range.check_student_in_range(student_obj)
+                if len(stop_arr) != 0:
+                    in_range = True
+                else:
+                    in_range = False
                 student_obj.in_range = in_range
             student_obj.save()
             student_serializer = StudentSerializer(student_obj, many=False)

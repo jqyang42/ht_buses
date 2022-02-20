@@ -35,7 +35,10 @@ class BusRoutesPlanner extends Component {
             active_route: 0,
             add_route_success: false,
             error_status: false,
-            error_code: 200
+            error_code: 200,
+            stops_edit_mode: false,
+            dnd: false,
+            stops_order: [],
         }
     }
 
@@ -48,10 +51,42 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    handleStudentsShowAll = () => {
+        this.setState(prevState => ({
+            students_show_all: !prevState.students_show_all
+        }))
+    }
+
+    handleStopsShowAll = () => {
+        this.setState(prevState => ({
+            stops_show_all: !prevState.stops_show_all
+        }))
+    }
+
+    switchStopsEditMode = () => {
+        this.setState(prevState => ({
+            stops_edit_mode: !prevState.stops_edit_mode
+        }))
+        this.setState(prevState => ({
+            dnd: !prevState.dnd
+        }))
+    }
+
+    handleReorder = (new_order) => {
+        this.setState({ stops_order: new_order })
+    }
+
+    submitStopsOrder = () => {
+        this.switchStopsEditMode()
+        // TODO: add axios get for stops reordering @jessica
+        
+    }
+
     handleTableGet = () => {        
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const data = res.data
+                console.log(data.students)
                 this.setState({ 
                     school: data.school,
                     students: data.students,
@@ -114,11 +149,9 @@ class BusRoutesPlanner extends Component {
             .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            console.log(this.state.stops)
         })
         .catch (error => {
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
                 this.setState({ error_status: true });
                 this.setState({ error_code: error.response.status });
             }
@@ -142,8 +175,6 @@ class BusRoutesPlanner extends Component {
     handleRouteSelection = event => {
         if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
         this.setState({ active_route: parseInt(event.target.value) })
-        console.log(this.state.active_route)
-
         this.handleStopsGet(parseInt(event.target.value))
     }
 
@@ -234,6 +265,7 @@ class BusRoutesPlanner extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+        console.log(this.state.markers)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -392,12 +424,38 @@ class BusRoutesPlanner extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
+                                        <h7>STUDENTS</h7>
+                                        <SchoolStudentsTable data={this.state.students}/>
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
+                                            { !this.state.students_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
+
                                         {
                                             this.state.active_route === 0 ? "" : this.state.stops ?
                                             <>
-                                                <h7>STOPS</h7>
-                                                <div></div>
-                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all}/>
+                                                <div className="row d-flex justify-content-between align-items-center mb-2">
+                                                    <h7 className="col w-auto">STOPS</h7>
+                                                    <div className="col float-end">
+                                                        {
+                                                            this.state.stops_edit_mode ?
+                                                            <button className="btn btn-primary float-end w-auto" onClick={this.submitStopsOrder}>
+                                                                <span className="btn-text">
+                                                                    Save
+                                                                </span>
+                                                            </button>
+                                                            :
+                                                            <button className="btn btn-primary float-end w-auto" onClick={this.switchStopsEditMode}>
+                                                                <span className="btn-text">
+                                                                    <i className="bi bi-pencil-square me-2"></i>
+                                                                    Edit
+                                                                </span>
+                                                            </button>
+                                                        }
+                                                    </div> 
+                                                </div>
+                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd} handleReorder={this.handleReorder}/>
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
@@ -406,9 +464,6 @@ class BusRoutesPlanner extends Component {
                                                 <div></div>
                                             </> : ""
                                         }
-                                        
-                                        <h7>STUDENTS</h7>
-                                        <SchoolStudentsTable data={this.state.students}/>
                                     </div>
                                 </div>
                             </div>

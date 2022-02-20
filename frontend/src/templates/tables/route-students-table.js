@@ -19,7 +19,15 @@ export function RouteStudentsTable({ data, showAll }) {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name'
-            }
+            },
+            {
+                Header: 'Bus Stops',
+                accessor: 'in_range',
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
+                )
+            },
         ],
         []
     )
