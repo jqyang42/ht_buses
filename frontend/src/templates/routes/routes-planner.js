@@ -14,6 +14,7 @@ import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
+import { callGoogle } from "./route-time-calc";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
@@ -30,6 +31,7 @@ class BusRoutesPlanner extends Component {
             route_dropdown: [],
             center: {},
             markers: [],
+            calc_route_times: false,
             assign_mode: false,
             assign_mode_warning: false,
             active_route: 0,
@@ -40,6 +42,7 @@ class BusRoutesPlanner extends Component {
     }
 
     componentDidMount() {
+        this.handleStopTimeCalc()
         this.handleTableGet();       
         this.handleLocationsGet();     
         if (this.state.active_route !== 0) { this.handleStopsGet() };
@@ -48,10 +51,30 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    handleStopTimeCalc = () => {
+        callGoogle({
+            first_stop: { lat: 35.7966295542791, lng: -78.84261969355543 },
+            school: { lat: 35.80513650819991, lng: -78.86720180228771 },
+            stops: [
+                {
+                    location: { lat: 35.78721052689135, lng: -78.86991589070445 },
+                },
+                {
+                    location: { lat: 35.791252102220305, lng: -78.85021124623715 },
+                },                
+            ],
+            arrival_time: "07:20",
+            departure_time: "14:25"
+        }).then(res => {
+            console.log(res)
+        })
+    }
+
     handleTableGet = () => {        
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const data = res.data
+                console.log(data)
                 this.setState({ 
                     school: data.school,
                     students: data.students,
@@ -71,6 +94,7 @@ class BusRoutesPlanner extends Component {
     handleLocationsGet = () => {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
+                console.log(res.data)
                 const school_location = res.data.school.location;
                 this.setState({ 
                     center: { 
@@ -206,8 +230,10 @@ class BusRoutesPlanner extends Component {
 
     handleRouteAssignSubmit = event => {
         this.setState({
-            assign_mode: false
+            assign_mode: false,
+            calc_route_times: true
         })
+        // this.useTimeCalculation()
 
         api.put('routeplanner/edit', this.students)
         .then(res => {
@@ -224,9 +250,25 @@ class BusRoutesPlanner extends Component {
         })
     }
 
-    calculateStopTimes = () => {
-
-    }
+    // useTimeCalculation() {
+    //     return (
+    //     <TimeCalculation
+    //         origin={{ lat: 35.7966295542791, lng: -78.84261969355543 }}
+    //         destination={{ lat: 35.80513650819991, lng: -78.86720180228771 }}
+    //         stops={[
+    //             {
+    //                 location: { lat: 35.78721052689135, lng: -78.86991589070445 },
+    //             },
+    //             {
+    //                 location: { lat: 35.791252102220305, lng: -78.85021124623715 },
+    //             },                
+    //         ]}
+    //         arrival_time={'07:20'}
+    //         departure_time={'14:25'}
+    //         handleRouteTimes={this.handleStopTimeCalc}
+    //     />
+    //     )
+    // }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -238,13 +280,10 @@ class BusRoutesPlanner extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.active_route)
-        console.log(this.state.stops)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
                     <SidebarMenu activeTab="schools" />
-
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="Schools" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.school.name} page="Route Planner" />
                         <div className="container my-4 mx-0 w-100 mw-100">
@@ -426,12 +465,12 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-function RouteSelectDropdown() { 
-    let routes = this.state.routes(route => {
-        return {value: route.id, display: route.name}
-    })
-    this.setState({ route_dropdown: routes })
-}
+// function RouteSelectDropdown() { 
+//     let routes = this.state.routes(route => {
+//         return {value: route.id, display: route.name}
+//     })
+//     this.setState({ route_dropdown: routes })
+// }
 
 export default (props) => (
     <BusRoutesPlanner
