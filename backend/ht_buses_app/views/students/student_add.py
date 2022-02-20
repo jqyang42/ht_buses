@@ -12,6 +12,7 @@ def add_new_students(request):
     data = {}
     user_id = request.query_params["id"]
     reqBody = json.loads(request.body)
+    print(reqBody)
     try:
         for student in reqBody["students"]:
             create_student(student, user_id)

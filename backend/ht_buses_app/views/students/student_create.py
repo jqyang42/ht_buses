@@ -21,7 +21,7 @@ def create_student(student_info, id=None):
     try:
         route_id = Route.routeTables.get(pk = student_info['route_id'])
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id=route_id)
-        stop_arr = check_in_range.check_student_in_range(user.id, route_id)
+        stop_arr = check_in_range.check_student_in_range(id, student_info['route_id'])
         if len(stop_arr) != 0:
             in_range = True
         else:
@@ -31,6 +31,8 @@ def create_student(student_info, id=None):
     except:
         route_id = None
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id = route_id)
+        student.in_range = False
+        student.save()
     user.is_parent = True
     user.save()
     data["message"] = "student created successfully"

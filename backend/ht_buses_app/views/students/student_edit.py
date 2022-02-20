@@ -47,6 +47,7 @@ def student_edit(request):
         og_student_object.in_range = in_range
     except: 
         og_student_object.route_id = None
+        og_student_object.in_range = False
     og_student_object.save()
     data["message"] = "student information successfully updated"
     data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
