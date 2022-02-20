@@ -7,6 +7,7 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
+from .user_address_update import update_student_stop
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -27,6 +28,7 @@ def user_edit(request):
         user_object.is_parent = reqBody["user"]["is_parent"]
         user_object.is_staff = reqBody["user"]["is_staff"]
         user_object.save()
+        update_student_stop(id)
         data["message"] = "user information was successfully updated"
         data["success"] = True
         location_serializer = LocationSerializer(user_object.location, many=False)

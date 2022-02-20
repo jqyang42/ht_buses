@@ -53,7 +53,6 @@ def student_edit(request):
     if og_student_object.route_id != None:
         student_route = Route.routeTables.get(pk=reqBody["student"]["route_id"])
         is_complete = route_check_is_complete.route_is_complete(reqBody["student"]["route_id"])
-        print(is_complete)
         student_route.is_complete = is_complete
         student_route.save()
     data["message"] = "student information successfully updated"
