@@ -132,9 +132,9 @@ class RouteMap extends Component {
   handleUpdateStops = (event, index) => {
     event.preventDefault()
     // console.log(this.state.stops)
-    const value = this.state.stops[index]
+    const value = this.state.newStops[index]
     // console.log(value)
-    const new_stops = this.state.stops.filter(stop => stop !== value)
+    const new_stops = this.state.newStops.filter(stop => stop !== value)
 
     // console.log(index)
 
@@ -142,7 +142,7 @@ class RouteMap extends Component {
     // console.log(new_stops)
     // new_stops.splice(index, 1)
     // console.log(new_stops)
-    this.setState({ stops: new_stops })
+    this.setState({ newStops: new_stops })
   }
 
   counter = 0
@@ -175,7 +175,7 @@ class RouteMap extends Component {
             <Marker position={this.props.center}  />
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
-                key={`${value.location.lat}+${value.location.long}`} 
+                key={index} 
                 location={value.location} 
                 assign_mode={this.props.assign_mode} 
                 routeID={value.routeID} 
@@ -191,7 +191,7 @@ class RouteMap extends Component {
               console.log("stop render")
               console.log(value)
               return <StopMarker 
-              key={`${value.location.lat}+${value.location.long}`}
+              key={`${value.location.lat}+${value.location.lng}`}
               id={index}
               name={value.name}
               location={{
