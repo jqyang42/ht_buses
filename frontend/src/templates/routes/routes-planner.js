@@ -45,7 +45,7 @@ class BusRoutesPlanner extends Component {
     componentDidMount() {
         this.handleTableGet();       
         this.handleLocationsGet();     
-        if (this.state.active_route !== 0) { this.handleStopsGet(this.state.active_route) };
+        if (this.state.active_route !== 0) { this.handleStopsGet() };
         makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
             this.setState({ route_dropdown: ret })
         })
@@ -144,8 +144,8 @@ class BusRoutesPlanner extends Component {
             );
     }
 
-    handleStopsGet = (active_route) => {
-        api.get(`stops?id=${active_route}`)
+    handleStopsGet = () => {
+        api.get(`stops?id=${this.state.active_route}`)
             .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
@@ -157,6 +157,15 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
+    }
+
+    delete_orig_stop_ids = {'stops': []}
+    handleOrigStopsDeletion = (stop_ids) => {
+        const deletion_ids = stop_ids.map(id => {
+            return { 'id': id }
+        })
+        console.log(deletion_ids)
+        this.delete_orig_stop_ids["stops"] = deletion_ids;
     }
 
     handleAssignMode = event => {
@@ -173,9 +182,10 @@ class BusRoutesPlanner extends Component {
     }
     
     handleRouteSelection = event => {
-        if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
-        this.setState({ active_route: parseInt(event.target.value) })
-        this.handleStopsGet(parseInt(event.target.value))
+        if (this.state.assign_mode_warning) { 
+            this.setState({ assign_mode_warning: false }) 
+        };
+        this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
     }
 
     handleRouteNameChange = event => {
@@ -222,13 +232,13 @@ class BusRoutesPlanner extends Component {
     }
 
     students = {"students":[]};
-    stops = {"stops": []};
+    new_stops = {"stops": []};
     handleRouteIDChange = (students) => {
       this.students["students"] = students;
     }
 
-    handleRouteStopChange = (stops) => {
-        this.stops["stops"] = stops;
+    handleNewStopsChange = (stops) => {
+        this.new_stops["stops"] = stops;
         console.log("new stops")
         console.log(this.stops)
     }
@@ -246,13 +256,24 @@ class BusRoutesPlanner extends Component {
             this.handleLocationsGet()
         })
         console.log("sent stops")
-        console.log(this.stops)
-        api.post('stops/create', this.stops)
+        console.log(this.new_stops)
+        api.post('stops/create', this.new_stops)
         .then(res => {
-            this.stops = {"stops":[]};
+            this.new_stops = {"stops":[]};
             this.handleTableGet() 
             this.handleLocationsGet()
-            this.handleStopsGet(this.state.active_route)
+            this.handleStopsGet()
+        })
+
+        console.log(this.delete_orig_stop_ids)
+        api.delete(`stops/delete`, { data: this.delete_orig_stop_ids })
+        .then(res => {
+            const success = res.data.success
+            console.log(success)
+            // TODO error handling for stops delete
+            this.handleStopsGet()
+        }).catch(error => {
+            console.log(error)
         })
     }
 
@@ -422,7 +443,9 @@ class BusRoutesPlanner extends Component {
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
                                             onChange={this.handleRouteIDChange}
-                                            handleUpdateNewStops={this.handleRouteStopChange}/>
+                                            handleUpdateNewStops={this.handleNewStopsChange}
+                                            handleDeleteOrigStops={this.handleOrigStopsDeletion}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col">
@@ -477,12 +500,12 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-function RouteSelectDropdown() { 
-    let routes = this.state.routes(route => {
-        return {value: route.id, display: route.name}
-    })
-    this.setState({ route_dropdown: routes })
-}
+// function RouteSelectDropdown() { 
+//     let routes = this.state.routes(route => {
+//         return {value: route.id, display: route.name}
+//     })
+//     this.setState({ route_dropdown: routes })
+// }
 
 export default (props) => (
     <BusRoutesPlanner

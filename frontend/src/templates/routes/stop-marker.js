@@ -50,7 +50,6 @@ class StopMarker extends Component {
 
   render () {
     const { showInfoWindow } = this.state;
-    console.log(this.state.props)
     return (
       <>
       <Marker 
