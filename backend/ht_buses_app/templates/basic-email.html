@@ -34,13 +34,13 @@
                 {% else %}
                 <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route Stop Options:</p>
                 <table class="table table-striped" style="width: 100%; margin-top: 8px; font-size: 1.2em; font-family: 'Helvetica Neue'; color: #6C757D; border-collapse: collapse;">
-                    {% for stop in student.stops %}
                     <tr style="color: #343A40; height:48px; border-bottom: 1.2px solid #343A40;">
                         <th style="padding-left:16px; padding-right:16px;">Stop Name</th>
                         <th style="padding-left:16px; padding-right:16px;">Stop Location</th>
                         <th style="padding-left:16px; padding-right:16px;">Pickup Time</th>
                         <th style="padding-left:16px; padding-right:16px;">Dropoff Time</th>
                     </tr>
+                    {% for stop in student.stops %}
                     <tr style="background-color: #F3F3F3; height:48px; border-bottom: 0.8px solid #6C757D;">
                         <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
                         <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
