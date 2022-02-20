@@ -149,9 +149,13 @@ class BusRoutesPlanner extends Component {
 
     handleStopsGet = (active_route) => {
         api.get(`stops?id=${active_route}`)
-            .then(res => {
+        .then(res => {
             const data = res.data;
-            this.setState({ stops: data.stops }, () => this.handleStopTimeCalc())            
+            this.setState({ stops: data.stops }, () => {
+                if (data.stops.length !== 0) {
+                    this.handleStopTimeCalc()
+                }            
+            })
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -173,7 +177,7 @@ class BusRoutesPlanner extends Component {
         })
         
         getStopTimes({
-            first_stop: { lat: stops[0].location.lat, lng: stops[0].location.long },
+            first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: { lat: school.location.lat, lng: school.location.long },
             stops: stops_latlng,
             arrival_time: school.arrival,
