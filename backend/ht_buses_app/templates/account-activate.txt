@@ -1,0 +1,5 @@
+Hi {{first_name}} {{last_name}},
+
+A Hypothetical Transporation account has been created on your behalf. Please follow the link below to finish setting up your account.
+
+{{url}}

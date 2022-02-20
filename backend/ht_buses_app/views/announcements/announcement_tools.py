@@ -26,62 +26,49 @@ def email_request_parser(reqBody):
 
 def announcement_substitutions(user, subject, body, include_route_info):
     from_email = 'Hypothetical Transportation'
-    text_content = """
+    #Add text content later
+    text_content = """ 
     {}
     """.format(body)
-    if include_route_info and user.is_parent:
-        text_content= """
-        {}
-        
-        {}
-        """.format(text_content, tailored_parent_email(user))
     msg = EmailMultiAlternatives(subject, text_content, from_email, [user.email], reply_to=[constants.DEFAULT_NO_REPLY_EMAIL])
-    #template = get_template('basic-email.html')
-    #dynamic_data = { 'user_first': user.first_name, 'user_last': user.last_name } #TODO try using html
-    #html_content = html_c.render(dynamic_data)
-    #msg.attach_alternative(html_content)
+    students_arr = []
+    include_parent_info = False
+    if include_route_info and user.is_parent:
+        students_arr = get_students_info(user)
+        include_parent_info = True
+    msg_html = render_to_string('basic-email.html', ({'include_parent_info': include_parent_info,'first_name': user.first_name, 'last_name': user.last_name, 'body': body, 'students': students_arr}))
+    msg.attach_alternative(msg_html, "text/html")
     return msg
 
-def tailored_parent_email(user):
-    parent_body = ""
+def get_students_info(user):
+    students_array = []
     if user.is_parent:
         students = Student.studentsTable.filter(user_id = user)
-        student_body = ""
         for student in students:
-            student_arr = parent_student_detail.student_arr_data(student)
-            try:
-                route_data = student_arr["route"]
-                route_name = route_data["name"]
-                stop_string = make_stop_body(route_data["id"])
-            except:
-                route_name = "Unassigned"
-                stop_string = "N/A"
-            student_body = """{}
-            Name: {} {}\tSchool ID: {}\tSchool Name: {}\tRoute Name: {}\n
-            Route Stop Options: {}\n
-            """.format(student_body,student_arr["first_name"], student_arr["last_name"],student_arr["school_student_id"], student_arr["school_name"], route_name, stop_string)
-        parent_body = """
-        Here is your students' information:\n
-        {}\n
-        """.format(student_body) 
-        return parent_body
+            student_array = parent_student_detail.student_arr_data(student)
+            route_data = student_array["route"]
+            student_array["route_name"] = route_data["name"]
+            student_array["stops"] = get_stop_array(route_data["id"])
+            students_array.append(student_array)
+    return students_array
 
-def make_stop_body(route):
+def get_stop_array(route):
+    stops_array = []
     try:
         stops = Stop.stopTables.filter(route_id = route)
-        stop_string = ""
         for stop in stops:
+            stop_array = {}
             stop_serializer = StopSerializer(stop, many=False)
             stop_data = stop_serializer.data
             location = Location.locationTables.get(pk = stop_data["location_id"])
-            address = location.address
-            new_stop = """{}
-            Stop Name: {}   Location: {}    Arrival: {}    Departure: {}\t\n
-            """.format(stop_string, stop_data["name"], address, stop_data["arrival"], stop_data["departure"])
-            stop_string = new_stop
+            stop_array["address"] = location.address
+            stop_array["name"] = stop_data["name"]
+            stop_array["arrival"] = stop_data["arrival"]
+            stop_array["departure"] = stop_data["departure"]
+            stops_array.append(stop_array)
     except:
-        stop_string = "N/A"
-    return stop_string
+        stops_array = []
+    return stops_array
 
 def send_mass_announcement(subject, body, recipients, include_route_info=False):
     data = {}

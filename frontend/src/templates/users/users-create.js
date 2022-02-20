@@ -64,7 +64,6 @@ class UsersCreate extends Component {
     }
 
     createUser = (request) => {
-        console.log(request)
         api.post(`users/create`, request)
         .then(res => {
             const success = res.data.success
@@ -135,12 +134,14 @@ class UsersCreate extends Component {
         let user = this.state.new_user
         user.is_staff = role_value === 'administrator'
         this.setState({ new_user: user });
+        this.checkStaffAddress()
     }
 
     // Called when onBlur (when user clicks out of input box) to reduce Geocoding API calls.
     handleAddressValidation = () => {
         const address = this.state.new_user.location.address
-        if (address !== '') {
+        const empty_address = address === "" || address == undefined
+        if (!empty_address) {
             Geocode.fromAddress(address).then(
                 (response) => {
                     let user = this.state.new_user
@@ -157,6 +158,7 @@ class UsersCreate extends Component {
                 }
             )
         }
+      
     }
     
     handleStudentFirstNameChange = (event, student_num) => {
@@ -266,14 +268,30 @@ class UsersCreate extends Component {
             this.setState({ new_user: user })
         }
     }
+    checkStaffAddress = async () => {
+        const address = this.state.new_user.location.address
+        const empty_address = address === "" || address == undefined
+        if(this.state.new_user.is_staff && empty_address) {
+            let user = this.state.new_user
+            user.location.lat = 0
+            user.location.long = 0
+            user.location.address = ""
+            this.setState({
+                new_user: user,
+                valid_address: true,
+            })
+        }
+        return this.state.valid_address
+    }
 
     handleSubmit = (event) => {        
         event.preventDefault();
-
-        if (!emailValidation({ email: this.state.new_user.email }) || !this.state.valid_password || !this.state.valid_address || !this.studentIDValidation()) {
+        this.checkStaffAddress().then(valid_address => {
+        if (!emailValidation({ email: this.state.new_user.email }) || !this.state.valid_password || !valid_address || !this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return 
-        }
+          }
+        })
 
         const request = {
             user: {
@@ -392,6 +410,7 @@ class UsersCreate extends Component {
                                                         types: ['address']
                                                     }}
                                                     value={this.state.new_user?.location?.address}
+                                                    defaultValue=""
                                                     placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}

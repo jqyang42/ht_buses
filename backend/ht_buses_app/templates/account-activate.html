@@ -1,0 +1,22 @@
+{% load static %}
+{% load bootstrap5 %}
+{% block content %}
+<!doctype html>
+<html lang="en">
+<div style="background-color: #F3F3F3; padding-top: 8%; padding-bottom: 8%; padding-left: 12%; padding-right: 12%; align-items: center;">
+    <img src="../static/ht_buses_app/img/HT_Logo.png" style="align-self: center; text-align: center;"></img>
+    <div style="background-color: #ffffff; padding: 10%; justify-content: center; align-items: center; margin-top: 16px;">
+        <div style="text-align: left; margin-top: 0px; width: 100%;">
+            <h3 style="font-family: Helvetica Neue; margin-top: 0px; color: #343A40; font-size: 1.6em;">Hi {{first_name}} {{last_name}},</h3>
+            <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">A Hypothetical Transporation account has been created on your behalf. Please follow the link below to finish setting up your account.</p>
+        </div>
+        <div style="width: 100%; margin-top: 32px; justify-content: center; text-align: center;">
+            <a style="background-color: #FFDA6A; color: #343A40; padding: 10px 20px; border-radius: 5px; border: none; text-decoration:none; font-size:15px;
+            font-family: Helvetica Neue;" class="btn btn-primary" href={{url}}>
+                Activate Your Account
+            </a>
+        </div>
+    </div>
+</div>
+</html>
+{% endblock %}
