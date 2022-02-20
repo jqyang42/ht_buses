@@ -22,7 +22,7 @@ export function RouteStudentsTable({ data, showAll }) {
             },
             {
                 Header: 'Bus Stops',
-                accessor: 'route.in_range',
+                accessor: 'in_range',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
