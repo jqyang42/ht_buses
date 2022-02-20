@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";  
 import { Table } from "./table";
+import { toDisplayFormat } from "../components/time";
 
 export function StopsTable({ data, showAll, dnd, handleReorder }) {
 
@@ -14,13 +15,19 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
                 Header: 'Pickup Time',
                 accessor: 'arrival',
                 disableFilter: true,
-                disableSortBy: true
+                disableSortBy: true,
+                Cell: ({ cell: { value } }) => (
+                    toDisplayFormat({ twentyfour_time: value })
+                )
             },
             {
                 Header: 'Dropoff Time',
                 accessor: 'departure',
                 disableFilter: true,
-                disableSortBy: true
+                disableSortBy: true,
+                Cell: ({ cell: { value } }) => (
+                    toDisplayFormat({ twentyfour_time: value })
+                )
             }
         ],
         []
