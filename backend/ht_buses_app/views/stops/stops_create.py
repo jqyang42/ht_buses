@@ -7,6 +7,7 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 from datetime import datetime
 from ..routes import route_check_is_complete
+from .check_in_range import update_students_in_range
 
 # Stops POST API
 @csrf_exempt
@@ -35,6 +36,7 @@ def stops_create(request):
             is_complete = route_check_is_complete.route_is_complete(stop["route_id"])
             route.is_complete = is_complete
             route.save()
+            update_students_in_range(stop["route_id"])
         data["message"] = "stops created successfully"
         data["success"] = True
         data["stops"] = stops

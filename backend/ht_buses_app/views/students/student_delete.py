@@ -26,7 +26,6 @@ def student_delete(request):
         if route_id != None:
             route = Route.routeTables.get(pk=route_id)
             is_complete = route_check_is_complete.route_is_complete(route_id)
-            print(is_complete)
             route.is_complete = is_complete
             route.save()
         data["message"] = "student successfully deleted"
