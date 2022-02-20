@@ -17,7 +17,7 @@ class EmailConfirmation extends Component {
             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                 <div className="row">
                     <div className="col w-50">
-                        <h5>Check Your Mail</h5>
+                        <h5>Password Recovery</h5>
                         <p className="mb-3">We have sent a password recovery link to your email.</p>
                         <Link to={"/login"} className="btn btn-primary w-auto me-3 mb-3" role="button">
                             <span className="btn-text">

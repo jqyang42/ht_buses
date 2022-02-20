@@ -12,7 +12,8 @@ class ResetPassword extends Component {
 
     
     state = {
-        valid_url: 0
+        valid_url: 0,
+        type: "Reset Password"
     }
 
     sendApiRequest = async (data) => {
@@ -28,7 +29,7 @@ class ResetPassword extends Component {
         }
     }
   
-    checkURL = () => {
+    checkURL() {
       api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`) 
         .then(res => {
             const valid_url = res.data.success
@@ -45,7 +46,7 @@ class ResetPassword extends Component {
         }
         api.post(`logout`, creds)
         .then(res => {
-            this.setState({token: '', message: res.data.message})
+            this.setState({token: ''})
             sessionStorage.setItem('token', '')
             sessionStorage.setItem('user_id', '')
             sessionStorage.setItem('first_name', '')
@@ -56,26 +57,25 @@ class ResetPassword extends Component {
     }
 
     componentDidMount() {
+        this.setState({ type: this.props.source })
         this.setState({ valid_url: 0 })
         this.checkURL()
     }
 
     render() {
-        if(this.state.valid_url === -1) {
-            return <Navigate to={LOGIN_URL} /> //TODO Redirect to bad request page 
-        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
+                {this.state.valid_url === -1 ? "Url link has expired." :
                 <div className="row flex-nowrap">
                     <UnauthenticatedSidebarMenu />
-
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <UnauthenticatedHeaderMenu />
                         <div className="container my-4 mx-0 w-100 mw-100">
-                            <PasswordForm type="Reset" source="ResetPassword" sendApiRequest={this.sendApiRequest} onChange={this.checkURL}/>
+                            <PasswordForm type={this.state.type} source="ResetPassword" sendApiRequest={this.sendApiRequest} checkURL={this.checkURL}/>
                         </div>
                     </div>
                 </div>
+    }
             </div>
         );
     }

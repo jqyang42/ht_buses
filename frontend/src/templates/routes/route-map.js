@@ -36,7 +36,9 @@ const hidePOIs = [{
 
 class RouteMap extends Component {
   state = {
-    stops: [],
+    newStops: [],
+    editedStops: [],
+    existingStops:this.props.existingStops,
     showModal: false,
     center: {
       lat: parseFloat(this.props.center.lat),
@@ -49,6 +51,14 @@ class RouteMap extends Component {
 
   handleCenterChange = (event) => {
     //TODO: update state with new center
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.existingStops !== prevProps.existingStops){
+      this.setState({
+        existingStops: this.props.existingStops
+      });
+    }
   }
 
   // onChange
@@ -81,17 +91,16 @@ class RouteMap extends Component {
       }
       // this.newStops.push(newStop)
       this.setState(prevState => ({
-        stops: [...prevState.stops, newStop]
-      }))
+        newStops: [...prevState.newStops, newStop]
+      }), console.log(this.state.newStops))
     }
     this.handleStopCreate()
     this.setState({ showModal: true })
-    console.log(this.state.showModal)
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
   handleStopNameChange = (name, key) => {
-    const newStops = this.state.stops;
+    const newStops = this.state.newStops;
     const newStop = newStops[key];
     newStop.name = name;
     newStops[key] = newStop;
@@ -103,8 +112,8 @@ class RouteMap extends Component {
 
   handleStopCreate = () => {
     if (this.props.handleStopCreation) {
-      console.log(this.state.stops)
-      this.props.handleStopCreation(this.state.stops)
+      console.log(this.state.newStops)
+      this.props.handleStopCreation(this.state.newStops)
     }
   }
 
@@ -138,6 +147,7 @@ class RouteMap extends Component {
 
   counter = 0
   render() {
+    console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -165,8 +175,8 @@ class RouteMap extends Component {
             <Marker position={this.props.center}  />
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
-                key={`${value.position.lat}+${value.position.long}`} 
-                location={value.position} 
+                key={`${value.location.lat}+${value.location.long}`} 
+                location={value.location} 
                 assign_mode={this.props.assign_mode} 
                 routeID={value.routeID} 
                 active_route={this.props.active_route}
@@ -177,7 +187,23 @@ class RouteMap extends Component {
                 data-bs-toggle="modal"
                 data-bs-target="#staticBackdrop"/>
             })}
-            {this.state.stops?.map((value, index) => {
+            {this.state.existingStops?.map((value, index) => {
+              console.log("stop render")
+              console.log(value)
+              return <StopMarker 
+              key={`${value.location.lat}+${value.location.long}`}
+              id={index}
+              name={value.name}
+              location={{
+                lat: value.location.lat,
+                lng: value.location.long
+              }}
+              assign_mode={this.props.assign_mode} 
+              routeID={this.props.active_route}
+              handleDeleteMarker={this.handleDeleteMarker}
+              handleStopNameChange={this.handleStopNameChange}/>
+            })}
+            {this.state.newStops?.map((value, index) => {
               return <StopMarker 
               key={`${value.lat}+${value.long}`}
               id={index}

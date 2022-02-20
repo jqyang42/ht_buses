@@ -16,7 +16,8 @@ class Email extends Component {
         body: '',
         error_status: false,
         message_sent: 0,
-        error_code: 200
+        error_code: 200,
+        include_route_info: false
     }
 
     handleSubjectChange = (input) => {
@@ -35,6 +36,12 @@ class Email extends Component {
         })
     }
 
+    handleAnnouncementTypeChange = (event) => {
+        const announcement_value = event.target.value
+        this.setState({ include_route_info: announcement_value === "route" });
+    }
+    
+
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.body === "" || this.state.subject === "") {
@@ -45,10 +52,11 @@ class Email extends Component {
         const data = {
             email: {
                 subject: this.state.subject,
-                body: this.state.body
+                body: this.state.body,
             },
-            include_route_info: false
+            include_route_info: this.state.include_route_info
         }
+        console.log(data)
         const id_param_string = this.props.source.toLowerCase() === 'users' ? '' : (`?id=` + this.props.params.id)
 
         api.post(API_DOMAIN + 'announcement/' + this.props.source.toLowerCase() + id_param_string, data)
@@ -119,7 +127,7 @@ class Email extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div  className="form-group required pb-3 w-75">
+                                            <div  onChange={this.handleAnnouncementTypeChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
                                                     <label for="announcementType" className="control-label pb-2">Announcement Type</label>
                                                 </div>

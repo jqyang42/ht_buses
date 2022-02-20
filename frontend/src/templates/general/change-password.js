@@ -12,7 +12,7 @@ import PasswordForm from "../components/password-form";
 
 class ChangePassword extends Component {
 
-    onChange = () => {
+    checkURL = () => {
         //placeholder don't delete
     }
     
@@ -40,7 +40,7 @@ class ChangePassword extends Component {
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Account" isRoot={false} isSecond={true} name="Change Password" />
                         <div className="container my-4 mx-0 w-100 mw-100">
-                            <PasswordForm type="Change" source="ChangePassword" sendApiRequest={this.sendApiRequest} onChange={this.onChange}/>
+                            <PasswordForm type="Change Password" source="ChangePassword" sendApiRequest={this.sendApiRequest} checkURL={this.checkURL}/>
                         </div>
                     </div>
                 </div>
