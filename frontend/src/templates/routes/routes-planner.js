@@ -42,31 +42,11 @@ class BusRoutesPlanner extends Component {
     }
 
     componentDidMount() {
-        this.handleStopTimeCalc()
         this.handleTableGet();       
         this.handleLocationsGet();     
         if (this.state.active_route !== 0) { this.handleStopsGet() };
         makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
             this.setState({ route_dropdown: ret })
-        })
-    }
-
-    handleStopTimeCalc = () => {
-        callGoogle({
-            first_stop: { lat: 35.7966295542791, lng: -78.84261969355543 },
-            school: { lat: 35.80513650819991, lng: -78.86720180228771 },
-            stops: [
-                {
-                    location: { lat: 35.78721052689135, lng: -78.86991589070445 },
-                },
-                {
-                    location: { lat: 35.791252102220305, lng: -78.85021124623715 },
-                },                
-            ],
-            arrival_time: "07:20",
-            departure_time: "14:25"
-        }).then(res => {
-            console.log(res)
         })
     }
 
@@ -138,7 +118,7 @@ class BusRoutesPlanner extends Component {
             .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            console.log(this.state.stops)
+            this.handleStopTimeCalc(data.stops)
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -148,6 +128,28 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
+    }
+
+    handleStopTimeCalc = (stops) => {
+        console.log(stops)
+        stops.sort((a, b) => a.order_by - b.order_by)
+        console.log(stops)
+        // callGoogle({
+        //     first_stop: { lat: 35.7966295542791, lng: -78.84261969355543 },
+        //     school: { lat: 35.80513650819991, lng: -78.86720180228771 },
+        //     stops: [
+        //         {
+        //             location: { lat: 35.78721052689135, lng: -78.86991589070445 },
+        //         },
+        //         {
+        //             location: { lat: 35.791252102220305, lng: -78.85021124623715 },
+        //         },                
+        //     ],
+        //     arrival_time: "07:20",
+        //     departure_time: "14:25"
+        // }).then(res => {
+        //     console.log(res)
+        // })
     }
 
     handleAssignMode = event => {
@@ -249,26 +251,6 @@ class BusRoutesPlanner extends Component {
             this.handleLocationsGet()
         })
     }
-
-    // useTimeCalculation() {
-    //     return (
-    //     <TimeCalculation
-    //         origin={{ lat: 35.7966295542791, lng: -78.84261969355543 }}
-    //         destination={{ lat: 35.80513650819991, lng: -78.86720180228771 }}
-    //         stops={[
-    //             {
-    //                 location: { lat: 35.78721052689135, lng: -78.86991589070445 },
-    //             },
-    //             {
-    //                 location: { lat: 35.791252102220305, lng: -78.85021124623715 },
-    //             },                
-    //         ]}
-    //         arrival_time={'07:20'}
-    //         departure_time={'14:25'}
-    //         handleRouteTimes={this.handleStopTimeCalc}
-    //     />
-    //     )
-    // }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
