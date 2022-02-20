@@ -77,7 +77,8 @@ class BusRoutesDetail extends Component {
                             student_school_id: student.student_school_id,
                             id: student.id,
                             first_name: student.first_name,
-                            last_name: student.last_name
+                            last_name: student.last_name,
+                            in_range: student.in_range
                         }
                     })
                 })

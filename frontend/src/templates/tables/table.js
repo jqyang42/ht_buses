@@ -84,7 +84,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     }
 
     // console.log(dnd)
-    // console.log(searchOn)
+    console.log(rows)
 
     return (
         <>
