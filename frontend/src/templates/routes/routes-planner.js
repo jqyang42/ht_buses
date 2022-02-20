@@ -14,7 +14,7 @@ import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
-import { callGoogle } from "./route-time-calc";
+import { getStopTimes } from "./route-time-calc";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
@@ -151,8 +151,7 @@ class BusRoutesPlanner extends Component {
         api.get(`stops?id=${active_route}`)
             .then(res => {
             const data = res.data;
-            this.setState({ stops: data.stops })
-            this.handleStopTimeCalc(data.stops)
+            this.setState({ stops: data.stops }, () => this.handleStopTimeCalc())            
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -163,9 +162,9 @@ class BusRoutesPlanner extends Component {
         )
     }
 
-    handleStopTimeCalc = (api_stops) => {
+    handleStopTimeCalc = () => {
         const school = this.state.school
-        const stops = [...api_stops]
+        const stops = [...this.state.stops]
         stops.sort((a, b) => a.order_by - b.order_by)
         const stops_latlng = stops.filter(stop => stop.order_by !== 1).map(stop => {
             return {
@@ -173,15 +172,25 @@ class BusRoutesPlanner extends Component {
             }
         })
         
-        callGoogle({
+        getStopTimes({
             first_stop: { lat: stops[0].location.lat, lng: stops[0].location.long },
             school: { lat: school.location.lat, lng: school.location.long },
             stops: stops_latlng,
             arrival_time: school.arrival,
             departure_time: school.departure
-        }).then(res => {
-            console.log(res)
+        }).then(res => this.updateStopTimes(res))
+    }
+
+    updateStopTimes = (stop_times) => {
+        const stops = [...this.state.stops]
+        const new_stops = stops.map(stop => {
+            return {
+                ...stop,
+                arrival: stop_times[stop.order_by - 1].pickup,
+                departure: stop_times[stop.order_by - 1].dropoff
+            }
         })
+        this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
     }
 
     handleAssignMode = event => {
