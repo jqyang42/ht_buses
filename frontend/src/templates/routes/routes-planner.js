@@ -163,26 +163,25 @@ class BusRoutesPlanner extends Component {
         )
     }
 
-    handleStopTimeCalc = (stops) => {
-        console.log(stops)
+    handleStopTimeCalc = (api_stops) => {
+        const school = this.state.school
+        const stops = [...api_stops]
         stops.sort((a, b) => a.order_by - b.order_by)
-        console.log(stops)
-        // callGoogle({
-        //     first_stop: { lat: 35.7966295542791, lng: -78.84261969355543 },
-        //     school: { lat: 35.80513650819991, lng: -78.86720180228771 },
-        //     stops: [
-        //         {
-        //             location: { lat: 35.78721052689135, lng: -78.86991589070445 },
-        //         },
-        //         {
-        //             location: { lat: 35.791252102220305, lng: -78.85021124623715 },
-        //         },                
-        //     ],
-        //     arrival_time: "07:20",
-        //     departure_time: "14:25"
-        // }).then(res => {
-        //     console.log(res)
-        // })
+        const stops_latlng = stops.filter(stop => stop.order_by !== 1).map(stop => {
+            return {
+                location: { lat: stop.location.lat, lng: stop.location.long }
+            }
+        })
+        
+        callGoogle({
+            first_stop: { lat: stops[0].location.lat, lng: stops[0].location.long },
+            school: { lat: school.location.lat, lng: school.location.long },
+            stops: stops_latlng,
+            arrival_time: school.arrival,
+            departure_time: school.departure
+        }).then(res => {
+            console.log(res)
+        })
     }
 
     handleAssignMode = event => {
