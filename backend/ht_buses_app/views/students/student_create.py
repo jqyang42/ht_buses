@@ -1,4 +1,4 @@
-from pyparsing import empty
+# from pyparsing import empty
 from ...serializers import StudentSerializer
 from ...models import Student, School, User, Route
 from rest_framework.response import Response
