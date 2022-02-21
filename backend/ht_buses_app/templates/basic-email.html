@@ -46,9 +46,9 @@
                     </tr>
                     {% for stop in student.stops %}
                         {% if forloop.counter0|divisibleby:2 %}
-                            <tr style="background-color: #F3F3F3; height:48px; border-bottom: 0.8px solid #6C757D;">
+                            <tr style="background-color: #F3F3F3; height:48px; border-bottom: 0.8px solid #DEE2E6;">
                         {% else %} 
-                            <tr style="background-color: #ffffff; height:48px; border-bottom: 0.8px solid #6C757D;">
+                            <tr style="background-color: #ffffff; height:48px; border-bottom: 0.8px solid #DEE2E6;">
                         {% endif %}
                                 <td style="padding-left:16px; padding-right:16px;">{{stop.name}}</td>
                                 <td style="padding-left:16px; padding-right:16px;">{{stop.address}}</td>
