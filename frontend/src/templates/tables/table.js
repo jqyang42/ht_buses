@@ -83,10 +83,6 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         setRecords(new_records)
     }
 
-    // console.log(dnd)
-    // console.log(searchOn)
-    // console.log(rows)
-
     return (
         <>
             { searchOn ?

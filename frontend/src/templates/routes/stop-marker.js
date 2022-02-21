@@ -35,6 +35,7 @@ class StopMarker extends Component {
     }
 
     editName = (event) => {
+      event.preventDefault();
       this.setState({
         name: event.target.value
       });
@@ -43,7 +44,13 @@ class StopMarker extends Component {
     handleSubmit = (event) => {
       event.preventDefault();
       if (this.props.handleStopNameChange) {
-        this.props.handleStopNameChange(this.state.name, this.props.id)
+        if(this.props.uid) {
+          console.log(this.state.name)
+          this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid)
+        } 
+        else {
+          this.props.handleStopNameChange(this.state.name, this.props.id)
+        }
       }
       this.handleClick()
     }
@@ -73,7 +80,8 @@ class StopMarker extends Component {
                       <input type='name' className="d-inline form-control w-auto ms-1 me-0" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
                       <div className='row mt-3 mb-1 ms-1 w-auto d-flex justify-content-between'>
                         <div className='float-start ms-0 ps-0 w-auto'>
-                          <button onClick={this.props.handleDeleteMarker} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
+                          {/* <button onClick={showInfoWindow ? this.props.handleDeleteMarker(this.props.id) : () => {}} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button> */}
+                          <button onClick={(e) => this.props.handleDeleteStopMarker(e, this.props.id)} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
                         </div>
                         <div className='float-end w-auto text-align-end align-items-end pb-0'>
                           <button onClick={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>

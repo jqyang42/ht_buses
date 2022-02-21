@@ -46,7 +46,7 @@ class BusRoutesPlanner extends Component {
     componentDidMount() {
         this.handleTableGet();       
         this.handleLocationsGet();     
-        if (this.state.active_route !== 0) { this.handleStopsGet(this.state.active_route) };
+        if (this.state.active_route !== 0) { this.handleStopsGet() };
         makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
             this.setState({ route_dropdown: ret })
         })
@@ -146,15 +146,17 @@ class BusRoutesPlanner extends Component {
             );
     }
 
-    handleStopsGet = (active_route) => {
-        api.get(`stops?id=${active_route}`)
-        .then(res => {
-            const data = res.data;
-            this.setState({ stops: data.stops }, () => {
-                if (data.stops.length !== 0) {
-                    this.handleStopTimeCalc()
-                }            
-            })
+    handleStopsGet = () => {
+        api.get(`stops?id=${this.state.active_route}`)
+            .then(res => {
+            const stops = res.data.stops;
+            console.log(stops)
+            if (stops.length !== 0) {
+                this.handleStopTimeCalc(stops)
+                .then(res => this.setState({ stops: res }))
+            } else {
+                this.setState({ stops: stops })
+            }
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -165,35 +167,40 @@ class BusRoutesPlanner extends Component {
         )
     }
 
-    handleStopTimeCalc = () => {
+    async handleStopTimeCalc(stops) {
         const school = this.state.school
-        const stops = [...this.state.stops]
+        // const stops = [...this.state.stops]
         stops.sort((a, b) => a.order_by - b.order_by)
-        const stops_latlng = stops.filter(stop => stop.order_by !== 1).map(stop => {
+        const stops_latlng = stops.filter(stop => stops.indexOf(stop) !== 0).map(stop => {
             return {
                 location: { lat: stop.location.lat, lng: stop.location.long }
             }
         })
-        
-        getStopTimes({
+
+        const stop_times = await getStopTimes({
             first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: { lat: school.location.lat, lng: school.location.long },
             stops: stops_latlng,
             arrival_time: school.arrival,
             departure_time: school.departure
-        }).then(res => this.updateStopTimes(res))
+        })
+        
+        const updated_stops = this.updateStopTimes(stop_times, stops)
+        console.log(updated_stops)
+        return updated_stops
     }
 
-    updateStopTimes = (stop_times) => {
-        const stops = [...this.state.stops]
-        const new_stops = stops.map(stop => {
-            return {
+    updateStopTimes = (stop_times, orig_stops) => {
+        // const stops = [...this.state.stops]
+        // const new_stops = stops.map(stop => {
+        return orig_stops.map(stop => {
+                return {
                 ...stop,
-                arrival: stop_times[stop.order_by - 1].pickup,
-                departure: stop_times[stop.order_by - 1].dropoff
+                arrival: stop_times[orig_stops.indexOf(stop)].pickup,
+                departure: stop_times[orig_stops.indexOf(stop)].dropoff
             }
         })
-        this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
+        // this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
     }
 
     handleAssignMode = event => {
@@ -210,9 +217,10 @@ class BusRoutesPlanner extends Component {
     }
     
     handleRouteSelection = event => {
-        if (this.state.assign_mode_warning) { this.setState({ assign_mode_warning: false }) };
-        this.setState({ active_route: parseInt(event.target.value) })
-        this.handleStopsGet(parseInt(event.target.value))
+        if (this.state.assign_mode_warning) { 
+            this.setState({ assign_mode_warning: false }) 
+        };
+        this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
     }
 
     handleRouteNameChange = event => {
@@ -259,38 +267,102 @@ class BusRoutesPlanner extends Component {
     }
 
     students = {"students":[]};
-    stops = {"stops": []};
+    newStops = {"stops": []};
+    editedStops = {"stops": []};
     handleRouteIDChange = (students) => {
       this.students["students"] = students;
     }
 
-    handleRouteStopChange = (stops) => {
-        this.stops["stops"] = stops;
+    handleNewStopsChange = (stops) => {
+        this.newStops["stops"] = stops;
         console.log("new stops")
-        console.log(this.stops)
+        console.log(this.newStops)
+    }
+
+    handleRouteStopModification = (stops) => {
+        this.editedStops["stops"] = stops;
+        console.log("edited stops")
+        console.log(this.editedStops)
+    }
+
+    delete_orig_stop_ids = {'stops': []}
+    handleOrigStopsDeletion = (stop_ids) => {
+        const deletion_ids = stop_ids.map(id => {
+            return { 'id': id }
+        })
+        console.log(deletion_ids)
+        this.delete_orig_stop_ids["stops"] = deletion_ids;
     }
 
     handleAssignModeSave = event => {
+        event.preventDefault();
+        console.log("saved!")
         this.setState({
             assign_mode: false,
         })
 
         api.put('routeplanner/edit', this.students)
-        .then(res => {
+        .then(
+            res => {
             this.students = {"students":[]};
             this.setState({markers: []})
-            this.handleTableGet() 
-            this.handleLocationsGet()
+            // this.handleTableGet() 
+            // this.handleLocationsGet()
+            
+            api.put('stops/edit-name', this.editedStops)
+            .then(res => {  
+                this.editedStops = {"stops":[]};
+                // this.handleTableGet() 
+                // this.handleStopsGet()
+                // this.handleLocationsGet()
+                api.post('stops/create', this.newStops)
+                .then(res => {
+                    this.newStops = {"stops":[]};
+                    // this.handleTableGet() 
+                    // this.handleStopsGet()
+                    // this.handleLocationsGet()
+                    api.delete(`stops/delete`, { data: this.delete_orig_stop_ids })
+                    .then(res => {
+                        const success = res.data.success
+                        console.log(success)
+                        // TODO error handling for stops delete
+                        this.delete_orig_stop_ids = {'stops': []}
+                        this.handleTableGet() 
+                        this.handleLocationsGet()
+                        this.handleStopsGet()
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                })
+            })
         })
-        console.log("sent stops")
-        console.log(this.stops)
-        api.post('stops/create', this.stops)
-        .then(res => {
-            this.stops = {"stops":[]};
-            this.handleTableGet() 
-            this.handleLocationsGet()
-            this.handleStopsGet(this.state.active_route)
-        })
+        // console.log("sent stops")
+        // console.log(this.newStops)
+        // api.post('stops/create', this.newStops)
+        // .then(res => {
+        //     this.newStops = {"stops":[]};
+        //     this.handleTableGet() 
+        //     this.handleStopsGet()
+        //     // this.handleLocationsGet()
+        // })
+
+        console.log(this.delete_orig_stop_ids)
+        // api.delete(`stops/delete`, { data: this.delete_orig_stop_ids })
+        // .then(res => {
+        //     const success = res.data.success
+        //     console.log(success)
+        //     // TODO error handling for stops delete
+        //     this.handleStopsGet()
+        // }).catch(error => {
+        //     console.log(error)
+        // })
+        // api.put('stops/edit-name', this.editedStops)
+        // .then(res => {  
+        //     this.editedStops = {"stops":[]};
+        //     this.handleTableGet() 
+        //     this.handleStopsGet()
+        //     this.handleLocationsGet()
+        // })
 
         // handle editting orig stops, creating new stops @jessica
     }
@@ -459,7 +531,10 @@ class BusRoutesPlanner extends Component {
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
                                             onChange={this.handleRouteIDChange}
-                                            handleStopCreation={this.handleRouteStopChange}/>
+                                            handleUpdateNewStops={this.handleNewStopsChange}
+                                            handleDeleteOrigStops={this.handleOrigStopsDeletion}
+                                            handleStopModification={this.handleRouteStopModification}
+                                            />
                                         </div>
                                     </div>
                                     <div className="col">
