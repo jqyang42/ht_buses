@@ -4,11 +4,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from django.core.paginator import Paginator
 
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def students(request):
     data = {}
     # COMMENTED OUT CODE FOR PAGINATION
@@ -18,8 +19,15 @@ def students(request):
     #     students = Student.studentsTable.all()[:10*int(page_number)]
     # else:
     #     students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
-    students = Student.studentsTable.all()
-    student_serializer = StudentSerializer(students, many=True)
+    page_number = request.query_params["page"]
+    if page_number == 0:
+        students = Student.studentsTable.all()
+        student_serializer = StudentSerializer(students, many=True)
+    else:
+        students = Student.studentsTable.all()
+        paginator = Paginator(students, 10) # Show 10 per page
+        students_per_page = paginator.get_page(page_number)
+        student_serializer = StudentSerializer(students_per_page, many=True)
     student_list = []
     for student in student_serializer.data:
         id = student["id"]
