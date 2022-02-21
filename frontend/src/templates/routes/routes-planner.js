@@ -14,7 +14,7 @@ import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
-import { getStopTimes } from "./route-time-calc";
+import { getStopInfo } from "./route-time-calc";
 
 Geocode.setApiKey(GOOGLE_API_KEY);
 class BusRoutesPlanner extends Component {
@@ -224,7 +224,7 @@ class BusRoutesPlanner extends Component {
             }
         })
 
-        const stop_times = await getStopTimes({
+        const stop_info = await getStopInfo({
             first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: { lat: school.location.lat, lng: school.location.long },
             stops: stops_latlng,
@@ -232,22 +232,21 @@ class BusRoutesPlanner extends Component {
             departure_time: school.departure
         })
         
-        const updated_stops = this.updateStopTimes(stop_times, stops)
+        const updated_stops = this.updateStopInfo(stop_info, stops)
         console.log(updated_stops)
         return updated_stops
     }
 
-    updateStopTimes = (stop_times, orig_stops) => {
-        // const stops = [...this.state.stops]
-        // const new_stops = stops.map(stop => {
+    updateStopInfo = (stop_info, orig_stops) => {
+        const stop_times = stop_info.stop_times
         return orig_stops.map(stop => {
                 return {
                 ...stop,
                 arrival: stop_times[orig_stops.indexOf(stop)].pickup,
                 departure: stop_times[orig_stops.indexOf(stop)].dropoff
+                // TODO include stop_infor.stop_addresses after api is set up
             }
         })
-        // this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
     }
 
     handleAssignMode = event => {

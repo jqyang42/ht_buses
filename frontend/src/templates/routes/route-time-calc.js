@@ -1,6 +1,6 @@
 import { timetoArrive, timeToDepart } from "../components/time";
 
-export async function getStopTimes({ first_stop, school, stops, arrival_time, departure_time }) {
+export async function getStopInfo({ first_stop, school, stops, arrival_time, departure_time }) {
     // @jessica handle more than 10 stops
     const directionsService = new window.google.maps.DirectionsService()
     const api_response = await directionsService.route(
@@ -11,7 +11,15 @@ export async function getStopTimes({ first_stop, school, stops, arrival_time, de
             waypoints: stops
         }
     )
-    return calculateTime({ route_legs: api_response.routes[0].legs, arrival_time: arrival_time, departure_time: departure_time })
+    
+    const stop_address = api_response.routes[0].legs.map(leg => {
+        return leg.start_address
+    })
+
+    return {
+        stop_addresses: stop_address,
+        stop_times: calculateTime({ route_legs: api_response.routes[0].legs, arrival_time: arrival_time, departure_time: departure_time })
+    }
 }
 
 function calculateTime({ route_legs, arrival_time, departure_time }) {
