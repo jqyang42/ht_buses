@@ -28,6 +28,11 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
                 Cell: ({ cell: { value } }) => (
                     toDisplayFormat({ twentyfour_time: value })
                 )
+            },
+            {
+                Header: 'to be hidden',
+                accessor: 'order_by',
+                disableSortBy: true
             }
         ],
         []
@@ -48,9 +53,10 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
             handleReorder={handleReorder}
             hasCustomSortBy={true}
             customSortBy={[{
-                id: 'arrival',
+                id: 'order_by',
                 desc: false
             }]}
+            customHiddenColumn={['order_by']}
         />
     )
 }
