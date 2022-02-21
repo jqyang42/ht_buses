@@ -25,5 +25,11 @@
             }
         ]
     },
+    "location":{
+        "id":72,
+        "address":"2901 Bertland Ave, Durham, NC 27705, USA",
+        "lat":36.0307632,
+        "long":-78.93236
+    },
     "success":true
 }
