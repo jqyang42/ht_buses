@@ -27,7 +27,8 @@ def student_route_edit(request):
                 student_obj.route_id = None
             else:
                 student_obj.route_id = Route.routeTables.get(pk=route_id)
-                stop_arr = check_in_range.check_student_in_range(student_obj)
+                student_obj_serializer = StudentSerializer(student_obj, many=False)
+                stop_arr = check_in_range.check_student_in_range(student_obj_serializer.data["user_id"], route_id)
                 if len(stop_arr) != 0:
                     in_range = True
                 else:
