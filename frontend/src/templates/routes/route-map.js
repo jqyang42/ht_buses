@@ -38,7 +38,7 @@ class RouteMap extends Component {
   state = {
     newStops: [],
     editedStops: [],
-    existingStops:this.props.existingStops,
+    existingStops: this.props.existingStops,
     showModal: false,
     center: {
       lat: parseFloat(this.props.center.lat),
@@ -91,15 +91,15 @@ class RouteMap extends Component {
         newStops: [...prevState.newStops, newStop]
       }), console.log(this.state.newStops))
     }
-    this.handleStopCreate()
+    this.handleUpdateNewStops()
     this.setState({ showModal: true })
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
-  handleStopCreate = () => {
-    if (this.props.handleStopCreation) {
+  handleUpdateNewStops = () => {
+    if (this.props.handleUpdateNewStops) {
       console.log(this.state.newStops)
-      this.props.handleStopCreation(this.state.newStops)
+      this.props.handleUpdateNewStops(this.state.newStops)
     }
   }
 
@@ -119,7 +119,7 @@ class RouteMap extends Component {
     this.setState({
       newStops: newStopNames
     }, console.log(this.state.newStops)) 
-    this.handleStopCreate()
+    this.handleUpdateNewStops()
   }
   
   handleStopModify = () => {
@@ -150,8 +150,23 @@ class RouteMap extends Component {
     this.handleStopModify()
   }
 
-  handleDeleteMarker = (event) => {
-    // TODO: delete marker @thomas
+  handleDeleteNewStops = (event, index) => {
+    event.preventDefault()
+    const new_stops = [...this.state.newStops]
+    new_stops.splice(index, 1)
+    this.setState({ newStops: new_stops }, () => this.handleUpdateNewStops())
+  }
+
+  deleted_ids = []
+  handleDeleteOrigStops = (event, index) => {
+    event.preventDefault()
+    const existing_stops = [...this.state.existingStops]
+    existing_stops.splice(index, 1)
+    this.setState({ existingStops: existing_stops })
+
+    const stop_id = this.state.existingStops[index].id
+    this.deleted_ids.push(stop_id)
+    this.props.handleDeleteOrigStops(this.deleted_ids)
   }
 
   render() {
@@ -197,7 +212,7 @@ class RouteMap extends Component {
             })}
             {this.state.existingStops?.map((value, index) => {
               return <StopMarker 
-              key={`${value.location.lat}+${value.location.long}`}
+              key={`${value.location.lat}+${value.location.lng}`}
               id={index}
               uid={value.id}
               name={value.name}
@@ -207,7 +222,7 @@ class RouteMap extends Component {
               }}
               assign_mode={this.props.assign_mode} 
               routeID={this.props.active_route}
-              handleDeleteMarker={this.handleDeleteMarker}
+              handleDeleteStopMarker={this.handleDeleteOrigStops}
               handleStopNameChange={this.handleExistingStopNameChange}/>
             })}
             {this.state.newStops?.map((value, index) => {
@@ -218,10 +233,11 @@ class RouteMap extends Component {
               location={{
                 lat: value.lat,
                 lng: value.long
-              }}
+              }
+            }
               assign_mode={this.props.assign_mode} 
               routeID={value.route_id}
-              handleDeleteMarker={this.handleDeleteMarker}
+              handleDeleteStopMarker={this.handleDeleteNewStops}
               handleStopNameChange={this.handleNewStopNameChange}/>
             })}
           </GoogleMap>
