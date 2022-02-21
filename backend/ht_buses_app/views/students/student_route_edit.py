@@ -1,4 +1,4 @@
-from ...models import Route, Student, User
+from ...models import Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
