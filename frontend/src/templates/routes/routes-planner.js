@@ -149,12 +149,14 @@ class BusRoutesPlanner extends Component {
     handleStopsGet = () => {
         api.get(`stops?id=${this.state.active_route}`)
             .then(res => {
-            const data = res.data;
-            this.setState({ stops: data.stops }, () => {
-                if (data.stops.length !== 0) {
-                    this.handleStopTimeCalc()
-                }            
-            })
+            const stops = res.data.stops;
+            console.log(stops)
+            if (stops.length !== 0) {
+                this.handleStopTimeCalc(stops)
+                .then(res => this.setState({ stops: res }))
+            } else {
+                this.setState({ stops: stops })
+            }
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -165,35 +167,40 @@ class BusRoutesPlanner extends Component {
         )
     }
 
-    handleStopTimeCalc = () => {
+    async handleStopTimeCalc(stops) {
         const school = this.state.school
-        const stops = [...this.state.stops]
+        // const stops = [...this.state.stops]
         stops.sort((a, b) => a.order_by - b.order_by)
-        const stops_latlng = stops.filter(stop => stop.order_by !== 1).map(stop => {
+        const stops_latlng = stops.filter(stop => stops.indexOf(stop) !== 0).map(stop => {
             return {
                 location: { lat: stop.location.lat, lng: stop.location.long }
             }
         })
-        
-        getStopTimes({
+
+        const stop_times = await getStopTimes({
             first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: { lat: school.location.lat, lng: school.location.long },
             stops: stops_latlng,
             arrival_time: school.arrival,
             departure_time: school.departure
-        }).then(res => this.updateStopTimes(res))
+        })
+        
+        const updated_stops = this.updateStopTimes(stop_times, stops)
+        console.log(updated_stops)
+        return updated_stops
     }
 
-    updateStopTimes = (stop_times) => {
-        const stops = [...this.state.stops]
-        const new_stops = stops.map(stop => {
-            return {
+    updateStopTimes = (stop_times, orig_stops) => {
+        // const stops = [...this.state.stops]
+        // const new_stops = stops.map(stop => {
+        return orig_stops.map(stop => {
+                return {
                 ...stop,
-                arrival: stop_times[stop.order_by - 1].pickup,
-                departure: stop_times[stop.order_by - 1].dropoff
+                arrival: stop_times[orig_stops.indexOf(stop)].pickup,
+                departure: stop_times[orig_stops.indexOf(stop)].dropoff
             }
         })
-        this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
+        // this.setState({ stops: new_stops }) // @jessica TODO update correct state to allow pushing to backend
     }
 
     handleAssignMode = event => {
@@ -313,6 +320,7 @@ class BusRoutesPlanner extends Component {
             console.log(error)
         })
 
+        this.handleStopsGet()
         // handle editting orig stops, creating new stops @jessica
     }
 
