@@ -104,10 +104,11 @@ class BusRoutesPlanner extends Component {
             const success = res.data.success
             const new_stops = res.data.stops
             console.log(new_stops)
-            const new_stops_by_id = new_stops.map(stop => {
-                return stop.id
-            })
-            console.log(new_stops_by_id)
+            // const new_stops_by_id = new_stops.map(stop => {
+            //     return stop.id
+            // })
+            // console.log(new_stops_by_id)
+            console.log(success)
             if (success) {
                 // console.log(this.state.stops)
                 // const orig_stops = [...this.state.stops]
@@ -244,7 +245,7 @@ class BusRoutesPlanner extends Component {
         })
         
         const updated_stops = this.updateStopInfo(stop_info, stops)
-        console.log(updated_stops)
+        // console.log(updated_stops)
         return updated_stops
     }
 
