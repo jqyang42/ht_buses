@@ -243,7 +243,7 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 w-75 " + (this.state.edited_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -256,7 +256,7 @@ class UsersEdit extends Component {
                                                     value={this.state.edited_user?.location?.address}
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.user.is_parent}/>
+                                                    required={this.state.edited_user.is_parent}/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div className="form-group required pb-3 w-75">
