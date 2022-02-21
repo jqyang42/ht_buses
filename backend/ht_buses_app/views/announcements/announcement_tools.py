@@ -49,7 +49,10 @@ def get_students_info(user):
             student_array = parent_student_detail.student_arr_data(student)
             route_data = student_array["route"]
             student_array["route_name"] = route_data["name"]
-            student_array["route_description"] = route_data["description"]
+            try:
+                student_array["route_description"] = route_data["description"]
+            except:
+                student_array["route_description"] = "N/A"
             student_array["stops"] = get_stop_array(user,route_data["id"])
             students_array.append(student_array)
     return students_array
