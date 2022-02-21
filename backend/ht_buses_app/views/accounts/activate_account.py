@@ -8,27 +8,21 @@ from . import account_tools
 from ..general import general_apis
 from ...constants import constants
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 
 def send_account_activation_email(user):  
     data = {}
     url = account_tools.account_activation_url(user)
     from_email = constants.FROM_DISPLAY
-    text_content = """
-    Hi {} {},
-
-    An account has been created on your behalf. Please follow the link below to finish setting up your account.
-
-    {}
-    """.format(user.first_name,user.last_name,url)
+    msg_plain = render_to_string(constants.ACCOUNT_ACTIVATE_TEXT, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
+    msg_html = render_to_string(constants.ACCOUNT_ACTIVATE_TEMPLATE, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
     subject = constants.ACCOUNT_ACTIVATION_SUBJECT
     try:
-        send_mail(subject, text_content, from_email, [user.email],fail_silently=False)
+        send_mail(subject, msg_plain, from_email, [user.email], html_message=msg_html, fail_silently=False)
         data["message"] = "message successfully sent"
         data["success"] = True
-        return data
     except:
         data["message"] = "message not successfully sent"
         data["success"] = False
-        return data
-
+    return data
