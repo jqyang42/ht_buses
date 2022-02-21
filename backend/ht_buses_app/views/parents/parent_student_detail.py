@@ -12,9 +12,9 @@ def parent_student_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
+        student = Student.studentsTable.get(pk=id)
         auth_string = "Token "+str(student.user_id.auth_token)
         if auth_string == request.headers['Authorization']:
-            student = Student.studentsTable.get(pk=id)
             data["student"] = student_arr_data(student)
             data["success"] = True
             return Response(data)
