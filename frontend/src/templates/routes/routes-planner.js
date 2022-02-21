@@ -259,18 +259,27 @@ class BusRoutesPlanner extends Component {
     }
 
     students = {"students":[]};
-    stops = {"stops": []};
+    newStops = {"stops": []};
+    editedStops = {"stops": []};
     handleRouteIDChange = (students) => {
       this.students["students"] = students;
     }
 
-    handleRouteStopChange = (stops) => {
-        this.stops["stops"] = stops;
+    handleRouteStopCreation = (stops) => {
+        this.newStops["stops"] = stops;
         console.log("new stops")
-        console.log(this.stops)
+        console.log(this.newStops)
+    }
+
+    handleRouteStopModification = (stops) => {
+        this.editedStops["stops"] = stops;
+        console.log("edited stops")
+        console.log(this.editedStops)
     }
 
     handleAssignModeSave = event => {
+        event.preventDefault();
+        console.log("saved!")
         this.setState({
             assign_mode: false,
         })
@@ -283,13 +292,19 @@ class BusRoutesPlanner extends Component {
             this.handleLocationsGet()
         })
         console.log("sent stops")
-        console.log(this.stops)
-        api.post('stops/create', this.stops)
+        console.log(this.newStops)
+        api.post('stops/create', this.newStops)
         .then(res => {
-            this.stops = {"stops":[]};
+            this.newStops = {"stops":[]};
             this.handleTableGet() 
-            this.handleLocationsGet()
             this.handleStopsGet(this.state.active_route)
+        })
+        api.put('stops/edit-name', this.editedStops)
+        .then(res => {  
+            this.editedStops = {"stops":[]};
+            this.handleTableGet() 
+            this.handleStopsGet(this.state.active_route)
+            this.handleLocationsGet()
         })
 
         // handle editting orig stops, creating new stops @jessica
@@ -459,7 +474,8 @@ class BusRoutesPlanner extends Component {
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
                                             onChange={this.handleRouteIDChange}
-                                            handleStopCreation={this.handleRouteStopChange}/>
+                                            handleStopCreation={this.handleRouteStopCreation}
+                                            handleStopModification={this.handleRouteStopModification}/>
                                         </div>
                                     </div>
                                     <div className="col">

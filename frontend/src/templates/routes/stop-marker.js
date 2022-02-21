@@ -35,6 +35,7 @@ class StopMarker extends Component {
     }
 
     editName = (event) => {
+      event.preventDefault();
       this.setState({
         name: event.target.value
       });
@@ -43,7 +44,12 @@ class StopMarker extends Component {
     handleSubmit = (event) => {
       event.preventDefault();
       if (this.props.handleStopNameChange) {
-        this.props.handleStopNameChange(this.state.name, this.props.id)
+        if(this.props.uid) {
+          this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid)
+        } 
+        else {
+          this.props.handleStopNameChange(this.state.name, this.props.id)
+        }
       }
       this.handleClick()
     }

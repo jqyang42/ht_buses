@@ -74,8 +74,6 @@ class RouteMap extends Component {
     }
   }
 
-  // newStops = [];
-
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
@@ -98,22 +96,58 @@ class RouteMap extends Component {
     // document.getElementById("staticBackdrop").modal({ show: true, backdrop: false, keyboard: false });
   }
 
-  handleStopNameChange = (name, key) => {
-    const newStops = this.state.newStops;
-    const newStop = newStops[key];
-    newStop.name = name;
-    newStops[key] = newStop;
-    console.log(newStops);
-    this.setState({
-      stops: newStops
-    }, this.handleStopCreate()) 
-  }
-
   handleStopCreate = () => {
     if (this.props.handleStopCreation) {
       console.log(this.state.newStops)
       this.props.handleStopCreation(this.state.newStops)
     }
+  }
+
+  handleStopNameChange = (arrayToChange, name, index) => {
+    console.log("edited list")
+    const newStopNames = arrayToChange;
+    const newStop = newStopNames[index];
+    console.log(newStopNames)
+    newStop.name = name;
+    newStopNames[index] = newStop;
+    return newStopNames
+  }
+
+  handleNewStopNameChange = (name, index) => {
+    console.log("edited list")
+    const newStopNames = this.handleStopNameChange(this.state.newStops, name, index)
+    this.setState({
+      newStops: newStopNames
+    }, console.log(this.state.newStops)) 
+    this.handleStopCreate()
+  }
+  
+  handleStopModify = () => {
+    if (this.props.handleStopCreation) {
+      console.log(this.state.editedStops)
+      this.props.handleStopModification(this.state.editedStops)
+    }
+  }
+
+  handleExistingStopNameChange = (name, index, uid) => {
+    const updatedStopNames = this.handleStopNameChange(this.state.existingStops, name, index)
+    const editedStop = {
+      "id": uid,
+      "name": name
+    }
+    console.log(editedStop)
+    const editedStopNames = this.state.editedStops;
+    editedStopNames.push(editedStop)
+    // this.setState(prevState => ({
+    //   editedStops: [...prevState.editedStops, editedStop]
+    // }), console.log(this.state.editedStops))
+    this.setState({
+      editedStops: editedStopNames,
+      existingStops: updatedStopNames
+    })
+    console.log(this.state.editedStops)
+    console.log(this.state.existingStops)
+    this.handleStopModify()
   }
 
   handleDeleteMarker = (event) => {
@@ -162,11 +196,10 @@ class RouteMap extends Component {
                 data-bs-target="#staticBackdrop"/>
             })}
             {this.state.existingStops?.map((value, index) => {
-              console.log("stop render")
-              console.log(value)
               return <StopMarker 
               key={`${value.location.lat}+${value.location.long}`}
               id={index}
+              uid={value.id}
               name={value.name}
               location={{
                 lat: value.location.lat,
@@ -175,7 +208,7 @@ class RouteMap extends Component {
               assign_mode={this.props.assign_mode} 
               routeID={this.props.active_route}
               handleDeleteMarker={this.handleDeleteMarker}
-              handleStopNameChange={this.handleStopNameChange}/>
+              handleStopNameChange={this.handleExistingStopNameChange}/>
             })}
             {this.state.newStops?.map((value, index) => {
               return <StopMarker 
@@ -189,7 +222,7 @@ class RouteMap extends Component {
               assign_mode={this.props.assign_mode} 
               routeID={value.route_id}
               handleDeleteMarker={this.handleDeleteMarker}
-              handleStopNameChange={this.handleStopNameChange}/>
+              handleStopNameChange={this.handleNewStopNameChange}/>
             })}
           </GoogleMap>
         </LoadScript>
@@ -208,7 +241,7 @@ class RouteMap extends Component {
                         <div className="form-group pb-3 required">
                             <label for="stop-name" className="control-label pb-2">Name</label>
                             <input type="name" className="form-control" id="stop-name" required defaultValue=""
-                            placeholder="Enter stop name" onChange={this.handleStopNameChange}></input>
+                            placeholder="Enter stop name" onChange={this.handleNewStopNameChange}></input>
                         </div> 
                     </div>
                     <div className="modal-footer">
