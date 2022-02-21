@@ -8,7 +8,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, rowProps = () => ({}) }) {
+export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}) }) {
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
@@ -55,12 +55,12 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
             searchInput: "",
             pageIndex: 0,
             pageSize: 10,
-            sortBy: dnd ? [] : [
+            sortBy: dnd ? [] : ( hasCustomSortBy ? customSortBy : [
                 {
                     id: 'name',
                     desc: false
                 }
-            ]
+            ])
         },
         },
         useFilters,
@@ -81,8 +81,8 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         const new_order = new_records.map(row => {
             return row.id
         })
-        console.log(new_records)
-        console.log(new_order)
+        // console.log(new_records)
+        // console.log(new_order)
         handleReorder(new_order)
         setRecords(new_records)
     }
