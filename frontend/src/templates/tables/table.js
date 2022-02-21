@@ -61,7 +61,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     desc: false
                 }
             ]),
-            hiddenColumns: customHiddenColumn
+            hiddenColumns: customHiddenColumn || []
         },
         },
         useFilters,
