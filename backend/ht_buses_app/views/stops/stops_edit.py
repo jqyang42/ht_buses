@@ -19,7 +19,6 @@ def stops_edit(request):
         stops = []
         for stop in reqBody["stops"]:
             stop_obj = Stop.stopTables.get(pk=stop["id"])
-            print(stop_obj)
             route = Route.routeTables.get(pk=stop["route_id"])
             stop_obj.route_id = route
             stop_obj.order_by = count
@@ -30,6 +29,7 @@ def stops_edit(request):
             stop_obj.location_id.address = stop["location"]["address"]
             stop_obj.location_id.lat = stop["location"]["lat"]
             stop_obj.location_id.long = stop["location"]["long"]
+            stop_obj.location_id.save()
             stop_obj.save()
             stop_serializer = StopSerializer(stop_obj, many=False)
             stops.append(stop_serializer.data)
