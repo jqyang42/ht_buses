@@ -132,14 +132,31 @@ class UsersEdit extends Component {
         }
     }
 
+
+    checkStaffAddress = async () => {
+        const address = this.state.edited_user.location.address
+        const empty_address = address === "" || address == undefined
+        if(!this.state.edited_user.is_parent && empty_address) {
+            let user = this.state.edited_user
+            user.location.lat = 0
+            user.location.long = 0
+            user.location.address = ""
+            this.setState({
+                new_user: user,
+                valid_address: true,
+            })
+        }
+        return this.state.valid_address
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
-
-        if (!emailValidation({ email: this.state.edited_user?.email }) || !this.state.valid_address ) {
-            this.setState({ edit_success: -1 })
-            return 
-        }
-
+        this.checkStaffAddress().then(valid_address => {
+            if (!emailValidation({ email: this.state.edited_user?.email }) || valid_address ) {
+                this.setState({ edit_success: -1 })
+                return 
+            }
+        })
         const request = {
             user: {
                 email: this.state.edited_user?.email
@@ -239,7 +256,7 @@ class UsersEdit extends Component {
                                                     value={this.state.edited_user?.location?.address}
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.edited_user.is_parent}/>
+                                                    required={this.state.user.is_parent}/>
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
                                             <div className="form-group required pb-3 w-75">
