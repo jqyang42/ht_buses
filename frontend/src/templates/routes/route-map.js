@@ -38,24 +38,21 @@ class RouteMap extends Component {
   state = {
     newStops: [],
     editedStops: [],
-    existingStops: this.props.existingStops,
+    existingStops: [],
     showModal: false,
-    center: {
-      lat: parseFloat(this.props.center.lat),
-      lng: parseFloat(this.props.center.lng)
-    },
+    center: {},
   }
 
   studentsChanged = []
 
-  handleCenterChange = (event) => {
-    //TODO: update state with new center
-  }
-
   componentDidUpdate(prevProps) {
     if(this.props.existingStops !== prevProps.existingStops){
       this.setState({
-        existingStops: this.props.existingStops
+        existingStops: this.props.existingStops, 
+        center: {
+          lat: parseFloat(this.props.center.lat),
+          lng: parseFloat(this.props.center.lng)
+        }
       });
     }
   }
@@ -86,10 +83,13 @@ class RouteMap extends Component {
         arrival: "00:00",
         departure: "00:00"
       }
-      // this.newStops.push(newStop)
       this.setState(prevState => ({
-        newStops: [...prevState.newStops, newStop]
-      }), console.log(this.state.newStops))
+        newStops: [...prevState.newStops, newStop],
+        center: {
+          lat: coords.lat,
+          long: coords.lng
+        }
+      }), console.log(this.state.center))
     }
     this.handleUpdateNewStops()
     this.setState({ showModal: true })
