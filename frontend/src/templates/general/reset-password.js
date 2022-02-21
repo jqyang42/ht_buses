@@ -65,7 +65,7 @@ class ResetPassword extends Component {
     render() {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                {this.state.valid_url === -1 ? "Url link has expired." :
+                {this.state.valid_url === -1 ? "This url is not valid or it has expired." :
                 <div className="row flex-nowrap">
                     <UnauthenticatedSidebarMenu />
                     <div className="col mx-0 px-0 bg-gray w-100">
