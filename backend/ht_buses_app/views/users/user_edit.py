@@ -14,10 +14,9 @@ from .user_address_update import update_student_stop
 @permission_classes([IsAdminUser]) 
 def user_edit(request):
     data = {}
-    #try:
-    id = request.query_params["id"]
-    reqBody = json.loads(request.body)
     try:
+        id = request.query_params["id"]
+        reqBody = json.loads(request.body)
         user_object = User.objects.get(pk=id)
         user_object.email = reqBody["user"]["email"]
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
