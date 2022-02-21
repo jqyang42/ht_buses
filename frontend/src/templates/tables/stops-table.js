@@ -30,7 +30,7 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
                 )
             },
             {
-                Header: 'to be hidden',
+                Header: 'Stop Order',
                 accessor: 'order_by',
                 disableSortBy: true
             }

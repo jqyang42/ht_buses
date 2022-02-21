@@ -89,8 +89,11 @@ class BusRoutesPlanner extends Component {
                     name: stop.name,
                     arrival: stop.arrival,
                     departure: stop.departure,
-                    lat: stop.location.lat,
-                    long: stop.location.long
+                    location: {
+                        lat: stop.location.lat,
+                        long: stop.location.long,
+                        address: stop.location.address
+                    }
                 }
             }            
         )}
@@ -200,7 +203,10 @@ class BusRoutesPlanner extends Component {
             console.log(stops)
             if (stops.length !== 0) {
                 this.handleStopTimeCalc(stops)
-                .then(res => this.setState({ stops: res }))
+                .then(res => {
+                    this.setState({ stops: res })
+                    console.log(res)
+                })
             } else {
                 this.setState({ stops: stops })
             }
@@ -244,12 +250,16 @@ class BusRoutesPlanner extends Component {
 
     updateStopInfo = (stop_info, orig_stops) => {
         const stop_times = stop_info.stop_times
+        const stop_addresses = stop_info.stop_addresses
         return orig_stops.map(stop => {
                 return {
                 ...stop,
                 arrival: stop_times[orig_stops.indexOf(stop)].pickup,
-                departure: stop_times[orig_stops.indexOf(stop)].dropoff
-                // TODO include stop_infor.stop_addresses after api is set up
+                departure: stop_times[orig_stops.indexOf(stop)].dropoff,
+                location: {
+                    ...stop.location,
+                    address: stop_addresses[orig_stops.indexOf(stop)]
+                }                
             }
         })
     }
