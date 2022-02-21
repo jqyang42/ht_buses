@@ -19,6 +19,10 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
 
     const [records, setRecords] = useState(data)
 
+    useEffect(() => {
+        setRecords(data)
+    }, [data])
+
     const getRowId = React.useCallback(row => {
         // console.log(row)
         return row.id
