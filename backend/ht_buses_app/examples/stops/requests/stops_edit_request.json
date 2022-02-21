@@ -6,18 +6,12 @@
             "name": "Cool Stop 1",
             "arrival": "12:00",
             "departure": "13:00",
-            "lat": 3.0,
-            "long": 2.0
-        },
-        {
-            "id": 2,
-            "route_id": 1,
-            "name": "Cool Stop 2",
-            "arrival": "11:00",
-            "departure": "12:00",
-            "lat": 6.7,
-            "long": 5.0
-        }
+            "location": {
+                "address": "Address here",
+                "lat": 3.0,
+                "long": 2.0
 
+            }
+        }
     ]
 }

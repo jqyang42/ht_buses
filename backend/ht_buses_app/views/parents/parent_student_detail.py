@@ -1,9 +1,10 @@
-from ...models import School, Route, Student, User
+from ...models import School, Route, Student, Location, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
+from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
+from ..stops import check_in_range
 
 @csrf_exempt
 @api_view(["GET"])
@@ -36,6 +37,10 @@ def student_arr_data(student):
     school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     student_arr["school_name"] = school_serializer.data["name"]
+    user = User.objects.get(pk=student_serializer.data["user_id"])
+    location_serializer = LocationSerializer(user.location, many=False)
+    location_arr = {"id": location_serializer.data["id"], "address": location_serializer.data["address"],
+    "lat": location_serializer.data["lat"], "long": location_serializer.data["long"]}
     if student_serializer.data["route_id"] == None:
         route_arr = {"id": 0,"name":"Unassigned","description":"N/A","color_id": 0}
     else:
@@ -45,4 +50,6 @@ def student_arr_data(student):
         route_description = route_serializer.data["description"]
         route_arr = {'id': route_serializer.data["id"], 'name' : route_name, 'description' : route_description, 'color_id': route_serializer.data['color_id']}
     student_arr["route"] = route_arr
+    student_arr["stops"] = check_in_range.check_student_in_range(student_serializer.data["user_id"], student_serializer.data["route_id"])
+    student_arr["location"] = location_arr
     return student_arr
