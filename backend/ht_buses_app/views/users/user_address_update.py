@@ -7,7 +7,7 @@ def update_student_stop(user_id):
     students = Student.studentsTable.filter(user_id=user_id)
     students_serializer = StudentSerializer(students, many=True)
     for student in students_serializer.data:
-        if student["route_id"] != None or student["route_id"] != 0:
+        if student["route_id"] != None and student["route_id"] != 0:
             in_range_arr = check_in_range.check_student_in_range(user_id, student["route_id"])
             if len(in_range_arr) != 0:
                 in_range = True

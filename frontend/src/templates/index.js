@@ -47,7 +47,7 @@ class Login extends Component {
                 sessionStorage.setItem('first_name', data.info.first_name)
                 sessionStorage.setItem('last_name', data.info.last_name)
                 sessionStorage.setItem('is_staff', data.info.is_staff)
-                const role = data.info.is_staff ? "Administrator" : "Parent"
+                const role = data.info.is_staff ? "Administrator" : "General"
                 sessionStorage.setItem('role', role)
                 sessionStorage.setItem('logged_in', data.valid_login)
                 res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;

@@ -271,7 +271,7 @@ class UsersCreate extends Component {
     checkStaffAddress = async () => {
         const address = this.state.new_user.location.address
         const empty_address = address === "" || address == undefined
-        if(this.state.new_user.is_staff && empty_address) {
+        if(!this.state.new_user.is_parent && empty_address) {
             let user = this.state.new_user
             user.location.lat = 0
             user.location.long = 0
@@ -287,7 +287,7 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
         this.checkStaffAddress().then(valid_address => {
-        if (!emailValidation({ email: this.state.new_user.email }) || !this.state.valid_password || !valid_address || !this.studentIDValidation()) {
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return 
           }
@@ -431,6 +431,7 @@ class UsersCreate extends Component {
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
+                                            {/*
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword1" className="control-label pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword1" 
@@ -454,6 +455,7 @@ class UsersCreate extends Component {
                                                 ) : ""
                                                 }
                                             </div>
+                                            */}
                                         </div>
                                         <div className="col mt-2">
                                             <div className="form-group pb-3">

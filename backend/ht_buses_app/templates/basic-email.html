@@ -22,17 +22,19 @@
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Student ID:</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">School:</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route:</p>
+                    <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route Description:</p>
                 </div>
                 <div class="column">
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">{{student.first_name}} {{student.last_name}}</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">{{student.school_student_id}}</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">{{student.school_name}}</p>
                     <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">{{student.route_name}}</p>
+                    <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">{{student.route_description}}</p>
                 </div>
             </div>
             <div>
                 {% if student.stops|length == 0 %}
-                <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route Stop Options: N/A</p>
+                <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Route Stop Options: No stops in range</p>
                 {% else %}
                 <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em; padding-bottom: 4px; margin-bottom: 4px; margin-top: 8px; padding-top: 8px;">Route Stop Options:</p>
                 <table class="table table-striped" style="width: 100%; font-size: 1.2em; font-family: 'Helvetica Neue'; color: #6C757D; border-collapse: collapse;">

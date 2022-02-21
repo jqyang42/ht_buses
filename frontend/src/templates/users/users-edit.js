@@ -132,14 +132,31 @@ class UsersEdit extends Component {
         }
     }
 
+
+    checkStaffAddress = async () => {
+        const address = this.state.edited_user.location.address
+        const empty_address = address === "" || address == undefined
+        if(!this.state.edited_user.is_parent && empty_address) {
+            let user = this.state.edited_user
+            user.location.lat = 0
+            user.location.long = 0
+            user.location.address = ""
+            this.setState({
+                new_user: user,
+                valid_address: true,
+            })
+        }
+        return this.state.valid_address
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
-
-        if (!emailValidation({ email: this.state.edited_user?.email }) || !this.state.valid_address ) {
-            this.setState({ edit_success: -1 })
-            return 
-        }
-
+        this.checkStaffAddress().then(valid_address => {
+            if (!emailValidation({ email: this.state.edited_user?.email }) || valid_address ) {
+                this.setState({ edit_success: -1 })
+                return 
+            }
+        })
         const request = {
             user: {
                 email: this.state.edited_user?.email
@@ -226,7 +243,7 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className={"form-group pb-3 w-75 " + (this.state.user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 w-75 " + (this.state.edited_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete

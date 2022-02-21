@@ -12,9 +12,9 @@ def parent_student_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
+        student = Student.studentsTable.get(pk=id)
         auth_string = "Token "+str(student.user_id.auth_token)
         if auth_string == request.headers['Authorization']:
-            student = Student.studentsTable.get(pk=id)
             data["student"] = student_arr_data(student)
             data["success"] = True
             return Response(data)
@@ -37,7 +37,7 @@ def student_arr_data(student):
     school_serializer = SchoolSerializer(school, many=False)
     student_arr["school_name"] = school_serializer.data["name"]
     if student_serializer.data["route_id"] == None:
-        route_arr = {"id": 0,"name":"Unassigned","color_id": 0}
+        route_arr = {"id": 0,"name":"Unassigned","description":"N/A","color_id": 0}
     else:
         route = Route.routeTables.get(pk=student_serializer.data["route_id"])
         route_serializer = RouteSerializer(route, many=False)
