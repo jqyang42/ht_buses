@@ -46,6 +46,11 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
                 }
             })}
             handleReorder={handleReorder}
+            hasCustomSortBy={true}
+            customSortBy={[{
+                id: 'arrival',
+                desc: false
+            }]}
         />
     )
 }

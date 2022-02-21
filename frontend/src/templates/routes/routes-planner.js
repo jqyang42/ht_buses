@@ -64,6 +64,63 @@ class BusRoutesPlanner extends Component {
         }))
     }
 
+    handleReorder = (new_order) => {
+        console.log(this.state.stops)
+        console.log(new_order)
+        this.setState({ stops_order: new_order })
+    }
+
+    submitStopsOrder = () => {
+        this.switchStopsEditMode()
+
+        // reorder stops array to be nice
+        const ordered_stops = [...this.state.stops]
+        const order = [...this.state.stops_order]
+        ordered_stops.sort((a, b) => {
+            return order.indexOf(a.id) - order.indexOf(b.id)
+        })
+        
+        // make api req
+        const edit_body = {
+            stops: ordered_stops.map(stop => {
+                return {
+                    id: stop.id,
+                    route_id: this.state.active_route,
+                    name: stop.name,
+                    arrival: stop.arrival,
+                    departure: stop.departure,
+                    lat: stop.location.lat,
+                    long: stop.location.long
+                }
+            }            
+        )}
+        
+        console.log(edit_body)
+        api.put(`stops/edit`, edit_body)
+        .then(res => {
+            const success = res.data.success
+            const new_stops = res.data.stops
+            console.log(new_stops)
+            const new_stops_by_id = new_stops.map(stop => {
+                return stop.id
+            })
+            console.log(new_stops_by_id)
+            if (success) {
+                // console.log(this.state.stops)
+                // const orig_stops = [...this.state.stops]
+                // const ordered_stops = orig_stops.map(stop => {
+                //     return {
+                //         ...stop,
+                //         order_by: new_stops[new_stops_by_id.indexOf(stop.id)].order_by
+                //     }
+                // })
+                // console.log(ordered_stops)
+                // this.setState({ stops: ordered_stops })
+                this.handleStopsGet()
+            }
+        })
+    }
+
     switchStopsEditMode = () => {
         this.setState(prevState => ({
             stops_edit_mode: !prevState.stops_edit_mode
@@ -71,16 +128,6 @@ class BusRoutesPlanner extends Component {
         this.setState(prevState => ({
             dnd: !prevState.dnd
         }))
-    }
-
-    handleReorder = (new_order) => {
-        this.setState({ stops_order: new_order })
-    }
-
-    submitStopsOrder = () => {
-        this.switchStopsEditMode()
-        // TODO: add axios get for stops reordering @jessica
-        
     }
 
     handleTableGet = () => {        
