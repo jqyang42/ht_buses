@@ -3,13 +3,14 @@ import { timetoArrive, timeToDepart } from "../components/time";
 export async function getStopInfo({ school, stops, arrival_time, departure_time }) {
     // @jessica handle more than 10 stops
     const api_call_sets = stops.map(stop => {
+        const slice = stops.sl
         return {
-            
+            origin: 
         }
     })
 }
 
-function callGoogleDirectionServer({ origin, destination, waypoints }) {
+async function callGoogleDirectionServer({ origin, destination, waypoints, arrival_time, departure_time }) {
     const directionsService = new window.google.maps.DirectionsService()
     const api_response = await directionsService.route(
         {
