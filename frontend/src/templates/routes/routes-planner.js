@@ -218,14 +218,19 @@ class BusRoutesPlanner extends Component {
         const school = this.state.school
         // const stops = [...this.state.stops]
         stops.sort((a, b) => a.order_by - b.order_by)
-        const stops_latlng = stops.filter(stop => stops.indexOf(stop) !== 0).map(stop => {
+        // const stops_latlng = stops.filter(stop => stops.indexOf(stop) !== 0).map(stop => {
+        //     return {
+        //         location: { lat: stop.location.lat, lng: stop.location.long }
+        //     }
+        // })
+        const stops_latlng = stops.map(stop => {
             return {
                 location: { lat: stop.location.lat, lng: stop.location.long }
             }
         })
 
         const stop_info = await getStopInfo({
-            first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
+            // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: { lat: school.location.lat, lng: school.location.long },
             stops: stops_latlng,
             arrival_time: school.arrival,
