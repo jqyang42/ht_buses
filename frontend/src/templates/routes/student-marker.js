@@ -56,7 +56,7 @@ class StudentMarker extends Component {
       icon={this.state.icon} 
       onClick={this.handleClick} 
       id={this.props.id} 
-      key={this.props.key} 
+      key={this.props.id} 
       onMouseOver={this.handleMouseOver}
       onMouseOut={this.handleMouseExit}>
         {showInfoWindow && (

@@ -123,7 +123,7 @@ class RouteMap extends Component {
   }
   
   handleStopModify = () => {
-    if (this.props.handleStopCreation) {
+    if (this.props.handleStopModification) {
       console.log(this.state.editedStops)
       this.props.handleStopModification(this.state.editedStops)
     }

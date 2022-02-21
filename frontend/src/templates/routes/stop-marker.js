@@ -45,6 +45,7 @@ class StopMarker extends Component {
       event.preventDefault();
       if (this.props.handleStopNameChange) {
         if(this.props.uid) {
+          console.log(this.state.name)
           this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid)
         } 
         else {

@@ -302,41 +302,68 @@ class BusRoutesPlanner extends Component {
         })
 
         api.put('routeplanner/edit', this.students)
-        .then(res => {
+        .then(
+            res => {
             this.students = {"students":[]};
             this.setState({markers: []})
-            this.handleTableGet() 
-            this.handleLocationsGet()
-        })
-        console.log("sent stops")
-        console.log(this.newStops)
-        api.post('stops/create', this.newStops)
-        .then(res => {
-            this.newStops = {"stops":[]};
-            this.handleTableGet() 
-            this.handleStopsGet()
+            // this.handleTableGet() 
             // this.handleLocationsGet()
+            
+            api.put('stops/edit-name', this.editedStops)
+            .then(res => {  
+                this.editedStops = {"stops":[]};
+                // this.handleTableGet() 
+                // this.handleStopsGet()
+                // this.handleLocationsGet()
+                api.post('stops/create', this.newStops)
+                .then(res => {
+                    this.newStops = {"stops":[]};
+                    // this.handleTableGet() 
+                    // this.handleStopsGet()
+                    // this.handleLocationsGet()
+                    api.delete(`stops/delete`, { data: this.delete_orig_stop_ids })
+                    .then(res => {
+                        const success = res.data.success
+                        console.log(success)
+                        // TODO error handling for stops delete
+                        this.delete_orig_stop_ids = {'stops': []}
+                        this.handleTableGet() 
+                        this.handleLocationsGet()
+                        this.handleStopsGet()
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                })
+            })
         })
+        // console.log("sent stops")
+        // console.log(this.newStops)
+        // api.post('stops/create', this.newStops)
+        // .then(res => {
+        //     this.newStops = {"stops":[]};
+        //     this.handleTableGet() 
+        //     this.handleStopsGet()
+        //     // this.handleLocationsGet()
+        // })
 
         console.log(this.delete_orig_stop_ids)
-        api.delete(`stops/delete`, { data: this.delete_orig_stop_ids })
-        .then(res => {
-            const success = res.data.success
-            console.log(success)
-            // TODO error handling for stops delete
-            this.handleStopsGet()
-        }).catch(error => {
-            console.log(error)
-        })
-        api.put('stops/edit-name', this.editedStops)
-        .then(res => {  
-            this.editedStops = {"stops":[]};
-            this.handleTableGet() 
-            this.handleStopsGet()
-            this.handleLocationsGet()
-        })
+        // api.delete(`stops/delete`, { data: this.delete_orig_stop_ids })
+        // .then(res => {
+        //     const success = res.data.success
+        //     console.log(success)
+        //     // TODO error handling for stops delete
+        //     this.handleStopsGet()
+        // }).catch(error => {
+        //     console.log(error)
+        // })
+        // api.put('stops/edit-name', this.editedStops)
+        // .then(res => {  
+        //     this.editedStops = {"stops":[]};
+        //     this.handleTableGet() 
+        //     this.handleStopsGet()
+        //     this.handleLocationsGet()
+        // })
 
-        this.handleStopsGet()
         // handle editting orig stops, creating new stops @jessica
     }
 
