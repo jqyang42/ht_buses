@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { Table } from "./table";
 import { colors } from "../../static/colors";
     
-export function StudentsTable( {data, showAll} ) {
+export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages} ) {
     
     // Filter by multiple columns
     const ourGlobalFilterFunction = useCallback(
@@ -65,6 +65,8 @@ export function StudentsTable( {data, showAll} ) {
         []
     )
          
+    console.log(pageIndex)
+    
     return (
         <Table
             columns={columns}
@@ -79,6 +81,12 @@ export function StudentsTable( {data, showAll} ) {
                     cursor: "pointer"
                 }
             })}
+            pageIndex={pageIndex}
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            updatePageCount={updatePageCount}
+            pageSize={pageSize}
+            totalPages={totalPages}
         />
     )
 }

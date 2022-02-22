@@ -8,7 +8,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}) }) {
+export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages }) {
+
+
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
@@ -34,16 +36,16 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         headerGroups,
         prepareRow,
         rows,
-        page,
-        canPreviousPage,
-        canNextPage,
-        pageOptions,
-        nextPage,
-        previousPage,
-        state: { 
-            pageIndex,
-            pageSize
-        },
+        // page,
+        // canPreviousPage,
+        // canNextPage,
+        // pageOptions,
+        // nextPage,
+        // previousPage,
+        // state: { 
+            // pageIndex,
+            // pageSize
+        // },
         setGlobalFilter,
     } = useTable(
         {
@@ -51,10 +53,11 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         data: dnd ? records : data,
         getRowId,
         globalFilter: ourGlobalFilterFunction,
+        manualPagination: true,
         initialState: { 
             searchInput: "",
-            pageIndex: 0,
-            pageSize: 10,
+            // pageIndex: 0,
+            // pageSize: 10,
             sortBy: dnd ? [] : ( hasCustomSortBy ? customSortBy : [
                 {
                     id: 'name',
@@ -86,6 +89,8 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         handleReorder(new_order)
         setRecords(new_records)
     }
+
+    console.log(pageIndex)
 
     return (
         <>
@@ -127,7 +132,8 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                showAll ? (dnd ? 
+                // showAll ? 
+                (dnd ? 
                 rows.map((row, i) => 
                     // Prepare the row for display
                     prepareRow(row) || (
@@ -150,30 +156,32 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         })}
                     </tr>
                     )
-                })) : (dnd ? 
-                page.map((row, i) => 
-                    // Prepare the row for display
-                    prepareRow(row) || (
-                        <Row
-                        index={i}
-                        row={row}
-                        moveRow={moveRow}
-                        navUrl={navUrl}
-                        {...row.getRowProps(rowProps(row))}
-                        />
-                    )
-                ) :
-                page.map((row, i) => {
-                    // Prepare the row for display
-                    prepareRow(row)
-                    return (
-                    <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                        {row.cells.map(cell => {
-                        return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                        })}
-                    </tr>
-                    )
-                }))}
+                }))
+                //  : (dnd ? 
+                // page.map((row, i) => 
+                //     // Prepare the row for display
+                //     prepareRow(row) || (
+                //         <Row
+                //         index={i}
+                //         row={row}
+                //         moveRow={moveRow}
+                //         navUrl={navUrl}
+                //         {...row.getRowProps(rowProps(row))}
+                //         />
+                //     )
+                // ) :
+                // page.map((row, i) => {
+                //     // Prepare the row for display
+                //     prepareRow(row)
+                //     return (
+                //     <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                //         {row.cells.map(cell => {
+                //         return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
+                //         })}
+                //     </tr>
+                //     )
+                // }))}
+                }
                 </tbody>
             </table>
             </DndProvider>
@@ -182,13 +190,15 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 showAll ? "" :
                 <TablePagination
                     pageIndex={pageIndex}
-                    pageOptions={pageOptions}
-                    previousPage={previousPage}
+                    // pageOptions={pageOptions}
+                    // previousPage={previousPage}
                     canPreviousPage={canPreviousPage}
-                    nextPage={nextPage}
+                    // nextPage={nextPage}
                     canNextPage={canNextPage}
+                    updatePageCount={updatePageCount}
                     pageSize={pageSize}
-                    page={page}
+                    totalPages={totalPages}
+                    // page={page}
                 />
             }
         </>

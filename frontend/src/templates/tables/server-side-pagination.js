@@ -15,4 +15,4 @@ async function showAll() {
     // canPreviousPage and canNextPage should both be false
 }
 
-async function nextPage
+// async function nextPage

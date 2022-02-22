@@ -20,7 +20,8 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        this.getStudentsPage(1)
+        this.getStudentsPage(this.state.pageIndex)
+        console.log(this.state.pageIndex)
     }
 
     // render handlers
@@ -72,7 +73,7 @@ class Students extends Component {
                                     pageIndex={this.state.pageIndex}
                                     canPreviousPage={this.state.canPreviousPage}
                                     canNextPage={this.state.canNextPage}
-                                    updatePageCount={this.updateRequestedPage}
+                                    updatePageCount={this.getStudentsPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
                                     />
