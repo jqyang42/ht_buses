@@ -2,7 +2,11 @@
     "stops": [
         {
             "id": 21,
-            "name": ""
+            "name": "",
+            "location": {
+                "lat": 0.0,
+                "long": 5.0
+            }
 
         }
     ]
