@@ -2,11 +2,13 @@ import api from "../components/api";
 
 export async function getPage({ pageIndex }) {
     const response = await api.get(`students?page=${pageIndex}`)
+    console.log(response)
     return {
         data: response.data,
-        pageIndex: response.data.pageIndex,
-        canPreviousPage: response.data.canPreviousPage,
-        canNextPage: response.data.canNextPage
+        pageIndex: response.data.page.current_page,
+        canPreviousPage: response.data.page.can_prev_page,
+        canNextPage: response.data.page.can_next_page,
+        totalPages: response.data.page.total_pages
     }
 }
 

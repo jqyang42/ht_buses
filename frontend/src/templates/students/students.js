@@ -36,6 +36,7 @@ class Students extends Component {
     getStudentsPage = (page) => {
         getPage({ url: 'students', pageIndex: page })
         .then(res => {
+            console.log(res)
             this.setState({
                 students: res.data.students,
                 pageIndex: res.pageIndex,
