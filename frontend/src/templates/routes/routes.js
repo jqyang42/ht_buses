@@ -16,16 +16,17 @@ class BusRoutes extends Component {
         canPreviousPage: null,
         canNextPage: null,
         totalPages: null,
-        sortOptions: {}
+        sortOptions: {},
+        searchValue: ''
     }
 
     componentDidMount() {
-        this.getRoutesPage(this.state.pageIndex, this.state.sortOptions)
+        this.getRoutesPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination
-    getRoutesPage = (page, sortOptions) => {
-        getPage({ url: 'routes', pageIndex: page, sortOptions: sortOptions })
+    getRoutesPage = (page, sortOptions, search) => {
+        getPage({ url: 'routes', pageIndex: page, sortOptions: sortOptions, searchValue: search })
         .then(res => {
             this.setState({
                 routes: res.data.routes,
@@ -33,7 +34,8 @@ class BusRoutes extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                sortOptions: sortOptions
+                sortOptions: sortOptions,
+                searchValue: search
             })
         })
     }
@@ -73,6 +75,7 @@ class BusRoutes extends Component {
                                     updatePageCount={this.getRoutesPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
+                                    searchValue={this.state.searchValue}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?

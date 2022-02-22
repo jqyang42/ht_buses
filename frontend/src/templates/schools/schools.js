@@ -17,17 +17,18 @@ class Schools extends Component {
         canPreviousPage: null,
         canNextPage: null,
         totalPages: null,
-        sortOptions: {}
+        sortOptions: {},
+        searchValue: ''
     }
 
     // initialize
     componentDidMount() {
-        this.getSchoolsPage(this.state.pageIndex, this.state.sortOptions)
+        this.getSchoolsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination
-    getSchoolsPage = (page, sortOptions) => {
-        getPage({ url: 'schools', pageIndex: page, sortOptions: sortOptions })
+    getSchoolsPage = (page, sortOptions, search) => {
+        getPage({ url: 'schools', pageIndex: page, sortOptions: sortOptions, searchValue: search })
         .then(res => {
             this.setState({
                 schools: res.data.schools,
@@ -35,7 +36,8 @@ class Schools extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                sortOptions: sortOptions
+                sortOptions: sortOptions,
+                searchValue: search
             })
         })
     }
@@ -45,7 +47,7 @@ class Schools extends Component {
         this.setState(prevState => ({
             show_all: !prevState.show_all
         }), () => {
-            this.getSchoolsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
+            this.getSchoolsPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
         })
     }
     
@@ -83,6 +85,7 @@ class Schools extends Component {
                                     updatePageCount={this.getSchoolsPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
+                                    searchValue={this.state.searchValue}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?

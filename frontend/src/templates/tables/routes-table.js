@@ -4,12 +4,12 @@ import { Table } from "./table";
 import { useState } from "react";
 
 export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
-    updatePageCount, pageSize, totalPages }) {
+    updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
     useEffect(() => {
-        updatePageCount(pageIndex, sort)
+        updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
 
     // Filter by multiple columns
@@ -108,6 +108,7 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
+            searchValue={searchValue}
         />
     )
 }

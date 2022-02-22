@@ -3,24 +3,24 @@ import { Table } from "./table";
 import { useState } from "react";
     
 export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
-    updatePageCount, pageSize, totalPages }) {
+    updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
     useEffect(() => {
-        updatePageCount(pageIndex, sort)
+        updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
 
-    // Filter by multiple columns
-    const ourGlobalFilterFunction = useCallback(
-        (rows, ids, query) => {
-            return rows.filter((row) => 
-                row.values["name"].toLowerCase().includes(query.toLowerCase()) ||
-                row.values["email"].toLowerCase().includes(query.toLowerCase())
-            );
-        },
-        [],
-    );
+    // // Filter by multiple columns
+    // const ourGlobalFilterFunction = useCallback(
+    //     (rows, ids, query) => {
+    //         return rows.filter((row) => 
+    //             row.values["name"].toLowerCase().includes(query.toLowerCase()) ||
+    //             row.values["email"].toLowerCase().includes(query.toLowerCase())
+    //         );
+    //     },
+    //     [],
+    // );
 
     const columns = React.useMemo(
         () => [
@@ -107,6 +107,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
+            searchValue={searchValue}
         />
     )
 }

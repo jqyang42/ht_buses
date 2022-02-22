@@ -16,16 +16,17 @@ class Users extends Component {
         canPreviousPage: null,
         canNextPage: null,
         totalPages: null,
-        sortOptions: {}
+        sortOptions: {},
+        searchValue: ''
     }
 
     componentDidMount() {
-        this.getUsersPage(this.state.pageIndex, this.state.sortOptions)
+        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination
-    getUsersPage = (page, sortOptions) => {
-        getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions })
+    getUsersPage = (page, sortOptions, search) => {
+        getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
         .then(res => {
             this.setState({
                 users: res.data.users,
@@ -33,7 +34,8 @@ class Users extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                sortOptions: sortOptions
+                sortOptions: sortOptions,
+                searchValue: search
             })
         })
     }
@@ -43,7 +45,7 @@ class Users extends Component {
         this.setState(prev => ({
             show_all: !prev.show_all
         }), () => {
-            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
+            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
         })
     }
 
@@ -87,6 +89,7 @@ class Users extends Component {
                                     updatePageCount={this.getUsersPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
+                                    searchValue={this.state.searchValue}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
