@@ -184,7 +184,9 @@ class BusRoutesPlanner extends Component {
             this.setState({ assign_mode_warning: false }) 
         };
         this.setState({ add_route_success: false})
-        this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
+        if (parseInt(event.target.value) !== 0) {
+            this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
+        }
     }
 
     handleRouteNameChange = event => {
