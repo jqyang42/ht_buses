@@ -17,7 +17,8 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     const handleFilterInputChange = (e) => {
         // console.log(e.currentTarget);
         const { value } = e.currentTarget;
-        setGlobalFilter(value);
+        // TODO: Call backend API for search here, pass in value as query @jessica
+        // setGlobalFilter(value);
     };
 
     const [records, setRecords] = useState(data)
@@ -92,15 +93,12 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         setRecords(new_records)
     }
 
-    const printHere = () => {
-        console.log("this is a function")
-    }
-
-
     return (
         <>
             { searchOn ?
-            <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> : "" }
+            // <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> 
+            <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
+            : "" }
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}

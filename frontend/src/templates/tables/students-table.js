@@ -14,15 +14,15 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
     }, [sort])
     
     // Filter by multiple columns
-    const ourGlobalFilterFunction = useCallback(
-        (rows, ids, query) => {
-            return rows.filter((row) => 
-                row.values["student_school_id"].toString().includes(query.toString()) ||
-                row.values["name"].toLowerCase().includes(query.toLowerCase())
-            );
-        },
-        [],
-    );
+    // const ourGlobalFilterFunction = useCallback(
+    //     (rows, ids, query) => {
+    //         return rows.filter((row) => 
+    //             row.values["student_school_id"].toString().includes(query.toString()) ||
+    //             row.values["name"].toLowerCase().includes(query.toLowerCase())
+    //         );
+    //     },
+    //     [],
+    // );
 
     const columns = React.useMemo(
         () => [
@@ -108,7 +108,7 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
             data={data}
             searchOn={true}
             searchLabel="Search by id or name..."
-            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/students/"}
             rowProps={row => ({
