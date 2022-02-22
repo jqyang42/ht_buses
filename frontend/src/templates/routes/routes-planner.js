@@ -79,7 +79,7 @@ class BusRoutesPlanner extends Component {
         ordered_stops.sort((a, b) => {
             return order.indexOf(a.id) - order.indexOf(b.id)
         })
-
+        console.log(ordered_stops)
         this.editStops(ordered_stops)
         
         // make api req
@@ -224,9 +224,8 @@ class BusRoutesPlanner extends Component {
             if (stops.length !== 0) {
                 this.handleStopTimeCalc(stops)
                 .then(res => {
+                    this.editedStops(res)
                     this.setState({ stops: res })
-                    console.log(res)
-                    this.editStops(res)
                 })
             } else {
                 this.setState({ stops: stops })
@@ -234,8 +233,9 @@ class BusRoutesPlanner extends Component {
         })
         .catch (error => {
             if (error.response.status !== 200) {
-                this.setState({ error_status: true });
-                this.setState({ error_code: error.response.status });
+                this.setState({ error_status: true,
+                    error_code: error.response.status 
+                });
             }
         } 
         )
@@ -412,7 +412,7 @@ class BusRoutesPlanner extends Component {
                         this.handleTableGet() 
                         this.handleLocationsGet()
                         this.handleStopsGet()
-                        // this.editStops()
+                        // this.editStops(this.state.stops)
                     }).catch(error => {
                         console.log(error)
                     })
