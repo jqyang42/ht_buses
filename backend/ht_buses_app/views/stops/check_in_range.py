@@ -1,5 +1,5 @@
 from ...models import Stop, Route, User, Location, Student
-from ...serializers import StopSerializer, StudentSerializer, UserSerializer
+from ...serializers import LocationSerializer, StopSerializer, StudentSerializer, UserSerializer
 import math
 
 
@@ -38,5 +38,14 @@ def check_student_in_range(user_id, student_route_id):
             r = 6371
             dist = c * r
             if dist <= 0.4828032:
-                stops_arr.append(stop)
+                stops_arr.append(stop_format(stop))
     return stops_arr
+
+def stop_format(stop):
+    location = Location.locationTables.get(pk=stop["location_id"])
+    location_serializer = LocationSerializer(location, many=False)
+    location_arr = {"id": location_serializer.data["id"], "lat": location_serializer.data["lat"], "long": location_serializer.data["long"]}
+    stop_form = {"id": stop["id"], "name": stop["name"], "arrival": stop["arrival"][:-3], 
+    "departure": stop["departure"][:-3], "order_by": stop["order_by"], "location": location_arr
+    }
+    return stop_form
