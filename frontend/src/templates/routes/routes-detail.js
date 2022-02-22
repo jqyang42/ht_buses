@@ -138,7 +138,7 @@ class BusRoutesDetail extends Component {
                 studentNames.push(fullName);
             });
             markers.push({
-                position: {
+                location: {
                     lat: user.location.lat,
                     lng: user.location.long
                 },
@@ -301,7 +301,8 @@ class BusRoutesDetail extends Component {
                                             key={this.state.assign_mode} 
                                             active_route={this.props.params.id} 
                                             center={this.state.center}
-                                            markers={this.state.markers}
+                                            students={this.state.markers}
+                                            existingStops={this.state.stops}
                                         />
                                         : "" }
                                         </div>

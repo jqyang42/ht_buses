@@ -14,6 +14,7 @@ import { STUDENTS_URL } from "../../constants";
 class ParentDetail extends Component {
     state = {
         student: {},
+        center: {},
         error_status: false,
         error_code: 200,
         stops_show_all: false
@@ -27,9 +28,17 @@ class ParentDetail extends Component {
     getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
         .then(res => {
-            console.log(res.data.student.stops)
+            console.log(res.data.student)
             const student = res.data.student
-            this.setState({ student: student })
+            this.setState({ 
+                student: student,
+                center: {
+                    lat: student.location.lat,
+                    lng: student.location.long
+                }
+             })
+             
+            console.log(this.state.student)
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -102,12 +111,13 @@ class ParentDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
                                         <div className="bg-gray rounded mb-4">
-                                        {/* <RouteMap 
+                                        <RouteMap 
                                             assign_mode={false} 
-                                            key={this.state.assign_mode} 
-                                            active_route={this.props.params.id} 
+                                            key={1}
+                                            active_route={2} 
                                             center={this.state.center}
-                                            markers={this.state.markers}/> */}
+                                            existingStops={this.state.student.stops}
+                                        />
                                         </div>
                                     </div>
                                     <div className="col">
