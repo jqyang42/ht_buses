@@ -121,17 +121,19 @@ class RouteMap extends Component {
     }
   }
 
-  handleStopNameChange = (arrayToChange, name, index) => {
+  handleStopNameChange = (arrayToChange, name, index, location) => {
     const newStopNames = arrayToChange;
     const newStop = newStopNames[index];
-    console.log(newStopNames)
     newStop.name = name;
+    newStop.location.lat = location.lat;
+    newStop.location.long = location.lng;
     newStopNames[index] = newStop;
+    console.log(newStopNames)
     return newStopNames
   }
 
-  handleNewStopNameChange = (name, index) => {
-    const newStopNames = this.handleStopNameChange(this.state.newStops, name, index)
+  handleNewStopNameChange = (name, index, location) => {
+    const newStopNames = this.handleStopNameChange(this.state.newStops, name, index, location)
     this.setState({
       newStops: newStopNames
     }, console.log(this.state.newStops)) 
@@ -145,8 +147,8 @@ class RouteMap extends Component {
     }
   }
 
-  handleExistingStopNameChange = (name, index, uid) => {
-    const updatedStopNames = this.handleStopNameChange(this.state.existingStops, name, index)
+  handleExistingStopNameChange = (name, index, uid, location) => {
+    const updatedStopNames = this.handleStopNameChange(this.state.existingStops, name, index, location)
     const editedStop = {
       "id": uid,
       "name": name
