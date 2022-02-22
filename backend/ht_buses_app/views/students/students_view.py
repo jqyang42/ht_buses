@@ -36,7 +36,7 @@ def students(request):
         if int(page_number) == 1 and int(page_number) == total_page_num:
             prev_page = False
             next_page = False
-        if int(page_number) == 1:
+        elif int(page_number) == 1:
             prev_page = False
             next_page = True
         else:
