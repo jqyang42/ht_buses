@@ -34,6 +34,7 @@ class Students extends Component {
 
     // pagination
     getStudentsPage = (page) => {
+        console.log("update function called")
         getPage({ url: 'students', pageIndex: page })
         .then(res => {
             console.log(res)

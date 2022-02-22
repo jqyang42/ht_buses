@@ -3,12 +3,8 @@ import React from "react";
 // const TablePagination = (props) => {
 export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages} ) {
     // // console.log(props.pageOptions)
-    const prevPage = pageIndex - 1
-    const nextPage = pageIndex + 1
-    
-    const printHere = () => {
-        console.log("clicked")
-    }
+    const prevPage = parseInt(pageIndex) - 1
+    const nextPage = parseInt(pageIndex) + 1
 
     return (
         <div className="row TablePagination align-middle align-items-center">
@@ -33,7 +29,7 @@ export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updat
                 <nav className="row d-inline-flex float-end" aria-label="Students Pagination">
                     <ul className="pagination">
                     <li className="page-item">
-                        <a className="page-link" onClick={canPreviousPage ? () => {}  : printHere} disabled={!canPreviousPage}>
+                        <a className="page-link" onClick={canPreviousPage ? () => {updatePageCount(prevPage)} : () => {}} disabled={!canPreviousPage}>
                             Previous
                         </a>
                     </li>
@@ -63,7 +59,7 @@ export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updat
                                 return <li className="page-item" key={index}><a className="page-link" onClick={props.page}>{page + 1}</a></li>
                             })} */}
                     <li className="page-item">
-                        <a className="page-link" onClick={!canNextPage ? () => {} : printHere} disabled={!canNextPage}>
+                        <a className="page-link" disabled={!canNextPage} onClick={canNextPage ? () => {updatePageCount(nextPage)} : () => {}} >
                             Next
                         </a>
                     </li>
