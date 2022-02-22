@@ -16,11 +16,12 @@ class Students extends Component {
         pageIndex: 1,
         canPreviousPage: null,
         canNextPage: null,
-        totalPages: null
+        totalPages: null,
+        sortOptions: {}
     }
     
     componentDidMount() {
-        this.getStudentsPage(this.state.pageIndex, {})
+        this.getStudentsPage(this.state.pageIndex, this.state.sortOptions)
     }
 
     // render handlers
@@ -28,16 +29,13 @@ class Students extends Component {
         this.setState(prevState => ({
             show_all: !prevState.show_all
         }), () => {
-            if (this.state.show_all) {
-                this.getStudentsPage(0)
-            } else {
-                this.getStudentsPage(1)
-            }
-        })        
+            this.getStudentsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
+        })
     }
 
     // pagination
     getStudentsPage = (page, sortOptions) => {
+        this.setState({ sortOptions: sortOptions })
         getPage({ url: 'students', pageIndex: page, sortOptions: sortOptions })
         .then(res => {
             this.setState({
