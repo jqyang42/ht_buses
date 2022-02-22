@@ -4,13 +4,13 @@ import { colors } from "../../static/colors";
 import { useState } from "react";
     
 export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
-    updatePageCount, pageSize, totalPages}) {
+    updatePageCount, pageSize, totalPages, searchValue}) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
     // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
 
     useEffect(() => {
-        updatePageCount(pageIndex, sort)
+        updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
     
     // Filter by multiple columns
@@ -124,6 +124,7 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
+            searchValue={searchValue}
         />
     )
 }

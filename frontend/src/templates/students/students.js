@@ -16,16 +16,17 @@ class Students extends Component {
         canPreviousPage: null,
         canNextPage: null,
         totalPages: null,
-        sortOptions: {}
+        sortOptions: {},
+        searchValue: null
     }
     
     componentDidMount() {
-        this.getStudentsPage(this.state.pageIndex, this.state.sortOptions)
+        this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
     
     // pagination
-    getStudentsPage = (page, sortOptions) => {
-        getPage({ url: 'students', pageIndex: page, sortOptions: sortOptions })
+    getStudentsPage = (page, sortOptions, search) => {
+        getPage({ url: 'students', pageIndex: page, sortOptions: sortOptions, searchValue: search })
         .then(res => {
             this.setState({
                 students: res.data.students,
@@ -33,7 +34,8 @@ class Students extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                sortOptions: sortOptions
+                sortOptions: sortOptions,
+                searchValue: search
             })
         })
     }
@@ -43,7 +45,7 @@ class Students extends Component {
         this.setState(prevState => ({
             show_all: !prevState.show_all
         }), () => {
-            this.getStudentsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
+            this.getStudentsPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
         })
     }
 
@@ -73,6 +75,7 @@ class Students extends Component {
                                     updatePageCount={this.getStudentsPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
+                                    searchValue={this.state.searchValue}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?

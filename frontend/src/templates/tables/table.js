@@ -10,13 +10,14 @@ import update from 'immutability-helper';
 
 export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, 
   hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
-  totalPages, columnHeaderClick, sortOptions }) {
+  totalPages, columnHeaderClick, sortOptions, searchValue }) {
 
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        // console.log(e.currentTarget);
-        const { value } = e.currentTarget;
+        console.log(e.currentTarget.value);
+        searchValue = e.currentTarget.value;
+        updatePageCount(pageIndex, sortOptions, searchValue)
         // TODO: Call backend API for search here, pass in value as query @jessica
         // setGlobalFilter(value);
     };
@@ -202,6 +203,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     pageSize={pageSize}
                     totalPages={totalPages}
                     sortOptions={sortOptions}
+                    searchValue={searchValue}
                     // page={page}
                 />
             }
