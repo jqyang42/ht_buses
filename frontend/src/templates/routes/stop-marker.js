@@ -44,7 +44,8 @@ class StopMarker extends Component {
     editLocation = (event) => {
       this.setState({
         location: event.latLng.toJSON() 
-      }, this.handleSubmit(event))
+      })
+      this.handleSubmit(event)
     }
  
     handleSubmit = (event) => {
@@ -54,6 +55,7 @@ class StopMarker extends Component {
           this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid, this.state.location)
         } 
         else {
+          console.log(this.state.name)
           this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
         }
       }

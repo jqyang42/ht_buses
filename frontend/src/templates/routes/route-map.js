@@ -98,8 +98,10 @@ class RouteMap extends Component {
     if (this.props.assign_mode ) {
       const newStop = {
         name: "",
-        lat: coords.lat,
-        long: coords.lng,
+        location: {
+          lat: coords.lat,
+          long: coords.lng,
+        },
         route_id: this.props.active_route,
         arrival: "00:00",
         departure: "00:00"
@@ -151,7 +153,11 @@ class RouteMap extends Component {
     const updatedStopNames = this.handleStopNameChange(this.state.existingStops, name, index, location)
     const editedStop = {
       "id": uid,
-      "name": name
+      "name": name,
+      "location": {
+        "lat": location.lat,
+        "long": location.lng,
+      }
     }
     console.log(editedStop)
     const editedStopNames = this.state.editedStops;
@@ -188,6 +194,7 @@ class RouteMap extends Component {
   }
 
   render() {
+    console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
