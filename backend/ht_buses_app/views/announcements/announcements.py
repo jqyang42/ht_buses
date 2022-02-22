@@ -47,17 +47,15 @@ def announcement_school(request):
 def announcement_route(request):
     data = {}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
-    #try:
-    id = request.query_params["id"]
-    route_id = Route.routeTables.get(pk=id)
-    students = Student.studentsTable.filter(route_id = route_id)
-    recipients = announcement_tools.filtered_users_helper(students)
-    data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
-    return Response(data)
-    """
+    try:
+        id = request.query_params["id"]
+        route_id = Route.routeTables.get(pk=id)
+        students = Student.studentsTable.filter(route_id = route_id)
+        recipients = announcement_tools.filtered_users_helper(students)
+        data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
+        return Response(data)
     except:
         data["message"] = "invalid route id"
         data["success"] = False
         return Response(data, status = 404)
-    """
 

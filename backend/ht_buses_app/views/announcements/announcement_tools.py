@@ -31,12 +31,10 @@ def announcement_substitutions(user, subject, body, include_route_info):
     text_content = """ 
     {}
     """.format(body)
-    print(include_route_info)
     msg = EmailMultiAlternatives(subject, text_content, from_email, [user.email], reply_to=[constants.DEFAULT_NO_REPLY_EMAIL])
     students_arr = []
     include_parent_info = False
     if include_route_info and user.is_parent:
-        print("true")
         students_arr = get_students_info(user)
         include_parent_info = True
     msg_html = render_to_string('basic-email.html', ({'include_parent_info': include_parent_info,'first_name': user.first_name, 'last_name': user.last_name, 'body': body, 'students': students_arr, 'home_url': constants.HOME_URL}))
