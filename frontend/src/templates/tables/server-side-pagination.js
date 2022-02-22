@@ -1,8 +1,8 @@
 import api from "../components/api";
 
-export async function getPage({ pageIndex }) {
-    const response = await api.get(`students?page=${pageIndex}`)
-    // console.log(response)
+export async function getPage({ url, pageIndex, order_by, sort_by }) {
+    const response = await api.get(`${url}/sort?page=${pageIndex}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}`)
+    console.log(response)
     return {
         data: response.data,
         pageIndex: response.data.page.current_page,
@@ -11,10 +11,3 @@ export async function getPage({ pageIndex }) {
         totalPages: response.data.page.total_pages
     }
 }
-
-async function showAll() {
-    return await getPage({ pageIndex: 0 })
-    // canPreviousPage and canNextPage should both be false
-}
-
-// async function nextPage

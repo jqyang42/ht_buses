@@ -1,11 +1,16 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Table } from "./table";
 import { colors } from "../../static/colors";
 import { useState } from "react";
     
-export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages} ) {
+export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages}) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, sort.sortDirection, sort.accessor)
+    }, [sort])
     
     // Filter by multiple columns
     const ourGlobalFilterFunction = useCallback(
@@ -72,7 +77,6 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
     )
 
     const columnHeaderClick = async (column) => {
-
         switch (column.sortDirection) {
           case 'none':
             // console.log(column.sortDirection)
@@ -118,6 +122,7 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
             pageSize={pageSize}
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
+            sortOptions={sort}
         />
     )
 }

@@ -20,7 +20,7 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        this.getStudentsPage(this.state.pageIndex)
+        this.getStudentsPage(this.state.pageIndex, 'ASC', 'name')
     }
 
     // render handlers
@@ -34,11 +34,11 @@ class Students extends Component {
                 this.getStudentsPage(1)
             }
         })        
-    }   
+    }
 
     // pagination
-    getStudentsPage = (page) => {
-        getPage({ url: 'students', pageIndex: page })
+    getStudentsPage = (page, order_by, sort_by) => {
+        getPage({ url: 'students', pageIndex: page, order_by: order_by, sort_by: sort_by })
         .then(res => {
             this.setState({
                 students: res.data.students,
@@ -48,10 +48,6 @@ class Students extends Component {
                 totalPages: res.totalPages
             })
         })
-    }
-
-    updateRequestedPage = (newPageIndex) => {
-        this.getStudentsPage(newPageIndex)
     }
 
     render() {
@@ -80,6 +76,7 @@ class Students extends Component {
                                     updatePageCount={this.getStudentsPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
+                                    // handleColumnSort={this.getSortOptions}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
