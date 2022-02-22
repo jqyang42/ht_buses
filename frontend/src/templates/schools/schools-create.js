@@ -81,6 +81,9 @@ class SchoolsCreate extends Component {
                 }
             )
         }
+        else {
+        this.setState({ valid_address: false})
+        }
     }
 
     handleArrivalChange = (event) => {
@@ -99,7 +102,7 @@ class SchoolsCreate extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
+       // this.handleAddressValidation()
         if (!this.state.valid_address ) {
             this.setState({ edit_success: -1 })
             return 
