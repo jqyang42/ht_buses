@@ -52,19 +52,21 @@ def get_students_info(user):
             try:
                 student_array["route_description"] = route_data["description"]
             except:
-                student_array["route_description"] = "N/A"
+                student_array["route_description"] = "None"
+            if student_array["route_description"] == "":
+                student_array["route_description"] = "None"
             student_array["stops"] = get_stop_array(user,route_data["id"])
             students_array.append(student_array)
     return students_array
 
 def get_stop_array(user, route_id):
     stops_array = []
-    try:
+    try: 
         stops = check_in_range.check_student_in_range(user.id, route_id)
         for stop in stops:
             stop_array = {}
             stop_data = stop
-            location = Location.locationTables.get(pk = stop_data["location_id"])
+            location = Location.locationTables.get(pk = stop_data["location"]["id"])
             stop_array["address"] = location.address
             stop_array["name"] = stop_data["name"]
             stop_array["arrival"] = stop_data["arrival"]

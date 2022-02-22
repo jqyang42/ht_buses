@@ -63,9 +63,9 @@ class UsersEdit extends Component {
         api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
             const success = res.data.success
+            this.setState({ edit_success: success ? 1 : -1 })
             if (success) {
-                this.setState({ 
-                    edit_success: 1,
+                this.setState({
                     redirect: true 
                 });
             }
@@ -152,7 +152,7 @@ class UsersEdit extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         this.checkStaffAddress().then(valid_address => {
-            if (!emailValidation({ email: this.state.edited_user?.email }) || valid_address ) {
+            if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
                 this.setState({ edit_success: -1 })
                 return 
             }
