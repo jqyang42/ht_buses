@@ -1,17 +1,45 @@
 import { timetoArrive, timeToDepart } from "../components/time";
 
-export async function getStopTimes({ first_stop, school, stops, arrival_time, departure_time }) {
+export async function getStopInfo({ school, stops, arrival_time, departure_time }) {
     // @jessica handle more than 10 stops
+    // const api_call_sets = stops.map(stop => {
+    //     const slice = stops.sl
+    //     return {
+    //         origin: 
+    //     }
+    // })
+    // const origin
+    console.log(stops)
+    return callGoogleDirectionServer({ 
+        origin: stops[0], 
+        destination: school, 
+        waypoints: stops.filter(stop => stops.indexOf(stop) !== 0), 
+        arrival_time: arrival_time, 
+        departure_time: departure_time
+    })
+}
+
+async function callGoogleDirectionServer({ origin, destination, waypoints, arrival_time, departure_time }) {
+    console.log(origin)
+    console.log(waypoints)
     const directionsService = new window.google.maps.DirectionsService()
     const api_response = await directionsService.route(
         {
-            origin: first_stop,
-            destination: school,
+            origin: origin,
+            destination: destination,
             travelMode: 'DRIVING',
-            waypoints: stops
+            waypoints: waypoints
         }
     )
-    return calculateTime({ route_legs: api_response.routes[0].legs, arrival_time: arrival_time, departure_time: departure_time })
+    
+    const stop_address = api_response.routes[0].legs.map(leg => {
+        return leg.start_address
+    })
+
+    return {
+        stop_addresses: stop_address,
+        stop_times: calculateTime({ route_legs: api_response.routes[0].legs, arrival_time: arrival_time, departure_time: departure_time })
+    }
 }
 
 function calculateTime({ route_legs, arrival_time, departure_time }) {
