@@ -28,9 +28,9 @@ class ParentDetail extends Component {
     getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
         .then(res => {
-            console.log(res.data.student.stops)
+            console.log(res.data.student)
             const student = res.data.student
-            const location = res.data.location
+            const location = res.data.student.location
             this.setState({ 
                 student: student,
                 center: {
@@ -116,7 +116,7 @@ class ParentDetail extends Component {
                                             active_route={this.props.params.id} 
                                             center={this.state.center}
                                             students={this.state.markers}
-                                            existingStops={this.state.stops}/>
+                                            existingStops={this.state.student.stops}/>
                                         </div>
                                     </div>
                                     <div className="col">
