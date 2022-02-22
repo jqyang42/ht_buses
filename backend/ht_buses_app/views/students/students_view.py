@@ -21,7 +21,6 @@ def students(request):
     #     students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
     page_number = request.query_params["page"]
     if int(page_number) == 0:
-        print("we need to enter here")
         prev_page = False
         next_page = False
         total_page_num = 0
