@@ -79,10 +79,43 @@ class BusRoutesPlanner extends Component {
         ordered_stops.sort((a, b) => {
             return order.indexOf(a.id) - order.indexOf(b.id)
         })
+
+        this.editStops(ordered_stops)
         
         // make api req
+        // const edit_body = {
+        //     stops: ordered_stops.map(stop => {
+        //         return {
+        //             id: stop.id,
+        //             route_id: this.state.active_route,
+        //             name: stop.name,
+        //             arrival: stop.arrival,
+        //             departure: stop.departure,
+        //             location: {
+        //                 lat: stop.location.lat,
+        //                 long: stop.location.long,
+        //                 address: stop.location.address
+        //             }
+        //         }
+        //     }            
+        // )}
+        
+        // console.log(edit_body)
+        // api.put(`stops/edit`, edit_body)
+        // .then(res => {
+        //     const success = res.data.success
+        //     const new_stops = res.data.stops
+        //     console.log(new_stops)
+        //     console.log(success)
+        //     if (success) {
+        //         this.handleStopsGet()
+        //     }
+        // })
+    }
+
+    editStops(stops) {
         const edit_body = {
-            stops: ordered_stops.map(stop => {
+            stops: stops.map(stop => {
                 return {
                     id: stop.id,
                     route_id: this.state.active_route,
@@ -97,29 +130,15 @@ class BusRoutesPlanner extends Component {
                 }
             }            
         )}
-        
+
         console.log(edit_body)
         api.put(`stops/edit`, edit_body)
         .then(res => {
             const success = res.data.success
             const new_stops = res.data.stops
             console.log(new_stops)
-            // const new_stops_by_id = new_stops.map(stop => {
-            //     return stop.id
-            // })
-            // console.log(new_stops_by_id)
             console.log(success)
             if (success) {
-                // console.log(this.state.stops)
-                // const orig_stops = [...this.state.stops]
-                // const ordered_stops = orig_stops.map(stop => {
-                //     return {
-                //         ...stop,
-                //         order_by: new_stops[new_stops_by_id.indexOf(stop.id)].order_by
-                //     }
-                // })
-                // console.log(ordered_stops)
-                // this.setState({ stops: ordered_stops })
                 this.handleStopsGet()
             }
         })
@@ -207,6 +226,7 @@ class BusRoutesPlanner extends Component {
                 .then(res => {
                     this.setState({ stops: res })
                     console.log(res)
+                    this.editStops(res)
                 })
             } else {
                 this.setState({ stops: stops })
@@ -392,6 +412,7 @@ class BusRoutesPlanner extends Component {
                         this.handleTableGet() 
                         this.handleLocationsGet()
                         this.handleStopsGet()
+                        // this.editStops()
                     }).catch(error => {
                         console.log(error)
                     })
