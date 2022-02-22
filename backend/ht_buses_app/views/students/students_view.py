@@ -12,13 +12,6 @@ from django.core.paginator import Paginator
 @permission_classes([AllowAny]) 
 def students(request):
     data = {}
-    # COMMENTED OUT CODE FOR PAGINATION
-    #page_number = request.query_params["page"]
-    # For now I will retrieve 10 records for each page request, can be changed
-    # if int(page_number) == 1:
-    #     students = Student.studentsTable.all()[:10*int(page_number)]
-    # else:
-    #     students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
     page_number = request.query_params["page"]
     if int(page_number) == 0:
         prev_page = False
