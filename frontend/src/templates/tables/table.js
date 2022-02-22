@@ -123,7 +123,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         <span className="w-auto ms-2 me-0 float-right text-end">
                             {!column.disableSortBy ? (column.sortDirection === 'ASC' ?
                             <img src={SORT_ASC} className="img-icon"></img> :
-                            column.isSortedDesc
+                            column.sortDirection === 'DESC'
                                 ? <img src={SORT_DESC} className="img-icon"></img>
                                 : <img src={SORT} className="img-icon"></img>) : ''}
                         </span>

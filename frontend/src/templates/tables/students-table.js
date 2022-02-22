@@ -37,8 +37,8 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
                 sortType: 'basic',
-                // sortDirection: sort.accessor === 'name' ? sort.direction : 'none'
-                sortDirection: 'none'
+                sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+                // sortDirection: 'none'
             },
             
             {
@@ -95,12 +95,14 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
             // const asc = await getClients('DESC', column.id);
+            console.log(sort)
             // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
             // const newData = await getClients('none', column.id);
             // setData(newData);
+            console.log(sort)
             break;
         }
     };
