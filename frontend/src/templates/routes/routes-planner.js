@@ -346,7 +346,7 @@ class BusRoutesPlanner extends Component {
 
         const stop_info = await getStopInfo({
             // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
-            school: { lat: school.location.lat, lng: school.location.long },
+            school: {location : { lat: school.location.lat, lng: school.location.long }},
             stops: stops_latlng,
             arrival_time: school.arrival,
             departure_time: school.departure
