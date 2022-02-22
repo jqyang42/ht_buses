@@ -65,6 +65,7 @@ class BusRoutesPlanner extends Component {
     }
 
     handleReorder = (new_order) => {
+        console.log(new_order)
         this.setState({ stops_order: new_order })
     }
 
@@ -145,7 +146,6 @@ class BusRoutesPlanner extends Component {
             .then(res => {
             const stops = res.data.stops;
             console.log(stops)
-            this.setState({ stops: stops })
             if (stops.length !== 0) {
                 this.handleStopTimeCalc(stops)
                 .then(res => {
@@ -290,14 +290,19 @@ class BusRoutesPlanner extends Component {
 
     submitStopsOrder = () => {
         this.switchStopsEditMode()
-
-        const ordered_stops = [...this.state.stops]
         const order = [...this.state.stops_order]
-        ordered_stops.sort((a, b) => {
-            return order.indexOf(a.id) - order.indexOf(b.id)
+        const ordered_stops = this.state.stops.slice().map(stop => {
+            return {
+                ...stop,
+                order_by: order.indexOf(stop.id)
+            }
         })
-        console.log(ordered_stops)
-        this.editStops(ordered_stops)
+        this.handleStopTimeCalc(ordered_stops)
+        .then(res => {
+            console.log(res)
+            this.editStops(res)
+            this.setState({ stops: res })
+        })
     }
 
     editStops(stops) {
@@ -318,16 +323,19 @@ class BusRoutesPlanner extends Component {
             }            
         )}
 
-        console.log(edit_body)
+        // console.log(edit_body)
         api.put(`stops/edit`, edit_body)
         .then(res => {
             const success = res.data.success
             const new_stops = res.data.stops
+
+            // this.setState({ stops: edit_body })
             // TODO ERROR HANDLING
         })
     }
 
     async handleStopTimeCalc(stops) {
+        // console.log(stops)
         const school = this.state.school
         stops.sort((a, b) => a.order_by - b.order_by)
         const stops_latlng = stops.map(stop => {
