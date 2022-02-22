@@ -1,0 +1,184 @@
+{
+    "students": [
+        {
+            "id": 203,
+            "student_school_id": 123,
+            "first_name": "Student 203",
+            "last_name": "Tester 203",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 8,
+                "first_name": "Example4",
+                "last_name": "IsCool3"
+            }
+        },
+        {
+            "id": 204,
+            "student_school_id": 123,
+            "first_name": "Student 204",
+            "last_name": "Tester 204",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 8,
+                "first_name": "Example4",
+                "last_name": "IsCool3"
+            }
+        },
+        {
+            "id": 205,
+            "student_school_id": 123,
+            "first_name": "Student 205",
+            "last_name": "Tester 205",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 8,
+                "first_name": "Example4",
+                "last_name": "IsCool3"
+            }
+        },
+        {
+            "id": 206,
+            "student_school_id": 123,
+            "first_name": "Student 206",
+            "last_name": "Tester 206",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 8,
+                "first_name": "Example4",
+                "last_name": "IsCool3"
+            }
+        },
+        {
+            "id": 207,
+            "student_school_id": 123,
+            "first_name": "Testing",
+            "last_name": "Dev",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 4,
+                "first_name": "Example2",
+                "last_name": "IsCool2"
+            }
+        },
+        {
+            "id": 208,
+            "student_school_id": 1516,
+            "first_name": "Mary",
+            "last_name": "Tankersley",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 4,
+                "first_name": "Example2",
+                "last_name": "IsCool2"
+            }
+        },
+        {
+            "id": 209,
+            "student_school_id": 15161216,
+            "first_name": "Cool",
+            "last_name": "Testingg",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 0,
+                "color_id": 0
+            },
+            "in_range": false,
+            "parent": {
+                "id": 4,
+                "first_name": "Example2",
+                "last_name": "IsCool2"
+            }
+        },
+        {
+            "id": 211,
+            "student_school_id": 6666,
+            "first_name": "Thomas",
+            "last_name": "Quintanilla",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 7,
+                "name": "Route 1",
+                "color_id": 7
+            },
+            "in_range": false,
+            "parent": {
+                "id": 10,
+                "first_name": "Kyra",
+                "last_name": "Chan"
+            }
+        },
+        {
+            "id": 221,
+            "student_school_id": 55465,
+            "first_name": "Zhongli",
+            "last_name": "Xiao",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 7,
+                "name": "Route 1",
+                "color_id": 7
+            },
+            "in_range": true,
+            "parent": {
+                "id": 11,
+                "first_name": "Jaclyn",
+                "last_name": "Xiao"
+            }
+        },
+        {
+            "id": 225,
+            "student_school_id": 12131,
+            "first_name": "Fern",
+            "last_name": "Garcia",
+            "school_name": "West Duke School",
+            "route": {
+                "id": 8,
+                "name": "Route No Stops",
+                "color_id": 8
+            },
+            "in_range": false,
+            "parent": {
+                "id": 13,
+                "first_name": "Evelyn",
+                "last_name": "Garcia"
+            }
+        }
+    ],
+    "page": {
+        "current_page": "21",
+        "can_prev_page": true,
+        "can_next_page": false,
+        "total_pages": 21
+    },
+    "success": true
+}
