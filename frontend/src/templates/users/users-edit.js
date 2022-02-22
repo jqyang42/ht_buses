@@ -63,9 +63,9 @@ class UsersEdit extends Component {
         api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
             const success = res.data.success
+            this.setState({ edit_success: success ? 1 : -1 })
             if (success) {
-                this.setState({ 
-                    edit_success: 1,
+                this.setState({
                     redirect: true 
                 });
             }
