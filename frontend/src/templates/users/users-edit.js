@@ -152,7 +152,7 @@ class UsersEdit extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         this.checkStaffAddress().then(valid_address => {
-            if (!emailValidation({ email: this.state.edited_user?.email }) || valid_address ) {
+            if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
                 this.setState({ edit_success: -1 })
                 return 
             }
