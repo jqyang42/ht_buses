@@ -32,7 +32,10 @@ def students(request):
         students_per_page = paginator.get_page(page_number)
         total_page_num = paginator.num_pages
         student_serializer = StudentSerializer(students_per_page, many=True)
-        if int(page_number) == 1:
+        if int(page_number) == 1 and int(page_number) == total_page_num:
+            prev_page = False
+            next_page = False
+        elif int(page_number) == 1:
             prev_page = False
             next_page = True
         else:
