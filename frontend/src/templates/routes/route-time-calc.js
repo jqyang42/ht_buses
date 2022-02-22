@@ -9,7 +9,7 @@ export async function getStopInfo({ school, stops, arrival_time, departure_time 
     //     }
     // })
     // const origin
-
+    console.log(stops)
     return callGoogleDirectionServer({ 
         origin: stops[0], 
         destination: school, 
@@ -20,6 +20,8 @@ export async function getStopInfo({ school, stops, arrival_time, departure_time 
 }
 
 async function callGoogleDirectionServer({ origin, destination, waypoints, arrival_time, departure_time }) {
+    console.log(origin)
+    console.log(waypoints)
     const directionsService = new window.google.maps.DirectionsService()
     const api_response = await directionsService.route(
         {
