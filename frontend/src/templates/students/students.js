@@ -7,25 +7,20 @@ import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { getPage } from "../tables/server-side-pagination";
 
 class Students extends Component {
     state = {
         students : [],
-        show_all: false
+        show_all: false,
+        pageIndex: 1,
+        canPreviousPage: null,
+        canNextPage: null,
+        totalPages: null
     }
     
     componentDidMount() {
-        this.apiGetStudents()
-    }
-
-    // api calls
-    apiGetStudents = () => {
-        api.get(`students`)
-        .then(res => {
-            console.log(res.data)
-            const students = res.data.students;
-            this.setState({ students: students });
-    })
+        this.getStudentsPage(1)
     }
 
     // render handlers
@@ -33,7 +28,26 @@ class Students extends Component {
         this.setState(prevState => ({
             show_all: !prevState.show_all
         }))
+        this.getStudentsPage(0)
     }  
+
+    // pagination
+    getStudentsPage = (page) => {
+        getPage({ url: 'students', pageIndex: page })
+        .then(res => {
+            this.setState({
+                students: res.data.students,
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages
+            })
+        })
+    }
+
+    updateRequestedPage = (newPageIndex) => {
+        this.getStudentsPage(newPageIndex)
+    }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
@@ -52,7 +66,16 @@ class Students extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
-                                    <StudentsTable data={this.state.students} showAll={this.state.show_all}/>
+                                    <StudentsTable 
+                                    data={this.state.students} 
+                                    showAll={this.state.show_all}
+                                    pageIndex={this.state.pageIndex}
+                                    canPreviousPage={this.state.canPreviousPage}
+                                    canNextPage={this.state.canNextPage}
+                                    updatePageCount={this.updateRequestedPage}
+                                    pageSize={10}
+                                    totalPages={this.state.totalPages}
+                                    />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"
