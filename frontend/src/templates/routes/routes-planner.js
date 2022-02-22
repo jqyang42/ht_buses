@@ -167,7 +167,7 @@ class BusRoutesPlanner extends Component {
     }
 
     handleAssignMode = event => {
-        this.setState({assign_mode_warning: false})
+        this.setState({assign_mode_warning: false, add_route_success: false})
         this.setState(prevState => ({ 
             assign_mode: !prevState.assign_mode
         }));
@@ -183,6 +183,7 @@ class BusRoutesPlanner extends Component {
         if (this.state.assign_mode_warning) { 
             this.setState({ assign_mode_warning: false }) 
         };
+        this.setState({ add_route_success: false})
         this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
     }
 
