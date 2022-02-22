@@ -188,7 +188,6 @@ class RouteMap extends Component {
   }
 
   render() {
-    console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }

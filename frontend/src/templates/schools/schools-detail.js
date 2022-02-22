@@ -10,6 +10,7 @@ import api from "../components/api";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { toDisplayFormat } from "../components/time";
 
 class SchoolsDetail extends Component {
     state = {
@@ -189,11 +190,11 @@ class SchoolsDetail extends Component {
                                     <div className="col-5 ms-2 me-4">
                                         <p>
                                             {/* TODO: connect school arrival time */}
-                                            {this.state.school.arrival}
+                                            {toDisplayFormat({ twentyfour_time: this.state.school.arrival})}
                                         </p>
                                         <p>
                                             {/* TODO: connect school departure time */}
-                                            {this.state.school.departure}
+                                            {toDisplayFormat({ twentyfour_time: this.state.school.departure})}
                                         </p>
                                     </div>
                                 </div>
