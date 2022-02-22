@@ -6,8 +6,8 @@ import { useState } from "react";
 export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages}) {
 
-        const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
-        // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
+    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+    // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
 
     useEffect(() => {
         updatePageCount(pageIndex, sort)

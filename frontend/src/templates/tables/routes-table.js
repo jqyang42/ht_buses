@@ -1,11 +1,16 @@
-import React, { useCallback } from "react";  
+import React, { useCallback, useEffect } from "react";  
 import { colors } from "../../static/colors";
 import { Table } from "./table";
 import { useState } from "react";
 
-export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages }) {
+export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, sort)
+    }, [sort])
 
     // Filter by multiple columns
     const ourGlobalFilterFunction = useCallback(
@@ -57,7 +62,6 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
     )
 
     const columnHeaderClick = async (column) => {
-
         switch (column.sortDirection) {
           case 'none':
             // console.log(column.sortDirection)
@@ -103,6 +107,7 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
             pageSize={pageSize}
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
+            sortOptions={sort}
         />
     )
 }
