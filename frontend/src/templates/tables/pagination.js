@@ -26,7 +26,7 @@ export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updat
                 <nav className="row d-inline-flex float-end" aria-label="Students Pagination">
                     <ul className="pagination">
                     <li className="page-item">
-                        <a className="page-link" disabled={!canPreviousPage}>
+                        <a className="page-link" onClick={updatePageCount(pageIndex - 1 )} disabled={!canPreviousPage}>
                             Previous
                         </a>
                     </li>
@@ -56,7 +56,7 @@ export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updat
                                 return <li className="page-item" key={index}><a className="page-link" onClick={props.page}>{page + 1}</a></li>
                             })} */}
                     <li className="page-item">
-                        <a className="page-link" disabled={!canNextPage}>
+                        <a className="page-link" onClick={updatePageCount(pageIndex + 1)} disabled={!canNextPage}>
                             Next
                         </a>
                     </li>
