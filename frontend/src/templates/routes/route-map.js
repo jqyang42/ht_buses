@@ -14,25 +14,43 @@ const containerStyle = {
   width: '100%',
   height: '400px'
 };
-const hidePOIs = [{
-  "featureType": "poi",
-  "elementType": "labels.icon",
-  "stylers": [
-    {
-      "visibility": "off"
-    }
-  ]
-},
-{
-  "featureType": "all",
-  "elementType": "labels.text",
-  "stylers": [
-    {
-      "visibility": "off"
-    }
-  ]
-},
+const hidePOIs = [
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
 ]
+
 
 class RouteMap extends Component {
   state = {
@@ -104,7 +122,6 @@ class RouteMap extends Component {
   }
 
   handleStopNameChange = (arrayToChange, name, index) => {
-    console.log("edited list")
     const newStopNames = arrayToChange;
     const newStop = newStopNames[index];
     console.log(newStopNames)
@@ -114,7 +131,6 @@ class RouteMap extends Component {
   }
 
   handleNewStopNameChange = (name, index) => {
-    console.log("edited list")
     const newStopNames = this.handleStopNameChange(this.state.newStops, name, index)
     this.setState({
       newStops: newStopNames
