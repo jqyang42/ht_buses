@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer, LocationSerializer
 
 # Schools Detail GET API
+# TODO: THIS WILL NEED PAGINATION
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdminUser]) 

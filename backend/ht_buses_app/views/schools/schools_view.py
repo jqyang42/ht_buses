@@ -36,8 +36,6 @@ def schools(request):
                 next_page = False
             else:
                 next_page = True
-    schools = School.schoolsTable.all()
-    school_serializer = SchoolSerializer(schools, many=True)
     schools_arr = []
     for school in school_serializer.data:
         id = school["id"]

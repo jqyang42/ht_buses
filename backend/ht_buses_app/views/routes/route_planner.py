@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 # Route Planner API
-# This needs to be rewritten, currently have 3 for loops
+# TODO: THIS WILL NEED PAGINATION
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
