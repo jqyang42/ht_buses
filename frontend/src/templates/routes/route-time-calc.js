@@ -1,21 +1,15 @@
 import { timetoArrive, timeToDepart } from "../components/time";
 
 export async function getStopInfo({ school, stops, arrival_time, departure_time }) {
-    // @jessica handle more than 10 stops
     let all_locations = stops
     all_locations.push(school)
-    console.log(all_locations)
-
-    // const all_locations = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 
     let api_call_sets = []
     for (let i = 0; i < all_locations.length; i += (2 + 10 - 1)) {
         api_call_sets.push(all_locations.slice(i, i + (2 + 10)))
     }
-    console.log(api_call_sets)
 
     const google_results = await Promise.all(api_call_sets.filter(set => set.length !== 1).map(async set => {
-        console.log(set)
         return await callGoogleDirectionServer({ 
             origin: set[0], 
             destination: set[set.length - 1], 
@@ -24,7 +18,6 @@ export async function getStopInfo({ school, stops, arrival_time, departure_time 
             departure_time: departure_time
         })
     }))
-    console.log(google_results)
     
     let merged_google_results = {
         stop_addresses: [],
@@ -34,7 +27,6 @@ export async function getStopInfo({ school, stops, arrival_time, departure_time 
         merged_google_results.stop_addresses = merged_google_results.stop_addresses.concat(set.stop_addresses)
         merged_google_results.stop_times = merged_google_results.stop_times.concat(set.stop_times)
     })
-    console.log(merged_google_results)
 
     return {
         stop_addresses: merged_google_results.stop_addresses,
@@ -63,7 +55,6 @@ async function callGoogleDirectionServer({ origin, destination, waypoints }) {
 
     return {
         stop_addresses: stop_address,
-        // stop_times: calculateTime({ route_legs: api_response.routes[0].legs, arrival_time: arrival_time, departure_time: departure_time })
         stop_times: stop_duration
     }
 }
