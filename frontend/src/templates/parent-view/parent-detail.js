@@ -14,7 +14,6 @@ import { STUDENTS_URL } from "../../constants";
 class ParentDetail extends Component {
     state = {
         student: {},
-        stops: [],
         center: {},
         error_status: false,
         error_code: 200,
@@ -29,11 +28,15 @@ class ParentDetail extends Component {
     getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
         .then(res => {
+            console.log(res.data.student.stops)
             const student = res.data.student
-            const stops = res.data.stops
+            const location = res.data.location
             this.setState({ 
                 student: student,
-                stops: stops
+                center: {
+                    lat: location.lat,
+                    lng: location.long
+                }
              })
         }).catch (error => {
             if (error.response.status !== 200) {
@@ -118,7 +121,7 @@ class ParentDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STOPS</h7>
-                                            {/* <StopsTable data={this.state.stops} showAll={this.state.stops_show_all}/> */}
+                                            <StopsTable data={this.state.student.stops || []} showAll={this.state.stops_show_all} dnd={false} handleReorder={() => {}}/>
                                             <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                 { !this.state.stops_show_all ?
                                                     "Show All" : "Show Pages"
