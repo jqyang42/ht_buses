@@ -64,6 +64,8 @@ class BusRoutesDetail extends Component {
             const school = route.school;
             const users = data.users;
             const students = this.getStudentsFromUser(users)
+
+            console.log(students)
             
             this.setState({ 
                 students: students,
@@ -120,7 +122,8 @@ class BusRoutesDetail extends Component {
                     student_school_id: student.student_school_id,
                     id: student.id,
                     first_name: student.first_name,
-                    last_name: student.last_name
+                    last_name: student.last_name,
+                    in_range: student.in_range
                 }
             })
         })
@@ -225,7 +228,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.markers)
+        console.log(this.state.students)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
