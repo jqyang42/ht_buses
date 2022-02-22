@@ -28,9 +28,14 @@ class Students extends Component {
     handleShowAll = () => {
         this.setState(prevState => ({
             show_all: !prevState.show_all
-        }))
-        this.getStudentsPage(0)
-    }  
+        }), () => {
+            if (this.state.show_all) {
+                this.getStudentsPage(0)
+            } else {
+                this.getStudentsPage(1)
+            }
+        })        
+    }   
 
     // pagination
     getStudentsPage = (page) => {
