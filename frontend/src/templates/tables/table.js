@@ -8,8 +8,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages }) {
-
+export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick }) {
 
     const navigate = useNavigate();
 
@@ -54,6 +53,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         getRowId,
         globalFilter: ourGlobalFilterFunction,
         manualPagination: true,
+        manualSortBy: true,
         initialState: { 
             searchInput: "",
             // pageIndex: 0,
@@ -90,7 +90,10 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         setRecords(new_records)
     }
 
-    console.log(pageIndex)
+    const printHere = () => {
+        console.log("this is a function")
+    }
+
 
     return (
         <>
@@ -109,7 +112,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     {// Loop over the headers in each row
                     headerGroup.headers.map(column => (
                         // Apply the header cell props
-                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())} onClick={() => columnHeaderClick(column)}>
                         {// Render the header
                         column.render('Header')}
                         
@@ -118,11 +121,11 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         
                         {/* Sorting UI */}
                         <span className="w-auto ms-2 me-0 float-right text-end">
-                            {!column.disableSortBy ? (column.isSorted
-                            ? column.isSortedDesc
+                            {!column.disableSortBy ? (column.sortDirection === 'ASC' ?
+                            <img src={SORT_ASC} className="img-icon"></img> :
+                            column.isSortedDesc
                                 ? <img src={SORT_DESC} className="img-icon"></img>
-                                : <img src={SORT_ASC} className="img-icon"></img>
-                            : <img src={SORT} className="img-icon"></img>) : ''}
+                                : <img src={SORT} className="img-icon"></img>) : ''}
                         </span>
                         </th>
                     ))}

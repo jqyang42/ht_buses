@@ -1,8 +1,11 @@
 import React, { useCallback } from "react";
 import { Table } from "./table";
 import { colors } from "../../static/colors";
+import { useState } from "react";
     
 export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages} ) {
+
+    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
     
     // Filter by multiple columns
     const ourGlobalFilterFunction = useCallback(
@@ -32,7 +35,10 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
             {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
-                id: 'name'
+                id: 'name',
+                sortType: 'basic',
+                // sortDirection: sort.accessor === 'name' ? sort.direction : 'none'
+                sortDirection: 'none'
             },
             
             {
@@ -64,9 +70,41 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
         ],
         []
     )
+
+    const columnHeaderClick = async (column) => {
+        console.log("column header click reached")
+        console.log(column)
+        // if (column.isSorted) {
+        //     console.log(column.id)
+        //     console.log("asc")
+        // } else if (column.isSortedDesc) {
+        //     console.log(column.id)
+        //     console.log("desc")
+        // } else {
+        //     console.log("none")
+        // }
+        switch (column.sortDirection) {
+          case 'none':
+            // console.log(column.sortDirection)
+            // console.log(column.id)
+            setSort({ sortDirection: 'ASC', accessor: column.id });
+            // const desc = await getClients( 'ASC', column.id );
+            // setData(desc);
+            console.log(sort)
+            break;
+          case 'ASC':
+            setSort({ sortDirection: 'DESC', accessor: column.id });
+            // const asc = await getClients('DESC', column.id);
+            // setData(asc);
+            break;
+          case 'DESC':
+            setSort({ sortDirection: 'none', accessor: column.id });
+            // const newData = await getClients('none', column.id);
+            // setData(newData);
+            break;
+        }
+    };
          
-    console.log(pageIndex)
-    
     return (
         <Table
             columns={columns}
@@ -87,6 +125,7 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
             updatePageCount={updatePageCount}
             pageSize={pageSize}
             totalPages={totalPages}
+            columnHeaderClick={columnHeaderClick}
         />
     )
 }

@@ -2,7 +2,7 @@ import api from "../components/api";
 
 export async function getPage({ pageIndex }) {
     const response = await api.get(`students?page=${pageIndex}`)
-    console.log(response)
+    // console.log(response)
     return {
         data: response.data,
         pageIndex: response.data.page.current_page,

@@ -21,7 +21,6 @@ class Students extends Component {
     
     componentDidMount() {
         this.getStudentsPage(this.state.pageIndex)
-        console.log(this.state.pageIndex)
     }
 
     // render handlers
@@ -39,10 +38,8 @@ class Students extends Component {
 
     // pagination
     getStudentsPage = (page) => {
-        console.log("update function called")
         getPage({ url: 'students', pageIndex: page })
         .then(res => {
-            console.log(res)
             this.setState({
                 students: res.data.students,
                 pageIndex: res.pageIndex,
