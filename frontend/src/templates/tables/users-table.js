@@ -91,7 +91,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             data={data}
             searchOn={true}
             searchLabel="Search by name or email..."
-            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/users/"}
             rowProps={row => ({

@@ -13,14 +13,14 @@ export function SchoolsTable({ data, showAll, pageIndex, canPreviousPage, canNex
     }, [sort])
 
     // Filter by multiple columns
-    const ourGlobalFilterFunction = useCallback(
-        (rows, ids, query) => {
-            return rows.filter((row) => 
-                row.values["name"].toLowerCase().includes(query.toLowerCase())
-            );
-        },
-        [],
-    );
+    // const ourGlobalFilterFunction = useCallback(
+    //     (rows, ids, query) => {
+    //         return rows.filter((row) => 
+    //             row.values["name"].toLowerCase().includes(query.toLowerCase())
+    //         );
+    //     },
+    //     [],
+    // );
 
     const columns = React.useMemo(
         () => [
@@ -92,7 +92,7 @@ export function SchoolsTable({ data, showAll, pageIndex, canPreviousPage, canNex
             data={data}
             searchOn={true}
             searchLabel="Search by name..."
-            ourGlobalFilterFunction={ourGlobalFilterFunction}
+            // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/schools/"}
             rowProps={row => ({
