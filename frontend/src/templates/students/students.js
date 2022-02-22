@@ -17,7 +17,7 @@ class Students extends Component {
         canNextPage: null,
         totalPages: null,
         sortOptions: {},
-        searchValue: null
+        searchValue: ''
     }
     
     componentDidMount() {
