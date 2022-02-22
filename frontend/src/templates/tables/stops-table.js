@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";  
-import { Table } from "./table";
+import { TableOld } from "./table-old";
 import { toDisplayFormat } from "../components/time";
 
 export function StopsTable({ data, showAll, dnd, handleReorder }) {
@@ -34,7 +34,7 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
     )
 
     return (
-        <Table 
+        <TableOld
             columns={columns}
             data={data}
             searchOn={false}

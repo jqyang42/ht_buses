@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "./table";
+import { TableOld } from "./table-old";
     
 export function SchoolRoutesTable({ data, showAll }) {
 
@@ -31,7 +31,7 @@ export function SchoolRoutesTable({ data, showAll }) {
     )
 
     return (
-        <Table
+        <TableOld
             columns={columns}
             data={data}
             searchOn={false}
