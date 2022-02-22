@@ -16,7 +16,7 @@ def student_search(request):
     # search by either id or name
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    students = Student.studentsTable.annotate(search= SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search_q)
+    students = Student.studentsTable.annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search_q)
     paginator = Paginator(students, 10) # Show 10 per page
     students_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages
