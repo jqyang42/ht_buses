@@ -174,9 +174,6 @@ class RouteMap extends Component {
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
-    else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
-      return <Navigate to={PARENT_DASHBOARD_URL} />
-    }
     return (
       <div className='w-100 h-100'>
         <LoadScript
