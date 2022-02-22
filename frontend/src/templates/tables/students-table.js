@@ -30,59 +30,56 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
             {
                 Header: 'ID',
                 accessor: 'student_school_id',
-                id: 'student_school_id'
+                id: 'student_school_id',
+                sortDirection: sort.accessor === 'student_school_id' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
-                sortType: 'basic',
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
-                // sortDirection: 'none'
             },
             
             {
                 Header: 'School',
                 accessor: 'school_name',
+                id: 'school_name',
                 disableFilter: true,
+                sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Route',
                 accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
                 disableFilter: true,
+                id: 'route',
                 Cell: ({ cell: { value } }) => (
                     value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
                 ),
+                sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
             },     
             {
                 Header: 'Bus Stops',
                 accessor: 'in_range',
                 disableFilter: true,
+                id: 'in_range',
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
-                )
+                ),
+                sortDirection: sort.accessor === 'in_range' ? sort.sortDirection : 'none'
             },     
             {
                 Header: 'Parent Name',
                 accessor: d => `${d.parent.first_name} ${d.parent.last_name}`,
-                disableFilter: true
+                id: 'parent',
+                disableFilter: true,
+                sortDirection: sort.accessor === 'parent' ? sort.sortDirection : 'none'
             },
         ],
-        []
+        [sort]
     )
 
     const columnHeaderClick = async (column) => {
-        console.log("column header click reached")
-        console.log(column)
-        // if (column.isSorted) {
-        //     console.log(column.id)
-        //     console.log("asc")
-        // } else if (column.isSortedDesc) {
-        //     console.log(column.id)
-        //     console.log("desc")
-        // } else {
-        //     console.log("none")
-        // }
+
         switch (column.sortDirection) {
           case 'none':
             // console.log(column.sortDirection)
