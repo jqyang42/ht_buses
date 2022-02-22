@@ -20,13 +20,6 @@ export function StudentsTable( {data, showAll, pageIndex, canPreviousPage, canNe
 
     const columns = React.useMemo(
         () => [
-            // {
-            //     Header: '#',
-            //     accessor: d => `${d.id}`, // accessor is the "key" in the data
-            //     id: 'id',
-            //     disableFilter: true,
-            //     disableSortBy: true
-            // },
             {
                 Header: 'ID',
                 accessor: 'student_school_id',
