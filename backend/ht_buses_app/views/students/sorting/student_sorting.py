@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ....models import Student, Route, User, School
 from django.core.paginator import Paginator
 from ....serializers import StudentSerializer, UserSerializer, SchoolSerializer, RouteSerializer
+from django.contrib.postgres.search import SearchVector, SearchQuery
 
 @csrf_exempt
 @api_view(['GET'])
@@ -14,43 +15,74 @@ def student_sort(request):
     order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     page_num = request.query_params["page"]
+    search = request.query_params["q"]
     # alphabetical sort
     if sort_by == "name" or sort_by == "route" or sort_by == "school_name" or sort_by == "in_range" or sort_by == "parent":
-        data = alphabetical_sort(order_by, sort_by, page_num)
+        data = alphabetical_sort(order_by, sort_by, page_num, search)
     
     # numerical sort
     if sort_by == "student_school_id":
-        data = numerical_sort(order_by, page_num)
+        data = numerical_sort(order_by, page_num, search)
 
     return Response(data)
 
-def alphabetical_sort(order_by, sort_by, page_number):
+def alphabetical_sort(order_by, sort_by, page_number, search):
     data = {}
     if sort_by == "name":
         if order_by == "asc":
-            students = Student.studentsTable.all().order_by("first_name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("first_name")
         else:
-            students = Student.studentsTable.all().order_by("-first_name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("-first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("-first_name")
     if sort_by == "route":
         if order_by == "asc":
-            students = Student.studentsTable.all().order_by("route_id__name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("route_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("route_id__name")
         else:
-            students = Student.studentsTable.all().order_by("-route_id__name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("-route_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("-route_id__name")
     if sort_by == "in_range":
         if order_by == "asc":
-            students = Student.studentsTable.all().order_by("-in_range")
+            if search != None:
+                students = Student.studentsTable.all().order_by("-in_range").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("-in_range")
         else:
-            students = Student.studentsTable.all().order_by("in_range")
+            if search != None:
+                students = Student.studentsTable.all().order_by("in_range").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("in_range")
     if sort_by == "parent":
         if order_by == "asc":
-            students = Student.studentsTable.all().order_by("user_id__first_name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("user_id__first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("user_id__first_name")
         else:
-            students = Student.studentsTable.all().order_by("user_id__first_name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("-user_id__first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("-user_id__first_name")
     if sort_by == "school_name":
         if order_by == "asc":
-            students = Student.studentsTable.all().order_by("school_id__name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("school_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("school_id__name")
         else:
-            students = Student.studentsTable.all().order_by("school_id__name")
+            if search != None:
+                students = Student.studentsTable.all().order_by("-school_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            else:
+                students = Student.studentsTable.all().order_by("-school_id__name")
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -101,12 +133,18 @@ def alphabetical_sort(order_by, sort_by, page_number):
         data["success"] = True
         return data
 
-def numerical_sort(order_by, page_number):
+def numerical_sort(order_by, page_number, search):
     data = {}
     if order_by == "asc":
-        students = Student.studentsTable.all().order_by("student_school_id")
+        if search != None:
+            students = Student.studentsTable.all().order_by("student_school_id").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+        else:
+            students = Student.studentsTable.all().order_by("student_school_id")
     else:
-        students = Student.studentsTable.all().order_by("-student_school_id")
+        if search != None:
+            students = Student.studentsTable.all().order_by("-student_school_id").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+        else:
+            students = Student.studentsTable.all().order_by("-student_school_id")
     if int(page_number) == 0:
         prev_page = False
         next_page = False
