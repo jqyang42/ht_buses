@@ -15,11 +15,11 @@ def student_sort(request):
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     page_num = request.query_params["page"]
     # alphabetical sort
-    if sort_by == "name" or sort_by == "route" or sort_by == "school" or sort_by == "bus-stop" or sort_by == "parent-name":
+    if sort_by == "name" or sort_by == "route" or sort_by == "school_name" or sort_by == "in_range" or sort_by == "parent":
         data = alphabetical_sort(order_by, sort_by, page_num)
     
     # numerical sort
-    if sort_by == "ID":
+    if sort_by == "student_school_id":
         data = numerical_sort(order_by, page_num)
 
     return Response(data)
@@ -36,59 +36,70 @@ def alphabetical_sort(order_by, sort_by, page_number):
             students = Student.studentsTable.all().order_by("route_id__name")
         else:
             students = Student.studentsTable.all().order_by("-route_id__name")
-    if sort_by == "bus-stop":
+    if sort_by == "in_range":
         if order_by == "asc":
-            students = Student.studentsTable.all().order_by("in_range")
-        else:
             students = Student.studentsTable.all().order_by("-in_range")
-    if sort_by == "parent-name":
+        else:
+            students = Student.studentsTable.all().order_by("in_range")
+    if sort_by == "parent":
         if order_by == "asc":
             students = Student.studentsTable.all().order_by("user_id__first_name")
         else:
             students = Student.studentsTable.all().order_by("user_id__first_name")
-    paginator = Paginator(students, 10) # Show 10 per page
-    students_per_page = paginator.get_page(page_number)
-    total_page_num = paginator.num_pages
-    student_serializer = StudentSerializer(students_per_page, many=True)
-    if int(page_number) == 1 and int(page_number) == total_page_num:
+    if sort_by == "school_name":
+        if order_by == "asc":
+            students = Student.studentsTable.all().order_by("school_id__name")
+        else:
+            students = Student.studentsTable.all().order_by("school_id__name")
+    if int(page_number) == 0:
         prev_page = False
         next_page = False
-    elif int(page_number) == 1:
-        prev_page = False
-        next_page = True
+        total_page_num = 0
+        student_serializer = StudentSerializer(students, many=True)
     else:
-        prev_page = True
-        if int(page_number) == total_page_num:
+        paginator = Paginator(students, 10) # Show 10 per page
+        students_per_page = paginator.get_page(page_number)
+        total_page_num = paginator.num_pages
+        student_serializer = StudentSerializer(students_per_page, many=True)
+        if int(page_number) == 1 and int(page_number) == total_page_num:
+            prev_page = False
             next_page = False
-        else:
+        elif int(page_number) == 1:
+            prev_page = False
             next_page = True
-    student_list = []
-    for student in student_serializer.data:
-        id = student["id"]
-        student_school_id = student["student_school_id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
-        parent = User.objects.get(pk=student["user_id"])
-        parent_serializer = UserSerializer(parent, many=False)
-        parent_first = parent_serializer.data["first_name"]
-        parent_last = parent_serializer.data["last_name"]
-        parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
-        school_serializer = SchoolSerializer(school, many=False)
-        school_name = school_serializer.data["name"]
-        in_range = student["in_range"]
-        if student["route_id"] == None:
-            route = 0
-            route_arr = {"id": 0, "color_id": 0}
         else:
-            route = Route.routeTables.get(pk=student["route_id"])
-            route_serializer = RouteSerializer(route, many=False)
-            route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
-        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
-    data["students"] = student_list
-    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
-    data["success"] = True
-    return data
+            prev_page = True
+            if int(page_number) == total_page_num:
+                next_page = False
+            else:
+                next_page = True
+        student_list = []
+        for student in student_serializer.data:
+            id = student["id"]
+            student_school_id = student["student_school_id"]
+            first_name = student["first_name"]
+            last_name = student["last_name"]
+            parent = User.objects.get(pk=student["user_id"])
+            parent_serializer = UserSerializer(parent, many=False)
+            parent_first = parent_serializer.data["first_name"]
+            parent_last = parent_serializer.data["last_name"]
+            parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
+            school = School.schoolsTable.get(pk=student["school_id"])
+            school_serializer = SchoolSerializer(school, many=False)
+            school_name = school_serializer.data["name"]
+            in_range = student["in_range"]
+            if student["route_id"] == None:
+                route = 0
+                route_arr = {"id": 0, "color_id": 0}
+            else:
+                route = Route.routeTables.get(pk=student["route_id"])
+                route_serializer = RouteSerializer(route, many=False)
+                route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
+            student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
+        data["students"] = student_list
+        data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
+        data["success"] = True
+        return data
 
 def numerical_sort(order_by, page_number):
     data = {}
@@ -96,46 +107,52 @@ def numerical_sort(order_by, page_number):
         students = Student.studentsTable.all().order_by("student_school_id")
     else:
         students = Student.studentsTable.all().order_by("-student_school_id")
-    paginator = Paginator(students, 10) # Show 10 per page
-    students_per_page = paginator.get_page(page_number)
-    total_page_num = paginator.num_pages
-    student_serializer = StudentSerializer(students_per_page, many=True)
-    if int(page_number) == 1 and int(page_number) == total_page_num:
+    if int(page_number) == 0:
         prev_page = False
         next_page = False
-    elif int(page_number) == 1:
-        prev_page = False
-        next_page = True
+        total_page_num = 0
+        student_serializer = StudentSerializer(students, many=True)
     else:
-        prev_page = True
-        if int(page_number) == total_page_num:
+        paginator = Paginator(students, 10) # Show 10 per page
+        students_per_page = paginator.get_page(page_number)
+        total_page_num = paginator.num_pages
+        student_serializer = StudentSerializer(students_per_page, many=True)
+        if int(page_number) == 1 and int(page_number) == total_page_num:
+            prev_page = False
             next_page = False
-        else:
+        elif int(page_number) == 1:
+            prev_page = False
             next_page = True
-    student_list = []
-    for student in student_serializer.data:
-        id = student["id"]
-        student_school_id = student["student_school_id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
-        parent = User.objects.get(pk=student["user_id"])
-        parent_serializer = UserSerializer(parent, many=False)
-        parent_first = parent_serializer.data["first_name"]
-        parent_last = parent_serializer.data["last_name"]
-        parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
-        school_serializer = SchoolSerializer(school, many=False)
-        school_name = school_serializer.data["name"]
-        in_range = student["in_range"]
-        if student["route_id"] == None:
-            route = 0
-            route_arr = {"id": 0, "color_id": 0}
         else:
-            route = Route.routeTables.get(pk=student["route_id"])
-            route_serializer = RouteSerializer(route, many=False)
-            route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
-        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
-    data["students"] = student_list
-    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
-    data["success"] = True
-    return data
+            prev_page = True
+            if int(page_number) == total_page_num:
+                next_page = False
+            else:
+                next_page = True
+        student_list = []
+        for student in student_serializer.data:
+            id = student["id"]
+            student_school_id = student["student_school_id"]
+            first_name = student["first_name"]
+            last_name = student["last_name"]
+            parent = User.objects.get(pk=student["user_id"])
+            parent_serializer = UserSerializer(parent, many=False)
+            parent_first = parent_serializer.data["first_name"]
+            parent_last = parent_serializer.data["last_name"]
+            parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
+            school = School.schoolsTable.get(pk=student["school_id"])
+            school_serializer = SchoolSerializer(school, many=False)
+            school_name = school_serializer.data["name"]
+            in_range = student["in_range"]
+            if student["route_id"] == None:
+                route = 0
+                route_arr = {"id": 0, "color_id": 0}
+            else:
+                route = Route.routeTables.get(pk=student["route_id"])
+                route_serializer = RouteSerializer(route, many=False)
+                route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
+            student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
+        data["students"] = student_list
+        data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
+        data["success"] = True
+        return data
