@@ -20,7 +20,7 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        this.getStudentsPage(this.state.pageIndex, 'ASC', 'name')
+        this.getStudentsPage(this.state.pageIndex, {})
     }
 
     // render handlers
@@ -37,8 +37,8 @@ class Students extends Component {
     }
 
     // pagination
-    getStudentsPage = (page, order_by, sort_by) => {
-        getPage({ url: 'students', pageIndex: page, order_by: order_by, sort_by: sort_by })
+    getStudentsPage = (page, sortOptions) => {
+        getPage({ url: 'students', pageIndex: page, sortOptions: sortOptions })
         .then(res => {
             this.setState({
                 students: res.data.students,

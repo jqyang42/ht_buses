@@ -1,7 +1,16 @@
 import api from "../components/api";
 
-export async function getPage({ url, pageIndex, order_by, sort_by }) {
-    const response = await api.get(`${url}/sort?page=${pageIndex}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}`)
+export async function getPage({ url, pageIndex, sortOptions }) {
+    const order_by = sortOptions?.sortDirection
+    const sort_by = sortOptions?.accessor
+
+    let response
+    if (!order_by || order_by === 'none') {
+        response = await api.get(`${url}?page=${pageIndex}`)
+    } else {
+        response = await api.get(`${url}/sort?page=${pageIndex}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}`)
+    }
+    
     console.log(response)
     return {
         data: response.data,
