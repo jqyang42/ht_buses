@@ -3,7 +3,7 @@ import { Link, Navigate } from "react-router-dom";
 import { SchoolsTable } from '../tables/schools-table';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
-import api from "../components/api";
+import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from '../../constants';
 import { SCHOOLS_CREATE_URL } from "../../constants";
@@ -12,31 +12,41 @@ import { PARENT_DASHBOARD_URL } from "../../constants";
 class Schools extends Component {
     state = {
         schools : [],
-        show_all: false
+        show_all: false,
+        pageIndex: 1,
+        canPreviousPage: null,
+        canNextPage: null,
+        totalPages: null,
+        sortOptions: {}
     }
 
     // initialize
     componentDidMount() {
-        this.getSchools()
+        this.getSchoolsPage(this.state.pageIndex, this.state.sortOptions)
     }
 
-    // api calls
-    getSchools = () => {
-        api.get('schools')
+    // pagination
+    getSchoolsPage = (page, sortOptions) => {
+        getPage({ url: 'schools', pageIndex: page, sortOptions: sortOptions })
         .then(res => {
-            const schools = res.data.schools;
-            this.setState({ 
-                schools: schools,
-                show_all: false 
-            });
+            this.setState({
+                schools: res.data.schools,
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                sortOptions: sortOptions
+            })
         })
     }
 
-    // render handlers 
+    // render handlers
     handleShowAll = () => {
         this.setState(prevState => ({
             show_all: !prevState.show_all
-        }))
+        }), () => {
+            this.getSchoolsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
+        })
     }
     
     render() {
@@ -64,7 +74,16 @@ class Schools extends Component {
                                             </span>
                                         </Link>
                                     </div>
-                                    <SchoolsTable data={this.state.schools} showAll={this.state.show_all}/>
+                                    <SchoolsTable 
+                                    data={this.state.schools} 
+                                    showAll={this.state.show_all}
+                                    pageIndex={this.state.pageIndex}
+                                    canPreviousPage={this.state.canPreviousPage}
+                                    canNextPage={this.state.canNextPage}
+                                    updatePageCount={this.getSchoolsPage}
+                                    pageSize={10}
+                                    totalPages={this.state.totalPages}
+                                    />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"

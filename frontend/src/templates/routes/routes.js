@@ -43,7 +43,7 @@ class BusRoutes extends Component {
         this.setState(prevState => ({
             show_all: !prevState.show_all
         }), () => {
-            this.getStudentsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
+            this.getRoutesPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
         })
     }
 
