@@ -1,10 +1,15 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Table } from "./table";
 import { useState } from "react";
     
-export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages }) {
+export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, sort)
+    }, [sort])
 
     // Filter by multiple columns
     const ourGlobalFilterFunction = useCallback(
@@ -56,7 +61,6 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
     )
 
     const columnHeaderClick = async (column) => {
-
         switch (column.sortDirection) {
           case 'none':
             // console.log(column.sortDirection)
@@ -102,6 +106,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             pageSize={pageSize}
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
+            sortOptions={sort}
         />
     )
 }

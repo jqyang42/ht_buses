@@ -3,11 +3,10 @@ import { Navigate } from "react-router-dom";
 import { StudentsTable } from "../tables/students-table";
 import SidebarMenu from "../components/sidebar-menu";
 import HeaderMenu from "../components/header-menu";
-import api from "../components/api";
+import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
-import { getPage } from "../tables/server-side-pagination";
 
 class Students extends Component {
     state = {
@@ -23,19 +22,9 @@ class Students extends Component {
     componentDidMount() {
         this.getStudentsPage(this.state.pageIndex, this.state.sortOptions)
     }
-
-    // render handlers
-    handleShowAll = () => {
-        this.setState(prevState => ({
-            show_all: !prevState.show_all
-        }), () => {
-            this.getStudentsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
-        })
-    }
-
+    
     // pagination
     getStudentsPage = (page, sortOptions) => {
-        this.setState({ sortOptions: sortOptions })
         getPage({ url: 'students', pageIndex: page, sortOptions: sortOptions })
         .then(res => {
             this.setState({
@@ -43,8 +32,18 @@ class Students extends Component {
                 pageIndex: res.pageIndex,
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
-                totalPages: res.totalPages
+                totalPages: res.totalPages,
+                sortOptions: sortOptions
             })
+        })
+    }
+
+    // render handlers
+    handleShowAll = () => {
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }), () => {
+            this.getStudentsPage(this.state.show_all ? 0 : 1, this.state.sortOptions)
         })
     }
 
@@ -74,7 +73,6 @@ class Students extends Component {
                                     updatePageCount={this.getStudentsPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
-                                    // handleColumnSort={this.getSortOptions}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
