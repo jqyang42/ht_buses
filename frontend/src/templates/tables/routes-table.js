@@ -21,6 +21,7 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
     //     },
     //     [],
     // );
+    // console.log(data)
 
     const columns = React.useMemo(
         () => [
