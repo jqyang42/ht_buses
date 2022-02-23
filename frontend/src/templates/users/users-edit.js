@@ -134,10 +134,9 @@ class UsersEdit extends Component {
     }
 
 
-    checkStaffAddress = async () => {
+    checkNonParentAddress = () => {
         const address = this.state.edited_user.location.address
         const empty_address = address === "" || address == undefined
-        console.log(this.state.edited_user.is_parent)
         if(!this.state.edited_user.is_parent && empty_address) {
             let user = this.state.edited_user
             user.location.lat = 0
@@ -148,16 +147,13 @@ class UsersEdit extends Component {
                 valid_address: true,
             })
         }
-        console.log(this.state.valid_address)
         return this.state.valid_address
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.checkStaffAddress()
-        console.log(this.state.valid_address)
-        if (!emailValidation({ email: this.state.edited_user?.email }) || !this.state.valid_address ) {
-            
+        const valid_address = this.checkNonParentAddress()
+        if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
             return 
         }
         else {

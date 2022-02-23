@@ -99,6 +99,7 @@ class UsersCreate extends Component {
         let user = this.state.new_user
         user.email = email
         this.setState({ new_user: user })
+        this.setState({ valid_email: true })
     }
 
     handlePasswordChange = (event) => {
@@ -134,7 +135,6 @@ class UsersCreate extends Component {
         let user = this.state.new_user
         user.is_staff = role_value === 'administrator'
         this.setState({ new_user: user });
-        this.checkStaffAddress()
     }
 
     // Called when onBlur (when user clicks out of input box) to reduce Geocoding API calls.
@@ -243,6 +243,7 @@ class UsersCreate extends Component {
             students: [...this.state.students, student_field],
             routes_dropdowns: [...this.state.routes_dropdowns, []]
         })
+        this.checkNonParentAddress()
     }
 
     handleDeleteStudent = (student_num) => {       
@@ -268,7 +269,7 @@ class UsersCreate extends Component {
             this.setState({ new_user: user })
         }
     }
-    checkStaffAddress = async () => {
+    checkNonParentAddress = () => {
         const address = this.state.new_user.location.address
         const empty_address = address === "" || address == undefined
         if(!this.state.new_user.is_parent && empty_address) {
@@ -286,12 +287,12 @@ class UsersCreate extends Component {
 
     handleSubmit = (event) => {        
         event.preventDefault();
-        this.checkStaffAddress().then(valid_address => {
-            if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
+       const valid_address = this.checkNonParentAddress()
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return 
           }
-          else {
+        else {
             const request = {
                 user: {
                     email: this.state.new_user.email
@@ -304,10 +305,8 @@ class UsersCreate extends Component {
                 }
             })
           }
-        })
-
-        
     }
+        
 
     // helper functions
     sendCreateRequest = () => {
