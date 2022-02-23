@@ -108,7 +108,11 @@ class RouteMap extends Component {
       }
       // this.newStops.push(newStop)
       this.setState(prevState => ({
-        newStops: [...prevState.newStops, newStop]
+        newStops: [...prevState.newStops, newStop],
+        center: {
+          lat: coords.lat,
+          lng: coords.lng
+        }
       }), console.log(this.state.newStops))
     }
     this.handleUpdateNewStops()
@@ -194,6 +198,7 @@ class RouteMap extends Component {
   }
 
   render() {
+    const center = this.props.center
     console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
@@ -205,16 +210,12 @@ class RouteMap extends Component {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={{
-              lat: parseFloat(this.props.center.lat),
-              lng: parseFloat(this.props.center.lng)
-            }}
+            center={center}
             options={{
               styles: hidePOIs
             }}
             zoom={13}
             onClick={this.createStopMarker}
-            onCenterChanged={this.handleCenterChange}
           >
             <Marker position={this.props.center}  />
             {this.props.students?.map((value, index) => {
