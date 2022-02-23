@@ -200,9 +200,9 @@ class BusRoutesPlanner extends Component {
         this.clearAddRouteForm()
     }
 
-    handleRouteCreateSubmit = event => {
+    handleRouteCreateSubmit = (event) => {
         event.preventDefault();
-
+    
         const route = {
             name: this.state.create_route_name,
             school_id: this.props.params.id,
