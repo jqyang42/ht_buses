@@ -205,7 +205,7 @@ class BusRoutesPlanner extends Component {
         if(this.state.create_route_name === "") {
             return 
         }
-    
+        else {
         const route = {
             name: this.state.create_route_name,
             school_id: this.props.params.id,
@@ -226,6 +226,7 @@ class BusRoutesPlanner extends Component {
                 this.handleLocationsGet()
             })
         this.clearAddRouteForm()
+        }
     }
 
     clearAddRouteForm = (event) => {

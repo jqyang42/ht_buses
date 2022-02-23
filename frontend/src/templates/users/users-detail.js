@@ -156,16 +156,18 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
+        event.preventDefault();
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
             this.setState({modal_dismiss: false})
             return
         }
-
+        else {
         const student = {
             students: [this.state.new_student]
+        
         }
-
         this.addStudent(student)
+        }
     }
 
     render() {
