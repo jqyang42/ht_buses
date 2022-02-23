@@ -63,6 +63,7 @@ class UsersEdit extends Component {
         api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
             const success = res.data.success
+            console.log(success)
             this.setState({ edit_success: success ? 1 : -1 })
             if (success) {
                 this.setState({
@@ -136,6 +137,7 @@ class UsersEdit extends Component {
     checkStaffAddress = async () => {
         const address = this.state.edited_user.location.address
         const empty_address = address === "" || address == undefined
+        console.log(this.state.edited_user.is_parent)
         if(!this.state.edited_user.is_parent && empty_address) {
             let user = this.state.edited_user
             user.location.lat = 0
@@ -146,31 +148,34 @@ class UsersEdit extends Component {
                 valid_address: true,
             })
         }
+        console.log(this.state.valid_address)
         return this.state.valid_address
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
-        this.checkStaffAddress().then(valid_address => {
-            if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
-                this.setState({ edit_success: -1 })
-                return 
-            }
-        })
-        const request = {
-            user: {
-                email: this.state.edited_user?.email
-            }
+        this.checkStaffAddress()
+        console.log(this.state.valid_address)
+        if (!emailValidation({ email: this.state.edited_user?.email }) || !this.state.valid_address ) {
+            
+            return 
         }
-
-        this.validateNewEmail(request).then(success => {
-            if (success) {
-                const user = {
-                    user: this.state.edited_user
+        else {
+            const request = {
+                user: {
+                    email: this.state.edited_user?.email
                 }
-                this.editUser(user)
             }
-        })
+    
+            this.validateNewEmail(request).then(success => {
+                if (success) {
+                    const user = {
+                        user: this.state.edited_user
+                    }
+                    this.editUser(user)
+                }
+            })
+        }
     }
 
     render() {

@@ -287,23 +287,26 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
         this.checkStaffAddress().then(valid_address => {
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
+            if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
             this.setState({ edit_success: -1 })
             return 
           }
-        })
-
-        const request = {
-            user: {
-                email: this.state.new_user.email
-            }            
-        }
-
-        this.validateNewEmail(request).then(success => {
-            if (success) {
-                this.sendCreateRequest()
+          else {
+            const request = {
+                user: {
+                    email: this.state.new_user.email
+                }            
             }
+    
+            this.validateNewEmail(request).then(success => {
+                if (success) {
+                    this.sendCreateRequest()
+                }
+            })
+          }
         })
+
+        
     }
 
     // helper functions
