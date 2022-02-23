@@ -202,6 +202,9 @@ class BusRoutesPlanner extends Component {
 
     handleRouteCreateSubmit = (event) => {
         event.preventDefault();
+        if(this.state.create_route_name === "") {
+            return 
+        }
     
         const route = {
             name: this.state.create_route_name,
