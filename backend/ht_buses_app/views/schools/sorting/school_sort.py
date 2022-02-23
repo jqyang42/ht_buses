@@ -92,7 +92,7 @@ def numerical_sort(sort_by, order_by, page_number, search):
             if search != None:
                 schools = School.schoolsTable.all().order_by("arrival").annotate(search=SearchVector("name")).filter(search__icontains=search)
             else:
-                schools = School.schoolsTable.all().order_by("departure")
+                schools = School.schoolsTable.all().order_by("arrival")
         else:
             if search != None:
                 schools = School.schoolsTable.all().order_by("-arrival").annotate(search=SearchVector("name")).filter(search__icontains=search)
