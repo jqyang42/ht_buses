@@ -104,15 +104,10 @@ class UsersDetail extends Component {
         this.deleteUser();
     }
 
-    resetStudentValues = () => {
-        this.lastNameField.value = ""
-        this.firstNameField.value = ""
-        this.idField.value = ""
-        this.schoolField.value = ""
-        this.routeField.value = ""
-        this.setState({ valid_id: 0})
+    resetStudentValues = (event) => {
+        document.getElementById("add-student-form").reset();
     }
-    
+
     handleClickAddStudent = () => {
         this.resetStudentValues()
         this.setState(prevState => ({
@@ -162,7 +157,7 @@ class UsersDetail extends Component {
 
     handleAddStudentSubmit = (event) => {
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
-            event.preventDefault();
+            this.setState({modal_dismiss: false})
             return
         }
 
@@ -221,7 +216,7 @@ class UsersDetail extends Component {
                                             <div className="modal fade" show={!this.state.modal_dismiss} id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <form onSubmit={this.handleAddStudentSubmit}> {/* TODO: add onClick handler */}
+                                                        <form id="add-student-form" onSubmit={this.handleAddStudentSubmit}> {/* TODO: add onClick handler */}
                                                             <div className="modal-header">
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Create New Student</h5>
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -230,17 +225,17 @@ class UsersDetail extends Component {
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputFirstName"} className="control-label pb-2">First Name</label>
                                                                     <input type="name" className="form-control pb-2" id={"exampleInputFirstName"}
-                                                                        placeholder="Enter first name" required ref={el => this.firstNameField = el} onChange={(e) => this.handleStudentFirstNameChange(e)}></input>
+                                                                        placeholder="Enter first name" required  onChange={(e) => this.handleStudentFirstNameChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputLastName"} className="control-label pb-2">Last Name</label>
                                                                     <input type="name" className="form-control pb-2" id={"exampleInputLastName"}
-                                                                        placeholder="Enter last name" required ref={el => this.lastNameField = el} onChange={(e) => this.handleStudentLastNameChange(e)}></input>
+                                                                        placeholder="Enter last name" required onChange={(e) => this.handleStudentLastNameChange(e)}></input>
                                                                 </div>
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
-                                                                    placeholder="Enter student ID" required ref={el => this.idField = el} onChange={(e) => this.handleStudentIDChange(e)}></input>
+                                                                    placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e)}></input>
                                                                     {(studentIDValidation({ student_id: this.state.new_student.student_school_id}) || (this.state.new_student.student_school_id === '')) ? "" :                                                                 
                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                         The Student ID value is invalid. Please edit and try again.
@@ -250,8 +245,8 @@ class UsersDetail extends Component {
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School"
-                                                                    ref={el => this.schoolField = el} onChange={(e) => this.handleSchoolChange(e)} required>
-                                                                        <option value="" disabled >Select a School</option>
+                                                                    onChange={(e) => this.handleSchoolChange(e)} required>
+                                                                         <option value="" selected>Select a School</option>
                                                                         {this.state.schools_dropdown.map(school => 
                                                                             <option value={school.value} id={school.display}>{school.display}</option>
                                                                         )}
@@ -260,7 +255,7 @@ class UsersDetail extends Component {
                                                                 <div className="form-group pb-3">
                                                                     <label for={"exampleInputRoute"} className="control-label pb-2">Route</label>
                                                                     <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
-                                                                   ref={el => this.routeField = el} onChange={(e) => this.handleRouteChange(e)} >
+                                                                    onChange={(e) => this.handleRouteChange(e)} >
                                                                         <option value= "" selected >Select a Route</option>
                                                                         {this.state.routes_dropdown.map(route => 
                                                                             <option value={route.value} id={route.display}>{route.display}</option>

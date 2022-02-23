@@ -102,7 +102,6 @@ class SchoolsCreate extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-       // this.handleAddressValidation()
         if (!this.state.valid_address ) {
             this.setState({ edit_success: -1 })
             return 
@@ -171,7 +170,8 @@ class SchoolsCreate extends Component {
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     value={this.state.new_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
+                                                    required={true}/>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>
