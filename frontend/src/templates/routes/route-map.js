@@ -98,10 +98,8 @@ class RouteMap extends Component {
     if (this.props.assign_mode ) {
       const newStop = {
         name: "",
-        location: {
-          lat: coords.lat,
-          long: coords.lng,
-        },
+        lat: coords.lat,
+        long: coords.lng,
         route_id: this.props.active_route,
         arrival: "00:00",
         departure: "00:00"
@@ -127,8 +125,8 @@ class RouteMap extends Component {
     const newStopNames = arrayToChange;
     const newStop = newStopNames[index];
     newStop.name = name;
-    newStop.location.lat = location.lat;
-    newStop.location.long = location.lng;
+    newStop.lat = location.lat;
+    newStop.long = location.lng;
     newStopNames[index] = newStop;
     console.log(newStopNames)
     return newStopNames
