@@ -99,6 +99,8 @@ class SchoolsEdit extends Component {
 
     handleAddressValidation = () => {
         const address = this.state.edited_school.location.address
+        console.log("address")
+        console.log(address)
         if (address !== '') {
             Geocode.fromAddress(address).then(
                 (response) => {
@@ -115,6 +117,9 @@ class SchoolsEdit extends Component {
                     this.setState({ valid_address: false})
                 }
             )
+        }
+        else {
+            this.setState({ valid_address: false})
         }
     }
 
@@ -204,7 +209,8 @@ class SchoolsEdit extends Component {
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     defaultValue={this.state.edited_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange.address}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
+                                                    required={true}/>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>

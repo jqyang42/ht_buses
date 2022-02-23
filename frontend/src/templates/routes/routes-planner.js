@@ -202,9 +202,12 @@ class BusRoutesPlanner extends Component {
         this.clearAddRouteForm()
     }
 
-    handleRouteCreateSubmit = event => {
+    handleRouteCreateSubmit = (event) => {
         event.preventDefault();
-
+        if(this.state.create_route_name === "") {
+            return 
+        }
+        else {
         const route = {
             name: this.state.create_route_name,
             school_id: this.props.params.id,
@@ -225,9 +228,11 @@ class BusRoutesPlanner extends Component {
                 this.handleLocationsGet()
             })
         this.clearAddRouteForm()
+        }
     }
 
     clearAddRouteForm = (event) => {
+        
         document.getElementById("add-route-form").reset();
     }
 
@@ -525,7 +530,7 @@ class BusRoutesPlanner extends Component {
                                             (<div>
                                                 <div class="alert alert-primary mt-3 mb-2" role="alert">
                                                     <i className="bi bi-info-circle-fill me-2"></i>
-                                                    Click on a location marker to add it to this route!
+                                                        Click on a location marker to add students to this route. Click any location on the map to add a new stop there.
                                                 </div>
                                             </div>) : ""
                                         }
