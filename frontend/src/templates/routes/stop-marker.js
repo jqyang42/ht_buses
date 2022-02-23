@@ -41,15 +41,22 @@ class StopMarker extends Component {
       });
     }
 
+    editLocation = (event) => {
+      this.setState({
+        location: event.latLng.toJSON() 
+      })
+      this.handleSubmit(event)
+    }
+ 
     handleSubmit = (event) => {
-      event.preventDefault();
       if (this.props.handleStopNameChange) {
         if(this.props.uid) {
           console.log(this.state.name)
-          this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid)
+          this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid, this.state.location)
         } 
         else {
-          this.props.handleStopNameChange(this.state.name, this.props.id)
+          console.log(this.state.name)
+          this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
         }
       }
       this.handleClick()
@@ -65,7 +72,9 @@ class StopMarker extends Component {
       icon={this.state.icon} 
       id={this.props.id} 
       key={this.props.id} 
-      onClick={this.handleClick}>
+      onClick={this.handleClick}
+      onDragEnd={this.editLocation}
+      draggable={this.props.assign_mode}>
         {showInfoWindow && (
           <InfoWindow options={{maxWidth:300}}>
             {
