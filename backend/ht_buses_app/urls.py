@@ -15,6 +15,7 @@ from . views.schools.sorting import school_sort
 from . views.schools.search import school_search
 from . views.routes.sorting import route_sorting
 from . views.routes.search import route_search
+from . views.users.sorting import user_sort
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -64,6 +65,7 @@ urlpatterns = [
     path('api/schools/sort', school_sort.school_sort, name='school_sort'),
     path('api/schools/search', school_search.school_search, name='school_search'),
     path('api/routes/sort', route_sorting.route_sort, name='route_sort'),
-    path('api/routes/search', route_search.route_search, name='route_search')
+    path('api/routes/search', route_search.route_search, name='route_search'),
+    path('api/users/sort', user_sort.user_sort, name='user_sort')
 
 ]

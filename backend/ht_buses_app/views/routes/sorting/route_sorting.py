@@ -67,7 +67,6 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
         prev_page = False
         next_page = False
         total_page_num = 0
-        routes = Route.routeTables.all().order_by("id")
         route_serializer = RouteSerializer(routes, many=True)
     else:
         paginator = Paginator(routes, 10) # Show 10 per page
@@ -86,22 +85,22 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
                 next_page = False
             else:
                 next_page = True
-        routes_filter = []
-        for route in route_serializer.data:
-            id = route["id"]
-            name = route["name"]
-            school = School.schoolsTable.get(pk=route["school_id"])
-            school_serializer = SchoolSerializer(school, many=False)
-            school_name = school_serializer.data["name"]
-            route_students = Student.studentsTable.filter(route_id=id)
-            student_serializer = StudentSerializer(route_students, many=True)
-            student_count = len(student_serializer.data)
-            school_obj = {'id' : route["school_id"], 'name': school_name}
-            routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count, "is_complete": route["is_complete"], "color_id": route["color_id"]})
-        data["routes"] = routes_filter
-        data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
-        data["success"] = True
-        return data
+    routes_filter = []
+    for route in route_serializer.data:
+        id = route["id"]
+        name = route["name"]
+        school = School.schoolsTable.get(pk=route["school_id"])
+        school_serializer = SchoolSerializer(school, many=False)
+        school_name = school_serializer.data["name"]
+        route_students = Student.studentsTable.filter(route_id=id)
+        student_serializer = StudentSerializer(route_students, many=True)
+        student_count = len(student_serializer.data)
+        school_obj = {'id' : route["school_id"], 'name': school_name}
+        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count, "is_complete": route["is_complete"], "color_id": route["color_id"]})
+    data["routes"] = routes_filter
+    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
+    data["success"] = True
+    return data
 
 def numerical_sort(sort_by, order_by, page_number, search):
     data = {}
