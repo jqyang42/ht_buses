@@ -1,11 +1,12 @@
 import csv
-from ...models import User, Location
+from ...models import Location, School
 from django.core.management import BaseCommand
 from django.utils import timezone
 from ...google_funcs import geocode_address
+from datetime import datetime
 
 class Command(BaseCommand):
-    help = "Loads parent information into the Parent table."
+    help = "Loads school information into the School table."
 
     def add_arguments(self, parser):
         parser.add_argument("file_path", type=str)
@@ -17,29 +18,22 @@ class Command(BaseCommand):
             reader = csv.reader(f)
             next(reader, None)
             for row in reader:
-                name = row[0].split()
-                first_name = name[0]
-                last_name = name[1]
-                # make location object
-                # call google api
-                location_arr = geocode_address(row[2])
+                location_arr = geocode_address(row[1])
                 location = Location.locationTables.create(
-                    address=row[2],
+                    address=row[1],
                     lat=location_arr[0]["lat"],
                     long=location_arr[0]["lng"]
                 )
-                user = User.objects.create(
-                    first_name = first_name,
-                    last_name = last_name,
-                    email = row[1],
-                    is_parent = True,
-                    is_staff = False,
-                    location = location
+                school = School.schoolsTable.create(
+                    location_id=location,
+                    name=row[0],
+                    arrival=datetime.time(datetime.strptime(row[2],"%H:%M")),
+                    departure=datetime.time(datetime.strptime(row[3],"%H:%M"))
                 )
             end_time = timezone.now()
             self.stdout.write(
             self.style.SUCCESS(
-                f"Loading CSV into Parent table took: {(end_time-start_time).total_seconds()} seconds."
+                f"Loading CSV into School table took: {(end_time-start_time).total_seconds()} seconds."
             )
         )
 
