@@ -34,40 +34,40 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
                 users = User.objects.all().order_by("first_name")
         else:
             if search != None:
-                users = User.objects.all().order_by("-first_name").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("-first_name").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("-first_name")
     if sort_by == "email":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("email").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("email").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("email")
         else:
             if search != None:
-                users = User.objects.all().order_by("-email").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("-email").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("-email")
     if sort_by == "is_staff":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("-is_staff").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("-is_staff").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("-is_staff")
         else:
             if search != None:
-                users = User.objects.all().order_by("is_staff").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("is_staff").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("is_staff")
     if sort_by == "address":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("location__address").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("location__address").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("location__address")
         else:
             if search != None:
-                users = User.objects.all().order_by("-location__address").annotate(search=SearchVector("first_name", "last_name","email")).filter(search=SearchQuery(search))
+                users = User.objects.all().order_by("-location__address").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
             else:
                 users = User.objects.all().order_by("-location__address")
     if int(page_number) == 0:
