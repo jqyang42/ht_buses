@@ -27,7 +27,7 @@ def stops_view(request):
             paginator = Paginator(stops, 10) # Show 10 per page
             stops_per_page = paginator.get_page(page_number)
             total_page_num = paginator.num_pages
-            route_serializer = StopSerializer(stops_per_page, many=True)
+            stops_serializer = StopSerializer(stops_per_page, many=True)
             if int(page_number) == 1 and int(page_number) == total_page_num:
                 prev_page = False
                 next_page = False
@@ -40,8 +40,6 @@ def stops_view(request):
                     next_page = False
                 else:
                     next_page = True
-        stops = Stop.stopTables.filter(route_id=route)
-        stops_serializer = StopSerializer(stops, many=True)
         stops_arr = []
         for stop in stops_serializer.data:
             id = stop["id"]
