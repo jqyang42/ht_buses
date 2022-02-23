@@ -28,3 +28,19 @@ export function timetoArrive({ departure_time, travel_times }) {
     })
     return arrival_times.reverse()
 }
+
+export function validTime(departure_time, arrival_time) {
+    var first_value = departure_time[0]
+    var second_value = departure_time[1]
+    const hour_depart = String(first_value) + String(second_value)
+    first_value =  arrival_time[0]
+    second_value = arrival_time[1]
+    const hour_arrive = String(first_value) + String(second_value)
+    if(hour_arrive !== undefined && hour_depart !== undefined) {
+        if (parseInt(hour_depart) <= parseInt(hour_arrive)) {
+            return -1
+        }
+        return 1 
+    }  
+    return 0     
+}

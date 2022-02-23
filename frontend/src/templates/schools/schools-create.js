@@ -10,6 +10,7 @@ import api from "../components/api";
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { validTime } from "../components/time";
 
 class SchoolsCreate extends Component {
     state = {
@@ -27,7 +28,8 @@ class SchoolsCreate extends Component {
         valid_address: true,
         edit_success: 0,
         redirect_detail: false,
-        detail_url: ''
+        detail_url: '',
+        valid_time: 0
     }
 
     // api calls
@@ -91,6 +93,9 @@ class SchoolsCreate extends Component {
         let school = this.state.new_school
         school.arrival = arrival
         this.setState({ new_school: school })
+        const valid_time = validTime(this.state.new_school.departure, this.state.new_school.arrival ) 
+        this.setState({ valid_time: valid_time}) 
+       
     }
 
     handleDepartureChange = (event) => {
@@ -98,20 +103,25 @@ class SchoolsCreate extends Component {
         let school = this.state.new_school
         school.departure = departure
         this.setState({ new_school: school })
+        const valid_time = validTime(this.state.new_school.departure, this.state.new_school.arrival ) 
+        this.setState({ valid_time: valid_time}) 
+       
     }
+
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if (!this.state.valid_address ) {
+        if (!this.state.valid_address || this.state.valid_time ===-1 ) {
             this.setState({ edit_success: -1 })
             return 
         }
-
+        else {
         const school = {
             school: this.state.new_school
         }
 
         this.createSchool(school)
+        }
     }
 
     render() {
@@ -184,6 +194,11 @@ class SchoolsCreate extends Component {
                                                 <input type="time" id="default-picker-2" className="form-control pb-2"
                                                     placeholder="Select departure time" required
                                                     onChange={this.handleDepartureChange}></input>
+                                                {this.state.valid_time === -1 ?
+                                                ( <div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                    Please enter valid times. Departure time must be at least one hour after arrival time.
+                                                </div>) : ""
+                                                }
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
