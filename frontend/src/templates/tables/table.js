@@ -23,6 +23,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
 
     useEffect(() => {
         setRecords(data)
+        console.log(data)
     }, [data])
 
     const getRowId = React.useCallback(row => {
@@ -63,7 +64,8 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     id: 'name',
                     desc: false
                 }
-            ])
+            ]),
+            hiddenColumns: customHiddenColumn || []
         },
         },
         useFilters,

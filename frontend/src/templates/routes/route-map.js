@@ -14,25 +14,43 @@ const containerStyle = {
   width: '100%',
   height: '400px'
 };
-const hidePOIs = [{
-  "featureType": "poi",
-  "elementType": "labels.icon",
-  "stylers": [
-    {
-      "visibility": "off"
-    }
-  ]
-},
-{
-  "featureType": "all",
-  "elementType": "labels.text",
-  "stylers": [
-    {
-      "visibility": "off"
-    }
-  ]
-},
+const hidePOIs = [
+  {
+    "featureType": "administrative",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
 ]
+
 
 class RouteMap extends Component {
   state = {
@@ -80,8 +98,10 @@ class RouteMap extends Component {
     if (this.props.assign_mode ) {
       const newStop = {
         name: "",
-        lat: coords.lat,
-        long: coords.lng,
+        location: {
+          lat: coords.lat,
+          long: coords.lng,
+        },
         route_id: this.props.active_route,
         arrival: "00:00",
         departure: "00:00"
@@ -103,19 +123,19 @@ class RouteMap extends Component {
     }
   }
 
-  handleStopNameChange = (arrayToChange, name, index) => {
-    console.log("edited list")
+  handleStopNameChange = (arrayToChange, name, index, location) => {
     const newStopNames = arrayToChange;
     const newStop = newStopNames[index];
-    console.log(newStopNames)
     newStop.name = name;
+    newStop.location.lat = location.lat;
+    newStop.location.long = location.lng;
     newStopNames[index] = newStop;
+    console.log(newStopNames)
     return newStopNames
   }
 
-  handleNewStopNameChange = (name, index) => {
-    console.log("edited list")
-    const newStopNames = this.handleStopNameChange(this.state.newStops, name, index)
+  handleNewStopNameChange = (name, index, location) => {
+    const newStopNames = this.handleStopNameChange(this.state.newStops, name, index, location)
     this.setState({
       newStops: newStopNames
     }, console.log(this.state.newStops)) 
@@ -129,11 +149,15 @@ class RouteMap extends Component {
     }
   }
 
-  handleExistingStopNameChange = (name, index, uid) => {
-    const updatedStopNames = this.handleStopNameChange(this.state.existingStops, name, index)
+  handleExistingStopNameChange = (name, index, uid, location) => {
+    const updatedStopNames = this.handleStopNameChange(this.state.existingStops, name, index, location)
     const editedStop = {
       "id": uid,
-      "name": name
+      "name": name,
+      "location": {
+        "lat": location.lat,
+        "long": location.lng,
+      }
     }
     console.log(editedStop)
     const editedStopNames = this.state.editedStops;
@@ -173,9 +197,6 @@ class RouteMap extends Component {
     console.log(this.state.existingStops)
     if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
-    }
-    else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
-      return <Navigate to={PARENT_DASHBOARD_URL} />
     }
     return (
       <div className='w-100 h-100'>
