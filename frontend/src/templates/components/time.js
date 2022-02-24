@@ -10,7 +10,7 @@ export function toDisplayFormat({ twentyfour_time }) {
 // returns array of departure times in order of 1st stop to school
 export function timeToDepart({ arrival_time, travel_times }) {
     let prev_arrival = dayjs(arrival_time, 'HH:mm')
-    const departure_times = travel_times.map(time => {
+    const departure_times = travel_times.reverse().map(time => {
         const departure = prev_arrival.subtract(time, 's')
         prev_arrival = departure
         return departure.format('HH:mm')
