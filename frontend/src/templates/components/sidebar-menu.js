@@ -47,6 +47,8 @@ class SidebarMenu extends Component {
         var usersTab = (activeTab === "users") ? 'active' : '';
         var dashboardTab = (activeTab === "dashboard") ? 'active' : '';
 
+        console.log(JSON.parse(sessionStorage.getItem('is_parent')))
+        
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
                 <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
