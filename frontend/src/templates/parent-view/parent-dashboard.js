@@ -42,9 +42,6 @@ class ParentDashboard extends Component {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
-            return <Navigate to={STUDENTS_URL} />
-        }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">

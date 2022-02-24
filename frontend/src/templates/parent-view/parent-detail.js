@@ -64,9 +64,6 @@ class ParentDetail extends Component {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
-            return <Navigate to={STUDENTS_URL} />
-        }
         if (this.state.error_status) {
             // console.log("reached")
             return <ErrorPage code={this.state.error_code} />

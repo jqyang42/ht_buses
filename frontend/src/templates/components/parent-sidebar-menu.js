@@ -27,6 +27,7 @@ class ParentSidebarMenu extends Component {
             sessionStorage.setItem('last_name', '')
             sessionStorage.setItem('is_staff', false)
             sessionStorage.setItem('logged_in', false)
+            sessionStorage.setItem('is_parent', false)
             // console.log(sessionStorage.getItem('logged_in'))
             // console.log(sessionStorage.getItem('token'))
             window.location.reload()
