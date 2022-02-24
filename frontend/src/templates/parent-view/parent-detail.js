@@ -80,7 +80,7 @@ class ParentDetail extends Component {
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-nowrap">
                 {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
-                    <SidebarMenu activeTab="users" />:
+                    <SidebarMenu activeTab="dashboard" />:
                     <ParentSidebarMenu activeTab="Dashboard"/>
                     }
 
