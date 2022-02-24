@@ -89,6 +89,7 @@ class UsersDetail extends Component {
                     delete_success: 1,
                     redirect: true
                 })
+                this.getUserDetails()
                 return <Navigate to={ USERS_URL }/>;
             } else {
                 this.setState({ delete_success: -1 });
