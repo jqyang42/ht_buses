@@ -40,10 +40,18 @@ class BusRoutesPlanner extends Component {
             stops_edit_mode: false,
             dnd: false,
             stops_order: [],
+            modal_dismiss: false,
         }
     }
 
     componentDidMount() {
+        const reloadCount = sessionStorage.getItem('reloadCount');
+        if(reloadCount < 2) {
+        sessionStorage.setItem('reloadCount', String(reloadCount + 1));
+        window.location.reload();
+        } else {
+        sessionStorage.removeItem('reloadCount');
+        }
         this.handleTableGet();       
         this.handleLocationsGet();     
         if (this.state.active_route !== 0) { this.handleStopsGet() };
@@ -203,8 +211,9 @@ class BusRoutesPlanner extends Component {
     }
 
     handleRouteCreateSubmit = (event) => {
-        event.preventDefault();
+        
         if(this.state.create_route_name === "") {
+            event.preventDefault();
             return 
         }
         else {
@@ -224,7 +233,7 @@ class BusRoutesPlanner extends Component {
                 makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
                     this.setState({ route_dropdown: ret })
                 })
-
+                this.setState({ modal_dismiss: true})
                 this.handleLocationsGet()
             })
         this.clearAddRouteForm()
@@ -415,7 +424,7 @@ class BusRoutesPlanner extends Component {
                                                 </button>
 
                                                 {/* Modal for Add Route form */}
-                                                <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div className="modal fade" id="staticBackdrop" show={!this.state.modal_dismiss} data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                     <div className="modal-dialog modal-dialog-centered">
                                                         <div className="modal-content">
                                                             <div className="modal-header">
@@ -436,7 +445,7 @@ class BusRoutesPlanner extends Component {
                                                                 </div>
                                                                 <div className="modal-footer">
                                                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={this.resetAddRouteSuccess}>Cancel</button>
-                                                                    <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
+                                                                    <button type="submit" className="btn btn-primary" data-bs-dismiss={this.state.modal_dismiss ? "modal" : ""}>Create</button>
                                                                 </div>
                                                             </form>
                                                         </div>

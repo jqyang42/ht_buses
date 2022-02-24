@@ -90,7 +90,7 @@ class UsersDetail extends Component {
                 this.getUserDetails()
             } else {
                 this.setState({ create_success: -1 })      // TODO ERROR
-                this.setState({ modal_dismiss: true})
+                this.setState({ modal_dismiss: false})
             }
         })
     } 
@@ -162,8 +162,8 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
-        event.preventDefault();
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
+            event.preventDefault();
             return
         }
         else {
