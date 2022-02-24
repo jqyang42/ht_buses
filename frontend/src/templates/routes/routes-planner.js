@@ -8,6 +8,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import api from "../components/api";
+import { getPage } from "../tables/server-side-pagination";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
@@ -40,7 +41,17 @@ class BusRoutesPlanner extends Component {
             stops_edit_mode: false,
             dnd: false,
             stops_order: [],
+            students_page: [],
+            students_table: {
+                pageIndex: 1,
+                canPreviousPage: null,
+                canNextPage: null,
+                totalPages: null,
+                // sortOptions: {},
+                // searchValue: ''
+            },
             modal_dismiss: false,
+            route_complete: 0,
         }
     }
 
@@ -53,17 +64,41 @@ class BusRoutesPlanner extends Component {
         sessionStorage.removeItem('reloadCount');
         }
         this.handleTableGet();       
-        this.handleLocationsGet();     
+        this.handleLocationsGet();
+        this.getStudentsPage(this.state.students_table.pageIndex, null, '') 
+        
         if (this.state.active_route !== 0) { this.handleStopsGet() };
+        
         makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
             this.setState({ route_dropdown: ret })
+        })
+    }
+
+    // pagination
+    getStudentsPage = (page, sortOptions, search) => {
+        getPage({ url: `students/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}` })
+        .then(res => {
+            const students_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                students_page: res.data.students,
+                students_table: students_table
+            })
         })
     }
 
     handleStudentsShowAll = () => {
         this.setState(prevState => ({
             students_show_all: !prevState.students_show_all
-        }))
+        }), () => {
+            this.getStudentsPage(this.state.students_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleStopsShowAll = () => {
@@ -153,15 +188,21 @@ class BusRoutesPlanner extends Component {
         api.get(`stops?id=${this.state.active_route}`)
             .then(res => {
             const stops = res.data.stops;
-            console.log(stops)
+            const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
-                    this.setState({ stops: res })
+                    this.setState({ 
+                        stops: res,
+                        route_complete: is_complete ? 1 : -1
+                     })
                 })
             } else {
-                this.setState({ stops: stops })
+                this.setState({ 
+                    stops: stops,
+                    route_complete: is_complete ? 1 : -1,
+                })
             }
         })
         .catch (error => {
@@ -194,6 +235,8 @@ class BusRoutesPlanner extends Component {
         this.setState({ add_route_success: false})
         if (parseInt(event.target.value) !== 0) {
             this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
+        } else {
+            this.setState({ route_complete: 0 })
         }
     }
 
@@ -536,6 +579,15 @@ class BusRoutesPlanner extends Component {
                                             </div>) : ""
                                         }
 
+                                        {(this.state.route_complete === -1) ? 
+                                            (<div>
+                                                <div class="alert alert-warning mt-3 mb-2" role="alert">
+                                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                    This route is currently incomplete. All students assigned to this route must be within range of a bus stop in order for it to be considered complete.
+                                                </div>
+                                            </div>) : ""
+                                        }
+
                                         {(this.state.assign_mode) ? 
                                             (<div>
                                                 <div class="alert alert-primary mt-3 mb-2" role="alert">
@@ -563,7 +615,17 @@ class BusRoutesPlanner extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
-                                        <SchoolStudentsTable data={this.state.students}/>
+                                        <SchoolStudentsTable 
+                                        data={this.state.students_page} 
+                                        showAll={this.state.students_show_all}
+                                        pageIndex={this.state.students_table.pageIndex}
+                                        canPreviousPage={this.state.students_table.canPreviousPage}
+                                        canNextPage={this.state.students_table.canNextPage}
+                                        updatePageCount={this.getStudentsPage}
+                                        pageSize={10}
+                                        totalPages={this.state.students_table.totalPages}
+                                        searchValue={''}
+                                        />
                                         <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
                                             { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"

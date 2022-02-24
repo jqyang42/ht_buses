@@ -1,45 +1,40 @@
-from ...models import User, Location
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, UserSerializer
+from ....models import School, Location, Route, Student, User
 from django.core.paginator import Paginator
+from ....serializers import SchoolSerializer, UserSerializer, RouteSerializer, StudentSerializer, LocationSerializer
+from django.contrib.postgres.search import SearchVector, SearchQuery
+from django.db.models import Count
+from urllib.parse import unquote
 
-
-# User GET API: All Users for Admin
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdminUser]) 
-def users(request):
+def user_search(request):
     data = {}
+    search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    if int(page_number) == 0:
+    users = User.objects.annotate(search=SearchVector("first_name","last_name","email")).filter(search__icontains=search_q)
+    paginator = Paginator(users, 10) # Show 10 per page
+    users_per_page = paginator.get_page(page_number)
+    total_page_num = paginator.num_pages
+    user_serializer = UserSerializer(users_per_page, many=True)
+    if int(page_number) == 1 and int(page_number) == total_page_num:
         prev_page = False
         next_page = False
-        total_page_num = 0
-        users = User.objects.all().order_by("id")
-        user_serializers = UserSerializer(users, many=True)
+    elif int(page_number) == 1:
+        prev_page = False
+        next_page = True
     else:
-        users = User.objects.all().order_by("id")
-        paginator = Paginator(users, 10) # Show 10 per page
-        users_per_page = paginator.get_page(page_number)
-        total_page_num = paginator.num_pages
-        user_serializers = UserSerializer(users_per_page, many=True)
-        if int(page_number) == 1 and int(page_number) == total_page_num:
-            prev_page = False
+        prev_page = True
+        if int(page_number) == total_page_num:
             next_page = False
-        elif int(page_number) == 1:
-            prev_page = False
-            next_page = True
         else:
-            prev_page = True
-            if int(page_number) == total_page_num:
-                next_page = False
-            else:
-                next_page = True
+            next_page = True
     users_arr = []
-    for user in user_serializers.data:
+    for user in user_serializer.data:
         id = user["id"]
         first_name = user["first_name"]
         last_name = user["last_name"]

@@ -5,7 +5,6 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
-# Need to rethink logic, honestly not sure how to get rid of double for loop :(
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])

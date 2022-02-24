@@ -8,18 +8,13 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, 
-  hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
-  totalPages, columnHeaderClick, sortOptions, searchValue }) {
-
+export function TableOld({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, customHiddenColumn, rowProps = () => ({}) }) {
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget.value);
-        searchValue = e.currentTarget.value;
-        updatePageCount(pageIndex, sortOptions, searchValue)
-        // TODO: Call backend API for search here, pass in value as query @jessica
-        // setGlobalFilter(value);
+        // console.log(e.currentTarget);
+        const { value } = e.currentTarget;
+        setGlobalFilter(value);
     };
 
     const [records, setRecords] = useState(data)
@@ -40,16 +35,16 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         headerGroups,
         prepareRow,
         rows,
-        // page,
-        // canPreviousPage,
-        // canNextPage,
-        // pageOptions,
-        // nextPage,
-        // previousPage,
-        // state: { 
-            // pageIndex,
-            // pageSize
-        // },
+        page,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        nextPage,
+        previousPage,
+        state: { 
+            pageIndex,
+            pageSize
+        },
         setGlobalFilter,
     } = useTable(
         {
@@ -57,19 +52,17 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         data: dnd ? records : data,
         getRowId,
         globalFilter: ourGlobalFilterFunction,
-        manualPagination: true,
-        manualSortBy: true,
         initialState: { 
             searchInput: "",
-            // pageIndex: 0,
-            // pageSize: 10,
+            pageIndex: 0,
+            pageSize: 10,
             sortBy: dnd ? [] : ( hasCustomSortBy ? customSortBy : [
                 {
                     id: 'name',
                     desc: false
                 }
             ]),
-            // hiddenColumns: customHiddenColumn || []
+            hiddenColumns: customHiddenColumn || []
         },
         },
         useFilters,
@@ -99,9 +92,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     return (
         <>
             { searchOn ?
-            // <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> 
-            <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
-            : "" }
+            <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> : "" }
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
@@ -115,7 +106,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     {// Loop over the headers in each row
                     headerGroup.headers.map(column => (
                         // Apply the header cell props
-                        <th {...column.getHeaderProps(column.getSortByToggleProps())} onClick={() => columnHeaderClick(column)}>
+                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                         {// Render the header
                         column.render('Header')}
                         
@@ -124,11 +115,11 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         
                         {/* Sorting UI */}
                         <span className="w-auto ms-2 me-0 float-right text-end">
-                            {!column.disableSortBy ? (column.sortDirection === 'ASC' ?
-                            <img src={SORT_ASC} className="img-icon"></img> :
-                            column.sortDirection === 'DESC'
+                            {!column.disableSortBy ? (column.isSorted
+                            ? column.isSortedDesc
                                 ? <img src={SORT_DESC} className="img-icon"></img>
-                                : <img src={SORT} className="img-icon"></img>) : ''}
+                                : <img src={SORT_ASC} className="img-icon"></img>
+                            : <img src={SORT} className="img-icon"></img>) : ''}
                         </span>
                         </th>
                     ))}
@@ -138,8 +129,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                // showAll ? 
-                (dnd ? 
+                showAll ? (dnd ? 
                 rows.map((row, i) => 
                     // Prepare the row for display
                     prepareRow(row) || (
@@ -162,32 +152,30 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         })}
                     </tr>
                     )
-                }))
-                //  : (dnd ? 
-                // page.map((row, i) => 
-                //     // Prepare the row for display
-                //     prepareRow(row) || (
-                //         <Row
-                //         index={i}
-                //         row={row}
-                //         moveRow={moveRow}
-                //         navUrl={navUrl}
-                //         {...row.getRowProps(rowProps(row))}
-                //         />
-                //     )
-                // ) :
-                // page.map((row, i) => {
-                //     // Prepare the row for display
-                //     prepareRow(row)
-                //     return (
-                //     <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                //         {row.cells.map(cell => {
-                //         return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                //         })}
-                //     </tr>
-                //     )
-                // }))}
-                }
+                })) : (dnd ? 
+                page.map((row, i) => 
+                    // Prepare the row for display
+                    prepareRow(row) || (
+                        <Row
+                        index={i}
+                        row={row}
+                        moveRow={moveRow}
+                        navUrl={navUrl}
+                        {...row.getRowProps(rowProps(row))}
+                        />
+                    )
+                ) :
+                page.map((row, i) => {
+                    // Prepare the row for display
+                    prepareRow(row)
+                    return (
+                    <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
+                        {row.cells.map(cell => {
+                        return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
+                        })}
+                    </tr>
+                    )
+                }))}
                 </tbody>
             </table>
             </DndProvider>
@@ -196,17 +184,13 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 showAll ? "" :
                 <TablePagination
                     pageIndex={pageIndex}
-                    // pageOptions={pageOptions}
-                    // previousPage={previousPage}
+                    pageOptions={pageOptions}
+                    previousPage={previousPage}
                     canPreviousPage={canPreviousPage}
-                    // nextPage={nextPage}
+                    nextPage={nextPage}
                     canNextPage={canNextPage}
-                    updatePageCount={updatePageCount}
                     pageSize={pageSize}
-                    totalPages={totalPages}
-                    sortOptions={sortOptions}
-                    searchValue={searchValue}
-                    // page={page}
+                    page={page}
                 />
             }
         </>

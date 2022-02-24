@@ -9,6 +9,16 @@ from . views.announcements import announcements
 from . views.accounts import reset_password
 from . views.general import general_apis
 from . views.stops import stops_create, stops_view, stops_edit, stops_delete, stops_name_edit
+from . views.students.sorting import student_sorting
+from . views.students.search import student_search
+from . views.schools.sorting import school_sort
+from . views.schools.search import school_search
+from . views.routes.sorting import route_sorting
+from . views.routes.search import route_search
+from . views.users.sorting import user_sort
+from . views.users.search import user_search
+from . views.students.detail import student_view_route, student_view_school
+from . views.routes.detail import route_view_school
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -53,4 +63,16 @@ urlpatterns = [
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
     path('api/stops/delete', stops_delete.stops_delete, name='stops_delete'),
     path('api/stops/edit-name', stops_name_edit.stops_name_edit, name='stops_name_edit'),
+    path('api/students/sort',student_sorting.student_sort, name='student_sort'),
+    path('api/students/search', student_search.student_search, name='student_search'),
+    path('api/schools/sort', school_sort.school_sort, name='school_sort'),
+    path('api/schools/search', school_search.school_search, name='school_search'),
+    path('api/routes/sort', route_sorting.route_sort, name='route_sort'),
+    path('api/routes/search', route_search.route_search, name='route_search'),
+    path('api/users/sort', user_sort.user_sort, name='user_sort'),
+    path('api/users/search', user_search.user_search, name='user_search'),
+    path('api/students/route', student_view_route.students_route, name="student_view_route"),
+    path('api/students/school', student_view_school.students_school, name="student_view_school"),
+    path('api/routes/school', route_view_school.routes_school, name='route_view_school')
+
 ]
