@@ -71,19 +71,19 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
                 next_page = False
             else:
                 next_page = True
-        schools_arr = []
-        for school in school_serializer.data:
-            id = school["id"]
-            name = school["name"]
-            arrival = school["arrival"]
-            departure = school["departure"]
-            location = Location.locationTables.get(pk=school["location_id"])
-            location_serializer = LocationSerializer(location, many=False)
-            schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
-        data["schools"] = schools_arr
-        data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
-        data["success"] = True
-        return data
+    schools_arr = []
+    for school in school_serializer.data:
+        id = school["id"]
+        name = school["name"]
+        arrival = school["arrival"]
+        departure = school["departure"]
+        location = Location.locationTables.get(pk=school["location_id"])
+        location_serializer = LocationSerializer(location, many=False)
+        schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
+    data["schools"] = schools_arr
+    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
+    data["success"] = True
+    return data
 
 def numerical_sort(sort_by, order_by, page_number, search):
     data = {}
