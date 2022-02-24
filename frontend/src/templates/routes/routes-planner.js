@@ -46,6 +46,13 @@ class BusRoutesPlanner extends Component {
     }
 
     componentDidMount() {
+        const reloadCount = sessionStorage.getItem('reloadCount');
+        if(reloadCount < 2) {
+        sessionStorage.setItem('reloadCount', String(reloadCount + 1));
+        window.location.reload();
+        } else {
+        sessionStorage.removeItem('reloadCount');
+        }
         this.handleTableGet();       
         this.handleLocationsGet();     
         if (this.state.active_route !== 0) { this.handleStopsGet() };
