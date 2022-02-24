@@ -41,6 +41,7 @@ class BusRoutesPlanner extends Component {
             dnd: false,
             stops_order: [],
             modal_dismiss: false,
+            route_complete: false,
         }
     }
 
@@ -151,10 +152,16 @@ class BusRoutesPlanner extends Component {
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
-                    this.setState({ stops: res })
+                    this.setState({ 
+                        stops: res,
+                        route_complete: res.data.route.is_complete
+                     })
                 })
             } else {
-                this.setState({ stops: stops })
+                this.setState({ 
+                    stops: stops,
+                    route_complete: res.data.route.is_complete,
+                 })
             }
         })
         .catch (error => {
