@@ -7,6 +7,7 @@ import ErrorPage from "../error-page";
 import RouteMap from "../routes/route-map";
 import { StopsTable } from "../tables/stops-table";
 import api from "../components/api";
+import SidebarMenu from '../components/sidebar-menu';
 
 import { MARKER_ICONS } from '../../constants';
 
@@ -64,9 +65,6 @@ class ParentDetail extends Component {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (JSON.parse(sessionStorage.getItem('is_staff'))) {
-            return <Navigate to={STUDENTS_URL} />
-        }
         if (this.state.error_status) {
             // console.log("reached")
             return <ErrorPage code={this.state.error_code} />
@@ -81,7 +79,10 @@ class ParentDetail extends Component {
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-nowrap">
+                {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
+                    <SidebarMenu activeTab="dashboard" />:
                     <ParentSidebarMenu activeTab="Dashboard"/>
+                    }
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Dashboard" isRoot={false} isSecond={true} name={this.state.student.first_name + " " + this.state.student.last_name} />

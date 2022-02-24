@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from django.core.paginator import Paginator
 
 # Students GET API: All Students for Admin
 @csrf_exempt
@@ -11,15 +12,31 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer,
 @permission_classes([IsAdminUser]) 
 def students(request):
     data = {}
-    # COMMENTED OUT CODE FOR PAGINATION
-    #page_number = request.query_params["page"]
-    # For now I will retrieve 10 records for each page request, can be changed
-    # if int(page_number) == 1:
-    #     students = Student.studentsTable.all()[:10*int(page_number)]
-    # else:
-    #     students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
-    students = Student.studentsTable.all()
-    student_serializer = StudentSerializer(students, many=True)
+    page_number = request.query_params["page"]
+    if int(page_number) == 0:
+        prev_page = False
+        next_page = False
+        total_page_num = 0
+        students = Student.studentsTable.all().order_by("id")
+        student_serializer = StudentSerializer(students, many=True)
+    else:
+        students = Student.studentsTable.all().order_by("id")
+        paginator = Paginator(students, 10) # Show 10 per page
+        students_per_page = paginator.get_page(page_number)
+        total_page_num = paginator.num_pages
+        student_serializer = StudentSerializer(students_per_page, many=True)
+        if int(page_number) == 1 and int(page_number) == total_page_num:
+            prev_page = False
+            next_page = False
+        elif int(page_number) == 1:
+            prev_page = False
+            next_page = True
+        else:
+            prev_page = True
+            if int(page_number) == total_page_num:
+                next_page = False
+            else:
+                next_page = True
     student_list = []
     for student in student_serializer.data:
         id = student["id"]
@@ -44,5 +61,6 @@ def students(request):
             route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
     data["students"] = student_list
+    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True
     return Response(data)
