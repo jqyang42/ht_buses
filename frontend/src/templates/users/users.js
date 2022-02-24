@@ -3,7 +3,7 @@ import { Link, Navigate} from "react-router-dom";
 import { UsersTable } from '../tables/users-table';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
-import api from "../components/api";
+import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
@@ -11,19 +11,32 @@ import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 class Users extends Component {
     state = {
         users : [],
-        show_all: false
+        show_all: false,
+        pageIndex: 1,
+        canPreviousPage: null,
+        canNextPage: null,
+        totalPages: null,
+        sortOptions: {},
+        searchValue: ''
     }
 
     componentDidMount() {
-        this.getUsers()
+        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
-    // api calls
-    getUsers = () => {
-        api.get('users')
-            .then(response => {
-            const users = response.data.users;
-            this.setState({ users: users });
+    // pagination
+    getUsersPage = (page, sortOptions, search) => {
+        getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
+        .then(res => {
+            this.setState({
+                users: res.data.users,
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                sortOptions: sortOptions,
+                searchValue: search
+            })
         })
     }
     
@@ -31,7 +44,9 @@ class Users extends Component {
     handleShowAll = () => {
         this.setState(prev => ({
             show_all: !prev.show_all
-        }))
+        }), () => {
+            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
+        })
     }
 
     render() {
@@ -65,7 +80,17 @@ class Users extends Component {
                                             </span>
                                         </Link>
                                     </div>
-                                    <UsersTable data={this.state.users} showAll={this.state.show_all}/>
+                                    <UsersTable 
+                                    data={this.state.users} 
+                                    showAll={this.state.show_all}
+                                    pageIndex={this.state.pageIndex}
+                                    canPreviousPage={this.state.canPreviousPage}
+                                    canNextPage={this.state.canNextPage}
+                                    updatePageCount={this.getUsersPage}
+                                    pageSize={10}
+                                    totalPages={this.state.totalPages}
+                                    searchValue={this.state.searchValue}
+                                    />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"

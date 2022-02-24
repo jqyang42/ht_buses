@@ -1,26 +1,27 @@
-from ...models import School, Route, Student
+from ....models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
+from ....serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 from django.core.paginator import Paginator
 
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])
-def routes(request):
+def routes_school(request):
     data = {}
     page_number = request.query_params["page"]
+    school_id = request.query_params["id"]
     if int(page_number) == 0:
         prev_page = False
         next_page = False
         total_page_num = 0
-        routes = Route.routeTables.all().order_by("id")
+        routes = Route.routeTables.filter(school_id=school_id).order_by("id")
         route_serializer = RouteSerializer(routes, many=True)
     else:
-        routes = Route.routeTables.all().order_by("id")
+        routes = Route.routeTables.filter(school_id=school_id).order_by("id")
         paginator = Paginator(routes, 10) # Show 10 per page
         routes_per_page = paginator.get_page(page_number)
         total_page_num = paginator.num_pages

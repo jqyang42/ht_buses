@@ -1,41 +1,38 @@
-from ...models import School, Location
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.parsers import json
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, SchoolSerializer
+from ....models import School, Location
 from django.core.paginator import Paginator
+from ....serializers import StudentSerializer, LocationSerializer, SchoolSerializer
+from django.contrib.postgres.search import SearchVector
 
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdminUser]) 
-def schools(request):
+def school_search(request):
     data = {}
+    # search by either id or name
+    search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    if int(page_number) == 0:
+    schools = School.schoolsTable.annotate(search=SearchVector("name")).filter(search__icontains=search_q)
+    paginator = Paginator(schools, 10) # Show 10 per page
+    schools_per_page = paginator.get_page(page_number)
+    total_page_num = paginator.num_pages
+    school_serializer = SchoolSerializer(schools_per_page, many=True)
+    if int(page_number) == 1 and int(page_number) == total_page_num:
         prev_page = False
         next_page = False
-        total_page_num = 0
-        schools = School.schoolsTable.all().order_by("id")
-        school_serializer = SchoolSerializer(schools, many=True)
+    elif int(page_number) == 1:
+        prev_page = False
+        next_page = True
     else:
-        schools = School.schoolsTable.all().order_by("id")
-        paginator = Paginator(schools, 10) # Show 10 per page
-        schools_per_page = paginator.get_page(page_number)
-        total_page_num = paginator.num_pages
-        school_serializer = SchoolSerializer(schools_per_page, many=True)
-        if int(page_number) == 1 and int(page_number) == total_page_num:
-            prev_page = False
+        prev_page = True
+        if int(page_number) == total_page_num:
             next_page = False
-        elif int(page_number) == 1:
-            prev_page = False
-            next_page = True
         else:
-            prev_page = True
-            if int(page_number) == total_page_num:
-                next_page = False
-            else:
-                next_page = True
+            next_page = True
     schools_arr = []
     for school in school_serializer.data:
         id = school["id"]

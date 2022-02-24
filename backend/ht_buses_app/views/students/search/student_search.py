@@ -1,42 +1,38 @@
-from ...models import School, Route, Student, User
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.parsers import json
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from ....models import Student, Route, User, School
 from django.core.paginator import Paginator
+from ....serializers import StudentSerializer, UserSerializer, SchoolSerializer, RouteSerializer
+from django.contrib.postgres.search import SearchVector, SearchQuery
 
-# Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdminUser]) 
-def students(request):
+def student_search(request):
     data = {}
+    # search by either id or name
+    search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    if int(page_number) == 0:
+    students = Student.studentsTable.annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search_q)
+    paginator = Paginator(students, 10) # Show 10 per page
+    students_per_page = paginator.get_page(page_number)
+    total_page_num = paginator.num_pages
+    student_serializer = StudentSerializer(students_per_page, many=True)
+    if int(page_number) == 1 and int(page_number) == total_page_num:
         prev_page = False
         next_page = False
-        total_page_num = 0
-        students = Student.studentsTable.all().order_by("id")
-        student_serializer = StudentSerializer(students, many=True)
+    elif int(page_number) == 1:
+        prev_page = False
+        next_page = True
     else:
-        students = Student.studentsTable.all().order_by("id")
-        paginator = Paginator(students, 10) # Show 10 per page
-        students_per_page = paginator.get_page(page_number)
-        total_page_num = paginator.num_pages
-        student_serializer = StudentSerializer(students_per_page, many=True)
-        if int(page_number) == 1 and int(page_number) == total_page_num:
-            prev_page = False
+        prev_page = True
+        if int(page_number) == total_page_num:
             next_page = False
-        elif int(page_number) == 1:
-            prev_page = False
-            next_page = True
         else:
-            prev_page = True
-            if int(page_number) == total_page_num:
-                next_page = False
-            else:
-                next_page = True
+            next_page = True
     student_list = []
     for student in student_serializer.data:
         id = student["id"]

@@ -1,5 +1,5 @@
 import React from "react";
-import { Table } from "./table";
+import { TableOld } from "./table-old";
     
 export function SchoolRoutesTable({ data, showAll }) {
 
@@ -13,15 +13,18 @@ export function SchoolRoutesTable({ data, showAll }) {
             {
                 Header: 'Name',
                 accessor: 'name',
+                disableSortBy: true
             },
             {
                 Header: 'Student Count',
                 accessor: 'student_count',
+                disableSortBy: true
             },
             {
                 Header: 'Status',
                 accessor: 'is_complete',
                 disableFilter: true,
+                disableSortBy: true,
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>
                 )
@@ -31,7 +34,7 @@ export function SchoolRoutesTable({ data, showAll }) {
     )
 
     return (
-        <Table
+        <TableOld
             columns={columns}
             data={data}
             searchOn={false}
