@@ -51,10 +51,18 @@ class BusRoutesPlanner extends Component {
                 // searchValue: ''
             },
             modal_dismiss: false,
+            route_complete: 0,
         }
     }
 
     componentDidMount() {
+        const reloadCount = sessionStorage.getItem('reloadCount');
+        if(reloadCount < 2) {
+        sessionStorage.setItem('reloadCount', String(reloadCount + 1));
+        window.location.reload();
+        } else {
+        sessionStorage.removeItem('reloadCount');
+        }
         this.handleTableGet();       
         this.handleLocationsGet();
         this.getStudentsPage(this.state.students_table.pageIndex, null, '') 
@@ -180,15 +188,21 @@ class BusRoutesPlanner extends Component {
         api.get(`stops?id=${this.state.active_route}`)
             .then(res => {
             const stops = res.data.stops;
-            console.log(stops)
+            const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
-                    this.setState({ stops: res })
+                    this.setState({ 
+                        stops: res,
+                        route_complete: is_complete ? 1 : -1
+                     })
                 })
             } else {
-                this.setState({ stops: stops })
+                this.setState({ 
+                    stops: stops,
+                    route_complete: is_complete ? 1 : -1,
+                })
             }
         })
         .catch (error => {
@@ -221,6 +235,8 @@ class BusRoutesPlanner extends Component {
         this.setState({ add_route_success: false})
         if (parseInt(event.target.value) !== 0) {
             this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
+        } else {
+            this.setState({ route_complete: 0 })
         }
     }
 
@@ -558,6 +574,15 @@ class BusRoutesPlanner extends Component {
                                             (<div>
                                                 <div class="alert alert-danger mt-3 mb-2" role="alert">
                                                     Please select a route before switching to assign mode.
+                                                </div>
+                                            </div>) : ""
+                                        }
+
+                                        {(this.state.route_complete === -1) ? 
+                                            (<div>
+                                                <div class="alert alert-warning mt-3 mb-2" role="alert">
+                                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                    This route is currently incomplete. All students assigned to this route must be within range of a bus stop in order for it to be considered complete.
                                                 </div>
                                             </div>) : ""
                                         }
