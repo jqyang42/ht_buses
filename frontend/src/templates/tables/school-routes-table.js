@@ -13,15 +13,18 @@ export function SchoolRoutesTable({ data, showAll }) {
             {
                 Header: 'Name',
                 accessor: 'name',
+                disableSortBy: true
             },
             {
                 Header: 'Student Count',
                 accessor: 'student_count',
+                disableSortBy: true
             },
             {
                 Header: 'Status',
                 accessor: 'is_complete',
                 disableFilter: true,
+                disableSortBy: true,
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"Complete"}</> : <div className="unassigned">{"Incomplete"}</div>
                 )

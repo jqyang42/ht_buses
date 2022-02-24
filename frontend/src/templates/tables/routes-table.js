@@ -46,7 +46,8 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
                 accessor: 'student_count',
                 disableFilter: true,
                 id: 'student_count',
-                sortDirection: sort.accessor === 'student_count' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'student_count' ? sort.sortDirection : 'none',
+                disableSortBy: true
             },
             {
                 Header: 'Status',

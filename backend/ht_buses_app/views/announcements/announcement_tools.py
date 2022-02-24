@@ -11,6 +11,7 @@ from ..parents import parent_student_detail
 import datetime
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, StopSerializer, LocationSerializer
 from ..stops import check_in_range 
+from datetime import datetime
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
@@ -69,8 +70,12 @@ def get_stop_array(user, route_id):
             location = Location.locationTables.get(pk = stop_data["location"]["id"])
             stop_array["address"] = location.address
             stop_array["name"] = stop_data["name"]
-            stop_array["arrival"] = stop_data["arrival"]
-            stop_array["departure"] = stop_data["departure"]
+            d = datetime.strptime(stop_data["arrival"], "%H:%M")
+            arrival_converted = d.strftime("%I:%M %p")
+            stop_array["arrival"] = arrival_converted
+            d = datetime.strptime(stop_data["departure"], "%H:%M")
+            departure_converted = d.strftime("%I:%M %p")
+            stop_array["departure"] = departure_converted
             stops_array.append(stop_array)
     except:
         stops_array = []
