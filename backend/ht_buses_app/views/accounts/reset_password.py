@@ -30,7 +30,7 @@ def send_reset_password_email(request): #to actually send email with reset link
     msg_html = render_to_string(constants.PASSWORD_RESET_TEMPLATE, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
     subject = constants.PASSWORD_RESET_SUBJECT
     try:
-        send_mail(subject, msg_plain, from_email, [user.email], html_message=msg_html, fail_silently=False)
+        send_mail(subject, msg_plain, from_email, [user.email], html_message=msg_html, fail_silently=True)
         data["message"] = "message successfully sent"
         data["success"] = True
     except:

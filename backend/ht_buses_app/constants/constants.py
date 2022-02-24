@@ -1,4 +1,4 @@
-DEFAULT_NO_REPLY_EMAIL='no-reply@beesquared.com'
+DEFAULT_NO_REPLY_EMAIL='noreplybeesquared.ht@gmail.com'
 BASE_DOMAIN_URL='https://vcm-25151.vm.duke.edu' #change to productions url
 HOME_URL= BASE_DOMAIN_URL+"/login"
 PASSWORD_RESET_URL_FRONTEND=BASE_DOMAIN_URL+'/reset-password/'

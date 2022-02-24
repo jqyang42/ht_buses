@@ -87,6 +87,7 @@ class UsersDetail extends Component {
             if (success) {
                 this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
                 this.setState({ modal_dismiss: true})
+                this.getUserDetails()
             } else {
                 this.setState({ create_success: -1 })      // TODO ERROR
                 this.setState({ modal_dismiss: true})
@@ -161,17 +162,18 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
+        event.preventDefault();
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
-            event.preventDefault();
             return
         }
-
-        const student = {
-            students: [this.state.new_student]
-        }
+        else {
+            const student = {
+                students: [this.state.new_student]
+            }
 
         this.addStudent(student)
-    }
+        }
+        }
 
     render() {
         if (!JSON.parse(sessionStorage.getItem('logged_in'))) {

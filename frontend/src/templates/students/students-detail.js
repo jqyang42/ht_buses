@@ -84,6 +84,7 @@ class StudentsDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+        console.log(this.state.route.name)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
@@ -156,22 +157,22 @@ class StudentsDetail extends Component {
                                                 {this.state.school.name}
                                             </p>
                                         </a>
-                                        {(this.state.route.name === "Unassigned") ?
-                                            <p>{this.state.route.name}</p> :
+                                        {(this.state.route.name === "Unassigned" || this.state.route.name === "" ) ?
+                                        
+                                            <p className="unassigned"> {"Unassigned"}</p> :
                                             <a href={"/routes/" + this.state.route.id}>
                                                 <p>
                                                     {this.state.route.name}
                                                 </p>
-                                            </a>
+                                            </a> 
                                         }
                                         {
                                             (this.state.student.in_range ?
                                                 <p>
                                                     In Range
                                                 </p> :
-                                                <p>
-                                                   Out of Range
-                                                </p>)
+                                                <p className="unassigned"> {"Out of Range"}</p> 
+                                            )
                                         }
                                     </div>
                                 </div>
