@@ -33,26 +33,12 @@ class SidebarMenu extends Component {
         })
     }
 
-    updateIsParent = () => {
-        api.get(`users/detail?id=${sessionStorage.getItem('user_id')}`)
-        .then(res => {
-            const user = res.data.user;
-            const prev = JSON.parse(sessionStorage.getItem('is_parent'))
-            sessionStorage.setItem('is_parent', user.is_parent)
-            if(user.is_parent && !prev) {
-               window.location.reload()
-            }
-        })
-        .catch (err => {
-        })
-    }
 
     componentDidMount() {
         const config = {
         headers: {
             Authorization: `Token ${sessionStorage.getItem('token')}`
         }}
-        this.updateIsParent()
     }
 
     render() {
