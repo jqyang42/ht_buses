@@ -38,10 +38,10 @@ def stops_create(request):
             stop_serializer = StopSerializer(stop_obj, many=False)
             stops.append(stop_serializer.data)
             count += 1
+            update_students_in_range(stop["route_id"])
             is_complete = route_check_is_complete.route_is_complete(stop["route_id"])
             route.is_complete = is_complete
             route.save()
-            update_students_in_range(stop["route_id"])
         data["message"] = "stops created successfully"
         data["success"] = True
         data["stops"] = stops
