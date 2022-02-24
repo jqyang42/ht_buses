@@ -35,12 +35,13 @@ export function RoutesTable({ data, showAll }) {
             {
                 Header: 'School',
                 accessor: 'school_name.name',
-                disableFilter: true
+                disableFilter: true,
             },
             {
                 Header: 'Student Count',
                 accessor: 'student_count',
-                disableFilter: true
+                disableFilter: true,
+                disableSortBy: true
             },
             {
                 Header: 'Status',
