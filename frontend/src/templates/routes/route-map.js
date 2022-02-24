@@ -215,7 +215,15 @@ class RouteMap extends Component {
             zoom={13}
             onClick={this.createStopMarker}
           >
-            <Marker position={this.props.center}  />
+            {this.props.centerIcon ? 
+              <Marker 
+                position={this.props.center} 
+                icon={this.props.centerIcon}
+              /> :
+              <Marker 
+                position={this.props.center} 
+              />
+            }
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 

@@ -8,6 +8,8 @@ import RouteMap from "../routes/route-map";
 import { StopsTable } from "../tables/stops-table";
 import api from "../components/api";
 
+import { MARKER_ICONS } from '../../constants';
+
 import { LOGIN_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
 
@@ -41,8 +43,6 @@ class ParentDetail extends Component {
                 },
                 student: student,
              })
-             
-            console.log(this.state.student)
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -129,6 +129,7 @@ class ParentDetail extends Component {
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
                                             existingStops={this.state.stops}
+                                            centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
                                         />
                                         : "" }
                                         </div>
