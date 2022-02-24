@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def students_route(request):
     data = {}
     page_number = request.query_params["page"]

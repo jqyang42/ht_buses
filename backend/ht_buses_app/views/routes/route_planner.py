@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
 # Route Planner API
-# TODO: THIS WILL NEED PAGINATION
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])

@@ -5,7 +5,6 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 
-# TODO: THIS WILL NEED PAGINATION
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdminUser])

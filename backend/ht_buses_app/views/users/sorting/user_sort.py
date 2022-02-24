@@ -11,7 +11,7 @@ from urllib.parse import unquote
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def user_sort(request):
     order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
     sort_by = request.query_params["sort_by"] # will look for asc or desc

@@ -10,7 +10,7 @@ from django.contrib.postgres.search import SearchVector, SearchQuery
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def student_search(request):
     data = {}
     # search by either id or name

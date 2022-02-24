@@ -11,7 +11,7 @@ from urllib.parse import unquote
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def user_search(request):
     data = {}
     search_q = request.query_params["q"]
