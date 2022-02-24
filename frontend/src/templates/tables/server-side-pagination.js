@@ -4,7 +4,7 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue, additi
     const order_by = sortOptions?.sortDirection
     const sort_by = sortOptions?.accessor
     // const search = searchValue !== '' ? searchValue : false
-    const search = searchValue
+    const search = searchValue || ''
     const params = additionalParams ? additionalParams : ''
 
     console.log(searchValue)
