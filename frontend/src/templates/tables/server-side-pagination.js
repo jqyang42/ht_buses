@@ -1,15 +1,16 @@
 import api from "../components/api";
 
-export async function getPage({ url, pageIndex, sortOptions, searchValue }) {
+export async function getPage({ url, pageIndex, sortOptions, searchValue, additionalParams }) {
     const order_by = sortOptions?.sortDirection
     const sort_by = sortOptions?.accessor
     // const search = searchValue !== '' ? searchValue : false
     const search = searchValue
+    const params = additionalParams ? additionalParams : ''
 
     let response
     if (!order_by || order_by === 'none') {
         if (search === '') {
-            response = await api.get(`${url}?page=${pageIndex}`)
+            response = await api.get(`${url}?page=${pageIndex}${params}`)
         } else {
             response = await api.get(`${url}/search?page=${pageIndex}&q=${search}`)
         }

@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { colors } from "../../static/colors";
 import { Table } from "./table";
 import { useState } from "react";
     
-export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages }) {
+export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, null, searchValue)
+    }, [sort])
 
     const columns = React.useMemo(
         () => [
@@ -95,6 +100,7 @@ export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             pageSize={pageSize}
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
+            sortOptions={sort}
         />
     )
 }

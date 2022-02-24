@@ -7,6 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import api from "../components/api";
+import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -23,12 +24,42 @@ class SchoolsDetail extends Component {
         students_show_all: false,
         routes_show_all: false,
         error_status: false,
-        error_code: 200
+        error_code: 200,
+        students_page: [],
+        students_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+            // sortOptions: {},
+            // searchValue: ''
+        }
     }
 
     // initialize
     componentDidMount() {
         this.getSchoolDetails()
+        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+
+    }
+
+    // pagination
+    getStudentsPage = (page, sortOptions, search) => {
+        getPage({ url: `students/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}` })
+        .then(res => {
+            const students_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                students_page: res.data.students,
+                students_table: students_table
+            })
+        })
     }
     
     // api calls
@@ -70,7 +101,9 @@ class SchoolsDetail extends Component {
     handleStudentsShowAll = () => {
         this.setState(prevState => ({
             students_show_all: !prevState.students_show_all
-        }))
+        }), () => {
+            this.getStudentsPage(this.state.students_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleRoutesShowAll = () => {
@@ -201,7 +234,17 @@ class SchoolsDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col me-4">
                                         <h7>STUDENTS</h7>
-                                        <SchoolStudentsTable data={this.state.students} showAll={this.state.students_show_all}/>
+                                        <SchoolStudentsTable 
+                                        data={this.state.students_page} 
+                                        showAll={this.state.students_show_all}
+                                        pageIndex={this.state.students_table.pageIndex}
+                                        canPreviousPage={this.state.students_table.canPreviousPage}
+                                        canNextPage={this.state.students_table.canNextPage}
+                                        updatePageCount={this.getStudentsPage}
+                                        pageSize={10}
+                                        totalPages={this.state.students_table.totalPages}
+                                        searchValue={''}    
+                                        />
                                         <button className="btn btn-secondary align-self-center" onClick={this.handleStudentsShowAll}>
                                             { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"
