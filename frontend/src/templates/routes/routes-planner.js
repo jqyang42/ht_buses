@@ -139,7 +139,8 @@ class BusRoutesPlanner extends Component {
                     this.setState({ error_code: error.response.status });
                 }
             } 
-            )        
+            )
+        this.getStudentsPage(this.state.students_table.pageIndex, null, '') 
     }
 
     handleLocationsGet = () => {
