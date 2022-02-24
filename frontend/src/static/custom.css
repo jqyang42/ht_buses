@@ -155,6 +155,10 @@ li.page-item a:hover {
     color:#495057;
 }
 
+li.hbar {
+    border-top: 1px solid #6C757D;
+}
+
 li.page-item a[disabled] {
     color: #ADB5BD;
 }
