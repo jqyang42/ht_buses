@@ -7,15 +7,21 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue }) {
     const search = searchValue
 
     let response
-    if (!order_by || order_by === 'none') {
-        if (search === '') {
-            response = await api.get(`${url}?page=${pageIndex}`)
-        } else {
-            response = await api.get(`${url}/search?page=${pageIndex}&q=${search}`)
-        }
+    if (url === 'routes') {
+        response = await api.get(`${url}?page=${pageIndex}&search=${searchValue !== ''}&q=${searchValue}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}`)
     } else {
-        response = await api.get(`${url}/sort?page=${pageIndex}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}&q=${search}`)
+        if (!order_by || order_by === 'none') {
+            if (search === '') {
+                response = await api.get(`${url}?page=${pageIndex}`)
+            } else {
+                response = await api.get(`${url}/search?page=${pageIndex}&q=${search}`)
+            }
+        } else {
+            response = await api.get(`${url}/sort?page=${pageIndex}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}&q=${search}`)
+        }
     }
+
+    http://localhost:8000/api/routes/sort?order_by=asc&sort_by=name&page=1&search=false&q=
 
     console.log(response)
     return {
