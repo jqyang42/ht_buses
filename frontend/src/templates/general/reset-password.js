@@ -53,6 +53,7 @@ class ResetPassword extends Component {
             sessionStorage.setItem('first_name', '')
             sessionStorage.setItem('last_name', '')
             sessionStorage.setItem('is_staff', false)
+            sessionStorage.setItem('is_parent', false)
             sessionStorage.setItem('logged_in', false)
         })
     }

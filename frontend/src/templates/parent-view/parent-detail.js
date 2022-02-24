@@ -76,7 +76,6 @@ class ParentDetail extends Component {
         } else {
             console.log("theres nothing woahhhhhhh")
         }
-        console.log(JSON.parse(sessionStorage.getItem('is_parent')))
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-nowrap">
