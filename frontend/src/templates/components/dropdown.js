@@ -4,18 +4,19 @@ export async function makeParentsDropdown() {
     const res = await api.get(`users?page=0`)
     const dropdown = res.data.users.filter(user => {
         return user.is_parent === true
-    }).map(parent => {
+    }).sort((a, b) => { return ('' + a.last_name).localeCompare(b.last_name) }).map(parent => {
         return { 
             user_id: parent.id, 
             name: `${parent.first_name} ${parent.last_name}` 
         }
     })
-
-    return dropdown.sort()
+    
+    return dropdown
 }
 
 export async function makeSchoolsDropdown() {
     const res = await api.get(`schools?page=0`)
+    console.log(res.data.schools)
     const dropdown = res.data.schools.map(school => {
         return {
             value: school.id,
@@ -23,7 +24,8 @@ export async function makeSchoolsDropdown() {
         }
     })
 
-    return dropdown.sort()
+    dropdown.sort((a, b) => { return ('' + a.display).localeCompare(b.display) })
+    return dropdown
 }
 
 export async function makeRoutesDropdown({ school_id }) {
@@ -36,5 +38,6 @@ export async function makeRoutesDropdown({ school_id }) {
         }
     })
 
-    return dropdown.sort()
+    dropdown.sort((a, b) => { return ('' + a.display).localeCompare(b.display) })
+    return dropdown
 }
