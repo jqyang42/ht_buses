@@ -287,6 +287,7 @@ class BusRoutesPlanner extends Component {
             this.setState({markers: []})            
             api.put('stops/edit-name', this.editedStops)
             .then(res => {  
+                console.log(this.editedStops)
                 this.editedStops = {"stops":[]};
                 api.post('stops/create', this.newStops)
                 .then(res => {
