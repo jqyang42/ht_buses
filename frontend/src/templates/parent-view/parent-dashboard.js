@@ -6,7 +6,7 @@ import api from "../components/api";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { ParentDashboardTable } from "../tables/parent-dashboard-table";
-
+import SidebarMenu from '../components/sidebar-menu';
 class ParentDashboard extends Component {
     state = {
         user: {},
@@ -45,7 +45,10 @@ class ParentDashboard extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
+                    {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
+                    <SidebarMenu activeTab="users" />:
                     <ParentSidebarMenu activeTab="Dashboard"/>
+                    }
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Dashboard" isRoot={true} />

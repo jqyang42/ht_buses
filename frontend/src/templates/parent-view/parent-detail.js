@@ -7,6 +7,7 @@ import ErrorPage from "../error-page";
 import RouteMap from "../routes/route-map";
 import { StopsTable } from "../tables/stops-table";
 import api from "../components/api";
+import SidebarMenu from '../components/sidebar-menu';
 
 import { MARKER_ICONS } from '../../constants';
 
@@ -75,10 +76,14 @@ class ParentDetail extends Component {
         } else {
             console.log("theres nothing woahhhhhhh")
         }
+        console.log(JSON.parse(sessionStorage.getItem('is_parent')))
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-nowrap">
+                {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
+                    <SidebarMenu activeTab="users" />:
                     <ParentSidebarMenu activeTab="Dashboard"/>
+                    }
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="My Dashboard" isRoot={false} isSecond={true} name={this.state.student.first_name + " " + this.state.student.last_name} />
