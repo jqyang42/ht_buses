@@ -34,7 +34,7 @@ class PasswordForm extends Component {
         this.setState({ password: event.target.value});
     }
     
-    handleConfirmPasswordChange = event => {
+    handleConfirmPasswordChange = (event) => {
         this.setState({ confirm_password: event.target.value });
         this.password2 = event.target.value;
         this.setState({ password: this.password1Field.value});
@@ -43,13 +43,12 @@ class PasswordForm extends Component {
     }
 
     handleSubmit = event => {
-        
         event.preventDefault();
         if (!this.validPassword || (this.state.password !== this.state.confirm_password)) {
             this.setState({ edit_success: -1 })
             return 
         }
-
+        this.props.checkURL()
         const data = {
             user: {
                 password: this.state.password
@@ -58,8 +57,7 @@ class PasswordForm extends Component {
         this.props.sendApiRequest(data).then(password_changed => {
             this.setState({ edit_success: password_changed ? 1 : -1 })
             if (password_changed) {
-                this.password2Field.value = '';
-                this.password1Field.value = '';
+               document.getElementById("password-form").reset()
             }
         })
 
@@ -88,7 +86,7 @@ class PasswordForm extends Component {
                         </div>) : ""
                     }
                 </div>
-                <form onSubmit={this.handleSubmit}>
+                <form id="password-form" onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="col mt-2">
                             {/* <div className="form-group required pb-3 w-75">
@@ -104,7 +102,7 @@ class PasswordForm extends Component {
                             <div className="form-group required pb-3 w-75">
                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
-                                placeholder="Enter new password" required ref={el => this.password1Field = el} onClick={this.props.checkUrl} onChange={this.handlePasswordChange}></input>
+                                placeholder="Enter new password" required ref={el => this.password1Field = el} onClick={this.props.checkURL} onChange={this.handlePasswordChange}></input>
                                 {(!this.passwordValidation() && this.state.password !== "") ? 
                                     (<div class="alert alert-danger mt-3 mb-0" role="alert">
                                         Your password is too weak. Password must contain at least 8 characters, including a combination of uppercase letters, lowercase letters, and numbers.
@@ -114,7 +112,7 @@ class PasswordForm extends Component {
                             <div className="form-group required pb-3 w-75">
                                 <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
                                 <input type="password" className="form-control pb-2" id="exampleInputPassword3" 
-                                placeholder="Re-enter password" required ref={el => this.password2Field = el} onClick={this.props.checkUrl} onChange={this.handleConfirmPasswordChange}></input>
+                                placeholder="Re-enter password" required ref={el => this.password2Field = el} onClick={this.props.checkURL} onChange={this.handleConfirmPasswordChange}></input>
                                 {(!this.samePassword && this.password2 !== "") ? (this.state.password !== "" ? 
                                     (<div class="alert alert-danger mt-3 mb-0" role="alert">
                                         Password confirmation failed
