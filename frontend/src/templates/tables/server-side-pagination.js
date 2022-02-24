@@ -8,7 +8,7 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue }) {
 
     let response
     if (url === 'routes') {
-        response = await api.get(`${url}?page=${pageIndex}&search=${searchValue !== ''}&q=${searchValue}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}`)
+        response = await api.get(`${url}/sort?page=${pageIndex}&search=${searchValue !== ''}&q=${searchValue}&order_by=${order_by.toLowerCase()}&sort_by=${sort_by}`)
     } else {
         if (!order_by || order_by === 'none') {
             if (search === '') {
