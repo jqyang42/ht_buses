@@ -58,7 +58,7 @@ class ResetPassword extends Component {
     }
 
     componentDidMount() {
-        this.setState({ type: this.props.params.source })
+        this.setState({ type: this.props.source })
         this.setState({ valid_url: 0 })
         this.checkURL()
     }
