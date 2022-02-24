@@ -47,8 +47,8 @@ class SchoolsEdit extends Component {
                 name: school.name,
                 location: {
                     address: school.location.address,
-                    lat: 0.0,
-                    long: 0.0
+                    lat: school.location.lat,
+                    long: school.location.long
                 },
                 arrival: school.arrival,
                 departure: school.departure
@@ -95,10 +95,12 @@ class SchoolsEdit extends Component {
         let school = this.state.edited_school
         school.location.address = address
         this.setState({ edited_school: school })
+        console.log(this.state.edited_school)
     }
 
     handleAddressValidation = () => {
-        const address = this.state.edited_school.location.address
+        const address = this.state.edited_school.location.address || 
+        console.log(this.state.address)
         if (address !== '') {
             Geocode.fromAddress(address).then(
                 (response) => {
