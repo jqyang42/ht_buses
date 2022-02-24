@@ -8,7 +8,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 # Students Detail GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def students_detail(request):
     data = {}
     id = request.query_params["id"]
