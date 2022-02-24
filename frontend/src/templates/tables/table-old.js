@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from './search-bar';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import TablePagination from "./pagination";
+import TablePaginationOld from "./pagination-old";
 import update from 'immutability-helper';
 
 export function TableOld({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, customHiddenColumn, rowProps = () => ({}) }) {
@@ -182,7 +182,7 @@ export function TableOld({ columns, data, searchOn, searchLabel, ourGlobalFilter
 
             {
                 showAll ? "" :
-                <TablePagination
+                <TablePaginationOld
                     pageIndex={pageIndex}
                     pageOptions={pageOptions}
                     previousPage={previousPage}
