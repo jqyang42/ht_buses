@@ -37,7 +37,7 @@ def alphabetical_sort(is_search, order_by, sort_by, page_number, search):
                 routes = Route.routeTables.all().order_by("name")
                 #Route.routeTables.all().order_by("name")
         else:
-            if search != None:
+            if is_search == "true":
                 routes = Route.routeTables.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("-name")
             else:
                 routes = Route.routeTables.all().order_by("-name")
