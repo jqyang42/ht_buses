@@ -8,7 +8,7 @@ from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 # Students Detail GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def students_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -30,6 +30,14 @@ def students_detail(request):
         data["student"] = student_arr
         data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
         data["route"] = {'id' : route_id, 'name' : route_name}
+        # do siblings
+        sibling_arr = []
+        siblings = Student.studentsTable.filter(user_id=student_serializer.data["user_id"])
+        siblings_serializer = StudentSerializer(siblings, many=True)
+        for sibling in siblings_serializer.data:
+            if sibling["id"] != id:
+                sibling_arr.append({"id": sibling["id"]})
+        data["siblings"] = sibling_arr
         data["success"] = True
         return Response(data)
     except:
