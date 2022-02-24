@@ -40,7 +40,6 @@ class SchoolsDetail extends Component {
     componentDidMount() {
         this.getSchoolDetails()
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
-
     }
 
     // pagination
