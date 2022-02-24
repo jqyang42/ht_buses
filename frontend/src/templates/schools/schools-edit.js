@@ -97,7 +97,7 @@ class SchoolsEdit extends Component {
         let school = this.state.edited_school
         school.location.address = address
         this.setState({ edited_school: school })
-        console.log(this.state.edited_school)
+       
     }
 
     handleAddressValidation = () => {
@@ -144,7 +144,7 @@ class SchoolsEdit extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
+        
         if ( !this.state.valid_address || this.state.valid_time === -1) {
             this.setState({ edit_success: -1 })
             return 
@@ -213,7 +213,7 @@ class SchoolsEdit extends Component {
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     defaultValue={this.state.edited_school.location.address} 
-                                                    onChange={this.handleSchoolAddressChange.address}
+                                                    onChange={this.handleSchoolAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
                                                     required={true}/>
                                             </div>
