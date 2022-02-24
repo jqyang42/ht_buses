@@ -45,6 +45,7 @@ class UsersDetail extends Component {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
+        this.updateIsParent()
     }
 
     // api calls
@@ -53,6 +54,7 @@ class UsersDetail extends Component {
         .then(res => {
             const user = res.data.user;
             this.setState({ user: user });
+            
         })
         .catch (err => {
             if (err.response.status !== 200) {
@@ -61,6 +63,20 @@ class UsersDetail extends Component {
                     error_code: err.response.status
                  });
             }
+        })
+    }
+
+    updateIsParent = () => {
+        api.get(`users/detail?id=${sessionStorage.getItem('user_id')}`)
+        .then(res => {
+            const user = res.data.user;
+            const prev = JSON.parse(sessionStorage.getItem('is_parent'))
+            sessionStorage.setItem('is_parent', user.is_parent)
+            if(user.is_parent && !prev) {
+               window.location.reload()
+            }
+        })
+        .catch (err => {
         })
     }
 
@@ -87,7 +103,6 @@ class UsersDetail extends Component {
             if (success) {
                 this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
                 this.setState({ modal_dismiss: true})
-                this.getUserDetails()
             } else {
                 this.setState({ create_success: -1 })      // TODO ERROR
                 this.setState({ modal_dismiss: false})
@@ -173,6 +188,7 @@ class UsersDetail extends Component {
 
         this.addStudent(student)
         }
+        this.updateIsParent()
         }
 
     render() {
