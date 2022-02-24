@@ -162,8 +162,8 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
-        event.preventDefault();
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
+            event.preventDefault();
             return
         }
         else {
