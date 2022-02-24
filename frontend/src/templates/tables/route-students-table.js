@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "./table";
 import { useState } from "react";
     
-export function RouteStudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages }) {
+export function RouteStudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages, searchValue }) {
    
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, null, searchValue)
+    }, [sort])
 
     const columns = React.useMemo(
         () => [
@@ -79,6 +84,8 @@ export function RouteStudentsTable({ data, showAll, pageIndex, canPreviousPage, 
             pageSize={pageSize}
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
+            sortOptions={null}
+            searchValue={''}
         />
     )
 }
