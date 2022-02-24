@@ -100,7 +100,8 @@ export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             pageSize={pageSize}
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
-            sortOptions={sort}
+            sortOptions={null}
+            searchValue={''}
         />
     )
 }

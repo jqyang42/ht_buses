@@ -7,6 +7,8 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue, additi
     const search = searchValue
     const params = additionalParams ? additionalParams : ''
 
+    console.log(searchValue)
+
     let response
     if (!order_by || order_by === 'none') {
         if (search === '') {
