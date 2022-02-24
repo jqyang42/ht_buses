@@ -19,7 +19,8 @@ def send_account_activation_email(user):
     msg_html = render_to_string(constants.ACCOUNT_ACTIVATE_TEMPLATE, ({'first_name': user.first_name, 'last_name': user.last_name, 'url': url}))
     subject = constants.ACCOUNT_ACTIVATION_SUBJECT
     try:
-        send_mail(subject, msg_plain, from_email, [user.email], html_message=msg_html, fail_silently=False)
+        if "@example.com" not in user.email: 
+            send_mail(subject, msg_plain, from_email, [user.email], html_message=msg_html, fail_silently=True)
         data["message"] = "message successfully sent"
         data["success"] = True
     except:

@@ -207,7 +207,7 @@ class SchoolsDetail extends Component {
                                 </div>
                                 {(this.state.delete_success === -1) ? 
                                     (<div class="alert alert-danger mt-2 mb-2" role="alert">
-                                        Unable to delete school. Please correct all errors before deleting.
+                                        Unable to delete school. Please try again.
                                     </div>) : ""
                                 }
                                 <div className="row mt-2">

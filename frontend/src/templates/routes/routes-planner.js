@@ -49,7 +49,8 @@ class BusRoutesPlanner extends Component {
                 totalPages: null,
                 // sortOptions: {},
                 // searchValue: ''
-            }
+            },
+            modal_dismiss: false,
         }
     }
 
@@ -218,7 +219,9 @@ class BusRoutesPlanner extends Component {
             this.setState({ assign_mode_warning: false }) 
         };
         this.setState({ add_route_success: false})
-        this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
+        if (parseInt(event.target.value) !== 0) {
+            this.setState({ active_route: parseInt(event.target.value) }, () => this.handleStopsGet())
+        }
     }
 
     handleRouteNameChange = event => {
@@ -234,9 +237,13 @@ class BusRoutesPlanner extends Component {
         this.clearAddRouteForm()
     }
 
-    handleRouteCreateSubmit = event => {
-        event.preventDefault();
-
+    handleRouteCreateSubmit = (event) => {
+        
+        if(this.state.create_route_name === "") {
+            event.preventDefault();
+            return 
+        }
+        else {
         const route = {
             name: this.state.create_route_name,
             school_id: this.props.params.id,
@@ -253,13 +260,15 @@ class BusRoutesPlanner extends Component {
                 makeRoutesDropdown({ school_id: this.props.params.id }).then(ret => {
                     this.setState({ route_dropdown: ret })
                 })
-
+                this.setState({ modal_dismiss: true})
                 this.handleLocationsGet()
             })
         this.clearAddRouteForm()
+        }
     }
 
     clearAddRouteForm = (event) => {
+        
         document.getElementById("add-route-form").reset();
     }
 
@@ -442,7 +451,7 @@ class BusRoutesPlanner extends Component {
                                                 </button>
 
                                                 {/* Modal for Add Route form */}
-                                                <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                <div className="modal fade" id="staticBackdrop" show={!this.state.modal_dismiss} data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                     <div className="modal-dialog modal-dialog-centered">
                                                         <div className="modal-content">
                                                             <div className="modal-header">
@@ -463,7 +472,7 @@ class BusRoutesPlanner extends Component {
                                                                 </div>
                                                                 <div className="modal-footer">
                                                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={this.resetAddRouteSuccess}>Cancel</button>
-                                                                    <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Create</button>
+                                                                    <button type="submit" className="btn btn-primary" data-bs-dismiss={this.state.modal_dismiss ? "modal" : ""}>Create</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -557,7 +566,7 @@ class BusRoutesPlanner extends Component {
                                             (<div>
                                                 <div class="alert alert-primary mt-3 mb-2" role="alert">
                                                     <i className="bi bi-info-circle-fill me-2"></i>
-                                                    Click on a location marker to add it to this route!
+                                                        Click on a location marker to add students to this route. Click any location on the map to add a new stop there.
                                                 </div>
                                             </div>) : ""
                                         }

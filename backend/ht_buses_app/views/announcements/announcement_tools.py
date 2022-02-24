@@ -85,7 +85,7 @@ def send_mass_announcement(subject, body, recipients, include_route_info=False):
             messages.append(announcement_substitutions(user, subject, body, include_route_info))     
     try:
         connection = get_connection(
-            username=settings.EMAIL_HOST_USER, password=settings.EMAIL_HOST_PASSWORD, fail_silently=False)
+            username=settings.EMAIL_HOST_USER, password=settings.EMAIL_HOST_PASSWORD, fail_silently=True)
         connection.send_messages(messages)
         data["message"] = "messages successfully sent"
         data["success"] = True
