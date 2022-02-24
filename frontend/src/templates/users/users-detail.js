@@ -90,7 +90,7 @@ class UsersDetail extends Component {
                 this.getUserDetails()
             } else {
                 this.setState({ create_success: -1 })      // TODO ERROR
-                this.setState({ modal_dismiss: true})
+                this.setState({ modal_dismiss: false})
             }
         })
     } 
