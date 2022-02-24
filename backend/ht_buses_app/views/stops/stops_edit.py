@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from datetime import datetime
+from .check_in_range import update_students_in_range
+from ..routes import route_check_is_complete
 
 # Stops PUT API
 @csrf_exempt
@@ -32,6 +34,11 @@ def stops_edit(request):
             stop_obj.location_id.save()
             stop_obj.save()
             stop_serializer = StopSerializer(stop_obj, many=False)
+            update_students_in_range(stop_serializer.data["route_id"])
+            route = Route.routeTables.get(pk=stop_serializer.data["route_id"])
+            is_complete = route_check_is_complete.route_is_complete(stop_serializer.data["route_id"])
+            route.is_complete = is_complete
+            route.save()
             stops.append(stop_serializer.data)
             count += 1
         data["message"] = "stops edited successfully"

@@ -1,10 +1,12 @@
-from ...models import Stop
+from ...models import Stop, Route
 from ...serializers import StopSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
+from .check_in_range import update_students_in_range
+from ..routes import route_check_is_complete
 
 # Stops PUT API
 @csrf_exempt
@@ -29,11 +31,12 @@ def stops_name_edit(request):
         stop_serializer = StopSerializer(stop_obj, many=False)
         stops.append(stop_serializer.data)
         count += 1
+        update_students_in_range(stop_serializer.data["route_id"])
+        route = Route.routeTables.get(pk=stop_serializer.data["route_id"])
+        is_complete = route_check_is_complete.route_is_complete(stop_serializer.data["route_id"])
+        route.is_complete = is_complete
+        route.save()
     data["message"] = "stops edited successfully"
     data["success"] = True
     data["stops"] = stops
     return Response(data)
-    # except:
-    #     data["message"] = "stops could not be edited"
-    #     data["success"] = False
-    #     return Response(data, status=400)

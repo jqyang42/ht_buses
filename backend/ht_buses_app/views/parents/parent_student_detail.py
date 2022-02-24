@@ -42,7 +42,7 @@ def student_arr_data(student):
     location_arr = {"id": location_serializer.data["id"], "address": location_serializer.data["address"],
     "lat": location_serializer.data["lat"], "long": location_serializer.data["long"]}
     if student_serializer.data["route_id"] == None:
-        route_arr = {"id": 0,"name":"Unassigned","description":"N/A","color_id": 0}
+        route_arr = {"id": 0,"name":"Unassigned","description":"","color_id": 0}
     else:
         route = Route.routeTables.get(pk=student_serializer.data["route_id"])
         route_serializer = RouteSerializer(route, many=False)

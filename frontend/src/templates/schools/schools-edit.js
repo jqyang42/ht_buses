@@ -12,6 +12,7 @@ import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
+import { validTime } from "../components/time";
 
 class SchoolsEdit extends Component {
     state = {
@@ -30,7 +31,8 @@ class SchoolsEdit extends Component {
         valid_address: true,
         edit_success: 0,
         error_status: false,
-        error_code: 200
+        error_code: 200,
+        valid_time: 0
     }
 
     // initialize
@@ -99,8 +101,7 @@ class SchoolsEdit extends Component {
     }
 
     handleAddressValidation = () => {
-        const address = this.state.edited_school.location.address || 
-        console.log(this.state.address)
+        const address = this.state.edited_school.location.address
         if (address !== '') {
             Geocode.fromAddress(address).then(
                 (response) => {
@@ -118,6 +119,9 @@ class SchoolsEdit extends Component {
                 }
             )
         }
+        else {
+            this.setState({ valid_address: false})
+        }
     }
 
     handleArrivalChange = (event) => {
@@ -125,6 +129,8 @@ class SchoolsEdit extends Component {
         let school = this.state.edited_school
         school.arrival = arrival
         this.setState({ edited_school: school })
+        const valid_time = validTime(this.state.edited_school.departure, this.state.edited_school.arrival ) 
+        this.setState({ valid_time: valid_time}) 
     }
 
     handleDepartureChange = (event) => {
@@ -132,12 +138,14 @@ class SchoolsEdit extends Component {
         let school = this.state.edited_school
         school.departure = departure
         this.setState({ edited_school: school })
+        const valid_time = validTime(this.state.edited_school.departure, this.state.edited_school.arrival ) 
+        this.setState({ valid_time: valid_time}) 
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
 
-        if ( !this.state.valid_address ) {
+        if ( !this.state.valid_address || this.state.valid_time === -1) {
             this.setState({ edit_success: -1 })
             return 
         }
@@ -206,7 +214,8 @@ class SchoolsEdit extends Component {
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     defaultValue={this.state.edited_school.location.address} 
                                                     onChange={this.handleSchoolAddressChange.address}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
+                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
+                                                    required={true}/>
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>
@@ -219,6 +228,11 @@ class SchoolsEdit extends Component {
                                                 <input type="time" id="default-picker-2" className="form-control pb-2"
                                                     placeholder="Select departure time" defaultValue={this.state.edited_school.departure} required
                                                     onChange={this.handleDepartureChange}></input>
+                                                {this.state.valid_time === -1 ?
+                                                ( <div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                    Please enter valid times. Departure time must be at least one hour after arrival time.
+                                                </div>) : ""
+                                                }
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
                                                 <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
