@@ -49,8 +49,8 @@ class SchoolsEdit extends Component {
                 name: school.name,
                 location: {
                     address: school.location.address,
-                    lat: 0.0,
-                    long: 0.0
+                    lat: school.location.lat,
+                    long: school.location.long
                 },
                 arrival: school.arrival,
                 departure: school.departure
@@ -97,12 +97,11 @@ class SchoolsEdit extends Component {
         let school = this.state.edited_school
         school.location.address = address
         this.setState({ edited_school: school })
+       
     }
 
     handleAddressValidation = () => {
         const address = this.state.edited_school.location.address
-        console.log("address")
-        console.log(address)
         if (address !== '') {
             Geocode.fromAddress(address).then(
                 (response) => {
@@ -145,7 +144,7 @@ class SchoolsEdit extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
+        
         if ( !this.state.valid_address || this.state.valid_time === -1) {
             this.setState({ edit_success: -1 })
             return 
@@ -214,7 +213,7 @@ class SchoolsEdit extends Component {
                                                     }}
                                                     placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
                                                     defaultValue={this.state.edited_school.location.address} 
-                                                    onChange={this.handleSchoolAddressChange.address}
+                                                    onChange={this.handleSchoolAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
                                                     required={true}/>
                                             </div>
