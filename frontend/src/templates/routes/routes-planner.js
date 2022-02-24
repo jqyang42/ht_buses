@@ -330,6 +330,7 @@ class BusRoutesPlanner extends Component {
             this.setState({markers: []})            
             api.put('stops/edit-name', this.editedStops)
             .then(res => {  
+                console.log(this.editedStops)
                 this.editedStops = {"stops":[]};
                 api.post('stops/create', this.newStops)
                 .then(res => {
@@ -398,16 +399,16 @@ class BusRoutesPlanner extends Component {
         // console.log(stops)
         const school = this.state.school
         stops.sort((a, b) => a.order_by - b.order_by)
-        const stops_latlng = stops.map(stop => {
-            return {
-                location: { lat: stop.location.lat, lng: stop.location.long }
-            }
-        })
+        // const stops_latlng = stops.map(stop => {
+        //     return {
+        //         location: { lat: stop.location.lat, lng: stop.location.long }
+        //     }
+        // })
 
         const stop_info = await getStopInfo({
             // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: {location : { lat: school.location.lat, lng: school.location.long }},
-            stops: stops_latlng,
+            stops: stops,
             arrival_time: school.arrival,
             departure_time: school.departure
         })

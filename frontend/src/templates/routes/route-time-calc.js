@@ -1,7 +1,11 @@
 import { timetoArrive, timeToDepart } from "../components/time";
 
 export async function getStopInfo({ school, stops, arrival_time, departure_time }) {
-    let all_locations = stops
+    let all_locations = stops.map(stop => {
+        return {
+            location: { lat: stop.location.lat, lng: stop.location.long }
+        }
+    })
     all_locations.push(school)
 
     let api_call_sets = []
