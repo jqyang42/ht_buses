@@ -191,6 +191,7 @@ class BusRoutesPlanner extends Component {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
+                console.log(stops)
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
@@ -214,6 +215,7 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
+        console.log(this.state.stops)
     }
 
     handleAssignMode = event => {
@@ -405,7 +407,7 @@ class BusRoutesPlanner extends Component {
         //         location: { lat: stop.location.lat, lng: stop.location.long }
         //     }
         // })
-
+        console.log(stops)
         const stop_info = await getStopInfo({
             // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
             school: {location : { lat: school.location.lat, lng: school.location.long }},
@@ -414,14 +416,16 @@ class BusRoutesPlanner extends Component {
             departure_time: school.departure
         })
         
+        console.log(stop_info)
         const updated_stops = this.updateStopInfo(stop_info, stops)
-        // console.log(updated_stops)
+        console.log(updated_stops)
         return updated_stops
     }
 
     updateStopInfo = (stop_info, orig_stops) => {
         const stop_times = stop_info.stop_times
         const stop_addresses = stop_info.stop_addresses
+        console.log(stop_times[orig_stops])
         return orig_stops.map(stop => {
                 return {
                 ...stop,

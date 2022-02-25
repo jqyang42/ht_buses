@@ -67,10 +67,20 @@ function calculateTime({ leg_durations, arrival_time, departure_time }) {
     const pickup_times = timeToDepart({ arrival_time: arrival_time, travel_times: leg_durations })
     const dropoff_times = timetoArrive({ departure_time: departure_time, travel_times: leg_durations })
     let stop_times = []
-    pickup_times.forEach((i) => stop_times[pickup_times.indexOf(i)] = {
-        pickup: pickup_times[pickup_times.indexOf(i)],
-        dropoff: dropoff_times[pickup_times.indexOf(i)]
-    })
+    // pickup_times.forEach((i) => stop_times[pickup_times.indexOf(i)] = {
+    //     pickup: pickup_times[pickup_times.indexOf(i)],
+    //     dropoff: dropoff_times[pickup_times.indexOf(i)]
+    // })
 
+    for (let i = 0; i < pickup_times.length; i += 1) {
+        const time = {
+            pickup: pickup_times[i],
+            dropoff: dropoff_times[i]
+        }
+        stop_times.push(time)
+    }
+    console.log(pickup_times)
+    console.log(dropoff_times)
+    console.log(stop_times)
     return stop_times
 }
