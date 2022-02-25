@@ -7,7 +7,7 @@
             "id": 10,
             "address": "Duke St",
             "lat": 5.0,
-            "long": 0.0
+            "lng": 0.0
         }
     },
     "students": [
