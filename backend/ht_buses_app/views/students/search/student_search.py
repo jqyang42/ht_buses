@@ -13,7 +13,7 @@ from django.db.models.functions import Concat
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def student_search(request):
     data = {}
     # search by either id or name
