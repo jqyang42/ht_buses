@@ -18,10 +18,10 @@ def routes_school(request):
         prev_page = False
         next_page = False
         total_page_num = 0
-        routes = Route.routeTables.filter(school_id=school_id).order_by("id")
+        routes = Route.objects.filter(school_id=school_id).order_by("id")
         route_serializer = RouteSerializer(routes, many=True)
     else:
-        routes = Route.routeTables.filter(school_id=school_id).order_by("id")
+        routes = Route.objects.filter(school_id=school_id).order_by("id")
         paginator = Paginator(routes, 10) # Show 10 per page
         routes_per_page = paginator.get_page(page_number)
         total_page_num = paginator.num_pages

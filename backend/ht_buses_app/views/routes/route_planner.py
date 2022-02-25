@@ -18,7 +18,7 @@ def routeplanner(request):
         school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "lng": school.location_id.lng}
         school_arr = {"name": school_serializer.data["name"], "location": school_address} 
         data["school"] = school_arr
-        routes = Route.routeTables.filter(school_id=id)
+        routes = Route.objects.filter(school_id=id)
         routes_serializer = RouteSerializer(routes, many=True)
         routes_arr = []
         for route in routes_serializer.data:

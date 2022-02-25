@@ -19,7 +19,7 @@ def route_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        route_object =  Route.routeTables.get(pk=id)
+        route_object =  Route.objects.get(pk=id)
         route_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["route"]["name"])
         route_object.description = reqBody["route"]["description"]
         route_object.save()

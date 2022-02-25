@@ -18,7 +18,7 @@ class Test_students(APITestCase):
         return school
 
     def make_route():
-        route  = Route.routeTables.create(name = "Hilly Route", school_id = School.objects.get(name = "East Middle School") , description = "Here is a description")
+        route  = Route.objects.create(name = "Hilly Route", school_id = School.objects.get(name = "East Middle School") , description = "Here is a description")
         return route
 
     def test_student_creation(self):

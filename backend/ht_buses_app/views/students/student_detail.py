@@ -19,7 +19,7 @@ def students_detail(request):
             route_id = 0
             route_name = ""
         else:
-            route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+            route = Route.objects.get(pk=student_serializer.data["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_id = route_serializer.data["id"]
             route_name = route_serializer.data["name"]

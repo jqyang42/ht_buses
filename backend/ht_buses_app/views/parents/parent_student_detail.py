@@ -44,7 +44,7 @@ def student_arr_data(student):
     if student_serializer.data["route_id"] == None:
         route_arr = {"id": 0,"name":"Unassigned","description":"","color_id": 0}
     else:
-        route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+        route = Route.objects.get(pk=student_serializer.data["route_id"])
         route_serializer = RouteSerializer(route, many=False)
         route_name = route_serializer.data["name"]
         route_description = route_serializer.data["description"]

@@ -30,7 +30,7 @@ def users_detail(request):
                 if student["route_id"] == None:
                     route_arr = {"id": 0, "color_id": 0}
                 else:
-                    route_student = Route.routeTables.get(pk=student["route_id"])
+                    route_student = Route.objects.get(pk=student["route_id"])
                     route_serializer = RouteSerializer(route_student, many=False)
                     route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"], "in_range": student["in_range"]}
                 student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route' : route_arr, 'school': {'id': student_school.id, 'name': student_school.name}})

@@ -19,7 +19,7 @@ def stops_create(request):
         reqBody = json.loads(request.body)
         stops = []
         for stop in reqBody["stops"]:
-            route = Route.routeTables.get(pk=stop["route_id"])
+            route = Route.objects.get(pk=stop["route_id"])
             route_stops = Stop.stopTables.filter(route_id=route)
             route_stops_serializer = StopSerializer(route_stops, many=True)
             if len(route_stops_serializer.data) == 0:

@@ -24,7 +24,7 @@ def student_delete(request):
         student_object.delete()
         parent.save()
         if route_id != None:
-            route = Route.routeTables.get(pk=route_id)
+            route = Route.objects.get(pk=route_id)
             is_complete = route_check_is_complete.route_is_complete(route_id)
             route.is_complete = is_complete
             route.save()

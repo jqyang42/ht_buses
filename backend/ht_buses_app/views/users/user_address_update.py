@@ -17,6 +17,6 @@ def update_student_stop(user_id):
             student_obj.in_range = in_range
             student_obj.save()
             is_complete = route_check_is_complete.route_is_complete(student["route_id"])
-            route = Route.routeTables.get(pk=student["route_id"])
+            route = Route.objects.get(pk=student["route_id"])
             route.is_complete = is_complete
             route.save()

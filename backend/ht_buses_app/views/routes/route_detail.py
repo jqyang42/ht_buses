@@ -12,7 +12,7 @@ def routes_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        route = Route.routeTables.get(pk=id)
+        route = Route.objects.get(pk=id)
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)

@@ -13,7 +13,7 @@ def stops_view(request):
     data = {}
     id = request.query_params["id"] # this is route id
     try:
-        route = Route.routeTables.get(pk=id)
+        route = Route.objects.get(pk=id)
         route_serializer = RouteSerializer(route, many=False)
         stops = Stop.stopTables.filter(route_id=route)
         # COMMENTED OUT CODE FOR PAGINATION

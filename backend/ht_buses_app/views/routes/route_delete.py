@@ -12,7 +12,7 @@ def route_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        route_object =  Route.routeTables.get(pk=id)
+        route_object =  Route.objects.get(pk=id)
         route_object.delete()
         data["message"] = "route successfully deleted"
         data["success"] = True

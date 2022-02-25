@@ -20,7 +20,7 @@ def stops_delete(request):
         for stop in reqBody["stops"]:
             stop_obj = Stop.stopTables.get(pk=stop["id"])
             stop_serializer = StopSerializer(stop_obj, many=False)
-            route = Route.routeTables.get(pk=stop_serializer.data["route_id"])
+            route = Route.objects.get(pk=stop_serializer.data["route_id"])
             stop_obj.location_id.delete()
             stop_obj.delete()
             update_students_in_range(stop_serializer.data["route_id"])

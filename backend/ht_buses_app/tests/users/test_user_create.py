@@ -14,10 +14,10 @@ class Test_user_create(APITestCase):
             return json.load(f)
     def create_school_route():
         school = School.objects.create(name = "East Middle School", address = "90 East Ave")
-        route = Route.routeTables.create(name="Hilly Route", school_id = school,description="This is route 2" )
-        route = Route.routeTables.create(name="Route 2", school_id = school,description="This is route 2" )
+        route = Route.objects.create(name="Hilly Route", school_id = school,description="This is route 2" )
+        route = Route.objects.create(name="Route 2", school_id = school,description="This is route 2" )
         school = School.objects.create(name = "West High School", address = "82 West Ave")
-        route = Route.routeTables.create(name="Route 1", school_id = school,description="This is route 1" )
+        route = Route.objects.create(name="Route 1", school_id = school,description="This is route 1" )
 
     # Tests
     def test_create_user_parent(self):
@@ -40,7 +40,7 @@ class Test_user_create(APITestCase):
         User.objects.create(first_name= "Mary", last_name ="Poppins",email = "fun@gmail.com",password = "yellow",address ="Hilly Ave",is_staff = True,is_parent = True)
         response = APIClient().post(self.endpoint2, data = Test_user_create.signup_info("ht_buses_app/tests/resources/create_user/user_edit.json"), format='json')
         assert User.objects.filter(email = "funny@gmail.com",  first_name = "Marre", last_name = "Poppy").count() > 0
-        assert Student.studentsTable.filter(first_name = "Not Henry", route_id = Route.routeTables.get(name ="Hilly Route")).count() > 0
+        assert Student.studentsTable.filter(first_name = "Not Henry", route_id = Route.objects.get(name ="Hilly Route")).count() > 0
         assert response.status_code == 200 # Checks that the response code is successful
 
 

@@ -14,7 +14,7 @@ def stops_view(request):
     data = {}
     id = request.query_params["id"] # this is route id
     try:
-        route = Route.routeTables.get(pk=id)
+        route = Route.objects.get(pk=id)
         page_number = request.query_params["page"]
         if int(page_number) == 0:
             prev_page = False

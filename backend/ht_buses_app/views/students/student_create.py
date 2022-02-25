@@ -20,7 +20,7 @@ def create_student(student_info, id=None):
         data["success"] = False
         return Response(data)
     try:
-        route_id = Route.routeTables.get(pk = student_info['route_id'])
+        route_id = Route.objects.get(pk = student_info['route_id'])
         student = Student.studentsTable.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id=route_id)
         stop_arr = check_in_range.check_student_in_range(id, student_info['route_id'])
         if len(stop_arr) != 0:

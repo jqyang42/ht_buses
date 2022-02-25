@@ -21,7 +21,7 @@ class Route(models.Model):
     description = models.CharField(max_length=500)
     is_complete = models.BooleanField(default=False)
     color_id = models.IntegerField(default=0)
-    routeTables = models.Manager()
+    objects = models.Manager()
     class Meta:
         indexes = [
             models.Index(fields=['school_id'])

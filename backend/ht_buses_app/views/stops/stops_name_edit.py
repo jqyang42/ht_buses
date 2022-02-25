@@ -32,7 +32,7 @@ def stops_name_edit(request):
         stops.append(stop_serializer.data)
         count += 1
         update_students_in_range(stop_serializer.data["route_id"])
-        route = Route.routeTables.get(pk=stop_serializer.data["route_id"])
+        route = Route.objects.get(pk=stop_serializer.data["route_id"])
         is_complete = route_check_is_complete.route_is_complete(stop_serializer.data["route_id"])
         route.is_complete = is_complete
         route.save()
