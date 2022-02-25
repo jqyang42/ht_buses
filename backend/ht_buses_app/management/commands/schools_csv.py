@@ -22,7 +22,7 @@ class Command(BaseCommand):
                 location = Location.locationTables.create(
                     address=row[1],
                     lat=location_arr[0]["lat"],
-                    long=location_arr[0]["lng"]
+                    lng=location_arr[0]["lng"]
                 )
                 school = School.schoolsTable.create(
                     location_id=location,
