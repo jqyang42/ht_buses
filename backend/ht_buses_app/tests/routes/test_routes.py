@@ -13,11 +13,11 @@ class Test_routes(APITestCase):
             return json.load(f)
 
     def make_school(name):
-        school = School.schoolsTable.create(name = name, address = "90 East Ave")
+        school = School.objects.create(name = name, address = "90 East Ave")
         return school
 
     def make_route():
-        route  = Route.routeTables.create(name = "Route Star", school_id = School.schoolsTable.get(name = "East Middle School") , description = "Here is a description")
+        route  = Route.routeTables.create(name = "Route Star", school_id = School.objects.get(name = "East Middle School") , description = "Here is a description")
         return route
 
     def test_route_creation(self):

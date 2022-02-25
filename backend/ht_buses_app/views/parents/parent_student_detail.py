@@ -34,7 +34,7 @@ def student_arr_data(student):
     student_arr["school_student_id"] = student_serializer.data["student_school_id"]
     student_arr["first_name"] = student_serializer.data["first_name"]
     student_arr["last_name"] = student_serializer.data["last_name"]
-    school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+    school = School.objects.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     student_arr["school_name"] = school_serializer.data["name"]
     user = User.objects.get(pk=student_serializer.data["user_id"])

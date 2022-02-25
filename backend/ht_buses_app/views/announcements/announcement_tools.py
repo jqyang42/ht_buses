@@ -67,7 +67,7 @@ def get_stop_array(user, route_id):
         for stop in stops:
             stop_array = {}
             stop_data = stop
-            location = Location.locationTables.get(pk = stop_data["location"]["id"])
+            location = Location.objects.get(pk = stop_data["location"]["id"])
             stop_array["address"] = location.address
             stop_array["name"] = stop_data["name"]
             d = datetime.strptime(stop_data["arrival"], "%H:%M")

@@ -31,7 +31,7 @@ def announcement_school(request):
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
     try:
         id = request.query_params["id"]
-        school_id = School.schoolsTable.get(pk=id)
+        school_id = School.objects.get(pk=id)
         students = Student.studentsTable.filter(school_id = school_id)
         recipients = announcement_tools.filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)

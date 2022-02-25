@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 # make location object
                 # call google api
                 location_arr = geocode_address(row[2])
-                location = Location.locationTables.create(
+                location = Location.objects.create(
                     address=row[2],
                     lat=location_arr[0]["lat"],
                     lng=location_arr[0]["lng"]

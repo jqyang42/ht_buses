@@ -13,7 +13,7 @@ def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
     try:
-        school = School.schoolsTable.get(pk=id)
+        school = School.objects.get(pk=id)
         school_serializer = SchoolSerializer(school, many=False)
         school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "lng": school.location_id.lng}
         school_arr = {"name": school_serializer.data["name"], "location": school_address} 

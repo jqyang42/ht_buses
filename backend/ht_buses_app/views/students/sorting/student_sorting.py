@@ -116,7 +116,7 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
         parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
+        school = School.objects.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         in_range = student["in_range"]
@@ -178,7 +178,7 @@ def numerical_sort(order_by, page_number, search):
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
         parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
+        school = School.objects.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         in_range = student["in_range"]

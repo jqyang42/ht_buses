@@ -90,7 +90,7 @@ def alphabetical_sort(is_search, order_by, sort_by, page_number, search):
     for route in route_serializer.data:
         id = route["id"]
         name = route["name"]
-        school = School.schoolsTable.get(pk=route["school_id"])
+        school = School.objects.get(pk=route["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         route_students = Student.studentsTable.filter(route_id=id)
@@ -145,7 +145,7 @@ def numerical_sort(is_search, sort_by, order_by, page_number, search):
     for route in route_serializer.data:
         id = route["id"]
         name = route["name"]
-        school = School.schoolsTable.get(pk=route["school_id"])
+        school = School.objects.get(pk=route["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         route_students = Student.studentsTable.filter(route_id=id)

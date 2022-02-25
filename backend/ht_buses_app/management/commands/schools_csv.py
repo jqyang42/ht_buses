@@ -19,12 +19,12 @@ class Command(BaseCommand):
             next(reader, None)
             for row in reader:
                 location_arr = geocode_address(row[1])
-                location = Location.locationTables.create(
+                location = Location.objects.create(
                     address=row[1],
                     lat=location_arr[0]["lat"],
                     lng=location_arr[0]["lng"]
                 )
-                school = School.schoolsTable.create(
+                school = School.objects.create(
                     location_id=location,
                     name=row[0],
                     arrival=datetime.time(datetime.strptime(row[2],"%H:%M")),

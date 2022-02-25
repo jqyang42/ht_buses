@@ -12,7 +12,7 @@ def school_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        school_object = School.schoolsTable.get(pk=id)
+        school_object = School.objects.get(pk=id)
         school_object.location_id.delete()
         school_object.delete()
         data["message"] = "school successfully deleted"

@@ -14,7 +14,7 @@ def create_student(student_info, id=None):
     student_school_id = student_info["student_school_id"]
     try:
         user = User.objects.get(pk=id)
-        school_id = School.schoolsTable.get(id =student_info["school_id"])
+        school_id = School.objects.get(id =student_info["school_id"])
     except :
         data["message"] = "invalid options were chosen, student information update was unsuccessful"
         data["success"] = False

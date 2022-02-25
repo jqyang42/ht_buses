@@ -18,7 +18,7 @@ def route_create(request):
     name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["route"]["name"])
     route_color_num = 51
     try:
-        school = School.schoolsTable.get(pk=reqBody["route"]["school_id"])
+        school = School.objects.get(pk=reqBody["route"]["school_id"])
         description = reqBody["route"]["description"]
         is_complete = reqBody["route"]["is_complete"]
         route = Route.routeTables.create(name=name, school_id = school, description = description, is_complete=is_complete)

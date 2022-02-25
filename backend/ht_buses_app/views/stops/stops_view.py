@@ -30,7 +30,7 @@ def stops_view(request):
             arrival = stop["arrival"]
             departure = stop["departure"]
             order_by = stop["order_by"]
-            location = Location.locationTables.get(pk=stop["location_id"])
+            location = Location.objects.get(pk=stop["location_id"])
             location_serializer = LocationSerializer(location, many=False)
             stops_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data, "order_by": order_by})
         data["stops"] = stops_arr

@@ -14,7 +14,7 @@ def schools_detail(request):
     data = {}
     id = request.query_params["id"]
     try :
-        school = School.schoolsTable.get(pk=id)
+        school = School.objects.get(pk=id)
         school_serializer = SchoolSerializer(school, many=False)
         students = Student.studentsTable.filter(school_id=id)
         students_serializer = StudentSerializer(students, many=True)

@@ -20,13 +20,13 @@ def check_student_in_range(user_id, student_route_id):
     stops_arr = []
     user = User.objects.get(pk=user_id)
     user_serializer = UserSerializer(user, many=False)
-    location = Location.locationTables.get(pk=user_serializer.data["location"])
+    location = Location.objects.get(pk=user_serializer.data["location"])
     if student_route_id != 0 and student_route_id is not None :
         route = Route.routeTables.get(pk=student_route_id)
         stops = Stop.stopTables.filter(route_id=route)
         stops_serializer = StopSerializer(stops, many=True)
         for stop in stops_serializer.data:
-            stop_location = Location.locationTables.get(pk=stop["location_id"])
+            stop_location = Location.objects.get(pk=stop["location_id"])
             stop_lat = stop_location.lat / (180/math.pi)
             stop_lng = stop_location.lng / (180/math.pi)
             student_lat = location.lat / (180/math.pi)
@@ -42,7 +42,7 @@ def check_student_in_range(user_id, student_route_id):
     return stops_arr
 
 def stop_format(stop):
-    location = Location.locationTables.get(pk=stop["location_id"])
+    location = Location.objects.get(pk=stop["location_id"])
     location_serializer = LocationSerializer(location, many=False)
     location_arr = {"id": location_serializer.data["id"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
     stop_form = {"id": stop["id"], "name": stop["name"], "arrival": stop["arrival"][:-3], 

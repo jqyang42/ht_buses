@@ -13,10 +13,10 @@ class Test_user_create(APITestCase):
         with open(path) as f:
             return json.load(f)
     def create_school_route():
-        school = School.schoolsTable.create(name = "East Middle School", address = "90 East Ave")
+        school = School.objects.create(name = "East Middle School", address = "90 East Ave")
         route = Route.routeTables.create(name="Hilly Route", school_id = school,description="This is route 2" )
         route = Route.routeTables.create(name="Route 2", school_id = school,description="This is route 2" )
-        school = School.schoolsTable.create(name = "West High School", address = "82 West Ave")
+        school = School.objects.create(name = "West High School", address = "82 West Ave")
         route = Route.routeTables.create(name="Route 1", school_id = school,description="This is route 1" )
 
     # Tests

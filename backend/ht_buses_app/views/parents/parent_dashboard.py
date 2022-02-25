@@ -22,7 +22,7 @@ def parent_dashboard(request):
             student_school_id = student["student_school_id"]
             first_name = student["first_name"]
             last_name = student["last_name"]
-            school = School.schoolsTable.get(pk=student["school_id"])
+            school = School.objects.get(pk=student["school_id"])
             school_serializer = SchoolSerializer(school, many=False)
             school_name = school_serializer.data["name"]
             if student["route_id"] == None:

@@ -19,7 +19,7 @@ def school_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        school_object =  School.schoolsTable.get(pk = id)
+        school_object =  School.objects.get(pk = id)
         school_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["school"]["name"])
         school_object.arrival = datetime.time(datetime.strptime(reqBody["school"]["arrival"], "%H:%M"))
         school_object.departure = datetime.time(datetime.strptime(reqBody["school"]["departure"], "%H:%M"))

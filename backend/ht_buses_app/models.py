@@ -6,14 +6,14 @@ class Location(models.Model):
     address = models.CharField(max_length=100)
     lat = models.FloatField(default=0)
     lng = models.FloatField(default=0)
-    locationTables = models.Manager()
+    objects = models.Manager()
 
 class School(models.Model):
     name = models.CharField(max_length=100)
     location_id = models.ForeignKey('Location', default=None, on_delete=models.SET(None), blank=True, null=True)
     arrival = models.TimeField(default=datetime.time(00,00))
     departure = models.TimeField(default=datetime.time(00,00))
-    schoolsTable = models.Manager()
+    objects = models.Manager()
 
 class Route(models.Model):
     name = models.CharField(max_length=50)
@@ -66,7 +66,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a last name')
         if is_parent is True and not address:
                 raise ValueError('Users must have an address')
-        location_obj = Location.locationTables.create(address=address, lat=lat, lng=lng)
+        location_obj = Location.objects.create(address=address, lat=lat, lng=lng)
         user = self.model(
             email= self.normalize_email(email),
             first_name = first_name,

@@ -41,7 +41,7 @@ def routes(request):
     for route in route_serializer.data:
         id = route["id"]
         name = route["name"]
-        school = School.schoolsTable.get(pk=route["school_id"])
+        school = School.objects.get(pk=route["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         route_students = Student.studentsTable.filter(route_id=id)

@@ -24,7 +24,7 @@ def students_detail(request):
             route_id = route_serializer.data["id"]
             route_name = route_serializer.data["name"]
         in_range = student_serializer.data["in_range"]
-        school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+        school = School.objects.get(pk=student_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         student_arr = {"user_id": student_serializer.data["user_id"], "student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "in_range": in_range}
         data["student"] = student_arr

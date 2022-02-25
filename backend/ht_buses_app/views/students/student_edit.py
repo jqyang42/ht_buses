@@ -27,7 +27,7 @@ def student_edit(request):
         data["success"] = False
         return Response(data, status = 404)
     try:
-        school_id = School.schoolsTable.get(pk=reqBody["student"]["school_id"])
+        school_id = School.objects.get(pk=reqBody["student"]["school_id"])
         user_id = User.objects.get(pk = reqBody["student"]["user_id"]) 
         og_student_object.last_name = new_last_name
         og_student_object.first_name = new_first_name

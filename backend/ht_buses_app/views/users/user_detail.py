@@ -24,7 +24,7 @@ def users_detail(request):
             for student in students_serializer.data:
                 student_id = student["id"]
                 student_school_id = student["student_school_id"]
-                student_school = School.schoolsTable.get(pk=student["school_id"])
+                student_school = School.objects.get(pk=student["school_id"])
                 student_first_name = student["first_name"]
                 student_last_name = student["last_name"]
                 if student["route_id"] == None:
