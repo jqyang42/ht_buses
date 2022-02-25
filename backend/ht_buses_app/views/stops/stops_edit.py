@@ -30,7 +30,7 @@ def stops_edit(request):
             stop_obj.departure = datetime.time(datetime.strptime(departure, "%H:%M"))
             stop_obj.location_id.address = stop["location"]["address"]
             stop_obj.location_id.lat = stop["location"]["lat"]
-            stop_obj.location_id.long = stop["location"]["long"]
+            stop_obj.location_id.lng = stop["location"]["lng"]
             stop_obj.location_id.save()
             stop_obj.save()
             stop_serializer = StopSerializer(stop_obj, many=False)

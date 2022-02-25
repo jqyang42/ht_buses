@@ -26,12 +26,12 @@ def user_create(request):
     is_staff = reqBody["user"]['is_staff']
     is_parent = reqBody["user"]['is_parent']
     lat = reqBody["user"]["location"]['lat']
-    longitude = reqBody["user"]["location"]['long']
+    lng = reqBody["user"]["location"]['lng']
     password = account_tools.generate_random_password()
     if is_staff: 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, long=longitude)
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, long=longitude)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng)
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     data["message"] = "user created successfully"

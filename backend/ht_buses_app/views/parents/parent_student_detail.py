@@ -40,7 +40,7 @@ def student_arr_data(student):
     user = User.objects.get(pk=student_serializer.data["user_id"])
     location_serializer = LocationSerializer(user.location, many=False)
     location_arr = {"id": location_serializer.data["id"], "address": location_serializer.data["address"],
-    "lat": location_serializer.data["lat"], "long": location_serializer.data["long"]}
+    "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
     if student_serializer.data["route_id"] == None:
         route_arr = {"id": 0,"name":"Unassigned","description":"","color_id": 0}
     else:

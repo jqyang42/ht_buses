@@ -25,7 +25,7 @@ def stops_name_edit(request):
         else:
             stop_obj.name = stop["name"]
         stop_obj.location_id.lat = stop["location"]["lat"]
-        stop_obj.location_id.long = stop["location"]["long"]
+        stop_obj.location_id.lng = stop["location"]["lng"]
         stop_obj.location_id.save()
         stop_obj.save()
         stop_serializer = StopSerializer(stop_obj, many=False)

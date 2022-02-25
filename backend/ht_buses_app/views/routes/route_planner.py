@@ -15,7 +15,7 @@ def routeplanner(request):
     try:
         school = School.schoolsTable.get(pk=id)
         school_serializer = SchoolSerializer(school, many=False)
-        school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "long": school.location_id.long}
+        school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "lng": school.location_id.lng}
         school_arr = {"name": school_serializer.data["name"], "location": school_address} 
         data["school"] = school_arr
         routes = Route.routeTables.filter(school_id=id)
@@ -45,7 +45,7 @@ def routeplanner(request):
                         parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : 0, "in_range": child["in_range"]})
                     else:
                         parent_student_arr.append({"id" : child["id"], "first_name": child["first_name"], "last_name": child["last_name"], "route_id" : child["route_id"], "in_range": child["in_range"]})
-                parent_address = {"address": parent.location.address, "lat": parent.location.lat, "long": parent.location.long}
+                parent_address = {"address": parent.location.address, "lat": parent.location.lat, "lng": parent.location.lng}
                 address_arr.append({"id" : student["user_id"], "location": parent_address, "students": parent_student_arr})
         data["users"] = address_arr
         data["success"] = True

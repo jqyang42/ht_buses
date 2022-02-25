@@ -5,7 +5,7 @@ import datetime
 class Location(models.Model):
     address = models.CharField(max_length=100)
     lat = models.FloatField(default=0)
-    long = models.FloatField(default=0)
+    lng = models.FloatField(default=0)
     locationTables = models.Manager()
 
 class School(models.Model):
@@ -57,7 +57,7 @@ class Stop(models.Model):
         ]
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, long):
+    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -66,7 +66,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a last name')
         if is_parent is True and not address:
                 raise ValueError('Users must have an address')
-        location_obj = Location.locationTables.create(address=address, lat=lat, long=long)
+        location_obj = Location.locationTables.create(address=address, lat=lat, lng=lng)
         user = self.model(
             email= self.normalize_email(email),
             first_name = first_name,
@@ -78,8 +78,8 @@ class UserManager(BaseUserManager):
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, long=0):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, long)
+    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0):
+        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng)
         user.is_staff = True
         user.save(using=self._db)
         return user

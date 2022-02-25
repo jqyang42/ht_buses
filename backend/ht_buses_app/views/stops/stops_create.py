@@ -33,7 +33,7 @@ def stops_create(request):
             order_by = count
             arrival = stop["arrival"]
             departure = stop["departure"]
-            location = Location.locationTables.create(address="", lat=stop["lat"], long=stop["long"])
+            location = Location.locationTables.create(address="", lat=stop["lat"], lng=stop["lng"])
             stop_obj = Stop.stopTables.create(route_id=route, location_id=location, arrival=datetime.time(datetime.strptime(arrival,"%H:%M")), departure=datetime.time(datetime.strptime(departure, "%H:%M")), name=name, order_by=order_by)
             stop_serializer = StopSerializer(stop_obj, many=False)
             stops.append(stop_serializer.data)

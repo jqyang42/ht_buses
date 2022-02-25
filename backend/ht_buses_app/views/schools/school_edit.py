@@ -25,7 +25,7 @@ def school_edit(request):
         school_object.departure = datetime.time(datetime.strptime(reqBody["school"]["departure"], "%H:%M"))
         school_object.location_id.address = reqBody["school"]["location"]["address"]
         school_object.location_id.lat = reqBody["school"]["location"]["lat"]
-        school_object.location_id.long = reqBody["school"]["location"]["long"]
+        school_object.location_id.lng = reqBody["school"]["location"]["long"]
         school_object.location_id.save()
         school_object.save()
         data["message"] = "school information updated successfully"
