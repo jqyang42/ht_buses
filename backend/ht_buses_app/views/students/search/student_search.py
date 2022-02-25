@@ -7,16 +7,21 @@ from ....models import Student, Route, User, School
 from django.core.paginator import Paginator
 from ....serializers import StudentSerializer, UserSerializer, SchoolSerializer, RouteSerializer
 from django.contrib.postgres.search import SearchVector, SearchQuery
+from django.db.models import Q
+from django.db.models import Value as V
+from django.db.models.functions import Concat 
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def student_search(request):
     data = {}
     # search by either id or name
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    students = Student.studentsTable.annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search_q)
+    print(search_q)
+    students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search_q) | Q(first_name__icontains=search_q) | Q(last_name__icontains=search_q) | Q(student_school_id__icontains = search_q)).order_by("id")
     paginator = Paginator(students, 10) # Show 10 per page
     students_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages
