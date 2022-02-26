@@ -7,6 +7,9 @@ from ....models import Student, Route, User, School
 from django.core.paginator import Paginator
 from ....serializers import StudentSerializer, UserSerializer, SchoolSerializer, RouteSerializer
 from django.contrib.postgres.search import SearchVector, SearchQuery
+from django.db.models import Q
+from django.db.models import Value as V
+from django.db.models.functions import Concat 
 
 @csrf_exempt
 @api_view(['GET'])
@@ -31,56 +34,66 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
     if sort_by == "name":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.all().order_by("first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("first_name")
             else:
                 students = Student.studentsTable.all().order_by("first_name")
         else:
             if search != None:
-                students = Student.studentsTable.all().order_by("-first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-first_name")
             else:
                 students = Student.studentsTable.all().order_by("-first_name")
     if sort_by == "route":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.all().order_by("route_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("route_id__name")
             else:
                 students = Student.studentsTable.all().order_by("route_id__name")
         else:
             if search != None:
-                students = Student.studentsTable.all().order_by("-route_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-route_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
             else:
                 students = Student.studentsTable.all().order_by("-route_id__name")
     if sort_by == "in_range":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.all().order_by("-in_range").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-in_range")
             else:
                 students = Student.studentsTable.all().order_by("-in_range")
         else:
             if search != None:
-                students = Student.studentsTable.all().order_by("in_range").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("in_range")
             else:
                 students = Student.studentsTable.all().order_by("in_range")
     if sort_by == "parent":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.all().order_by("user_id__first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("user_id__first_name")
             else:
                 students = Student.studentsTable.all().order_by("user_id__first_name")
         else:
             if search != None:
-                students = Student.studentsTable.all().order_by("-user_id__first_name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-user_id__first_name")
             else:
                 students = Student.studentsTable.all().order_by("-user_id__first_name")
     if sort_by == "school_name":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.all().order_by("school_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("school_id__name")
             else:
                 students = Student.studentsTable.all().order_by("school_id__name")
         else:
             if search != None:
-                students = Student.studentsTable.all().order_by("-school_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-school_id__name")
             else:
                 students = Student.studentsTable.all().order_by("-school_id__name")
     if int(page_number) == 0:
@@ -137,12 +150,14 @@ def numerical_sort(order_by, page_number, search):
     data = {}
     if order_by == "asc":
         if search != None:
-            students = Student.studentsTable.all().order_by("student_school_id").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("student_school_id")
         else:
             students = Student.studentsTable.all().order_by("student_school_id")
     else:
         if search != None:
-            students = Student.studentsTable.all().order_by("-student_school_id").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
+            students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-student_school_id")
         else:
             students = Student.studentsTable.all().order_by("-student_school_id")
     if int(page_number) == 0:

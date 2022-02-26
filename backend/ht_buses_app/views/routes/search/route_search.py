@@ -16,7 +16,7 @@ def route_search(request):
     data = {}
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    routes = Route.routeTables.annotate(search=SearchVector("name")).filter(search=SearchQuery(search_q))
+    routes = Route.routeTables.filter(name__icontains=search_q)
     paginator = Paginator(routes, 10) # Show 10 per page
     routes_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages
