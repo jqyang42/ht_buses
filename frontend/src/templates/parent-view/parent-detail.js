@@ -40,7 +40,7 @@ class ParentDetail extends Component {
                 active_route: student.route.id,
                 center: {
                     lat: student.location.lat,
-                    lng: student.location.long
+                    lng: student.location.lng
                 },
                 student: student,
              })

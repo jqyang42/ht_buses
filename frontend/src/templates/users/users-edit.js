@@ -119,7 +119,7 @@ class UsersEdit extends Component {
                 (response) => {
                     let user = this.state.edited_user
                     user.location.lat = parseFloat(response.results[0].geometry.location.lat)
-                    user.location.long = parseFloat(response.results[0].geometry.location.lng)
+                    user.location.lng = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
                         edited_user: user,
                         valid_address: true,
@@ -140,7 +140,7 @@ class UsersEdit extends Component {
         if(!this.state.edited_user.is_parent && empty_address) {
             let user = this.state.edited_user
             user.location.lat = 0
-            user.location.long = 0
+            user.location.lng = 0
             user.location.address = ""
             this.setState({
                 new_user: user,

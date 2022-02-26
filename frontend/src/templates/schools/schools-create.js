@@ -21,7 +21,7 @@ class SchoolsCreate extends Component {
             location: {
                 address: '',
                 lat: 0,
-                long: 0,
+                lng: 0,
             }
         },
         redirect: false,
@@ -71,7 +71,7 @@ class SchoolsCreate extends Component {
                 (response) => {
                     let school = this.state.new_school
                     school.location.lat = parseFloat(response.results[0].geometry.location.lat)
-                    school.location.long = parseFloat(response.results[0].geometry.location.lng)
+                    school.location.lng = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
                         new_school: school,
                         valid_address: true

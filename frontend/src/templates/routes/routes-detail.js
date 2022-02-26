@@ -82,7 +82,7 @@ class BusRoutesDetail extends Component {
                 school: school, 
                 center: { 
                     lat: school.location.lat, 
-                    lng: school.location.long 
+                    lng: school.location.lng 
                 }, 
             });
 
@@ -101,7 +101,7 @@ class BusRoutesDetail extends Component {
             //         markers: [...prevState.markers, {
             //             position: {
             //                 lat: user.location.lat,
-            //                 lng: user.location.long
+            //                 lng: user.location.lng
             //             },
             //             id: user.id,
             //             studentIDs: studentIDs,
@@ -152,7 +152,7 @@ class BusRoutesDetail extends Component {
             markers.push({
                 location: {
                     lat: user.location.lat,
-                    lng: user.location.long
+                    lng: user.location.lng
                 },
                 id: user.id,
                 studentIDs: studentIDs,
@@ -163,7 +163,7 @@ class BusRoutesDetail extends Component {
             //     markers: [...prevState.markers, {
             //         position: {
             //             lat: user.location.lat,
-            //             lng: user.location.long
+            //             lng: user.location.lng
             //         },
             //         id: user.id,
             //         studentIDs: studentIDs,

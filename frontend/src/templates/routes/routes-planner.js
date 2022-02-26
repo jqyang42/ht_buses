@@ -151,7 +151,7 @@ class BusRoutesPlanner extends Component {
                 this.setState({ 
                     center: { 
                         lat: school_location.lat, 
-                        lng: school_location.long 
+                        lng: school_location.lng 
                     }
                  });
                 const users = res.data.users
@@ -167,7 +167,7 @@ class BusRoutesPlanner extends Component {
                         markers: [...prevState.markers, {
                             location: {
                                 lat: user.location.lat,
-                                lng: user.location.long
+                                lng: user.location.lng
                             },
                             id: user.id,
                             studentIDs: studentIDs,
@@ -380,7 +380,7 @@ class BusRoutesPlanner extends Component {
                     departure: stop.departure,
                     location: {
                         lat: stop.location.lat,
-                        long: stop.location.long,
+                        lng: stop.location.lng,
                         address: stop.location.address
                     }
                 }
@@ -404,13 +404,13 @@ class BusRoutesPlanner extends Component {
         stops.sort((a, b) => a.order_by - b.order_by)
         // const stops_latlng = stops.map(stop => {
         //     return {
-        //         location: { lat: stop.location.lat, lng: stop.location.long }
+        //         location: { lat: stop.location.lat, lng: stop.location.lng }
         //     }
         // })
         console.log(stops)
         const stop_info = await getStopInfo({
-            // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.long },
-            school: {location : { lat: school.location.lat, lng: school.location.long }},
+            // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.lng },
+            school: {location : { lat: school.location.lat, lng: school.location.lng }},
             stops: stops,
             arrival_time: school.arrival,
             departure_time: school.departure

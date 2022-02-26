@@ -21,7 +21,7 @@ class SchoolsEdit extends Component {
             location: {
                 address: '',
                 lat: 0.0,
-                long: 0.0
+                lng: 0.0
             },
             arrival: '',
             departure: '',
@@ -50,7 +50,7 @@ class SchoolsEdit extends Component {
                 location: {
                     address: school.location.address,
                     lat: school.location.lat,
-                    long: school.location.long
+                    lng: school.location.lng
                 },
                 arrival: school.arrival,
                 departure: school.departure
@@ -107,7 +107,7 @@ class SchoolsEdit extends Component {
                 (response) => {
                     let school = this.state.edited_school
                     school.location.lat = parseFloat(response.results[0].geometry.location.lat)
-                    school.location.long = parseFloat(response.results[0].geometry.location.lng)
+                    school.location.lng = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
                         edited_school: school,
                         valid_address: true

@@ -99,7 +99,7 @@ class RouteMap extends Component {
       const newStop = {
         name: "",
         lat: coords.lat,
-        long: coords.lng,
+        lng: coords.lng,
         route_id: this.props.active_route,
         arrival: "00:00",
         departure: "00:00"
@@ -130,7 +130,7 @@ class RouteMap extends Component {
     const newStop = newStopNames[index];
     newStop.name = name;
     newStop.lat = location.lat;
-    newStop.long = location.lng;
+    newStop.lng = location.lng;
     newStopNames[index] = newStop;
     console.log(newStopNames)
     return newStopNames
@@ -158,7 +158,7 @@ class RouteMap extends Component {
       "name": name,
       "location": {
         "lat": location.lat,
-        "long": location.lng,
+        "lng": location.lng,
       }
     }
     console.log(editedStop)
@@ -246,7 +246,7 @@ class RouteMap extends Component {
               name={value.name}
               location={{
                 lat: value.location.lat,
-                lng: value.location.long
+                lng: value.location.lng
               }}
               assign_mode={this.props.assign_mode} 
               routeID={this.props.active_route}
@@ -255,12 +255,12 @@ class RouteMap extends Component {
             })}
             {this.state.newStops?.map((value, index) => {
               return <StopMarker 
-              key={`${value.lat}+${value.long}`}
+              key={`${value.lat}+${value.lng}`}
               id={index}
               name={""}
               location={{
                 lat: value.lat,
-                lng: value.long
+                lng: value.lng
               }
             }
               assign_mode={this.props.assign_mode} 
