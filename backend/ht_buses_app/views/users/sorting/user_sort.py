@@ -8,6 +8,9 @@ from ....serializers import SchoolSerializer, UserSerializer, RouteSerializer, S
 from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.db.models import Count
 from urllib.parse import unquote
+from django.db.models import Q
+from django.db.models import Value as V
+from django.db.models.functions import Concat 
 
 @csrf_exempt
 @api_view(['GET'])
@@ -28,46 +31,54 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
     if sort_by == "name":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("first_name").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("first_name")
             else:
                 print("do we enter here")
                 users = User.objects.all().order_by("first_name")
         else:
             if search != None:
-                users = User.objects.all().order_by("-first_name").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-first_name")
             else:
                 users = User.objects.all().order_by("-first_name")
     if sort_by == "email":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("email").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("email")
             else:
                 users = User.objects.all().order_by("email")
         else:
             if search != None:
-                users = User.objects.all().order_by("-email").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-email")
             else:
                 users = User.objects.all().order_by("-email")
     if sort_by == "is_staff":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("-is_staff").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-is_staff")
             else:
                 users = User.objects.all().order_by("-is_staff")
         else:
             if search != None:
-                users = User.objects.all().order_by("is_staff").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("is_staff")
             else:
                 users = User.objects.all().order_by("is_staff")
     if sort_by == "address":
         if order_by == "asc":
             if search != None:
-                users = User.objects.all().order_by("location__address").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("location__address")
             else:
                 users = User.objects.all().order_by("location__address")
         else:
             if search != None:
-                users = User.objects.all().order_by("-location__address").annotate(search=SearchVector("first_name", "last_name","email")).filter(search__icontains=search)
+                users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-location__address")
             else:
                 users = User.objects.all().order_by("-location__address")
     if int(page_number) == 0:

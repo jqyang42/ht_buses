@@ -16,7 +16,11 @@ def school_search(request):
     # search by either id or name
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
+<<<<<<< HEAD
     schools = School.objects.annotate(search=SearchVector("name")).filter(search__icontains=search_q)
+=======
+    schools = School.schoolsTable.filter(name__icontains=search_q)
+>>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
     paginator = Paginator(schools, 10) # Show 10 per page
     schools_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages

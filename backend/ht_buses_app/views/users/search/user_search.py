@@ -8,6 +8,9 @@ from ....serializers import SchoolSerializer, UserSerializer, RouteSerializer, S
 from django.contrib.postgres.search import SearchVector, SearchQuery
 from django.db.models import Count
 from urllib.parse import unquote
+from django.db.models import Q
+from django.db.models import Value as V
+from django.db.models.functions import Concat 
 
 @csrf_exempt
 @api_view(['GET'])
@@ -16,7 +19,8 @@ def user_search(request):
     data = {}
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    users = User.objects.annotate(search=SearchVector("first_name","last_name","email")).filter(search__icontains=search_q)
+    users = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search_q) | Q(first_name__icontains=search_q) | Q(last_name__icontains=search_q) | Q(email__icontains = search_q)).order_by("id")
     paginator = Paginator(users, 10) # Show 10 per page
     users_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages

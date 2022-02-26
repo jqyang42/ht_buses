@@ -1,4 +1,4 @@
-from ...models import Route
+from ...models import Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser
@@ -13,6 +13,10 @@ def route_delete(request):
     id = request.query_params["id"]
     try:
         route_object =  Route.objects.get(pk=id)
+        students = Student.studentsTable.filter(route_id=route_object)
+        for student in students:
+            student.in_range = False
+            student.save()
         route_object.delete()
         data["message"] = "route successfully deleted"
         data["success"] = True

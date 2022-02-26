@@ -30,23 +30,23 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
     if sort_by == "name":
         if order_by == "asc":
             if search != None:
-                schools = School.objects.all().order_by("name").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("name")
             else:
                 schools = School.objects.all().order_by("name")
         else:
             if search != None:
-                schools = School.objects.all().order_by("-name").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("-name")
             else:
                 schools = School.objects.all().order_by("-name")
     if sort_by == "address":
         if order_by == "asc":
             if search != None:
-                schools = School.objects.all().order_by("location_id__address").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("location_id__address")
             else:
                 schools = School.objects.all().order_by("location_id__address")
         else:
             if search != None:
-                schools = School.objects.all().order_by("-location_id__address").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("-location_id__address")
             else:
                 schools = School.objects.all().order_by("-location_id__address")
     if int(page_number) == 0:
@@ -90,23 +90,23 @@ def numerical_sort(sort_by, order_by, page_number, search):
     if sort_by == "arrival":
         if order_by == "asc":
             if search != None:
-                schools = School.objects.all().order_by("arrival").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("arrival")
             else:
                 schools = School.objects.all().order_by("arrival")
         else:
             if search != None:
-                schools = School.objects.all().order_by("-arrival").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("-arrival")
             else:
                 schools = School.objects.all().order_by("-arrival")
     if sort_by == "departure":
         if order_by == "asc":
             if search != None:
-                schools = School.objects.all().order_by("departure").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("departure")
             else:
                 schools = School.objects.all().order_by("departure")
         else:
             if search != None:
-                schools = School.objects.all().order_by("-departure").annotate(search=SearchVector("name")).filter(search__icontains=search)
+                schools = School.objects.filter(name__icontains=search).order_by("-departure")
             else:
                 schools = School.objects.all().order_by("-departure")
     if int(page_number) == 0:
