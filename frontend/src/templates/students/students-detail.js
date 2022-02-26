@@ -67,11 +67,11 @@ class StudentsDetail extends Component {
 
 
     updateIsParent = () => {
-        api.get(`users/detail?id=${sessionStorage.getItem('user_id')}`)
+        api.get(`users/detail?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             const user = res.data.user;
-            const prev = JSON.parse(sessionStorage.getItem('is_parent'))
-            sessionStorage.setItem('is_parent', user.is_parent)
+            const prev = JSON.parse(localStorage.getItem('is_parent'))
+            localStorage.setItem('is_parent', user.is_parent)
             if(!user.is_parent && prev) {
                window.location.reload()
             }
@@ -90,10 +90,10 @@ class StudentsDetail extends Component {
 
     render() {
         this.updateIsParent()
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;

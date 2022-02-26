@@ -175,10 +175,10 @@ class UsersEdit extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
@@ -266,12 +266,12 @@ class UsersEdit extends Component {
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"
-                                                        checked={this.state.edited_user.is_staff} onChange={this.handleIsStaffChange} disabled={sessionStorage.getItem("is_staff") && sessionStorage.getItem("user_id") == this.props.params.id}></input>
+                                                        checked={this.state.edited_user.is_staff} onChange={this.handleIsStaffChange} disabled={localStorage.getItem("is_staff") && localStorage.getItem("user_id") == this.props.params.id}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
                                                     <input className="form-check-input" type="radio" name="adminType" id="general" value="general"
-                                                        checked={!this.state.edited_user.is_staff} onChange={this.handleIsStaffChange} disabled={sessionStorage.getItem("is_staff") && sessionStorage.getItem("user_id") == this.props.params.id}></input>
+                                                        checked={!this.state.edited_user.is_staff} onChange={this.handleIsStaffChange} disabled={localStorage.getItem("is_staff") && localStorage.getItem("user_id") == this.props.params.id}></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>

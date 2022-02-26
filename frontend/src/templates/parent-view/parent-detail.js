@@ -62,7 +62,7 @@ class ParentDetail extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
         if (this.state.error_status) {
@@ -79,7 +79,7 @@ class ParentDetail extends Component {
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-nowrap">
-                {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
+                {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                     <SidebarMenu activeTab="dashboard" />:
                     <ParentSidebarMenu activeTab="Dashboard"/>
                     }

@@ -39,34 +39,34 @@ class Login extends Component {
             const data = res.data
             console.log(data)
             this.setState({message: data.message, valid_login: data.valid_login})
-            sessionStorage.setItem('token', data.token)
+            localStorage.setItem('token', data.token)
             if (data.valid_login) {
                 this.emailField.value = ''
                 this.passwordField.value =''
-                sessionStorage.setItem('user_id', data.info.user_id)
-                sessionStorage.setItem('first_name', data.info.first_name)
-                sessionStorage.setItem('last_name', data.info.last_name)
-                sessionStorage.setItem('is_staff', data.info.is_staff)
-                sessionStorage.setItem('is_parent', data.info.is_parent)
+                localStorage.setItem('user_id', data.info.user_id)
+                localStorage.setItem('first_name', data.info.first_name)
+                localStorage.setItem('last_name', data.info.last_name)
+                localStorage.setItem('is_staff', data.info.is_staff)
+                localStorage.setItem('is_parent', data.info.is_parent)
                 const role = data.info.is_staff ? "Administrator" : "General"
-                sessionStorage.setItem('role', role)
-                sessionStorage.setItem('logged_in', data.valid_login)
-                res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
+                localStorage.setItem('role', role)
+                localStorage.setItem('logged_in', data.valid_login)
+                res.headers['Authorization'] = `Token ${localStorage.getItem('token')}`;
                 window.location.reload()
             } 
             else {
                 this.passwordField.value = '';
                 this.setState({password: ''})
             }
-            // console.log(sessionStorage.getItem('token'))
+            // console.log(localStorage.getItem('token'))
         })
     }   
     
     render() {
-        if (JSON.parse(sessionStorage.getItem('logged_in')) && JSON.parse(sessionStorage.getItem('is_staff'))) {
+        if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
-        else if (JSON.parse(sessionStorage.getItem('logged_in')) && !JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('logged_in')) && !JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (

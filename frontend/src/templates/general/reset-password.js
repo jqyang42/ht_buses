@@ -35,7 +35,7 @@ class ResetPassword extends Component {
         .then(res => {
             const valid_url = res.data.success
             this.setState({ valid_url: valid_url ? 1 : -1 })
-            if(JSON.parse(sessionStorage.getItem('logged_in'))) {
+            if(JSON.parse(localStorage.getItem('logged_in'))) {
                 this.logoutUser()
             }
         })
@@ -43,18 +43,18 @@ class ResetPassword extends Component {
 
     logoutUser = () => {
         const creds = {
-            user_id: sessionStorage.getItem('user_id')
+            user_id: localStorage.getItem('user_id')
         }
         api.post(`logout`, creds)
         .then(res => {
             this.setState({token: ''})
-            sessionStorage.setItem('token', '')
-            sessionStorage.setItem('user_id', '')
-            sessionStorage.setItem('first_name', '')
-            sessionStorage.setItem('last_name', '')
-            sessionStorage.setItem('is_staff', false)
-            sessionStorage.setItem('is_parent', false)
-            sessionStorage.setItem('logged_in', false)
+            localStorage.setItem('token', '')
+            localStorage.setItem('user_id', '')
+            localStorage.setItem('first_name', '')
+            localStorage.setItem('last_name', '')
+            localStorage.setItem('is_staff', false)
+            localStorage.setItem('is_parent', false)
+            localStorage.setItem('logged_in', false)
         })
     }
 

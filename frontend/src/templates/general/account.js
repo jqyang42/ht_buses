@@ -23,8 +23,8 @@ class Account extends Component {
 
     // api calls
     getUserDetails() {
-        console.log(sessionStorage.getItem('user_id'))
-        api.get(`account?id=${sessionStorage.getItem('user_id')}`)
+        console.log(localStorage.getItem('user_id'))
+        api.get(`account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             const user = res.data.user;
             console.log(user)
@@ -43,7 +43,7 @@ class Account extends Component {
 
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
         // const { redirect } = this.state;
@@ -55,7 +55,7 @@ class Account extends Component {
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
                     {
-                        sessionStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
+                        localStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
                     }
 
                     <div className="col mx-0 px-0 bg-gray w-100">

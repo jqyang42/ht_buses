@@ -6,7 +6,7 @@ class HeaderMenu extends Component {
     componentDidMount() {
         const config = {
         headers: {
-            Authorization: `Token ${sessionStorage.getItem('token')}`
+            Authorization: `Token ${localStorage.getItem('token')}`
         }}
     }
 
