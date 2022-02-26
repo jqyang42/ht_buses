@@ -56,12 +56,12 @@ class BusRoutesPlanner extends Component {
     }
 
     componentDidMount() {
-        const reloadCount = sessionStorage.getItem('reloadCount');
+        const reloadCount = localStorage.getItem('reloadCount');
         if(reloadCount < 2) {
-        sessionStorage.setItem('reloadCount', String(reloadCount + 1));
+        localStorage.setItem('reloadCount', String(reloadCount + 1));
         window.location.reload();
         } else {
-        sessionStorage.removeItem('reloadCount');
+        localStorage.removeItem('reloadCount');
         }
         this.handleTableGet();       
         this.handleLocationsGet();
@@ -440,10 +440,10 @@ class BusRoutesPlanner extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         if (this.state.error_status) {

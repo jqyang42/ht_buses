@@ -67,11 +67,11 @@ class UsersDetail extends Component {
     }
 
     updateIsParent = () => {
-        api.get(`users/detail?id=${sessionStorage.getItem('user_id')}`)
+        api.get(`users/detail?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             const user = res.data.user;
-            const prev = JSON.parse(sessionStorage.getItem('is_parent'))
-            sessionStorage.setItem('is_parent', user.is_parent)
+            const prev = JSON.parse(localStorage.getItem('is_parent'))
+            localStorage.setItem('is_parent', user.is_parent)
             if(user.is_parent && !prev) {
                window.location.reload()
             }
@@ -194,10 +194,10 @@ class UsersDetail extends Component {
         }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
@@ -304,7 +304,7 @@ class UsersDetail extends Component {
                                             </Link>
                                             
                                             {
-                                                sessionStorage.getItem("user_id") === this.props.params.id ? "" :
+                                                localStorage.getItem("user_id") === this.props.params.id ? "" :
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
                                                     Delete

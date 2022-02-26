@@ -14,21 +14,21 @@ class SidebarMenu extends Component {
     handleLogout = event => {
         event.preventDefault();
         const creds = {
-            user_id: sessionStorage.getItem('user_id')
+            user_id: localStorage.getItem('user_id')
         }
 
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
-            sessionStorage.setItem('token', '')
-            sessionStorage.setItem('user_id', '')
-            sessionStorage.setItem('first_name', '')
-            sessionStorage.setItem('last_name', '')
-            sessionStorage.setItem('is_staff', false)
-            sessionStorage.setItem('logged_in', false)
-            sessionStorage.setItem('is_parent', false)
-            // console.log(sessionStorage.getItem('logged_in'))
-            // console.log(sessionStorage.getItem('token'))
+            localStorage.setItem('token', '')
+            localStorage.setItem('user_id', '')
+            localStorage.setItem('first_name', '')
+            localStorage.setItem('last_name', '')
+            localStorage.setItem('is_staff', false)
+            localStorage.setItem('logged_in', false)
+            localStorage.setItem('is_parent', false)
+            // console.log(localStorage.getItem('logged_in'))
+            // console.log(localStorage.getItem('token'))
             window.location.reload()
         })
     }
@@ -37,7 +37,7 @@ class SidebarMenu extends Component {
     componentDidMount() {
         const config = {
         headers: {
-            Authorization: `Token ${sessionStorage.getItem('token')}`
+            Authorization: `Token ${localStorage.getItem('token')}`
         }}
     }
 
@@ -49,7 +49,7 @@ class SidebarMenu extends Component {
         var usersTab = (activeTab === "users") ? 'active' : '';
         var dashboardTab = (activeTab === "dashboard") ? 'active' : '';
 
-        console.log(JSON.parse(sessionStorage.getItem('is_parent')))
+        console.log(JSON.parse(localStorage.getItem('is_parent')))
         
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
@@ -83,7 +83,7 @@ class SidebarMenu extends Component {
                                 <span className="ms-1 d-none d-sm-inline">Manage Users</span>
                             </a>
                         </li>
-                        {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
+                        {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                             <>
                                 <li className='hbar my-4'></li>
                                 <li className={"nav-item " + dashboardTab}>

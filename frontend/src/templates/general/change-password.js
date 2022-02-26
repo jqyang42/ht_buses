@@ -17,7 +17,7 @@ class ChangePassword extends Component {
     }
     
     sendApiRequest = async (data) => {
-        const res = await api.put(`users/password-edit?id=${sessionStorage.getItem('user_id')}`, data) 
+        const res = await api.put(`users/password-edit?id=${localStorage.getItem('user_id')}`, data) 
         const password_changed = res.data.success
         return password_changed
     }
@@ -27,14 +27,14 @@ class ChangePassword extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
                     {
-                        sessionStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
+                        localStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
                     }
 
                     <div className="col mx-0 px-0 bg-gray w-100">

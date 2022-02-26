@@ -20,7 +20,7 @@ class ParentDashboard extends Component {
 
     // api calls
     getUserDashboard() {
-        api.get(`dashboard?id=${sessionStorage.getItem('user_id')}`)
+        api.get(`dashboard?id=${localStorage.getItem('user_id')}`)
             .then(res => {
             const user = res.data.user;
 
@@ -39,13 +39,13 @@ class ParentDashboard extends Component {
     }    
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-nowrap">
-                    {(JSON.parse(sessionStorage.getItem('is_staff')) && JSON.parse(sessionStorage.getItem('is_parent'))) ?
+                    {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                     <SidebarMenu activeTab="dashboard" /> :
                     <ParentSidebarMenu activeTab="Dashboard"/>
                     }
