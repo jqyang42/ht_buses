@@ -23,7 +23,7 @@ def check_student_in_range(user_id, student_route_id):
     location = Location.objects.get(pk=user_serializer.data["location"])
     if student_route_id != 0 and student_route_id is not None :
         route = Route.objects.get(pk=student_route_id)
-        stops = Stop.stopTables.filter(route_id=route)
+        stops = Stop.objects.filter(route_id=route)
         stops_serializer = StopSerializer(stops, many=True)
         for stop in stops_serializer.data:
             stop_location = Location.objects.get(pk=stop["location_id"])

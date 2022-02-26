@@ -50,7 +50,7 @@ class Stop(models.Model):
     order_by = models.IntegerField(default=None)
     arrival = models.TimeField(default=datetime.time(00,00))
     departure = models.TimeField(default=datetime.time(00,00))
-    stopTables = models.Manager()
+    objects = models.Manager()
     class Meta:
         indexes = [
             models.Index(fields=['route_id'])

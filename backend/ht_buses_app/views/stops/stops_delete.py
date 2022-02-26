@@ -18,7 +18,7 @@ def stops_delete(request):
     try:
         reqBody = json.loads(request.body)
         for stop in reqBody["stops"]:
-            stop_obj = Stop.stopTables.get(pk=stop["id"])
+            stop_obj = Stop.objects.get(pk=stop["id"])
             stop_serializer = StopSerializer(stop_obj, many=False)
             route = Route.objects.get(pk=stop_serializer.data["route_id"])
             stop_obj.location_id.delete()

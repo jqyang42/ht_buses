@@ -19,7 +19,7 @@ def stops_name_edit(request):
     count = 1
     stops = []
     for stop in reqBody["stops"]:
-        stop_obj = Stop.stopTables.get(pk=stop["id"])
+        stop_obj = Stop.objects.get(pk=stop["id"])
         if stop["name"] == "" or stop["name"] == None:
             stop_obj.name = "Stop " + str(stop_obj.order_by)
         else:

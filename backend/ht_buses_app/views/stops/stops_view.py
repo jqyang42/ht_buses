@@ -15,13 +15,7 @@ def stops_view(request):
     try:
         route = Route.objects.get(pk=id)
         route_serializer = RouteSerializer(route, many=False)
-        stops = Stop.stopTables.filter(route_id=route)
-        # COMMENTED OUT CODE FOR PAGINATION
-        # page_number = request.query_params["page"]
-        # if int(page_number) == 1:
-        #     stops = Stop.stopTables.all()[:10*int(page_number)]
-        # else:
-        #     stops = Stop.stopTable.all()[(1+10*(int(page_number)-1)):(10*int(page_number))]
+        stops = Stop.objects.filter(route_id=route)
         stops_serializer = StopSerializer(stops, many=True)
         stops_arr = []
         for stop in stops_serializer.data:

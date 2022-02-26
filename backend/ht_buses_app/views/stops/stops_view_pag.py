@@ -20,10 +20,10 @@ def stops_view(request):
             prev_page = False
             next_page = False
             total_page_num = 0
-            stops = Stop.stopTables.filter(route_id=route).order_by("order_by")
+            stops = Stop.objects.filter(route_id=route).order_by("order_by")
             stops_serializer = StopSerializer(stops, many=True)
         else:
-            stops = Stop.stopTables.filter(route_id=route).order_by("order_by")
+            stops = Stop.objects.filter(route_id=route).order_by("order_by")
             paginator = Paginator(stops, 10) # Show 10 per page
             stops_per_page = paginator.get_page(page_number)
             total_page_num = paginator.num_pages

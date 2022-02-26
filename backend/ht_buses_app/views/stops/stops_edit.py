@@ -20,7 +20,7 @@ def stops_edit(request):
         count = 1
         stops = []
         for stop in reqBody["stops"]:
-            stop_obj = Stop.stopTables.get(pk=stop["id"])
+            stop_obj = Stop.objects.get(pk=stop["id"])
             route = Route.objects.get(pk=stop["route_id"])
             stop_obj.route_id = route
             stop_obj.order_by = count
