@@ -14,7 +14,7 @@ def parent_dashboard(request):
         id = request.query_params["id"] # need id of parent
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
-        students = Student.studentsTable.filter(user_id=id)
+        students = Student.objects.filter(user_id=id)
         student_serializer = StudentSerializer(students, many=True)
         parent_kids = []
         for student in student_serializer.data:

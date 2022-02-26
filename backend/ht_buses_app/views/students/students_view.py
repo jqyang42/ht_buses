@@ -17,10 +17,10 @@ def students(request):
         prev_page = False
         next_page = False
         total_page_num = 0
-        students = Student.studentsTable.all().order_by("id")
+        students = Student.objects.all().order_by("id")
         student_serializer = StudentSerializer(students, many=True)
     else:
-        students = Student.studentsTable.all().order_by("id")
+        students = Student.objects.all().order_by("id")
         paginator = Paginator(students, 10) # Show 10 per page
         students_per_page = paginator.get_page(page_number)
         total_page_num = paginator.num_pages

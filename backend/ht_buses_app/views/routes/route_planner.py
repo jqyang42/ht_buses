@@ -28,7 +28,7 @@ def routeplanner(request):
             color_id = route["color_id"]
             routes_arr.append({"id" : route_id, "name" : name, "is_complete": is_complete, "color_id": color_id})
         data["routes"] = routes_arr
-        students = Student.studentsTable.filter(school_id=id)
+        students = Student.objects.filter(school_id=id)
         student_serializer = StudentSerializer(students, many=True)
         address_arr = []
         parent_id_arr = []
@@ -37,7 +37,7 @@ def routeplanner(request):
             parent = User.objects.get(pk=parent_id)
             if parent_id not in parent_id_arr:
                 parent_id_arr.append(parent_id)
-                parent_student = Student.studentsTable.filter(user_id=parent_id, school_id=id)
+                parent_student = Student.objects.filter(user_id=parent_id, school_id=id)
                 parent_student_serializer = StudentSerializer(parent_student, many=True)
                 parent_student_arr = []
                 for child in parent_student_serializer.data:

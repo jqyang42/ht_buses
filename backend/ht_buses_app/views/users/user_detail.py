@@ -18,7 +18,7 @@ def users_detail(request):
         location_serializer = LocationSerializer(user.location, many=False)
         location_arr = location_serializer.data
         if user_serializer.data["is_parent"] == True:
-            students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
+            students = Student.objects.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
             student_list = []
             for student in students_serializer.data:

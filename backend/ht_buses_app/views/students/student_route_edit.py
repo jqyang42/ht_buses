@@ -22,7 +22,7 @@ def student_route_edit(request):
             student_id = student["id"]
             route_id = student["route_id"]
             in_range = student["in_range"]
-            student_obj = Student.studentsTable.get(pk=student_id)
+            student_obj = Student.objects.get(pk=student_id)
             if route_id == 0:
                 student_obj.route_id = None
             else:

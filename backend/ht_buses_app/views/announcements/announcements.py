@@ -32,7 +32,7 @@ def announcement_school(request):
     try:
         id = request.query_params["id"]
         school_id = School.objects.get(pk=id)
-        students = Student.studentsTable.filter(school_id = school_id)
+        students = Student.objects.filter(school_id = school_id)
         recipients = announcement_tools.filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
         return Response(data)
@@ -50,7 +50,7 @@ def announcement_route(request):
     try:
         id = request.query_params["id"]
         route_id = Route.objects.get(pk=id)
-        students = Student.studentsTable.filter(route_id = route_id)
+        students = Student.objects.filter(route_id = route_id)
         recipients = announcement_tools.filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
         return Response(data)

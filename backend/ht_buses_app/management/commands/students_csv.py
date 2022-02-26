@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 user = User.objects.filter(email=row[3])[0]
                 user_serializer = UserSerializer(user, many=False)
                 parent = User.objects.get(pk=user_serializer.data["id"])
-                student = Student.studentsTable.create(
+                student = Student.objects.create(
                     first_name = first_name,
                     last_name = last_name,
                     student_school_id = student_school_id,

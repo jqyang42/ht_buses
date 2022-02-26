@@ -35,7 +35,7 @@ class Student(models.Model):
     route_id = models.ForeignKey('Route', default=None, on_delete=models.SET(None), blank=True, null=True)
     user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE) 
     in_range = models.BooleanField(default=False)
-    studentsTable = models.Manager()
+    objects = models.Manager()
     class Meta:
         indexes = [
             models.Index(fields=['route_id']),

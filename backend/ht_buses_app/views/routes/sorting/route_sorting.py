@@ -32,59 +32,35 @@ def alphabetical_sort(is_search, order_by, sort_by, page_number, search):
     if sort_by == "name":
         if order_by == "asc":
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("name")
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by("name")
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(name__icontains=search).order_by("name")
             else:
                 routes = Route.objects.all().order_by("name")
         else:
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("-name")
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by("-name")
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(name__icontains=search).order_by("-name")
             else:
                 routes = Route.objects.all().order_by("-name")
     if sort_by == "school":
         if order_by == "asc":
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("school_id__name")
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by("school_id__name")
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(name__icontains=search).order_by("school_id__name")
             else:
                 routes = Route.objects.all().order_by("school_id__name")
                 print(routes)
         else:
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("-school_id__name")
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by("-school_id__name")
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(name__icontains=search).order_by("-school_id__name")
             else:
                 routes = Route.objects.all().order_by("-school_id__name")
     if sort_by == "is_complete":
         if order_by == "asc":
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("-is_complete")
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by("-is_complete")
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(name__icontains=search).order_by("-is_complete")
             else:
                 routes = Route.objects.all().order_by("-is_complete")
         else:
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name")).filter(search=SearchQuery(search)).order_by("is_complete")
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by("is_complete")
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(name__icontains=search).order_by("is_complete")
             else:
                 routes = Route.objects.all().order_by("is_complete")
     if int(page_number) == 0:
@@ -116,7 +92,7 @@ def alphabetical_sort(is_search, order_by, sort_by, page_number, search):
         school = School.objects.get(pk=route["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
-        route_students = Student.studentsTable.filter(route_id=id)
+        route_students = Student.objects.filter(route_id=id)
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
         school_obj = {'id' : route["school_id"], 'name': school_name}
@@ -131,27 +107,15 @@ def numerical_sort(is_search, sort_by, order_by, page_number, search):
     if sort_by == "student_count":
         if order_by == "asc":
             if is_search == "true":
-<<<<<<< HEAD
-                routes = Route.objects.annotate(search=SearchVector("name"),student_count=Count('student')).filter(search=SearchQuery(search)).order_by('student_count')
+                routes = Route.objects.filter(name__icontains=search).order_by('student_count')
             else:
-                routes = Route.objects.annotate(student_count=Count('student')).order_by('student_count')
+                routes = Route.objects.filter(student_count=Count('student')).order_by('student_count')
                 print(routes)
         else:
             if is_search == "true":
-                routes = Route.objects.annotate(search=SearchVector("name"),student_count=Count('student')).filter(search=SearchQuery(search)).order_by('-student_count')
+                routes = Route.objects.filter(name__icontains=search).order_by('-student_count')
             else:
-                routes = Route.objects.annotate(student_count=Count('student')).order_by('-student_count')
-=======
-                routes = Route.routeTables.filter(name__icontains=search).order_by('student_count')
-            else:
-                routes = Route.routeTables.filter(student_count=Count('student')).order_by('student_count')
-                print(routes)
-        else:
-            if is_search == "true":
-                routes = Route.routeTables.filter(name__icontains=search).order_by('-student_count')
-            else:
-                routes = Route.routeTables.filter(student_count=Count('student')).order_by('-student_count')
->>>>>>> a685ed4ed2fc364920bb2f01e590caed72227d57
+                routes = Route.objects.filter(student_count=Count('student')).order_by('-student_count')
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -181,7 +145,7 @@ def numerical_sort(is_search, sort_by, order_by, page_number, search):
         school = School.objects.get(pk=route["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
-        route_students = Student.studentsTable.filter(route_id=id)
+        route_students = Student.objects.filter(route_id=id)
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
         school_obj = {'id' : route["school_id"], 'name': school_name}

@@ -16,7 +16,7 @@ def schools_detail(request):
     try :
         school = School.objects.get(pk=id)
         school_serializer = SchoolSerializer(school, many=False)
-        students = Student.studentsTable.filter(school_id=id)
+        students = Student.objects.filter(school_id=id)
         students_serializer = StudentSerializer(students, many=True)
         route = Route.objects.filter(school_id=id)
         route_serializer = RouteSerializer(route, many=True)
@@ -37,7 +37,7 @@ def schools_detail(request):
         data["students"] = student_list
         route_list = []
         for school_route in route_serializer.data:
-            route_count = Student.studentsTable.filter(route_id=Route.objects.get(pk=school_route["id"]))
+            route_count = Student.objects.filter(route_id=Route.objects.get(pk=school_route["id"]))
             route_count_serialize = StudentSerializer(route_count, many=True)
             route_list.append({'id': school_route["id"], 'name': school_route["name"], 'student_count': len(route_count_serialize.data), "is_complete": school_route["is_complete"]})
         data["routes"] = route_list

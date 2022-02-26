@@ -40,7 +40,7 @@ class Test_user_create(APITestCase):
         User.objects.create(first_name= "Mary", last_name ="Poppins",email = "fun@gmail.com",password = "yellow",address ="Hilly Ave",is_staff = True,is_parent = True)
         response = APIClient().post(self.endpoint2, data = Test_user_create.signup_info("ht_buses_app/tests/resources/create_user/user_edit.json"), format='json')
         assert User.objects.filter(email = "funny@gmail.com",  first_name = "Marre", last_name = "Poppy").count() > 0
-        assert Student.studentsTable.filter(first_name = "Not Henry", route_id = Route.objects.get(name ="Hilly Route")).count() > 0
+        assert Student.objects.filter(first_name = "Not Henry", route_id = Route.objects.get(name ="Hilly Route")).count() > 0
         assert response.status_code == 200 # Checks that the response code is successful
 
 

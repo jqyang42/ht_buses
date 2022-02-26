@@ -13,7 +13,7 @@ def students_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        student = Student.studentsTable.get(pk=id)
+        student = Student.objects.get(pk=id)
         student_serializer = StudentSerializer(student, many=False)
         if student_serializer.data["route_id"] == None:
             route_id = 0

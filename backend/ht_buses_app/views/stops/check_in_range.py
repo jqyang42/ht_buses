@@ -4,10 +4,10 @@ import math
 
 
 def update_students_in_range(student_route_id):
-    students = Student.studentsTable.filter(route_id=student_route_id)
+    students = Student.objects.filter(route_id=student_route_id)
     students_serializer = StudentSerializer(students, many=True)
     for student in students_serializer.data:
-        student_obj = Student.studentsTable.get(pk=student["id"])
+        student_obj = Student.objects.get(pk=student["id"])
         if len(check_student_in_range(student["user_id"], student_route_id)) != 0:
             student_obj.in_range = True
             student_obj.save()

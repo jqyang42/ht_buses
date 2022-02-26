@@ -21,7 +21,7 @@ def student_edit(request):
     new_last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["student"]["last_name"])
     student_school_id = reqBody["student"]["student_school_id"]
     try:
-        og_student_object = Student.studentsTable.get(pk = id) 
+        og_student_object = Student.objects.get(pk = id) 
     except: 
         data["message"] = "student was not found, update was unsucessful"
         data["success"] = False
