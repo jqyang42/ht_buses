@@ -1,10 +1,9 @@
-from lib2to3.pytree import Base
 from ...models import Route, Student, User, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, SchoolSerializer, StudentSerializer, RouteSerializer, UserSerializer
+from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, UserSerializer
 
 @csrf_exempt
 @api_view(["GET"])

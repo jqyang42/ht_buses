@@ -9,7 +9,6 @@ from ..stops import check_in_range
 from ..routes import route_check_is_complete
 
 # Student Route PUT API
-# Need to test
 @csrf_exempt
 @api_view(['PUT'])
 @permission_classes([IsAdminUser])
