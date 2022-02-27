@@ -11,7 +11,7 @@ from ..student_pagination import student_pagination
 # Students Table: User Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def students_user(request):
     data = {}
     page_number = request.query_params["page"]

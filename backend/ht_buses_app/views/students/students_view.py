@@ -11,7 +11,7 @@ from .student_pagination import student_pagination
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def students(request):
     page_number = request.query_params["page"]
     order_by = request.query_params["order_by"]

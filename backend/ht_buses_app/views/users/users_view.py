@@ -12,7 +12,7 @@ from django.db.models.functions import Concat
 # Basically we can use this api just for search by sending order_by/sort_by to be none
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def user_view(request):
     order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
     sort_by = request.query_params["sort_by"] # will look for asc or desc
