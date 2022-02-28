@@ -26,7 +26,7 @@ def get_routes_view(order_by, sort_by, page_number, search):
 
 def route_search_and_sort(order_by, sort_by, search):
     if sort_by == "school":
-        sort_by = "school_id___name"
+        sort_by = "school_id__name"
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         routes = Route.objects.filter(name__icontains=search).order_by("id")
     else:
