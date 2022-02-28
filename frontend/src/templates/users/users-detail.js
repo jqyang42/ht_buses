@@ -12,6 +12,7 @@ import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown'
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { getPage } from '../tables/server-side-pagination';
 
 class UsersDetail extends Component {
     state = {
@@ -34,18 +35,49 @@ class UsersDetail extends Component {
         delete_success: 0,    
         error_status: false,
         error_code: 200,
-        valid_id: 0
-        
+        valid_id: 0,
+        students_page: [],
+        students_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+            sortOptions: {
+                accessor: '',
+                sortDirection: 'none'
+            },
+            searchValue: ''
+        }
     }
 
     // initialize page
     componentDidMount() {
         this.getUserDetails()
+        this.getStudentsPage(this.state.students_table.pageIndex, this.state.students_table.sortOptions, this.state.students_table.searchValue)
         this.setState({ valid_id: 0})
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
         this.updateIsParent()
+    }
+
+    // pagination
+    getStudentsPage = (page, sortOptions, search) => {
+        getPage({ url: `students/user`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}` })
+        .then(res => {
+            const students_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                sortOptions: sortOptions,
+                searchValue: search
+            }
+            this.setState({
+                students_page: res.data.students,
+                students_table: students_table
+            })
+        })
     }
 
     // api calls
@@ -114,7 +146,11 @@ class UsersDetail extends Component {
 
     // render handlers
     handleShowAll = () => {
-        this.setState({ show_all: !this.state.show_all })
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }), () => {
+            this.getStudentsPage(this.state.show_all ? 0 : 1, null, '')
+        })
     }
 
     handleDeleteSubmit = (event) => {
@@ -370,7 +406,17 @@ class UsersDetail extends Component {
 
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>
-                                    <UserStudentsTable data={this.state.user?.students || []} showAll={this.state.show_all}/>
+                                    <UserStudentsTable 
+                                    data={this.state.students_page} 
+                                    showAll={this.state.show_all}
+                                    pageIndex={this.state.students_table.pageIndex}
+                                    canPreviousPage={this.state.students_table.canPreviousPage}
+                                    canNextPage={this.state.students_table.canNextPage}
+                                    updatePageCount={this.getStudentsPage}
+                                    pageSize={10}
+                                    totalPages={this.state.students_table.totalPages}
+                                    searchValue={this.state.students_table.searchValue}
+                                    />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"

@@ -40,7 +40,11 @@ class BusRoutesDetail extends Component {
             //     sortDirection: 'none'
             // },
             // searchValue: ''
-        }
+        },
+        // stops_page:[],
+        // stops_table: {
+
+        // }
     }
 
     componentDidMount() {
