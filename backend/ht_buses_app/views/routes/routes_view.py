@@ -8,7 +8,7 @@ from .route_pagination import route_pagination
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def routes(request):
     data = {}
     page_number = request.query_params["page"]
@@ -28,7 +28,7 @@ def route_search_and_sort(order_by, sort_by, search):
     if sort_by == "school":
         sort_by = "school_id___name"
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
-        routes = School.objects.filter(name__icontains=search).order_by("id")
+        routes = Route.objects.filter(name__icontains=search).order_by("id")
     else:
         if order_by == "asc":
             if search != None:

@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def schools(request):
     data = {}
     page_number = request.query_params["page"]
@@ -60,7 +60,7 @@ def get_schools_view(order_by, sort_by, page_number, search):
 
 def school_search_and_sort(sort_by, order_by, search):
     if sort_by == "address":
-        sort_by = "location_id___address"
+        sort_by = "location_id__address"
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         schools = School.objects.filter(name__icontains=search).order_by("id")
     else:
