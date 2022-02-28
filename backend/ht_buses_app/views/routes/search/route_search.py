@@ -16,7 +16,7 @@ def route_search(request):
     data = {}
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    routes = Route.routeTables.filter(name__icontains=search_q)
+    routes = Route.objects.filter(name__icontains=search_q)
     paginator = Paginator(routes, 10) # Show 10 per page
     routes_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages
@@ -37,10 +37,10 @@ def route_search(request):
     for route in route_serializer.data:
         id = route["id"]
         name = route["name"]
-        school = School.schoolsTable.get(pk=route["school_id"])
+        school = School.objects.get(pk=route["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
-        route_students = Student.studentsTable.filter(route_id=id)
+        route_students = Student.objects.filter(route_id=id)
         student_serializer = StudentSerializer(route_students, many=True)
         student_count = len(student_serializer.data)
         school_obj = {'id' : route["school_id"], 'name': school_name}

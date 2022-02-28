@@ -18,19 +18,19 @@ def users_detail(request):
         location_serializer = LocationSerializer(user.location, many=False)
         location_arr = location_serializer.data
         if user_serializer.data["is_parent"] == True:
-            students = Student.studentsTable.filter(user_id=user_serializer.data["id"])
+            students = Student.objects.filter(user_id=user_serializer.data["id"])
             students_serializer = StudentSerializer(students, many=True)
             student_list = []
             for student in students_serializer.data:
                 student_id = student["id"]
                 student_school_id = student["student_school_id"]
-                student_school = School.schoolsTable.get(pk=student["school_id"])
+                student_school = School.objects.get(pk=student["school_id"])
                 student_first_name = student["first_name"]
                 student_last_name = student["last_name"]
                 if student["route_id"] == None:
                     route_arr = {"id": 0, "color_id": 0}
                 else:
-                    route_student = Route.routeTables.get(pk=student["route_id"])
+                    route_student = Route.objects.get(pk=student["route_id"])
                     route_serializer = RouteSerializer(route_student, many=False)
                     route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"], "in_range": student["in_range"]}
                 student_list.append({'id' : student_id, 'student_school_id': student_school_id, 'first_name': student_first_name, 'last_name' : student_last_name, 'route' : route_arr, 'school': {'id': student_school.id, 'name': student_school.name}})

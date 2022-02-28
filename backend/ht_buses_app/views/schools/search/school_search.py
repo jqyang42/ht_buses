@@ -16,7 +16,7 @@ def school_search(request):
     # search by either id or name
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
-    schools = School.schoolsTable.filter(name__icontains=search_q)
+    schools = School.objects.filter(name__icontains=search_q)
     paginator = Paginator(schools, 10) # Show 10 per page
     schools_per_page = paginator.get_page(page_number)
     total_page_num = paginator.num_pages
@@ -39,7 +39,7 @@ def school_search(request):
         name = school["name"]
         arrival = school["arrival"]
         departure = school["departure"]
-        location = Location.locationTables.get(pk=school["location_id"])
+        location = Location.objects.get(pk=school["location_id"])
         location_serializer = LocationSerializer(location, many=False)
         schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
     data["schools"] = schools_arr

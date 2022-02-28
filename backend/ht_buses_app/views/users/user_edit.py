@@ -23,7 +23,7 @@ def user_edit(request):
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])
         user_object.location.address = reqBody["user"]["location"]["address"]
         user_object.location.lat = reqBody["user"]["location"]["lat"]
-        user_object.location.long = reqBody["user"]["location"]["long"]
+        user_object.location.lng = reqBody["user"]["location"]["lng"]
         user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
         user_object.is_staff = reqBody["user"]["is_staff"]

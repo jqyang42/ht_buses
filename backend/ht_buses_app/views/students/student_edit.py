@@ -21,13 +21,13 @@ def student_edit(request):
     new_last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["student"]["last_name"])
     student_school_id = reqBody["student"]["student_school_id"]
     try:
-        og_student_object = Student.studentsTable.get(pk = id) 
+        og_student_object = Student.objects.get(pk = id) 
     except: 
         data["message"] = "student was not found, update was unsucessful"
         data["success"] = False
         return Response(data, status = 404)
     try:
-        school_id = School.schoolsTable.get(pk=reqBody["student"]["school_id"])
+        school_id = School.objects.get(pk=reqBody["student"]["school_id"])
         user_id = User.objects.get(pk = reqBody["student"]["user_id"]) 
         og_student_object.last_name = new_last_name
         og_student_object.first_name = new_first_name
@@ -39,7 +39,7 @@ def student_edit(request):
         data["success"] = False
         return Response(data)
     try: 
-        og_student_object.route_id = Route.routeTables.get(pk=reqBody["student"]["route_id"])
+        og_student_object.route_id = Route.objects.get(pk=reqBody["student"]["route_id"])
         stop_arr = check_in_range.check_student_in_range(reqBody["student"]["user_id"], reqBody["student"]["route_id"])
         if len(stop_arr) != 0:
             in_range = True
@@ -51,7 +51,7 @@ def student_edit(request):
         og_student_object.in_range = False
     og_student_object.save()
     if og_student_object.route_id != None:
-        student_route = Route.routeTables.get(pk=reqBody["student"]["route_id"])
+        student_route = Route.objects.get(pk=reqBody["student"]["route_id"])
         is_complete = route_check_is_complete.route_is_complete(reqBody["student"]["route_id"])
         student_route.is_complete = is_complete
         student_route.save()

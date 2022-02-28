@@ -20,7 +20,7 @@ def student_search(request):
     search_q = request.query_params["q"]
     page_number = request.query_params["page"]
     print(search_q)
-    students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+    students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search_q) | Q(first_name__icontains=search_q) | Q(last_name__icontains=search_q) | Q(student_school_id__icontains = search_q)).order_by("id")
     paginator = Paginator(students, 10) # Show 10 per page
     students_per_page = paginator.get_page(page_number)
@@ -49,7 +49,7 @@ def student_search(request):
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
         parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
+        school = School.objects.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         in_range = student["in_range"]
@@ -57,7 +57,7 @@ def student_search(request):
             route = 0
             route_arr = {"id": 0, "color_id": 0}
         else:
-            route = Route.routeTables.get(pk=student["route_id"])
+            route = Route.objects.get(pk=student["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})

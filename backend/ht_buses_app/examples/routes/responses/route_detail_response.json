@@ -6,7 +6,7 @@
             "name": "School 1",
             "location": {
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         },
         "description": "Route 1 description",
@@ -19,7 +19,7 @@
             "location": {
                 "address": "Duke St. Durham NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             },
             "students": [
                 {

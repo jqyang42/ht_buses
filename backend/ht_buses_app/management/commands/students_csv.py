@@ -24,13 +24,13 @@ class Command(BaseCommand):
                 name = row[1].split()
                 first_name = name[0]
                 last_name = name[1]
-                school = School.schoolsTable.filter(name=row[2])[0]
+                school = School.objects.filter(name=row[2])[0]
                 school_serializer = SchoolSerializer(school, many=False)
-                student_school = School.schoolsTable.get(pk=school_serializer.data["id"])
+                student_school = School.objects.get(pk=school_serializer.data["id"])
                 user = User.objects.filter(email=row[3])[0]
                 user_serializer = UserSerializer(user, many=False)
                 parent = User.objects.get(pk=user_serializer.data["id"])
-                student = Student.studentsTable.create(
+                student = Student.objects.create(
                     first_name = first_name,
                     last_name = last_name,
                     student_school_id = student_school_id,

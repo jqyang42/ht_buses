@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
-        fields = ('id', 'address', 'lat', 'long')
+        fields = ('id', 'address', 'lat', 'lng')
 
 class StopSerializer(serializers.ModelSerializer):
     class Meta:

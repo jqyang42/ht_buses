@@ -34,68 +34,68 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
     if sort_by == "name":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("first_name")
             else:
-                students = Student.studentsTable.all().order_by("first_name")
+                students = Student.objects.all().order_by("first_name")
         else:
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-first_name")
             else:
-                students = Student.studentsTable.all().order_by("-first_name")
+                students = Student.objects.all().order_by("-first_name")
     if sort_by == "route":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("route_id__name")
             else:
-                students = Student.studentsTable.all().order_by("route_id__name")
+                students = Student.objects.all().order_by("route_id__name")
         else:
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-route_id__name").annotate(search=SearchVector("student_school_id","first_name","last_name")).filter(search__icontains=search)
             else:
-                students = Student.studentsTable.all().order_by("-route_id__name")
+                students = Student.objects.all().order_by("-route_id__name")
     if sort_by == "in_range":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-in_range")
             else:
-                students = Student.studentsTable.all().order_by("-in_range")
+                students = Student.objects.all().order_by("-in_range")
         else:
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("in_range")
             else:
-                students = Student.studentsTable.all().order_by("in_range")
+                students = Student.objects.all().order_by("in_range")
     if sort_by == "parent":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("user_id__first_name")
             else:
-                students = Student.studentsTable.all().order_by("user_id__first_name")
+                students = Student.objects.all().order_by("user_id__first_name")
         else:
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-user_id__first_name")
             else:
-                students = Student.studentsTable.all().order_by("-user_id__first_name")
+                students = Student.objects.all().order_by("-user_id__first_name")
     if sort_by == "school_name":
         if order_by == "asc":
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("school_id__name")
             else:
-                students = Student.studentsTable.all().order_by("school_id__name")
+                students = Student.objects.all().order_by("school_id__name")
         else:
             if search != None:
-                students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-school_id__name")
             else:
-                students = Student.studentsTable.all().order_by("-school_id__name")
+                students = Student.objects.all().order_by("-school_id__name")
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -129,7 +129,7 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
         parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
+        school = School.objects.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         in_range = student["in_range"]
@@ -137,7 +137,7 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
             route = 0
             route_arr = {"id": 0, "color_id": 0}
         else:
-            route = Route.routeTables.get(pk=student["route_id"])
+            route = Route.objects.get(pk=student["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})
@@ -150,16 +150,16 @@ def numerical_sort(order_by, page_number, search):
     data = {}
     if order_by == "asc":
         if search != None:
-            students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+            students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("student_school_id")
         else:
-            students = Student.studentsTable.all().order_by("student_school_id")
+            students = Student.objects.all().order_by("student_school_id")
     else:
         if search != None:
-            students = Student.studentsTable.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+            students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-student_school_id")
         else:
-            students = Student.studentsTable.all().order_by("-student_school_id")
+            students = Student.objects.all().order_by("-student_school_id")
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -193,7 +193,7 @@ def numerical_sort(order_by, page_number, search):
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
         parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
+        school = School.objects.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]
         in_range = student["in_range"]
@@ -201,7 +201,7 @@ def numerical_sort(order_by, page_number, search):
             route = 0
             route_arr = {"id": 0, "color_id": 0}
         else:
-            route = Route.routeTables.get(pk=student["route_id"])
+            route = Route.objects.get(pk=student["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
         student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'parent' : parent_name})

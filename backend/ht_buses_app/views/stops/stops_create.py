@@ -19,8 +19,8 @@ def stops_create(request):
         reqBody = json.loads(request.body)
         stops = []
         for stop in reqBody["stops"]:
-            route = Route.routeTables.get(pk=stop["route_id"])
-            route_stops = Stop.stopTables.filter(route_id=route)
+            route = Route.objects.get(pk=stop["route_id"])
+            route_stops = Stop.objects.filter(route_id=route)
             route_stops_serializer = StopSerializer(route_stops, many=True)
             if len(route_stops_serializer.data) == 0:
                 count = 1
@@ -33,8 +33,8 @@ def stops_create(request):
             order_by = count
             arrival = stop["arrival"]
             departure = stop["departure"]
-            location = Location.locationTables.create(address="", lat=stop["lat"], long=stop["long"])
-            stop_obj = Stop.stopTables.create(route_id=route, location_id=location, arrival=datetime.time(datetime.strptime(arrival,"%H:%M")), departure=datetime.time(datetime.strptime(departure, "%H:%M")), name=name, order_by=order_by)
+            location = Location.objects.create(address="", lat=stop["lat"], lng=stop["lng"])
+            stop_obj = Stop.objects.create(route_id=route, location_id=location, arrival=datetime.time(datetime.strptime(arrival,"%H:%M")), departure=datetime.time(datetime.strptime(departure, "%H:%M")), name=name, order_by=order_by)
             stop_serializer = StopSerializer(stop_obj, many=False)
             stops.append(stop_serializer.data)
             count += 1

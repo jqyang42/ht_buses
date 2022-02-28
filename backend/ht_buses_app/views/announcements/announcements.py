@@ -31,8 +31,8 @@ def announcement_school(request):
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
     try:
         id = request.query_params["id"]
-        school_id = School.schoolsTable.get(pk=id)
-        students = Student.studentsTable.filter(school_id = school_id)
+        school_id = School.objects.get(pk=id)
+        students = Student.objects.filter(school_id = school_id)
         recipients = announcement_tools.filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
         return Response(data)
@@ -49,8 +49,8 @@ def announcement_route(request):
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
     try:
         id = request.query_params["id"]
-        route_id = Route.routeTables.get(pk=id)
-        students = Student.studentsTable.filter(route_id = route_id)
+        route_id = Route.objects.get(pk=id)
+        students = Student.objects.filter(route_id = route_id)
         recipients = announcement_tools.filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
         return Response(data)

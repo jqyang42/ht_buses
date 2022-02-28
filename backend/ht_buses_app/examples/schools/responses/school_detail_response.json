@@ -8,7 +8,7 @@
             "id": 1,
             "address": "School 1 Address",
             "lat": 0.0,
-            "long": 0.0
+            "lng": 0.0
         }
     },
     "students": [

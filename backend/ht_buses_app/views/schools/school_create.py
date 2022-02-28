@@ -20,11 +20,11 @@ def school_create(request):
         name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["school"]["name"])
         address = reqBody["school"]["location"]["address"]
         lat = reqBody["school"]["location"]["lat"]
-        long = reqBody["school"]["location"]["long"]
+        lng = reqBody["school"]["location"]["lng"]
         arrival = reqBody["school"]["arrival"]
         departure = reqBody["school"]["departure"]
-        location = Location.locationTables.create(address=address, lat=lat, long=long)
-        school = School.schoolsTable.create(name=name, location_id=location, arrival=datetime.time(datetime.strptime(arrival,"%H:%M")), departure=datetime.time(datetime.strptime(departure, "%H:%M")))
+        location = Location.objects.create(address=address, lat=lat, lng=lng)
+        school = School.objects.create(name=name, location_id=location, arrival=datetime.time(datetime.strptime(arrival,"%H:%M")), departure=datetime.time(datetime.strptime(departure, "%H:%M")))
         location_serializer = LocationSerializer(location, many=False)
         data["message"] = "school created successfully"
         data["success"] = True

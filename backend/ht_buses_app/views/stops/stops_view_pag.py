@@ -14,16 +14,16 @@ def stops_view(request):
     data = {}
     id = request.query_params["id"] # this is route id
     try:
-        route = Route.routeTables.get(pk=id)
+        route = Route.objects.get(pk=id)
         page_number = request.query_params["page"]
         if int(page_number) == 0:
             prev_page = False
             next_page = False
             total_page_num = 0
-            stops = Stop.stopTables.filter(route_id=route).order_by("order_by")
+            stops = Stop.objects.filter(route_id=route).order_by("order_by")
             stops_serializer = StopSerializer(stops, many=True)
         else:
-            stops = Stop.stopTables.filter(route_id=route).order_by("order_by")
+            stops = Stop.objects.filter(route_id=route).order_by("order_by")
             paginator = Paginator(stops, 10) # Show 10 per page
             stops_per_page = paginator.get_page(page_number)
             total_page_num = paginator.num_pages
@@ -47,7 +47,7 @@ def stops_view(request):
             arrival = stop["arrival"]
             departure = stop["departure"]
             order_by = stop["order_by"]
-            location = Location.locationTables.get(pk=stop["location_id"])
+            location = Location.objects.get(pk=stop["location_id"])
             location_serializer = LocationSerializer(location, many=False)
             stops_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data, "order_by": order_by})
         data["stops"] = stops_arr

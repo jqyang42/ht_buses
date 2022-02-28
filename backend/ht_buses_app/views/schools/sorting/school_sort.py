@@ -30,25 +30,25 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
     if sort_by == "name":
         if order_by == "asc":
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("name")
+                schools = School.objects.filter(name__icontains=search).order_by("name")
             else:
-                schools = School.schoolsTable.all().order_by("name")
+                schools = School.objects.all().order_by("name")
         else:
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("-name")
+                schools = School.objects.filter(name__icontains=search).order_by("-name")
             else:
-                schools = School.schoolsTable.all().order_by("-name")
+                schools = School.objects.all().order_by("-name")
     if sort_by == "address":
         if order_by == "asc":
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("location_id__address")
+                schools = School.objects.filter(name__icontains=search).order_by("location_id__address")
             else:
-                schools = School.schoolsTable.all().order_by("location_id__address")
+                schools = School.objects.all().order_by("location_id__address")
         else:
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("-location_id__address")
+                schools = School.objects.filter(name__icontains=search).order_by("-location_id__address")
             else:
-                schools = School.schoolsTable.all().order_by("-location_id__address")
+                schools = School.objects.all().order_by("-location_id__address")
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -77,7 +77,7 @@ def alphabetical_sort(order_by, sort_by, page_number, search):
         name = school["name"]
         arrival = school["arrival"]
         departure = school["departure"]
-        location = Location.locationTables.get(pk=school["location_id"])
+        location = Location.objects.get(pk=school["location_id"])
         location_serializer = LocationSerializer(location, many=False)
         schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
     data["schools"] = schools_arr
@@ -90,25 +90,25 @@ def numerical_sort(sort_by, order_by, page_number, search):
     if sort_by == "arrival":
         if order_by == "asc":
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("arrival")
+                schools = School.objects.filter(name__icontains=search).order_by("arrival")
             else:
-                schools = School.schoolsTable.all().order_by("arrival")
+                schools = School.objects.all().order_by("arrival")
         else:
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("-arrival")
+                schools = School.objects.filter(name__icontains=search).order_by("-arrival")
             else:
-                schools = School.schoolsTable.all().order_by("-arrival")
+                schools = School.objects.all().order_by("-arrival")
     if sort_by == "departure":
         if order_by == "asc":
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("departure")
+                schools = School.objects.filter(name__icontains=search).order_by("departure")
             else:
-                schools = School.schoolsTable.all().order_by("departure")
+                schools = School.objects.all().order_by("departure")
         else:
             if search != None:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("-departure")
+                schools = School.objects.filter(name__icontains=search).order_by("-departure")
             else:
-                schools = School.schoolsTable.filter(name__icontains=search).order_by("-departure")
+                schools = School.objects.all().order_by("-departure")
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -137,7 +137,7 @@ def numerical_sort(sort_by, order_by, page_number, search):
             name = school["name"]
             arrival = school["arrival"]
             departure = school["departure"]
-            location = Location.locationTables.get(pk=school["location_id"])
+            location = Location.objects.get(pk=school["location_id"])
             location_serializer = LocationSerializer(location, many=False)
             schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
         data["schools"] = schools_arr

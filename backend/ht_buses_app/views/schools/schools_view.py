@@ -16,10 +16,10 @@ def schools(request):
         prev_page = False
         next_page = False
         total_page_num = 0
-        schools = School.schoolsTable.all().order_by("id")
+        schools = School.objects.all().order_by("id")
         school_serializer = SchoolSerializer(schools, many=True)
     else:
-        schools = School.schoolsTable.all().order_by("id")
+        schools = School.objects.all().order_by("id")
         paginator = Paginator(schools, 10) # Show 10 per page
         schools_per_page = paginator.get_page(page_number)
         total_page_num = paginator.num_pages
@@ -42,7 +42,7 @@ def schools(request):
         name = school["name"]
         arrival = school["arrival"]
         departure = school["departure"]
-        location = Location.locationTables.get(pk=school["location_id"])
+        location = Location.objects.get(pk=school["location_id"])
         location_serializer = LocationSerializer(location, many=False)
         schools_arr.append({"id": id, "name": name, "arrival": arrival[:-3], "departure": departure[:-3], "location": location_serializer.data})
     data["schools"] = schools_arr

@@ -45,7 +45,7 @@ def announcement_substitutions(user, subject, body, include_route_info):
 def get_students_info(user):
     students_array = []
     if user.is_parent:
-        students = Student.studentsTable.filter(user_id = user)
+        students = Student.objects.filter(user_id = user)
         for student in students:
             student_array = parent_student_detail.student_arr_data(student)
             route_data = student_array["route"]
@@ -67,7 +67,7 @@ def get_stop_array(user, route_id):
         for stop in stops:
             stop_array = {}
             stop_data = stop
-            location = Location.locationTables.get(pk = stop_data["location"]["id"])
+            location = Location.objects.get(pk = stop_data["location"]["id"])
             stop_array["address"] = location.address
             stop_array["name"] = stop_data["name"]
             d = datetime.strptime(stop_data["arrival"], "%H:%M")

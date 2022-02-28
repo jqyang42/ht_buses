@@ -15,16 +15,16 @@ def student_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        student_object =  Student.studentsTable.get(pk=id)
+        student_object =  Student.objects.get(pk=id)
         student_serializer = StudentSerializer(student_object, many=False)
         route_id = student_serializer.data["route_id"]
         parent = User.objects.get(pk = student_object.user_id.id)
-        if(Student.studentsTable.filter(user_id = parent).count() == 1):
+        if(Student.objects.filter(user_id = parent).count() == 1):
             parent.is_parent = False
         student_object.delete()
         parent.save()
         if route_id != None:
-            route = Route.routeTables.get(pk=route_id)
+            route = Route.objects.get(pk=route_id)
             is_complete = route_check_is_complete.route_is_complete(route_id)
             route.is_complete = is_complete
             route.save()

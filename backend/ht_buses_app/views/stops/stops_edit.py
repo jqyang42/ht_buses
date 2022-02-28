@@ -20,8 +20,8 @@ def stops_edit(request):
         count = 1
         stops = []
         for stop in reqBody["stops"]:
-            stop_obj = Stop.stopTables.get(pk=stop["id"])
-            route = Route.routeTables.get(pk=stop["route_id"])
+            stop_obj = Stop.objects.get(pk=stop["id"])
+            route = Route.objects.get(pk=stop["route_id"])
             stop_obj.route_id = route
             stop_obj.order_by = count
             arrival = stop["arrival"]
@@ -30,12 +30,12 @@ def stops_edit(request):
             stop_obj.departure = datetime.time(datetime.strptime(departure, "%H:%M"))
             stop_obj.location_id.address = stop["location"]["address"]
             stop_obj.location_id.lat = stop["location"]["lat"]
-            stop_obj.location_id.long = stop["location"]["long"]
+            stop_obj.location_id.lng = stop["location"]["lng"]
             stop_obj.location_id.save()
             stop_obj.save()
             stop_serializer = StopSerializer(stop_obj, many=False)
             update_students_in_range(stop_serializer.data["route_id"])
-            route = Route.routeTables.get(pk=stop_serializer.data["route_id"])
+            route = Route.objects.get(pk=stop_serializer.data["route_id"])
             is_complete = route_check_is_complete.route_is_complete(stop_serializer.data["route_id"])
             route.is_complete = is_complete
             route.save()

@@ -10,7 +10,7 @@
             "location": {
                 "address": "a cool place",
                 "lat": 178.2,
-                "long": 152.1
+                "lng": 152.1
             }
         },
         {
@@ -23,7 +23,7 @@
             "location": {
                 "address": "a cool place",
                 "lat": 178.2,
-                "long": 152.1
+                "lng": 152.1
             }
         },
         {
@@ -36,7 +36,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         },
         {
@@ -49,7 +49,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         },
         {
@@ -62,7 +62,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         },
         {
@@ -75,7 +75,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         },
         {
@@ -88,7 +88,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         }
     ],

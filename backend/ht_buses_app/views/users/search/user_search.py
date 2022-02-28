@@ -45,7 +45,7 @@ def user_search(request):
         email = user["email"]
         is_staff = user["is_staff"]
         is_parent = user["is_parent"]
-        location = Location.locationTables.get(pk=user["location"])
+        location = Location.objects.get(pk=user["location"])
         location_serializer = LocationSerializer(location, many=False)
         location_arr = location_serializer.data
         users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'location' : location_arr})

@@ -13,18 +13,18 @@ def students_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        student = Student.studentsTable.get(pk=id)
+        student = Student.objects.get(pk=id)
         student_serializer = StudentSerializer(student, many=False)
         if student_serializer.data["route_id"] == None:
             route_id = 0
             route_name = ""
         else:
-            route = Route.routeTables.get(pk=student_serializer.data["route_id"])
+            route = Route.objects.get(pk=student_serializer.data["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_id = route_serializer.data["id"]
             route_name = route_serializer.data["name"]
         in_range = student_serializer.data["in_range"]
-        school = School.schoolsTable.get(pk=student_serializer.data["school_id"])
+        school = School.objects.get(pk=student_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         student_arr = {"user_id": student_serializer.data["user_id"], "student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "in_range": in_range}
         data["student"] = student_arr
