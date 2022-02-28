@@ -35,7 +35,10 @@ class BusRoutesDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {},
+            // sortOptions: {
+            //     accessor: '',
+            //     sortDirection: 'none'
+            // },
             // searchValue: ''
         }
     }
@@ -48,7 +51,7 @@ class BusRoutesDetail extends Component {
 
     // pagination
     getStudentsPage = (page, sortOptions, search) => {
-        getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}` })
+        getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
             const students_table = {
                 pageIndex: res.pageIndex,
@@ -86,31 +89,7 @@ class BusRoutesDetail extends Component {
                 }, 
             });
 
-            this.setMarkers(users)
-            // console.log(users)
-
-            // users.map((user) => {
-            //     const studentIDs = [];
-            //     const studentNames = [];
-            //     user.students.map((student) => {
-            //         studentIDs.push(student.id);
-            //         const fullName = student.first_name + ' ' + student.last_name;
-            //         studentNames.push(fullName);
-            //     });
-            //     this.setState(prevState => ({
-            //         markers: [...prevState.markers, {
-            //             position: {
-            //                 lat: user.location.lat,
-            //                 lng: user.location.lng
-            //             },
-            //             id: user.id,
-            //             studentIDs: studentIDs,
-            //             studentNames: studentNames,
-            //             routeID: this.props.params.id //TODO: change markers to create per student
-            //         }]
-            //     }));
-            // });
-            
+            this.setMarkers(users)            
         })
         .catch(error => {
             // console.log(error.response)
