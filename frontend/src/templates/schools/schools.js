@@ -17,7 +17,10 @@ class Schools extends Component {
         canPreviousPage: null,
         canNextPage: null,
         totalPages: null,
-        sortOptions: {},
+        sortOptions: {
+            accessor: '',
+            sortDirection: 'none'
+        },
         searchValue: ''
     }
 
