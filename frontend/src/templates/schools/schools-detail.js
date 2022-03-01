@@ -44,7 +44,7 @@ class SchoolsDetail extends Component {
 
     // pagination
     getStudentsPage = (page, sortOptions, search) => {
-        getPage({ url: `students/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}` })
+        getPage({ url: `students/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
             const students_table = {
                 pageIndex: res.pageIndex,
