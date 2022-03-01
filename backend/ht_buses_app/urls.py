@@ -1,6 +1,6 @@
 from django.urls import path
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
-from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view
+from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
 from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
 from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
 from . views.auth import auth_valid, login, logout
@@ -12,6 +12,7 @@ from . views.stops import stops_create, stops_view, stops_edit, stops_delete, st
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
+from . views.users.detail import user_school
 
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
@@ -20,6 +21,7 @@ urlpatterns = [
     path('api/schools/detail', school_detail.schools_detail, name="schools_detail"),
     path('api/schools/create', school_create.school_create, name="school_create"),
     path('api/schools/edit', school_edit.school_edit, name="school_edit"),
+    path('api/schools/edit/time', school_edit_time.school_edit_time, name="school_edit_time"),
     path('api/schools/delete', school_delete.school_delete, name="school_delete"),
     path('api/routes', routes_view.routes, name="routes"),
     path('api/routes/detail', route_detail.routes_detail, name="routes_detail"),
@@ -32,6 +34,7 @@ urlpatterns = [
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
     path('api/users/edit/validate-email', user_edit.valid_email_edit, name="validate_email_edit"),
+    path('api/users/school', user_school.user_school_view, name="user_school"),
     path('api/email_exists', general_apis.email_exists, name="email_exists"),
     path('api/users/delete', user_delete.user_delete, name = "delete_user"),
     path('api/routeplanner', route_planner.routeplanner, name="routeplanner"),
