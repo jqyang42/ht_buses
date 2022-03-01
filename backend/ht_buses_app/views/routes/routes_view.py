@@ -8,7 +8,7 @@ from .route_pagination import route_pagination
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def routes(request):
     data = {}
     page_number = request.query_params["page"]
