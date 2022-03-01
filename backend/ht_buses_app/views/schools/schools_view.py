@@ -12,14 +12,21 @@ from django.core.paginator import Paginator
 def schools(request):
     data = {}
     page_number = request.query_params["page"]
+    order_by = request.query_params["order_by"] 
+    sort_by = request.query_params["sort_by"]
+    search = request.query_params["q"]
+    data = get_schools_view(order_by, sort_by, page_number, search)
+    return Response(data)
+
+def get_schools_view(order_by, sort_by, page_number, search):
+    data = {}
+    schools = school_search_and_sort(sort_by, order_by, search)
     if int(page_number) == 0:
         prev_page = False
         next_page = False
         total_page_num = 0
-        schools = School.objects.all().order_by("id")
         school_serializer = SchoolSerializer(schools, many=True)
     else:
-        schools = School.objects.all().order_by("id")
         paginator = Paginator(schools, 10) # Show 10 per page
         schools_per_page = paginator.get_page(page_number)
         total_page_num = paginator.num_pages
@@ -48,4 +55,24 @@ def schools(request):
     data["schools"] = schools_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True
-    return Response(data)
+    return data
+
+
+def school_search_and_sort(sort_by, order_by, search):
+    if sort_by == "address":
+        sort_by = "location_id__address"
+    if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
+        schools = School.objects.filter(name__icontains=search).order_by("id")
+    else:
+        if order_by == "asc":
+            if search != None:
+                schools = School.objects.filter(name__icontains=search).order_by(sort_by)
+            else:
+                schools = School.objects.all().order_by(sort_by)
+        else:
+            if search != None:
+                schools = School.objects.filter(name__icontains=search).order_by("-" + sort_by)
+            else:
+                schools = School.objects.all().order_by("-" + sort_by)
+    return schools
+    

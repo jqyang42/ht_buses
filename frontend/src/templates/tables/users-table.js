@@ -11,17 +11,6 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
         updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
 
-    // // Filter by multiple columns
-    // const ourGlobalFilterFunction = useCallback(
-    //     (rows, ids, query) => {
-    //         return rows.filter((row) => 
-    //             row.values["name"].toLowerCase().includes(query.toLowerCase()) ||
-    //             row.values["email"].toLowerCase().includes(query.toLowerCase())
-    //         );
-    //     },
-    //     [],
-    // );
-
     const columns = React.useMemo(
         () => [
             // {
