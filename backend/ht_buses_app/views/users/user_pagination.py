@@ -39,7 +39,11 @@ def user_pagination(users, page_number):
         location = Location.objects.get(pk=user["location"])
         location_serializer = LocationSerializer(location, many=False)
         location_arr = location_serializer.data
-        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'role' : User.role_choices[role-1][1], 'is_parent' : is_parent, 'location' : location_arr})
+        if role == 0:
+            role_name = "General"
+        else:
+            role_name = User.role_choices[int(user_serializer.data["role"])-1][1]
+        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'role' : role_name, 'is_parent' : is_parent, 'location' : location_arr})
     data["users"] = users_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True

@@ -16,7 +16,11 @@ def users_detail(request):
         user_serializer = UserSerializer(user, many=False)
         location_serializer = LocationSerializer(user.location, many=False)
         location_arr = location_serializer.data
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": User.role_choices[int(user_serializer.data["role"])-1][1], "is_parent": user_serializer.data["is_parent"], "location": location_arr}
+        if user_serializer.data["role"] == 0:
+            role = "General"
+        else:
+            role = User.role_choices[int(user_serializer.data["role"])-1][1]
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role, "is_parent": user_serializer.data["is_parent"], "location": location_arr}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)

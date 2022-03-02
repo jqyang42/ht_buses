@@ -4,7 +4,7 @@
         "password": "something",
         "first_name": "Example",
         "last_name": "IsCool",
-        "is_staff": true,
+        "role": "Administrator",
         "is_parent": false,
         "location": {
             "address": "Address here",
