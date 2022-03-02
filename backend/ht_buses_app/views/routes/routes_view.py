@@ -1,10 +1,9 @@
-from ...models import School, Route, Student
+from ...models import School, Route
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
-from django.core.paginator import Paginator
+from .route_pagination import route_pagination
 
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
@@ -13,43 +12,32 @@ from django.core.paginator import Paginator
 def routes(request):
     data = {}
     page_number = request.query_params["page"]
-    if int(page_number) == 0:
-        prev_page = False
-        next_page = False
-        total_page_num = 0
-        routes = Route.objects.all().order_by("id")
-        route_serializer = RouteSerializer(routes, many=True)
-    else:
-        routes = Route.objects.all().order_by("id")
-        paginator = Paginator(routes, 10) # Show 10 per page
-        routes_per_page = paginator.get_page(page_number)
-        total_page_num = paginator.num_pages
-        route_serializer = RouteSerializer(routes_per_page, many=True)
-        if int(page_number) == 1 and int(page_number) == total_page_num:
-            prev_page = False
-            next_page = False
-        elif int(page_number) == 1:
-            prev_page = False
-            next_page = True
-        else:
-            prev_page = True
-            if int(page_number) == total_page_num:
-                next_page = False
-            else:
-                next_page = True
-    routes_filter = []
-    for route in route_serializer.data:
-        id = route["id"]
-        name = route["name"]
-        school = School.objects.get(pk=route["school_id"])
-        school_serializer = SchoolSerializer(school, many=False)
-        school_name = school_serializer.data["name"]
-        route_students = Student.objects.filter(route_id=id)
-        student_serializer = StudentSerializer(route_students, many=True)
-        student_count = len(student_serializer.data)
-        school_obj = {'id' : route["school_id"], 'name': school_name}
-        routes_filter.append({'id' : id, 'name' : name, 'school_name': school_obj, 'student_count': student_count, "is_complete": route["is_complete"], "color_id": route["color_id"]})
-    data["routes"] = routes_filter
-    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
-    data["success"] = True
+    order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
+    sort_by = request.query_params["sort_by"] # will look for asc or desc
+    search = request.query_params["q"]
+    data = get_routes_view(order_by, sort_by, page_number, search)
     return Response(data)
+
+def get_routes_view(order_by, sort_by, page_number, search):
+    data = {}
+    routes = route_search_and_sort(order_by, sort_by, search)
+    data = route_pagination(routes, page_number)
+    return data
+
+def route_search_and_sort(order_by, sort_by, search):
+    if sort_by == "school":
+        sort_by = "school_id__name"
+    if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
+        routes = Route.objects.filter(name__icontains=search).order_by("id")
+    else:
+        if order_by == "asc":
+            if search != None:
+                routes = Route.objects.filter(name__icontains=search).order_by(sort_by)
+            else:
+                routes = Route.objects.all().order_by(sort_by)
+        else:
+            if search != None:
+                routes = Route.objects.filter(name__icontains=search).order_by("-" + sort_by)
+            else:
+                routes = Route.objects.all().order_by("-" + sort_by)
+    return routes

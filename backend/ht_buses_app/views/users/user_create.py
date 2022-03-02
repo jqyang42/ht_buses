@@ -19,7 +19,6 @@ def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
     email = reqBody["user"]['email']
-    #password = reqBody["user"]['password']
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['first_name'])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['last_name'])
     address = reqBody["user"]["location"]['address']
