@@ -7,7 +7,7 @@ from ...serializers import LocationSerializer, UserSerializer
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAdminUser])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]

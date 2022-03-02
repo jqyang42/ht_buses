@@ -6,7 +6,7 @@ from rest_framework.response import Response
   
 @csrf_exempt
 @api_view(["DELETE"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdminUser]) 
 def user_delete(request):
     data = {}
     id = request.query_params["id"]
