@@ -3,7 +3,7 @@
     "last_name": "Sydney",
     "email": "cs@admin.com",
     "password": "IamTheCoolAdmin",
-    "is_staff": true,
+    "role": "Administrator",
     "is_parent": false,
     "address": ""
 }

@@ -3,7 +3,7 @@
         "first_name": "Example2",
         "last_name": "IsCool2",
         "email": "testing@example.com",
-        "is_staff": true,
+        "role": "General",
         "is_parent": true,
         "location": {
             "id": 13,
