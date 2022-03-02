@@ -25,7 +25,7 @@ def user_login(request):
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
-    info["is_staff"] = user.is_staff
+    info["role"] = user.role
     info["is_parent"] = user.is_parent
     info["email"] = user.email
     info["first_name"] = user.first_name

@@ -8,7 +8,7 @@ from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from ..user_pagination import user_pagination
 
-# Basically we can use this api just for search by sending order_by/sort_by to be none
+# This only gets users for 1 school, need this somehow to get multiple
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdminUser]) 

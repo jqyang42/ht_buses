@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import json
 from rest_framework.response import Response
 
+# TODO: Needs to be updated, ask Fern
 # Valid Access API
 @csrf_exempt
 @api_view(["POST"]) 

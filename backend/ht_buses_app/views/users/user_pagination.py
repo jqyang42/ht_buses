@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from ...models import Location
+from ...models import Location, User
 from ...serializers import UserSerializer, LocationSerializer
 from django.db.models.functions import Concat 
 
@@ -34,12 +34,12 @@ def user_pagination(users, page_number):
         first_name = user["first_name"]
         last_name = user["last_name"]
         email = user["email"]
-        is_staff = user["is_staff"]
+        role = user["role"]
         is_parent = user["is_parent"]
         location = Location.objects.get(pk=user["location"])
         location_serializer = LocationSerializer(location, many=False)
         location_arr = location_serializer.data
-        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'is_staff' : is_staff, 'is_parent' : is_parent, 'location' : location_arr})
+        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'role' : User.role_choices[role-1][1], 'is_parent' : is_parent, 'location' : location_arr})
     data["users"] = users_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True

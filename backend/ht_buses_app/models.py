@@ -57,7 +57,7 @@ class Stop(models.Model):
         ]
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng):
+    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng, role):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -73,23 +73,39 @@ class UserManager(BaseUserManager):
             last_name = last_name,
             is_parent = is_parent,
             )
+        if role == None:
+            user.role = 0
+        else:
+            if role == "School Staff":
+                user.role = User.SCHOOL_STAFF
+            if role == "Driver":
+                user.role = User.DRIVER
         user.location_id = location_obj.id
         user.set_password(password)
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng)
-        user.is_staff = True
+    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0,):
+        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=None)
+        user.role = User.ADMIN
         user.save(using=self._db)
         return user
 
 class User(AbstractBaseUser):
+    ADMIN = 1
+    DRIVER = 2
+    SCHOOL_STAFF = 3
+    role_choices = (
+        (ADMIN, "Administrator"),
+        (DRIVER, "Driver"),
+        (SCHOOL_STAFF, "School Staff")
+    )
+    role = models.PositiveSmallIntegerField(choices=role_choices, null=True, blank=True, default=0)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email',unique=True,max_length=128)
-    is_staff = models.BooleanField(default=False)
     is_parent = models.BooleanField(default=False)
+    role = models.PositiveSmallIntegerField(choices=role_choices)
     location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']

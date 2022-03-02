@@ -19,7 +19,7 @@ class SchoolSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'is_staff', 'is_parent', 'location')
+        fields = ('id', 'first_name', 'last_name', 'email', 'role', 'is_parent', 'location')
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:

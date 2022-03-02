@@ -14,7 +14,7 @@ from ..accounts import account_tools
 # User POST API
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -22,15 +22,15 @@ def user_create(request):
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['first_name'])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['last_name'])
     address = reqBody["user"]["location"]['address']
-    is_staff = reqBody["user"]['is_staff']
+    role = reqBody["user"]['role']
     is_parent = reqBody["user"]['is_parent']
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
     password = account_tools.generate_random_password()
-    if is_staff: 
+    if role == "Administrator": 
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role)
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     data["message"] = "user created successfully"
