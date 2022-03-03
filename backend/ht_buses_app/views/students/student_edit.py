@@ -1,18 +1,18 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
+from ...role_permissions import IsAdmin
 
 # Students PUT API
 @csrf_exempt
 @api_view(['PUT'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def student_edit(request):
     data = {}
     id = request.query_params["id"]

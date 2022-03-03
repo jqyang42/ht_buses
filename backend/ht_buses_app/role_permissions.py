@@ -6,10 +6,9 @@ class IsAdmin(permissions.BasePermission):
         if request.user.role == 1:
             return True
 
-
 class IsSchoolStaff(permissions.BasePermission): 
     def has_permission(self, request, view): 
-        if request.user.role == 4:
+        if request.user.role == 3:
             return True
 
 class IsDriver(permissions.BasePermission):

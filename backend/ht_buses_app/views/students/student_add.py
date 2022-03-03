@@ -1,13 +1,14 @@
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from .student_create import create_student
+from ...role_permissions import IsAdmin
 
 @api_view(["POST"])
 @csrf_exempt
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def add_new_students(request):
     data = {}
     user_id = request.query_params["id"]

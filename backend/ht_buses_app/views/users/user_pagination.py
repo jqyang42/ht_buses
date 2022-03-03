@@ -36,9 +36,12 @@ def user_pagination(users, page_number):
         role = user["role"]
         is_parent = user["is_parent"]
         phone_number = user["phone_number"]
-        location = Location.objects.get(pk=user["location"])
-        location_serializer = LocationSerializer(location, many=False)
-        location_arr = location_serializer.data
+        try:
+            location = Location.objects.get(pk=user["location"])
+            location_serializer = LocationSerializer(location, many=False)
+            location_arr = location_serializer.data
+        except:
+            location_arr = []
         if role == 0:
             role_name = "General"
         else:

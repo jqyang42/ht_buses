@@ -2,7 +2,7 @@ from ...serializers import SchoolSerializer, LocationSerializer
 from ...models import School, Location, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
+from rest_framework.permissions import  AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from ...role_permissions import IsSchoolStaff
@@ -12,11 +12,12 @@ from datetime import datetime
 from django.contrib.auth.decorators import permission_required
 from guardian.shortcuts import assign_perm
 from guardian.shortcuts import get_objects_for_user
+from ...role_permissions import IsAdmin
 
  
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin]) 
 def school_edit(request):
     data = {}
     id = request.query_params["id"]

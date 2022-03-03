@@ -7,6 +7,7 @@ from ..resources import capitalize_reg
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
 
+
 def create_student(student_info, id=None):
     data = {}
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info["first_name"])
