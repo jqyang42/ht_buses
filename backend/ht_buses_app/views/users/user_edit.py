@@ -12,7 +12,7 @@ import traceback
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def user_edit(request):
     data = {}
     try:
@@ -25,6 +25,7 @@ def user_edit(request):
         user_object.location.address = reqBody["user"]["location"]["address"]
         user_object.location.lat = reqBody["user"]["location"]["lat"]
         user_object.location.lng = reqBody["user"]["location"]["lng"]
+        user_object.phone_number = reqBody["user"]["phone_number"]
         user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
         if User.role_choices[0][1] == reqBody["user"]["role"]:
@@ -40,7 +41,7 @@ def user_edit(request):
         data["message"] = "user information was successfully updated"
         data["success"] = True
         location_serializer = LocationSerializer(user_object.location, many=False)
-        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role' : reqBody["user"]["role"], 'is_parent' : reqBody["user"]["is_parent"], 'location' : location_serializer.data}
+        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role' : reqBody["user"]["role"], 'is_parent' : reqBody["user"]["is_parent"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
         return Response(data)
     except:
 
