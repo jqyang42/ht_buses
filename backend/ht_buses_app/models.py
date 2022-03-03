@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
+from django.core.validators import RegexValidator
 
 class Location(models.Model):
     address = models.CharField(max_length=100)
@@ -104,6 +105,8 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email',unique=True,max_length=128)
+    phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$")
+    phone_number = models.CharField(validators = [phoneNumberRegex], max_length=16, unique=True, default=None, blank=True, null=True)
     is_parent = models.BooleanField(default=False)
     role = models.PositiveSmallIntegerField(choices=role_choices)
     location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
