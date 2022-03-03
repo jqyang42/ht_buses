@@ -58,7 +58,7 @@ class Stop(models.Model):
         ]
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng, role):
+    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng, role, phone_number):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -73,6 +73,7 @@ class UserManager(BaseUserManager):
             first_name = first_name,
             last_name = last_name,
             is_parent = is_parent,
+            phone_number = phone_number
             )
         if role == None:
             user.role = 0
@@ -87,7 +88,7 @@ class UserManager(BaseUserManager):
         return user 
        
     def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0,):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=None)
+        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=None, phone_number=None)
         user.role = User.ADMIN
         user.save(using=self._db)
         return user
