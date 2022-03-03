@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
 from django.core.validators import RegexValidator
+from django.contrib.auth.models import PermissionsMixin 
 
 class Location(models.Model):
     address = models.CharField(max_length=100)
@@ -15,6 +16,13 @@ class School(models.Model):
     arrival = models.TimeField(default=datetime.time(00,00))
     departure = models.TimeField(default=datetime.time(00,00))
     objects = models.Manager()
+    class Meta:
+        permissions = (
+                       ("view", "can view school"),
+                       ("change", "can edit school"),
+                       ("delete", "can delete school"),
+                        ("add", "can create school"),
+                      )
 
 class Route(models.Model):
     name = models.CharField(max_length=50)
@@ -27,6 +35,12 @@ class Route(models.Model):
         indexes = [
             models.Index(fields=['school_id'])
         ]
+        permissions = (
+                       ("view", "can view route"),
+                       ("change", "can edit route"),
+                       ("delete", "can delete route"),
+                        ("add", "can create route"),
+                      )
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
@@ -43,6 +57,12 @@ class Student(models.Model):
             models.Index(fields=['school_id']),
             models.Index(fields=['user_id'])
         ]
+        permissions = (
+                       ("view", "can view student"),
+                       ("change", "can edit student"),
+                       ("delete", "can delete student"),
+                        ("add", "can create student"),
+                      )
 
 class Stop(models.Model):
     location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
@@ -56,6 +76,12 @@ class Stop(models.Model):
         indexes = [
             models.Index(fields=['route_id'])
         ]
+        permissions = (
+                       ("view", "can view stop"),
+                       ("change", "can edit stop"),
+                       ("delete", "can delete stop"),
+                        ("add", "can create stop"),
+                      )
 
 class UserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng, role, phone_number):
@@ -93,7 +119,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     ADMIN = 1
     DRIVER = 2
     GENERAL = 3
@@ -116,6 +142,13 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
     objects = UserManager()
+    class Meta:
+        permissions = (
+                       ("view", "can view user"),
+                       ("change", "can edit user"),
+                       ("delete", "can delete user"),
+                        ("add", "can create user"),
+                      )
 
 
     
