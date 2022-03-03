@@ -2,17 +2,18 @@ from ...serializers import LocationSerializer
 from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from .user_address_update import update_student_stop
 import traceback
+from ...role_permissions import IsAdmin
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdmin]) 
 def user_edit(request):
     data = {}
     try:

@@ -1,7 +1,7 @@
 from ...models import Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
 from django.db.models import Value as V
@@ -11,7 +11,7 @@ from .student_pagination import student_pagination
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([AllowAny]) 
 def students(request):
     page_number = request.query_params["page"]
     order_by = request.query_params["order_by"]

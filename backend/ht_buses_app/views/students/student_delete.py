@@ -1,16 +1,16 @@
 from ...models import Student, User, Route
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...serializers import StudentSerializer
 from ..routes import route_check_is_complete
+from ...role_permissions import IsAdmin
 
 # Student DELETE API
 @csrf_exempt
 @api_view(["DELETE"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def student_delete(request):
     data = {}
     id = request.query_params["id"]

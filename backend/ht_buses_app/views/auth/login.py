@@ -1,5 +1,5 @@
 from rest_framework.authtoken.models import Token
-from ...models import User
+from ...models import User, Student
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import api_view, permission_classes
@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
+from ..general.general_tools import user_is_parent
 
 @csrf_exempt
 @api_view(['POST'])
@@ -25,10 +26,15 @@ def user_login(request):
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
-    info["role"] = user.role
-    info["is_parent"] = user.is_parent
+    info["role_id"] = user.role
+    info["role_vaue"] = get_role_string(user.role)
+    info["is_parent"] = user_is_parent(user.id)
     info["email"] = user.email
     info["first_name"] = user.first_name
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
     return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
+
+
+def get_role_string(role_id):
+    return User.role_choices[int(role_id)-1][1]

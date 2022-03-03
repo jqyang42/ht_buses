@@ -2,18 +2,18 @@ from ...serializers import SchoolSerializer, LocationSerializer
 from ...models import School, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from datetime import datetime
-
+from ...role_permissions import IsAdmin
 # Schools Time PUT API
 # Refactor to be a PUT request
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def school_edit_time(request):
     data = {}
     id = request.query_params["id"]

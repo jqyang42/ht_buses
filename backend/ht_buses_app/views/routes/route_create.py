@@ -1,17 +1,18 @@
 from ...models import Route, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import json
 from ...serializers import RouteSerializer
 import re
 from ..resources import capitalize_reg
 from datetime import datetime
+from ...role_permissions import IsAdmin
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)

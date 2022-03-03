@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
@@ -7,11 +7,12 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from .user_pagination import user_pagination
+from ...role_permissions import IsAdmin
 
 # Basically we can use this api just for search by sending order_by/sort_by to be none
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdmin]) 
 def user_view(request):
     order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
     sort_by = request.query_params["sort_by"] # will look for asc or desc

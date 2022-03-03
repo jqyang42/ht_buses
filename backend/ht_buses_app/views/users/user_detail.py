@@ -4,10 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, UserSerializer
+from ...role_permissions import IsAdmin
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
