@@ -1,19 +1,22 @@
 from ...serializers import SchoolSerializer, LocationSerializer
-from ...models import School, Location
+from ...models import School, Location, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.parsers import json
 from rest_framework.response import Response
+from ...role_permissions import IsSchoolStaff
 import re
 from ..resources import capitalize_reg
 from datetime import datetime
+from django.contrib.auth.decorators import permission_required
+from guardian.shortcuts import assign_perm
+from guardian.shortcuts import get_objects_for_user
 
-# Schools PUT API
-# Refactor to be a PUT request
+ 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdminUser]) 
 def school_edit(request):
     data = {}
     id = request.query_params["id"]
