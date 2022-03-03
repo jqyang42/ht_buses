@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
+from ..general.general_tools import user_is_parent
 
 @csrf_exempt
 @api_view(['POST'])
@@ -27,11 +28,7 @@ def user_login(request):
     info["user_id"] = user.id
     info["role_id"] = user.role
     info["role_vaue"] = get_role_string(user.role)
-    try:
-        student_one = Student.objects.filter(pk = user.id)[0]
-        info["is_parent"] = True
-    except: 
-        info["is_parent"] = False
+    info["is_parent"] = user_is_parent(user.id)
     info["email"] = user.email
     info["first_name"] = user.first_name
     info["last_name"] = user.last_name
