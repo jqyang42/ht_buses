@@ -75,8 +75,8 @@ class UserManager(BaseUserManager):
             is_parent = is_parent,
             phone_number = phone_number
             )
-        if role == None:
-            user.role = 0
+        if role == None or role == "" or role == "General":
+            user.role = 3
         else:
             if role == "School Staff":
                 user.role = User.SCHOOL_STAFF
@@ -96,10 +96,12 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     ADMIN = 1
     DRIVER = 2
-    SCHOOL_STAFF = 3
+    GENERAL = 3
+    SCHOOL_STAFF = 4
     role_choices = (
         (ADMIN, "Administrator"),
         (DRIVER, "Driver"),
+        (GENERAL, "General"),
         (SCHOOL_STAFF, "School Staff")
     )
     role = models.PositiveSmallIntegerField(choices=role_choices, null=True, blank=True, default=0)
