@@ -1,5 +1,5 @@
 from rest_framework.authtoken.models import Token
-from ...models import User
+from ...models import User, Student
 from django.contrib.auth import login
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import api_view, permission_classes
@@ -25,10 +25,19 @@ def user_login(request):
     login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
-    info["role"] = user.role
-    info["is_parent"] = user.is_parent
+    info["role_id"] = user.role
+    info["role_vaue"] = get_role_string(user.role)
+    try:
+        student_one = Student.objects.filter(pk = user.id)[0]
+        info["is_parent"] = True
+    except: 
+        info["is_parent"] = False
     info["email"] = user.email
     info["first_name"] = user.first_name
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
     return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
+
+
+def get_role_string(role_id):
+    return User.role_choices[int(role_id)-1][1]
