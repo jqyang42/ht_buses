@@ -54,8 +54,8 @@ class BusRoutesPlanner extends Component {
             },
             modal_dismiss: false,
             route_complete: 0,
-            map_redirect_arriving: [],
-            map_redirect_departing: [],
+            map_redirect_pickup: [],
+            map_redirect_dropoff: [],
         }
     }
 
@@ -203,8 +203,8 @@ class BusRoutesPlanner extends Component {
                         stops: res,
                         route_complete: is_complete ? 1 : -1
                      })
-                     this.redirectToGoogleMapsArriving(this.state.stops)
-                     this.redirectToGoogleMapsDeparting(this.state.stops)
+                     this.redirectToGoogleMapsPickup(this.state.stops)
+                     this.redirectToGoogleMapsDropoff(this.state.stops)
                 })
             } else {
                 this.setState({ 
@@ -297,51 +297,51 @@ class BusRoutesPlanner extends Component {
         document.getElementById("add-route-form").reset();
     }
 
-    redirectToGoogleMapsArriving = (stops) => {
-        this.setState({map_redirect_arriving: []})
+    redirectToGoogleMapsPickup = (stops) => {
+        this.setState({map_redirect_pickup: []})
         let arrivingLinks = []
         for (let i=0; i < stops.length; i+=10 ) {
-            let map_redirect_arriving = GOOGLE_MAP_URL
-            map_redirect_arriving += '&waypoints='
+            let map_redirect_pickup = GOOGLE_MAP_URL
+            map_redirect_pickup += '&waypoints='
             let j;
             for (j = i; j < i + 9 && j < stops.length; j+=1) {
                 console.log(stops[j])
-                map_redirect_arriving += stops[j].location.lat + ',' + stops[j].location.lng +'|'
+                map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
             }
             if (j == stops.length) {
-                map_redirect_arriving += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
+                map_redirect_pickup += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
             } else {
-                map_redirect_arriving += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
+                map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
             }
-            console.log(map_redirect_arriving)
-            arrivingLinks.push(map_redirect_arriving)
+            console.log(map_redirect_pickup)
+            arrivingLinks.push(map_redirect_pickup)
         }
         this.setState({
-            map_redirect_arriving: arrivingLinks
+            map_redirect_pickup: arrivingLinks
         })
     }
 
-    redirectToGoogleMapsDeparting = (stops) => {
+    redirectToGoogleMapsDropoff = (stops) => {
         let reversed_stops = stops.slice().reverse();
         let departingLinks = []
         let i;
         for (i = 0; i < reversed_stops.length-1; i+=10 ) {
-            let map_redirect_departing = GOOGLE_MAP_URL 
+            let map_redirect_dropoff = GOOGLE_MAP_URL 
             if (i == 0) {
-                map_redirect_departing += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+                map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
             }
-            map_redirect_departing +=  '&waypoints=';
+            map_redirect_dropoff +=  '&waypoints=';
             let j;
             for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
                 console.log(reversed_stops)
-                map_redirect_departing += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
+                map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
             }
             //Think about cases where this could be in its own link
-            map_redirect_departing += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
-            departingLinks.push(map_redirect_departing)
+            map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
+            departingLinks.push(map_redirect_dropoff)
         }
         console.log(departingLinks)
-        this.setState({map_redirect_departing: departingLinks})
+        this.setState({map_redirect_dropoff: departingLinks})
     }
 
     students = {"students":[]};
@@ -571,7 +571,7 @@ class BusRoutesPlanner extends Component {
                                                 <button type="button" className="btn btn-primary" onClick={this.state.active_route === 0 ? this.triggerAssignModeWarning : this.handleAssignMode}>Switch to Assign Mode</button>
                                             </div>
                                             <div> 
-                                            <a href={this.state.map_redirect_departing[1]} rel="noreferrer">
+                                            <a href={this.state.map_redirect_dropoff[1]} rel="noreferrer">
                                                 Departing
                                             </a>
                                             </div>
