@@ -293,7 +293,6 @@ class BusRoutesPlanner extends Component {
     }
 
     clearAddRouteForm = (event) => {
-        
         document.getElementById("add-route-form").reset();
     }
 
