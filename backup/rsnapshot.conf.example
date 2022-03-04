@@ -1,4 +1,5 @@
-pshot.conf - rsnapshot configuration file #
+#################################################
+# rsnapshot.conf - rsnapshot configuration file #
 #################################################
 #                                               #
 # PLEASE BE AWARE OF THE FOLLOWING RULE:        #
@@ -223,7 +224,7 @@ lockfile        /var/run/rsnapshot.pid
 ###############################
 
 # LOCALHOST
-backup  [prod-account]@[prod-server]:/home/[prod-account]/ht_buses/daily_backup     ht_buses/
+backup  jqy2@vcm-24684.vm.duke.edu:/var/lib/postgresql/backups  ht_buses/
 #backup /home/          localhost/
 #backup /etc/           localhost/
 #backup /usr/local/     localhost/

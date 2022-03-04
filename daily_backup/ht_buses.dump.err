@@ -1,1 +1,0 @@
-pg_dump: error: connection to database "ht_bus" failed: FATAL:  database "ht_bus" does not exist
