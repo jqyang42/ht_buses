@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import PermissionsMixin 
+from .groups import admin_group, bus_driver_group
 
 class Location(models.Model):
     address = models.CharField(max_length=100)
@@ -101,29 +102,33 @@ class UserManager(BaseUserManager):
             is_parent = is_parent,
             phone_number = phone_number
             )
-        if role == None or role == "" or role == "General":
-            user.role = 3
+
+        if role < 5 and role > 0:
+            user.role = role
+            if role == 1: 
+                user.groups.add(admin_group)
+            #elif role == 2:
+            #user.groups.add(school_staff_group)
+            elif role == 3:
+                user.groups.add(bus_driver_group)
         else:
-            if role == "School Staff":
-                user.role = User.SCHOOL_STAFF
-            if role == "Driver":
-                user.role = User.DRIVER
+            user.role = 4
         user.location_id = location_obj.id
         user.set_password(password)
         user.save(using= self._db)
         return user 
        
     def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0,):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=None, phone_number=None)
+        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=1, phone_number=None)
         user.role = User.ADMIN
         user.save(using=self._db)
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
     ADMIN = 1
-    DRIVER = 2
-    GENERAL = 3
-    SCHOOL_STAFF = 4
+    SCHOOL_STAFF = 2
+    DRIVER = 3
+    GENERAL = 4
     role_choices = (
         (ADMIN, "Administrator"),
         (DRIVER, "Driver"),

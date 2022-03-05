@@ -29,7 +29,7 @@ def user_create(request):
     lng = reqBody["user"]["location"]['lng']
     phone_number = reqBody["user"]["phone_number"]
     password = account_tools.generate_random_password()
-    if role == "Administrator": 
+    if role == 1: 
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role)

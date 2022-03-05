@@ -2,14 +2,15 @@ from ...models import User, Student, Route, School
 from ...constants import constants
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from . import announcement_tools
 from django.conf import settings
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def announcement_users(request):
     data={}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
@@ -25,7 +26,7 @@ def announcement_users(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def announcement_school(request):
     data = {}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
@@ -43,7 +44,7 @@ def announcement_school(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def announcement_route(request):
     data = {}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)

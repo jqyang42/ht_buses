@@ -21,7 +21,7 @@ class UsersCreate extends Component {
             password: '',
             first_name: '',
             last_name: '',
-            is_staff: null,
+            role: 0,
             is_parent: false,
             location: {
                 address: '',
@@ -42,7 +42,7 @@ class UsersCreate extends Component {
         valid_email: true,
         student_ids_changed: false,
         valid_address: true,
-        edit_success: 0,
+        create_success: 0,
         redirect_detail: false,
         detail_url: '',
         error404: false
@@ -69,12 +69,12 @@ class UsersCreate extends Component {
             const success = res.data.success
             if (success) {
                 this.setState({ 
-                    edit_success: 1,
+                    create_success: 1,
                     redirect_detail: true,
                     detail_url: USERS_URL + "/" + res.data.user.id
                 });
             } else {
-                this.setState({ edit_success: -1 })
+                this.setState({ create_success: -1 })
             }
         })
     }
@@ -133,7 +133,7 @@ class UsersCreate extends Component {
     handleIsStaffChange = (event) => {
         const role_value = event.target.value
         let user = this.state.new_user
-        user.is_staff = role_value === 'administrator'
+        user.role = role_value
         this.setState({ new_user: user });
     }
 
@@ -288,8 +288,8 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
        const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
-            this.setState({ edit_success: -1 })
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.user.role === 0) {
+            this.setState({ create_success: -1 })
             return 
           }
         else {
@@ -367,7 +367,7 @@ class UsersCreate extends Component {
                                         <h5>Create New User</h5>
                                     </div>
                                 </div>
-                                {(this.state.edit_success === -1) ? 
+                                {(this.state.create_success === -1) ? 
                                     (<div class="alert alert-danger mt-2 mb-2" role="alert">
                                         Unable to create new user. Please correct all errors before submitting.
                                     </div>) : ""
@@ -425,11 +425,19 @@ class UsersCreate extends Component {
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
+                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value={1}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="general" value="general" ></input>
+                                                    <input className="form-check-input" type="radio" name="generalType" id="general" value={2} ></input>
+                                                    <label className="form-check-label" for="general">School Staff</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="driverType" id="general" value={3} ></input>
+                                                    <label className="form-check-label" for="general">Bus Driver</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="driverType" id="general" value={4} ></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
