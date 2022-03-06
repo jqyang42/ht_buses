@@ -1,5 +1,5 @@
 from ...serializers import UserSerializer
-from ...models import User
+from ...models import User, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -11,6 +11,7 @@ import re
 from ..resources import capitalize_reg
 from ..accounts import account_tools
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import assign_school_staff_perms
 
 
 # User POST API
@@ -34,6 +35,8 @@ def user_create(request):
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
+    if role == 2:
+        assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     data["message"] = "user created successfully"

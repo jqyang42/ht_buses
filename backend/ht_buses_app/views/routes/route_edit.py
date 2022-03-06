@@ -8,6 +8,7 @@ from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 # Routes PUT API
 # Switch to a PATCH API, would need to investigate how to rewrite this
@@ -19,7 +20,8 @@ def route_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        route_object =  Route.objects.get(pk=id)
+        uv_route_object =  Route.objects.get(pk=id)
+        route_object = get_object_for_user(request.user, uv_route_object, "change_route")
         route_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["route"]["name"])
         route_object.description = reqBody["route"]["description"]
         route_object.save()
