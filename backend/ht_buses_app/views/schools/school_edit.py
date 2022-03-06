@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import permission_required
 from guardian.shortcuts import assign_perm
 from guardian.shortcuts import get_objects_for_user
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
  
 @csrf_exempt
@@ -23,7 +24,8 @@ def school_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        school_object =  School.objects.get(pk = id)
+        uv_school_object =  School.objects.get(pk = id)
+        school_object = get_object_for_user(request.user, uv_school_object, "change_school")
         school_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["school"]["name"])
         school_object.arrival = datetime.time(datetime.strptime(reqBody["school"]["arrival"], "%H:%M"))
         school_object.departure = datetime.time(datetime.strptime(reqBody["school"]["departure"], "%H:%M"))

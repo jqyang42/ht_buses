@@ -16,7 +16,7 @@ def routeplanner(request):
     id = request.query_params["id"] # This is the school id
     try:
         uv_school = School.objects.get(pk=id)
-        school = get_object_for_user(request.user, uv_school, "change_route")
+        school = get_object_for_user(request.user, uv_school, "change_school")
         school_serializer = SchoolSerializer(school, many=False)
         school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "lng": school.location_id.lng}
         school_arr = {"name": school_serializer.data["name"], "location": school_address} 

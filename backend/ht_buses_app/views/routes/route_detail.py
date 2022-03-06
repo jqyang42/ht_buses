@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from guardian.shortcuts import get_objects_for_user
+from ..general.general_tools import get_object_for_user
 
 @csrf_exempt
 @api_view(["GET"])
@@ -14,8 +14,8 @@ def routes_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        route = Route.objects.get(pk=id)
-        route = get_objects_for_user(request.user, "view_video", route)
+        uv_route = Route.objects.get(pk=id)
+        route = uv_route #get_object_for_user(request.user, uv_route, "view_route")
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)

@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 # Routes DELETE API
 @csrf_exempt
@@ -12,7 +13,8 @@ def route_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        route_object =  Route.objects.get(pk=id)
+        uv_route_object =  Route.objects.get(pk=id)
+        route_object = get_object_for_user(request.user, uv_route_object, "delete_route")
         students = Student.objects.filter(route_id=route_object)
         for student in students:
             student.in_range = False

@@ -44,7 +44,10 @@ def role_string_to_id(role_string):
     return None
 
 def get_object_for_user(user, model_object, access_level):
+    print(user.has_perm(access_level, model_object))
     if user.has_perm('ht_buses_app.'+access_level):
+        return model_object
+    elif user.has_perm(access_level, model_object):
         return model_object
     else:
         raise PermissionDenied
@@ -65,20 +68,15 @@ def new_perms_to_many_objects(user, access_level, object_list):
 
 def assign_school_staff_perms(user, schools):
     current_perms = [*user.user_permissions.all()]
-    print(current_perms)
     user.user_permissions.clear()
     user.save()
     assign_school_perms(user, schools)
-    print("old user permisisons")
-    print(user.user_permissions.all())
     for school in schools:
         students = Student.objects.filter(school_id = school)
         assign_student_perms(user, students)
         assign_user_perms(user, students)
         assign_route_perms(user, students)
-    print("new_perms")
-    print(user.user_permissions.all())
-    print(user.has_perm("ht_buses_app."+"change_school",schools[0]))
+    user.save()
     return 
 
 def assign_school_perms(user, schools):

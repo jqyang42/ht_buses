@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
   
 @csrf_exempt
 @api_view(["DELETE"])
@@ -12,7 +13,8 @@ def user_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        user_object =  User.objects.get(pk=id)
+        uv_user_object =  User.objects.get(pk=id)
+        user_object = get_object_for_user(request.user, uv_user_object, "delete_user")
         user_object.location.delete()
         user_object.delete()
         data["message"] = "user successfully deleted"

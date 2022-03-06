@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import LocationSerializer, SchoolSerializer
 from django.core.paginator import Paginator
 from ...role_permissions import IsAdmin,IsSchoolStaff, IsDriver
+from guardian.shortcuts import get_objects_for_user
 
 @csrf_exempt
 @api_view(['GET'])
@@ -13,15 +14,16 @@ from ...role_permissions import IsAdmin,IsSchoolStaff, IsDriver
 def schools(request):
     data = {}
     page_number = request.query_params["page"]
-    order_by = request.query_params["order_by"] 
-    sort_by = request.query_params["sort_by"]
-    search = request.query_params["q"]
-    data = get_schools_view(order_by, sort_by, page_number, search)
+    order_by = "asc"#request.query_params["order_by"] TODO: Not sure if backedn or front but broken
+    sort_by = "address" #request.query_params["sort_by"]
+    search = "" #request.query_params["q"]
+    school_list = get_objects_for_user(request.user,"view_school", School.objects.all())
+    data = get_schools_view(order_by, sort_by, page_number, search, school_list)
     return Response(data)
 
-def get_schools_view(order_by, sort_by, page_number, search):
+def get_schools_view(order_by, sort_by, page_number, search, school_list):
     data = {}
-    schools = school_search_and_sort(sort_by, order_by, search)
+    schools = school_search_and_sort(sort_by, order_by, search, school_list)
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -59,21 +61,21 @@ def get_schools_view(order_by, sort_by, page_number, search):
     return data
 
 
-def school_search_and_sort(sort_by, order_by, search):
+def school_search_and_sort(sort_by, order_by, search, school_list):
     if sort_by == "address":
         sort_by = "location_id__address"
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
-        schools = School.objects.filter(name__icontains=search).order_by("id")
+        schools = school_list.filter(name__icontains=search).order_by("id")
     else:
         if order_by == "asc":
             if search != None:
-                schools = School.objects.filter(name__icontains=search).order_by(sort_by)
+                schools = school_list.filter(name__icontains=search).order_by(sort_by)
             else:
-                schools = School.objects.all().order_by(sort_by)
+                schools = school_list.all().order_by(sort_by)
         else:
             if search != None:
-                schools = School.objects.filter(name__icontains=search).order_by("-" + sort_by)
+                schools = school_list.filter(name__icontains=search).order_by("-" + sort_by)
             else:
-                schools = School.objects.all().order_by("-" + sort_by)
+                schools = school_list.order_by("-" + sort_by)
     return schools
     

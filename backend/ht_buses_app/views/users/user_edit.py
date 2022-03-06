@@ -10,6 +10,7 @@ from ..resources import capitalize_reg
 from .user_address_update import update_student_stop
 import traceback
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from guardian.shortcuts import get_objects_for_user
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -19,7 +20,8 @@ def user_edit(request):
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)
-        user_object = User.objects.get(pk=id)
+        uv_user_object = User.objects.get(pk=id)
+        user_object = get_object_for_user(request.user, uv_user_object, "change_user")
         user_object.email = reqBody["user"]["email"]
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])

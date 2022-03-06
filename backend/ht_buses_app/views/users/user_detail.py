@@ -21,7 +21,7 @@ def users_detail(request):
         data["success"] = False
         return Response(data, status = 404)
     try:
-        user = uv_user #get_object_for_user(request.user, unvalidated_user, "view_user")
+        user = get_object_for_user(request.user, uv_user, "view_user")
         user_serializer = UserSerializer(user, many=False)
         location_serializer = LocationSerializer(user.location, many=False)
         location_arr = location_serializer.data

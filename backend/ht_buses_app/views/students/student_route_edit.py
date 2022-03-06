@@ -8,6 +8,7 @@ from ...serializers import StudentSerializer
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 # Student Route PUT API
 @csrf_exempt
@@ -22,7 +23,8 @@ def student_route_edit(request):
             student_id = student["id"]
             route_id = student["route_id"]
             in_range = student["in_range"]
-            student_obj = Student.objects.get(pk=student_id)
+            uv_student_obj = Student.objects.get(pk=student_id)
+            student_object = get_object_for_user(request.user, student_object, "change_student")
             if route_id == 0:
                 student_obj.route_id = None
             else:

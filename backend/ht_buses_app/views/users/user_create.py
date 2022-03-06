@@ -30,13 +30,15 @@ def user_create(request):
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
     phone_number = reqBody["user"]["phone_number"]
-    password = "fec6password" #account_tools.generate_random_password()
+    password = "password" #account_tools.generate_random_password()
     if role == 1: 
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
+    assign_perm("change_user", user, user)
     if role == 2:
         assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
+    user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     data["message"] = "user created successfully"
