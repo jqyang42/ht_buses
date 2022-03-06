@@ -4,16 +4,18 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from guardian.shortcuts import get_objects_for_user
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver])
 def routes_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
         route = Route.objects.get(pk=id)
+        route = get_objects_for_user(request.user, "view_video", route)
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)

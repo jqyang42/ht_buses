@@ -5,11 +5,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer, LocationSerializer
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 # Schools Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def schools_detail(request):
     data = {}
     id = request.query_params["id"]

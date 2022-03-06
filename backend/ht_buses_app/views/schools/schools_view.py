@@ -5,11 +5,11 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, SchoolSerializer
 from django.core.paginator import Paginator
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin,IsSchoolStaff, IsDriver
 
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def schools(request):
     data = {}
     page_number = request.query_params["page"]

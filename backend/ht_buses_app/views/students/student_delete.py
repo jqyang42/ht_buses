@@ -5,12 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...serializers import StudentSerializer
 from ..routes import route_check_is_complete
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Student DELETE API
 @csrf_exempt
 @api_view(["DELETE"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def student_delete(request):
     data = {}
     id = request.query_params["id"]

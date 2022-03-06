@@ -8,11 +8,11 @@ from ...serializers import RouteSerializer
 import re
 from ..resources import capitalize_reg
 from datetime import datetime
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)

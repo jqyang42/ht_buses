@@ -20,6 +20,7 @@ class UsersCreate extends Component {
             email: '',
             password: '',
             first_name: '',
+            phone_number: 0,
             last_name: '',
             role: 0,
             is_parent: false,
@@ -130,10 +131,17 @@ class UsersCreate extends Component {
         this.setState({ new_user: user });
     }
 
+    handlePhoneChange = (event) => {
+        const phone_number = event.target.value
+        let user = this.state.new_user
+        user.phone_number = phone_number
+        this.setState({ new_user: user });
+    }
+
     handleIsStaffChange = (event) => {
         const role_value = event.target.value
         let user = this.state.new_user
-        user.role = role_value
+        user.role = parseInt(role_value)
         this.setState({ new_user: user });
     }
 
@@ -288,7 +296,7 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
        const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.user.role === 0) {
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role === 0) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -420,24 +428,29 @@ class UsersCreate extends Component {
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="phone_number" className="control-label pb-2">Telephone Number</label>
+                                                <input type="tel" className="form-control pb-2" id="exampleInputLastName1"
+                                                    placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
+                                            </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
                                                 <div>
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value={1}></input>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="administrator" value={1}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="generalType" id="general" value={2} ></input>
-                                                    <label className="form-check-label" for="general">School Staff</label>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="school_staff" value={2} ></input>
+                                                    <label className="form-check-label" for="achool_staff">School Staff</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="driverType" id="general" value={3} ></input>
-                                                    <label className="form-check-label" for="general">Bus Driver</label>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="bus_driver" value={3} ></input>
+                                                    <label className="form-check-label" for="bus_driver">Bus Driver</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="driverType" id="general" value={4} ></input>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="general" value={4} ></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>

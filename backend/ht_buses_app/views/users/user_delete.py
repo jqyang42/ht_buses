@@ -3,11 +3,11 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
   
 @csrf_exempt
 @api_view(["DELETE"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def user_delete(request):
     data = {}
     id = request.query_params["id"]

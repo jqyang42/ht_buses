@@ -9,11 +9,11 @@ import re
 from ..resources import capitalize_reg
 from .user_address_update import update_student_stop
 import traceback
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def user_edit(request):
     data = {}
     try:

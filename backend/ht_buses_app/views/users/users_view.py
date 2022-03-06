@@ -7,12 +7,12 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from .user_pagination import user_pagination
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 
 # Basically we can use this api just for search by sending order_by/sort_by to be none
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def user_view(request):
     order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
     sort_by = request.query_params["sort_by"] # will look for asc or desc

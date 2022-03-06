@@ -7,12 +7,12 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Student Route PUT API
 @csrf_exempt
 @api_view(['PUT'])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def student_route_edit(request):
     data = {}
     reqBody = json.loads(request.body)

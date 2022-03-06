@@ -7,13 +7,13 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Routes PUT API
 # Switch to a PATCH API, would need to investigate how to rewrite this
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def route_edit(request):
     data = {}
     id = request.query_params["id"]

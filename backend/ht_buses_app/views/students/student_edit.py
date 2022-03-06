@@ -7,12 +7,12 @@ import re
 from ..resources import capitalize_reg
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Students PUT API
 @csrf_exempt
 @api_view(['PUT'])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def student_edit(request):
     data = {}
     id = request.query_params["id"]

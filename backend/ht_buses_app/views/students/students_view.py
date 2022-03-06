@@ -7,11 +7,12 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from .student_pagination import student_pagination
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def students(request):
     page_number = request.query_params["page"]
     order_by = request.query_params["order_by"]

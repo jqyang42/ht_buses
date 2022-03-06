@@ -4,12 +4,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .route_pagination import route_pagination
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 
 # Routes GET API: All Routes View for Admin
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver])
 def routes(request):
     data = {}
     page_number = request.query_params["page"]

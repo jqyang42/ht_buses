@@ -44,7 +44,7 @@ def announcement_school(request):
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def announcement_route(request):
     data = {}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)

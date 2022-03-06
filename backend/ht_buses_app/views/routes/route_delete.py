@@ -2,12 +2,12 @@ from ...models import Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Routes DELETE API
 @csrf_exempt
 @api_view(["DELETE"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def route_delete(request):
     data = {}
     id = request.query_params["id"]

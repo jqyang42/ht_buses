@@ -12,12 +12,12 @@ from datetime import datetime
 from django.contrib.auth.decorators import permission_required
 from guardian.shortcuts import assign_perm
 from guardian.shortcuts import get_objects_for_user
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
  
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def school_edit(request):
     data = {}
     id = request.query_params["id"]
