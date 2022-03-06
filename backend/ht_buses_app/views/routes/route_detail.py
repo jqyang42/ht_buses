@@ -7,6 +7,7 @@ from ...serializers import LocationSerializer, StudentSerializer, RouteSerialize
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from ..general.general_tools import get_object_for_user
 
+
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver])
@@ -14,8 +15,8 @@ def routes_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        uv_route = Route.objects.get(pk=id)
-        route = uv_route #get_object_for_user(request.user, uv_route, "view_route")
+        route = Route.objects.get(pk=id)
+        get_object_for_user(request.user, route.school_id, "view_school")
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)

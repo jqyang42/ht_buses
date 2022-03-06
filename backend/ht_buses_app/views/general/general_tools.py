@@ -22,9 +22,12 @@ def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
     return User.objects.filter(pk__in=user_ids)
 
+"""
 def filtered_routes_helper(students):
-    route_ids = students.values_list('route_id', flat=True)
+    school = School.objects.filter()
+    route_ids = .values_list('route_id', flat=True)
     return User.objects.filter(pk__in=route_ids)
+"""
 
 def user_is_parent(user_id):
     try:
