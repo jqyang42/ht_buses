@@ -20,8 +20,14 @@ def route_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        uv_route_object =  Route.objects.get(pk=id)
-        route_object = get_object_for_user(request.user, uv_route_object, "change_route")
+        route_object =  Route.objects.get(pk=id)
+    except:
+        data["edit_success"] = -1
+        data["message"] = "route could not be updated"
+        data["success"] = False
+        return Response(data, status = 400)
+    try:
+        accessible_school = get_object_for_user(request.user, route_object.school_id, "change_school")
         route_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["route"]["name"])
         route_object.description = reqBody["route"]["description"]
         route_object.save()
@@ -32,6 +38,6 @@ def route_edit(request):
         return Response(data)
     except:
         data["edit_success"] = -1
-        data["message"] = "route could not be updated"
+        data["message"] = "permission denied"
         data["success"] = False
-        return Response(data, status = 400)
+        return Response(data, status = 403)

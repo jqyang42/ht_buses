@@ -12,6 +12,7 @@ from ..resources import capitalize_reg
 from ..accounts import account_tools
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import assign_school_staff_perms
+from guardian.shortcuts import assign_perm
 
 
 # User POST API
@@ -36,8 +37,11 @@ def user_create(request):
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
     assign_perm("change_user", user, user)
-    if role == 2:
-        assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
+    try:
+        if role == 2:
+            assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
+    except:
+        print("no school to assign, make a school")
     user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]

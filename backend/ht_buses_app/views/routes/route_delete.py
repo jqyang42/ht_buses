@@ -13,8 +13,8 @@ def route_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        uv_route_object =  Route.objects.get(pk=id)
-        route_object = get_object_for_user(request.user, uv_route_object, "delete_route")
+        route_object =  Route.objects.get(pk=id)
+        accessible_school = get_object_for_user(request.user, route_object.school_id, "change_school")
         students = Student.objects.filter(route_id=route_object)
         for student in students:
             student.in_range = False

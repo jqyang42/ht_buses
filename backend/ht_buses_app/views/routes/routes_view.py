@@ -18,8 +18,8 @@ def routes(request):
     order_by = request.query_params["order_by"] # Name, Route, School, Bus Stop, Parent Name
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     search = request.query_params["q"]
-    #route_list = get_objects_for_user(request.user,"view_route", Route.objects.all())
-    route_list = Route.objects.all()
+    schools = get_objects_for_user(request.user, "view_school", School.objects.values_list('pk', flat=True))
+    route_list = Route.objects.filter(school_id__in = schools)
     data = get_routes_view(order_by, sort_by, page_number, search, route_list)
     return Response(data)
 

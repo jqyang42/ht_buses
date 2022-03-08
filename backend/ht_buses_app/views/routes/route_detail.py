@@ -16,7 +16,12 @@ def routes_detail(request):
     id = request.query_params["id"]
     try:
         route = Route.objects.get(pk=id)
-        get_object_for_user(request.user, route.school_id, "view_school")
+    except:
+        data["message"] = "route was not found"
+        data["success"] = False
+        return Response(data, status = 404)
+    try:
+        accessible_school = get_object_for_user(request.user, route.school_id, "view_school")
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
@@ -46,7 +51,7 @@ def routes_detail(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "route was not found"
+        data["message"] = "permission denied"
         data["success"] = False
-        return Response(data, status = 404)
+        return Response(data, status = 403)
 

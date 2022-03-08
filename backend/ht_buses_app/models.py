@@ -131,9 +131,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     GENERAL = 4
     role_choices = (
         (ADMIN, "Administrator"),
+        (SCHOOL_STAFF, "School Staff"),
         (DRIVER, "Driver"),
-        (GENERAL, "General"),
-        (SCHOOL_STAFF, "School Staff")
+        (GENERAL, "General")
     )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

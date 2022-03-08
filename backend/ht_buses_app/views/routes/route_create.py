@@ -9,6 +9,7 @@ import re
 from ..resources import capitalize_reg
 from datetime import datetime
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 @csrf_exempt
 @api_view(["POST"])
@@ -20,6 +21,7 @@ def route_create(request):
     route_color_num = 51
     try:
         school = School.objects.get(pk=reqBody["route"]["school_id"])
+        accessible_school = get_object_for_user(request.user, school, "change_school")
         description = reqBody["route"]["description"]
         is_complete = reqBody["route"]["is_complete"]
         route = Route.objects.create(name=name, school_id = school, description = description, is_complete=is_complete)

@@ -43,15 +43,22 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
     # search and sort or sort only
     else:
         if order_by == "asc":
-            if search != None:
+            print("ascending")
+            if search != None and search != "":
                 users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by(sort_by)
+            elif sort_by == "role":
+                print("role")
+                #users = user_list.order_by( key=lambda x: x[1])
             else:
                 users = user_list.order_by(sort_by)
         else:
-            if search != None:
+            if search != None and search != "":
                 users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-" + sort_by)
+            elif sort_by == "role":
+                print("role")
+                #users = user_list.order_by( key=lambda x: x[1])
             else:
                 users = user_list.order_by("-" + sort_by)
     return users
