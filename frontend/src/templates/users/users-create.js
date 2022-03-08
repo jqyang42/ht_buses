@@ -8,6 +8,7 @@ import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
 import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
+import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -21,7 +22,9 @@ class UsersCreate extends Component {
             password: '',
             first_name: '',
             last_name: '',
-            is_staff: null,
+            is_staff: null, // TODO: @jessica when ur ready, comment out this line, convert to using roles
+            role: 0, // default: general user is 0, admin = 1, driver = 2, school staff = 3
+            phone: '',
             is_parent: false,
             location: {
                 address: '',
@@ -102,6 +105,14 @@ class UsersCreate extends Component {
         this.setState({ valid_email: true })
     }
 
+    handlePhoneChange = (event) => {
+        const phone = event.target.value
+        let user = this.state.new_user
+        user.phone = phone
+        this.setState({ new_user: user })
+        console.log(this.state.new_user.phone)
+    }
+
     handlePasswordChange = (event) => {
         const password = event.target.value
         let user = this.state.new_user
@@ -130,11 +141,21 @@ class UsersCreate extends Component {
         this.setState({ new_user: user });
     }
 
+    // TODO: @jessica when you're ready, comment this out, convert to using handleRoleChange()
     handleIsStaffChange = (event) => {
         const role_value = event.target.value
         let user = this.state.new_user
         user.is_staff = role_value === 'administrator'
         this.setState({ new_user: user });
+    }
+
+    // TODO: @jessica check if this is right lol i think it works tho, same for phone change
+    handleRoleChange = (event) => {
+        const role_value = event.target.value
+        let user = this.state.new_user
+        user.role = role_value
+        this.setState({ new_user: user });
+        console.log(this.state.new_user.role)
     }
 
     // Called when onBlur (when user clicks out of input box) to reduce Geocoding API calls.
@@ -374,7 +395,7 @@ class UsersCreate extends Component {
                                 }
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
-                                        <div className="col mt-2">
+                                        <div className="col mt-2 w-50">
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
@@ -402,6 +423,21 @@ class UsersCreate extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
+
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
+                                                <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
+                                                placeholder="Enter phone number" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" onChange={this.handlePhoneChange}></input>
+
+                                                {/* TODO: add phoneValidation() method to check if phone number is valid @fern */}
+
+                                                {/* {(!phoneValidation({ phone: this.state.new_user.phone }) && this.state.new_user.phone !== "") ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Please enter a valid phone number.
+                                                    </div>) : ""
+                                                } */}
+                                            </div>
+
                                             <div className={"form-group pb-3 w-75 " + (this.state.new_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
@@ -420,19 +456,49 @@ class UsersCreate extends Component {
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>
-                                            <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">
-                                                <div>
-                                                    <label for="adminType" className="control-label pb-2">User Type</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="administrator" value="administrator"></input>
-                                                    <label className="form-check-label" for="administrator">Administrator</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="adminType" id="general" value="general" ></input>
-                                                    <label className="form-check-label" for="general">General</label>
-                                                </div>
+                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75">
+                                                <label for="roleType" className="control-label pb-2">Role</label>
+                                                <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
+                                                onChange={(e) => this.handleRoleChange(e)}>
+                                                    <option value={0} selected>Select a Role</option>
+                                                    <option value={1} id="1">Administrator</option>
+                                                    <option value={2} id="2">Driver</option>
+                                                    <option value={3} id="3">School Staff</option>
+                                                    {/* {this.state.roles_dropdown.map(role => 
+                                                        <option value={role.value} id={role.display}>{role.display}</option>
+                                                    )} */}
+                                                </select>
                                             </div>
+
+                                            {/* if user role is school staff */}
+                                            { this.state.new_user.role == 3 ?
+                                                <div className="form-group required pb-3 w-75">
+                                                    <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
+                                                    {/* TODO: @jessica link up schools in the options field */}
+                                                    <DropdownMultiselect
+                                                        options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
+                                                        id="managedSchools"
+                                                        placeholder="Select Schools to Manage"
+                                                        buttonClass="form-select border"
+                                                        actionBtnStyle="ms-1 mt-1 bg-primary w-75"
+                                                        selectDeselectLabel="Select / Deselect All"
+                                                        // @jessica you can add an onChange method here by using "handleOnChange"
+                                                    />
+                                                    {/* @jessica for your reference */}
+                                                    {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
+                                                    onChange={(e) => this.handleManagedSchoolChange(e)} multiple="multiple" required>
+                                                        <option value="" disabled selected>Select a School</option>
+                                                        <option value="1">School 1</option>
+                                                        <option value="2">School 2</option>
+                                                        <option value="3">School 3</option>
+                                                        {this.state.schools_dropdown.map(school => 
+                                                            <option value={school.value} id={school.display}>{school.display}</option>
+                                                        )}
+                                                    </select> */}
+                                                </div>
+                                                 : ""                                            
+                                            }
+
                                             {/*
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPassword1" className="control-label pb-2">Password</label>
@@ -459,7 +525,7 @@ class UsersCreate extends Component {
                                             </div>
                                             */}
                                         </div>
-                                        <div className="col mt-2">
+                                        <div className="col mt-2 w-50">
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
                                                 <div>
