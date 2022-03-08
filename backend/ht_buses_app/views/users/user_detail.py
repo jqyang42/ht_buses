@@ -29,7 +29,7 @@ def users_detail(request):
             role = "General"
         else:
             role = User.role_choices[int(user_serializer.data["role"])-1][1]
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role, "is_parent": user_serializer.data["is_parent"], "location": location_arr}
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_serializer.data["is_parent"], "phone_number": user_serializer.data["phone_number"],"location": location_arr}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)

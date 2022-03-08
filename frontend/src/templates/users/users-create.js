@@ -22,7 +22,7 @@ class UsersCreate extends Component {
             first_name: '',
             phone_number: 0,
             last_name: '',
-            role: 0,
+            role_id: 0,
             is_parent: false,
             location: {
                 address: '',
@@ -139,9 +139,9 @@ class UsersCreate extends Component {
     }
 
     handleIsStaffChange = (event) => {
-        const role_value = event.target.value
+        const role_id = event.target.value
         let user = this.state.new_user
-        user.role = parseInt(role_value)
+        user.role_id = parseInt(role_id)
         this.setState({ new_user: user });
     }
 
@@ -296,7 +296,7 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
        const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role === 0) {
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -430,7 +430,7 @@ class UsersCreate extends Component {
                                             </div>
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="phone_number" className="control-label pb-2">Telephone Number</label>
-                                                <input type="tel" className="form-control pb-2" id="exampleInputLastName1"
+                                                <input type="tel" className="form-control pb-2" id="examplePhone"
                                                     placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
                                             </div>
                                             <div onChange={this.handleIsStaffChange.bind(this)} className="form-group required pb-3 w-75">

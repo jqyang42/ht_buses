@@ -26,7 +26,7 @@ def user_create(request):
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['first_name'])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['last_name'])
     address = reqBody["user"]["location"]['address']
-    role = reqBody["user"]['role']
+    role = reqBody["user"]['role_id']
     is_parent = reqBody["user"]['is_parent']
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
