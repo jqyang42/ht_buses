@@ -7,12 +7,12 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from ..student_pagination import student_pagination
-from ....role_permissions import IsAdmin
+from ....role_permissions import IsAdmin, IsSchoolStaff
 
 # Students Table: User Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def students_user(request):
     data = {}
     page_number = request.query_params["page"]

@@ -4,11 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from .student_create import create_student
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 @api_view(["POST"])
 @csrf_exempt
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def add_new_students(request):
     data = {}
     user_id = request.query_params["id"]

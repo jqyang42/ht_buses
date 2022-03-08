@@ -13,7 +13,10 @@ from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
+from . views.general.general_tools import permission_setup
 
+
+permission_setup() #TODO: figure out better place for this i.e after models, but only one time after runserver called
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
     path('api/students/detail', student_detail.students_detail, name="students_detail"),
@@ -65,3 +68,4 @@ urlpatterns = [
     path('api/routes/school', route_view_school.routes_school, name='route_view_school')
 
 ]
+

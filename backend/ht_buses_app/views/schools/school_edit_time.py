@@ -8,12 +8,12 @@ from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
 from datetime import datetime
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 # Schools Time PUT API
 # Refactor to be a PUT request
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def school_edit_time(request):
     data = {}
     id = request.query_params["id"]

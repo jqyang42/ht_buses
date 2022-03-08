@@ -9,17 +9,20 @@ import re
 from ..resources import capitalize_reg
 from .user_address_update import update_student_stop
 import traceback
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
+from guardian.shortcuts import get_objects_for_user
+from ..general.general_tools import get_object_for_user
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def user_edit(request):
     data = {}
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)
-        user_object = User.objects.get(pk=id)
+        uv_user_object = User.objects.get(pk=id)
+        user_object = get_object_for_user(request.user, uv_user_object, "change_user")
         user_object.email = reqBody["user"]["email"]
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])
@@ -29,20 +32,24 @@ def user_edit(request):
         user_object.phone_number = reqBody["user"]["phone_number"]
         user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
+        """
         if User.role_choices[0][1] == reqBody["user"]["role"]:
             user_object.role = User.ADMIN
         if User.role_choices[1][1] == reqBody["user"]["role"]:
             user_object.role = User.DRIVER
         if User.role_choices[2][1] == reqBody["user"]["role"]:
             user_object.role = User.SCHOOL_STAFF
-        if reqBody["user"]["role"] == "" or reqBody["user"]["role"] == None:
-            user_object.role = 0
+        """
+        if reqBody["user"]["role_id"] == None or reqBody["user"]["role_id"] > 4 or reqBody["user"]["role_id"] < 0:
+            user_object.role = 4
+        else:
+            user_object.role = reqBody["user"]["role_id"]
         user_object.save()
         update_student_stop(id)
         data["message"] = "user information was successfully updated"
         data["success"] = True
         location_serializer = LocationSerializer(user_object.location, many=False)
-        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role' : reqBody["user"]["role"], 'is_parent' : reqBody["user"]["is_parent"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
+        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role_id' : reqBody["user"]["role_id"], 'is_parent' : reqBody["user"]["is_parent"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
         return Response(data)
     except:
 
