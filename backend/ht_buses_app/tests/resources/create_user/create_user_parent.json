@@ -5,7 +5,7 @@
     "password": "yellow",
     "address": "90 Oregon Ave. Durham, NC",
     "is_parent": true,
-    "is_staff": false,
+    "role": "General",
     "students": [
         {
             "first_name": "Dary",

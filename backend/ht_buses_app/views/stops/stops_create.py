@@ -2,17 +2,18 @@ from ...models import Stop, Location, Route
 from ...serializers import StopSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from datetime import datetime
 from ..routes import route_check_is_complete
 from .check_in_range import update_students_in_range
+from ...role_permissions import IsAdmin
 
 # Stops POST API
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin]) 
 def stops_create(request):
     data = {}
     try:

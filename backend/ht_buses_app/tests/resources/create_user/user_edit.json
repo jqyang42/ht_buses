@@ -4,7 +4,7 @@
     "first_name": "Marre",
     "last_name": "Poppy",
     "address": "Hill St",
-    "is_staff": true,
+    "role": "General",
     "is_parent": true,
     "students": [
         

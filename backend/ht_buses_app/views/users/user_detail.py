@@ -4,10 +4,11 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, UserSerializer
+from ...role_permissions import IsAdmin
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def users_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -16,7 +17,11 @@ def users_detail(request):
         user_serializer = UserSerializer(user, many=False)
         location_serializer = LocationSerializer(user.location, many=False)
         location_arr = location_serializer.data
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "is_parent": user_serializer.data["is_parent"], "location": location_arr}
+        if user_serializer.data["role"] == 0:
+            role = "General"
+        else:
+            role = User.role_choices[int(user_serializer.data["role"])-1][1]
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role, "is_parent": user_serializer.data["is_parent"], "location": location_arr}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)
@@ -36,7 +41,7 @@ def user_account(request):
         user = User.objects.get(pk=id)
         user_serializer = UserSerializer(user, many=False)
         location_arr = {"address": user.location.address}
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "is_staff": user_serializer.data["is_staff"], "location": location_arr}
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": User.role_choices[user_serializer.data["role"]-1][1], "location": location_arr}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)

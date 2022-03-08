@@ -20,15 +20,7 @@ class SidebarMenu extends Component {
         axios.post(API_DOMAIN + `logout`, creds)
         .then(res => {
             this.setState({token: '', message: res.data.message})
-            localStorage.setItem('token', '')
-            localStorage.setItem('user_id', '')
-            localStorage.setItem('first_name', '')
-            localStorage.setItem('last_name', '')
-            localStorage.setItem('is_staff', false)
-            localStorage.setItem('logged_in', false)
-            localStorage.setItem('is_parent', false)
-            // console.log(localStorage.getItem('logged_in'))
-            // console.log(localStorage.getItem('token'))
+            localStorage.clear()
             window.location.reload()
         })
     }
