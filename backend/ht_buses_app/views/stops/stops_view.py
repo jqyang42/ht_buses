@@ -16,7 +16,7 @@ def stops_view(request):
     try:
         route = Route.objects.get(pk=id)
         route_serializer = RouteSerializer(route, many=False)
-        stops = Stop.objects.filter(route_id=route)
+        stops = Stop.objects.filter(route_id=route).order_by("order_by")
         stops_serializer = StopSerializer(stops, many=True)
         stops_arr = []
         for stop in stops_serializer.data:
