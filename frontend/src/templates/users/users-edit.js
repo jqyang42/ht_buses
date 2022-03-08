@@ -113,9 +113,9 @@ class UsersEdit extends Component {
     }
 
     handleIsStaffChange = (event) => {
-        const role_id_value = event.target.value
+        const role_value = event.target.value
         let user = this.state.edited_user
-        user.role_id = parseInt(role_id_value)
+        user.role_id = parseInt(role_value)
         this.setState({ edited_user: user });
     }
 
@@ -213,7 +213,7 @@ class UsersEdit extends Component {
                                 </div>
                                 <div className="w-50 pe-2 me-2">
                                     {(this.state.edit_success === -1) ? 
-                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role_id="alert">
+                                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
                                             Unable to edit user details. Please correct all errors before submitting.
                                         </div>) : ""
                                     }
@@ -241,12 +241,12 @@ class UsersEdit extends Component {
                                                 <small id="emailHelp" className="form-text text-muted pb-2">We'll never share your email with anyone
                                                     else.</small>
                                                     {(!emailValidation({ email: this.state.edited_user?.email})) ? 
-                                                    (<div class="alert alert-danger mt-2 mb-0" role_id="alert">
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
                                                 }
                                                  {(!this.state.valid_email) ? 
-                                                    (<div class="alert alert-danger mt-2 mb-0" role_id="alert">
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Update unsuccessful. Please enter a different email, a user with this email already exists
                                                     </div>) : ""
                                                 }
@@ -277,19 +277,19 @@ class UsersEdit extends Component {
                                                     <label for="adminType" className="control-label pb-2">User Type</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="role_idType" id="administrator" checked={this.state.edited_user.role_id === 1} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={1}></input>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="administrator" checked={this.state.edited_user.role_id === 1} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={1}></input>
                                                     <label className="form-check-label" for="administrator">Administrator</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="role_idType" id="school_staff" checked={this.state.edited_user.role_id === 2} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={2} ></input>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="school_staff" checked={this.state.edited_user.role_id === 2} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={2} ></input>
                                                     <label className="form-check-label" for="achool_staff">School Staff</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="role_idType" id="bus_driver" checked={this.state.edited_user.role_id === 3} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={3} ></input>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="bus_driver" checked={this.state.edited_user.role_id === 3} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={3} ></input>
                                                     <label className="form-check-label" for="bus_driver">Bus Driver</label>
                                                 </div>
                                                 <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="role_idType" id="general" checked={this.state.edited_user.role_id === 4} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={4} ></input>
+                                                    <input className="form-check-input" type="radio" name="roleType" id="general" checked={this.state.edited_user.role_id === 4} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={4} ></input>
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div>
@@ -299,7 +299,7 @@ class UsersEdit extends Component {
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
                                         {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
-                                        <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role_id="button">
+                                        <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                             <span className="btn-text">
                                                 Cancel
                                             </span>
