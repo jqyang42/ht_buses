@@ -40,10 +40,12 @@ def user_is_parent(user_id):
 def role_string_to_id(role_string):
     if role_string == 'Administrator':
         return 1
-    if role_string == 'Bus Driver':
-        return 2
     if role_string == 'School Staff':
+        return 2
+     if role_string == 'Bus Driver':
         return 3
+    if role_string == 'General':
+        return 4
     return None
 
 def get_object_for_user(user, model_object, access_level):
