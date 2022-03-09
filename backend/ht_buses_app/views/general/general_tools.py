@@ -42,7 +42,7 @@ def role_string_to_id(role_string):
         return 1
     if role_string == 'School Staff':
         return 2
-     if role_string == 'Bus Driver':
+    if role_string == 'Bus Driver':
         return 3
     if role_string == 'General':
         return 4
