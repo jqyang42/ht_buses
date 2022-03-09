@@ -10,6 +10,7 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 import { emailValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { makeSchoolsMultiSelect } from "../components/dropdown";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -20,6 +21,7 @@ class UsersEdit extends Component {
     state = {
         user: {},
         edited_user: {},
+        schools_multiselect: [],
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -31,6 +33,9 @@ class UsersEdit extends Component {
     // initialize page
     componentDidMount() {
         this.getUserDetails()
+        makeSchoolsMultiSelect().then(ret => {
+            this.setState({ schools_multiselect: ret })
+        })
     }
 
     // api calls
@@ -328,7 +333,8 @@ class UsersEdit extends Component {
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     {/* TODO: @jessica link up schools in the options field */}
                                                     <DropdownMultiselect
-                                                        options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
+                                                        // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
+                                                        options={this.state.schools_multiselect}
                                                         id="managedSchools"
                                                         placeholder="Select Schools to Manage"
                                                         buttonClass="form-select border"
