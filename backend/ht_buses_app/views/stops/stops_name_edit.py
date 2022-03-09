@@ -7,11 +7,11 @@ from rest_framework.parsers import json
 from rest_framework.response import Response
 from .check_in_range import update_students_in_range
 from ..routes import route_check_is_complete
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 # Stops PUT API
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def stops_name_edit(request):
     data = {}
     # try:

@@ -1,4 +1,4 @@
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
@@ -7,11 +7,12 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from ..user_pagination import user_pagination
+from ....role_permissions import IsAdmin, IsSchoolStaff
 
 # This only gets users for 1 school, need this somehow to get multiple
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def user_school_view(request):
     order_by = request.query_params["order_by"]
     sort_by = request.query_params["sort_by"] # will look for asc or desc

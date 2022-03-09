@@ -7,25 +7,28 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from .student_pagination import student_pagination
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from guardian.shortcuts import get_objects_for_user
 
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([AllowAny]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def students(request):
     page_number = request.query_params["page"]
     order_by = request.query_params["order_by"]
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     search = request.query_params["q"]
-    data = get_student_view(page_number, order_by, sort_by, search)
+    student_list = get_objects_for_user(request.user,"view_student", Student.objects.all())
+    data = get_student_view(page_number, order_by, sort_by, search, student_list)
     return Response(data)
 
-def get_student_view(page_number, order_by, sort_by, search):
-    students = student_search_and_sort(order_by, sort_by, search)
+def get_student_view(page_number, order_by, sort_by, search, student_list):
+    students = student_search_and_sort(order_by, sort_by, search, student_list)
     data = student_pagination(students, page_number)
     return data
 
-def student_search_and_sort(order_by, sort_by, search):
+def student_search_and_sort(order_by, sort_by, search, student_list):
     if sort_by == "name":
         sort_by = "first_name"
     if sort_by == "route":
@@ -42,14 +45,14 @@ def student_search_and_sort(order_by, sort_by, search):
     else:
         if order_by == "asc":
             if search != None:
-                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
             .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by(sort_by)
             else:
-                students = Student.objects.all().order_by(sort_by)
+                students = student_list.order_by(sort_by)
         else:
             if search != None:
-                students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-" + sort_by)
             else:
-                students = Student.objects.all().order_by("-" + sort_by)
+                students = student_list.order_by("-" + sort_by)
     return students
