@@ -12,10 +12,8 @@ import datetime
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, StopSerializer, LocationSerializer
 from ..stops import check_in_range 
 from datetime import datetime
+from ..general.general_tools import filtered_users_helper
 
-def filtered_users_helper(students):
-    user_ids = students.values_list('user_id', flat=True)
-    return User.objects.filter(pk__in=user_ids)
 
 def email_request_parser(reqBody):
     subject= reqBody['email']['subject']

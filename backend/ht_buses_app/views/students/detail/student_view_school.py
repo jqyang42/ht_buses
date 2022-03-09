@@ -6,12 +6,12 @@ from rest_framework.response import Response
 from ....serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from django.core.paginator import Paginator
 from ..student_pagination import student_pagination
-from ....role_permissions import IsAdmin
+from ....role_permissions import IsAdmin, IsSchoolStaff
 
 # Students Table: School Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def students_school(request):
     data = {}
     page_number = request.query_params["page"]

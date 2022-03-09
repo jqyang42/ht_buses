@@ -21,10 +21,9 @@ class UsersCreate extends Component {
             email: '',
             password: '',
             first_name: '',
+            phone_number: 0,
             last_name: '',
-            is_staff: null, // TODO: @jessica when ur ready, comment out this line, convert to using roles
-            role: 0, // default: general user is 0, admin = 1, driver = 2, school staff = 3
-            phone: '',
+            role_id: 0,
             is_parent: false,
             location: {
                 address: '',
@@ -45,7 +44,7 @@ class UsersCreate extends Component {
         valid_email: true,
         student_ids_changed: false,
         valid_address: true,
-        edit_success: 0,
+        create_success: 0,
         redirect_detail: false,
         detail_url: '',
         error404: false
@@ -72,12 +71,12 @@ class UsersCreate extends Component {
             const success = res.data.success
             if (success) {
                 this.setState({ 
-                    edit_success: 1,
+                    create_success: 1,
                     redirect_detail: true,
                     detail_url: USERS_URL + "/" + res.data.user.id
                 });
             } else {
-                this.setState({ edit_success: -1 })
+                this.setState({ create_success: -1 })
             }
         })
     }
@@ -103,14 +102,6 @@ class UsersCreate extends Component {
         user.email = email
         this.setState({ new_user: user })
         this.setState({ valid_email: true })
-    }
-
-    handlePhoneChange = (event) => {
-        const phone = event.target.value
-        let user = this.state.new_user
-        user.phone = phone
-        this.setState({ new_user: user })
-        console.log(this.state.new_user.phone)
     }
 
     handlePasswordChange = (event) => {
@@ -141,21 +132,18 @@ class UsersCreate extends Component {
         this.setState({ new_user: user });
     }
 
-    // TODO: @jessica when you're ready, comment this out, convert to using handleRoleChange()
-    handleIsStaffChange = (event) => {
-        const role_value = event.target.value
+    handlePhoneChange = (event) => {
+        const phone_number = event.target.value
         let user = this.state.new_user
-        user.is_staff = role_value === 'administrator'
+        user.phone_number = phone_number
         this.setState({ new_user: user });
     }
 
-    // TODO: @jessica check if this is right lol i think it works tho, same for phone change
     handleRoleChange = (event) => {
-        const role_value = event.target.value
+        const role_id = event.target.value
         let user = this.state.new_user
-        user.role = role_value
+        user.role_id = parseInt(role_id)
         this.setState({ new_user: user });
-        console.log(this.state.new_user.role)
     }
 
     // Called when onBlur (when user clicks out of input box) to reduce Geocoding API calls.
@@ -309,8 +297,8 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
        const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation()) {
-            this.setState({ edit_success: -1 })
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
+            this.setState({ create_success: -1 })
             return 
           }
         else {
@@ -388,7 +376,7 @@ class UsersCreate extends Component {
                                         <h5>Create New User</h5>
                                     </div>
                                 </div>
-                                {(this.state.edit_success === -1) ? 
+                                {(this.state.create_success === -1) ? 
                                     (<div class="alert alert-danger mt-2 mb-2" role="alert">
                                         Unable to create new user. Please correct all errors before submitting.
                                     </div>) : ""
@@ -424,10 +412,10 @@ class UsersCreate extends Component {
                                                 }
                                             </div>
 
-                                            <div className="form-group required pb-3 w-75">
+                                            {/* <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
-                                                placeholder="Enter phone number" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" onChange={this.handlePhoneChange}></input>
+                                                placeholder="Enter phone number" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" onChange={this.handlePhoneChange}></input> */}
 
                                                 {/* TODO: add phoneValidation() method to check if phone number is valid @fern */}
 
@@ -436,6 +424,12 @@ class UsersCreate extends Component {
                                                         Please enter a valid phone number.
                                                     </div>) : ""
                                                 } */}
+                                            {/* </div> */}
+
+                                            <div className="form-group required pb-3 w-75">
+                                                <label for="phone_number" className="control-label pb-2">Phone</label>
+                                                <input type="tel" className="form-control pb-2" id="examplePhone"
+                                                    placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
                                             </div>
 
                                             <div className={"form-group pb-3 w-75 " + (this.state.new_user.is_parent ? "required" : "")}>
@@ -456,19 +450,43 @@ class UsersCreate extends Component {
                                                 {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address"
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>
-                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75">
+
+                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75 required">
                                                 <label for="roleType" className="control-label pb-2">Role</label>
-                                                <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
+                                                <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
-                                                    <option value={0} selected>Select a Role</option>
+                                                    <option value={0} disabled selected>Select a Role</option>
+                                                    <option value={4} id="4">General</option>
                                                     <option value={1} id="1">Administrator</option>
                                                     <option value={2} id="2">Driver</option>
                                                     <option value={3} id="3">School Staff</option>
-                                                    {/* {this.state.roles_dropdown.map(role => 
+                                                    {/* { {this.state.roles_dropdown.map(role => 
                                                         <option value={role.value} id={role.display}>{role.display}</option>
-                                                    )} */}
+                                                    )} } */}
                                                 </select>
                                             </div>
+
+                                            {/* <div onChange={this.handleRoleChange.bind(this)} className="form-group required pb-3 w-75">
+                                                <div>
+                                                    <label for="adminType" className="control-label pb-2">User Type</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="roleType" id="general" value={4} defaultChecked={true}></input>
+                                                    <label className="form-check-label" for="general">General</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="roleType" id="administrator" value={1}></input>
+                                                    <label className="form-check-label" for="administrator">Administrator</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="roleType" id="school_staff" value={2} ></input>
+                                                    <label className="form-check-label" for="achool_staff">School Staff</label>
+                                                </div>
+                                                <div className="form-check form-check-inline">
+                                                    <input className="form-check-input" type="radio" name="roleType" id="bus_driver" value={3} ></input>
+                                                    <label className="form-check-label" for="bus_driver">Bus Driver</label>
+                                                </div>
+                                            </div> */}
 
                                             {/* if user role is school staff */}
                                             { this.state.new_user.role == 3 ?

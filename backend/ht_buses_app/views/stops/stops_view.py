@@ -4,12 +4,12 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Stops GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def stops_view(request):
     data = {}
     id = request.query_params["id"] # this is route id

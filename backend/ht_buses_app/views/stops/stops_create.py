@@ -8,12 +8,12 @@ from rest_framework.response import Response
 from datetime import datetime
 from ..routes import route_check_is_complete
 from .check_in_range import update_students_in_range
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
 
 # Stops POST API
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def stops_create(request):
     data = {}
     try:

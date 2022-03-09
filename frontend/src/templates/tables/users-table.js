@@ -32,11 +32,11 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
                 sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
             {
-                id:'is_staff',
+                id:'role',
                 Header: 'User Type',
-                accessor: d => { return d.is_staff ? 'Admin' : 'General' },
+                accessor: d => { return d.role },
                 disableFilter: true,
-                sortDirection: sort.accessor === 'is_staff' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'is_staff' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
             },            
             {
                 Header: 'Address',

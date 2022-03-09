@@ -1,5 +1,5 @@
 from ...serializers import UserSerializer
-from ...models import User
+from ...models import User, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -10,12 +10,15 @@ from ..accounts import activate_account
 import re
 from ..resources import capitalize_reg
 from ..accounts import account_tools
-from ...role_permissions import IsAdmin
+from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import assign_school_staff_perms
+from guardian.shortcuts import assign_perm
+
 
 # User POST API
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -23,16 +26,23 @@ def user_create(request):
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['first_name'])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['last_name'])
     address = reqBody["user"]["location"]['address']
-    role = reqBody["user"]['role']
+    role = reqBody["user"]['role_id']
     is_parent = reqBody["user"]['is_parent']
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
     phone_number = reqBody["user"]["phone_number"]
-    password = account_tools.generate_random_password()
-    if role == "Administrator": 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng)
+    password = "password" #account_tools.generate_random_password()
+    if role == 1: 
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
+    assign_perm("change_user", user, user)
+    try:
+        if role == 2:
+            assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
+    except:
+        print("no school to assign, make a school")
+    user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     data["message"] = "user created successfully"
