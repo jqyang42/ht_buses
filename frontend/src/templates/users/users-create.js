@@ -13,7 +13,7 @@ import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
-import { makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
+import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
 
 class UsersCreate extends Component {
     state = {
@@ -36,6 +36,7 @@ class UsersCreate extends Component {
         added_students_list: [],
         students: [],
         schools_dropdown: [],
+        schools_multiselect: [],
         routes_dropdowns: [],
         redirect: false,
         valid_password: false,
@@ -54,6 +55,9 @@ class UsersCreate extends Component {
     componentDidMount() {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
+        })
+        makeSchoolsMultiSelect().then(ret => {
+            this.setState({ schools_multiselect: ret })
         })
     }
 
@@ -494,7 +498,8 @@ class UsersCreate extends Component {
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     {/* TODO: @jessica link up schools in the options field */}
                                                     <DropdownMultiselect
-                                                        options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
+                                                        // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
+                                                        options={this.state.schools_multiselect}
                                                         id="managedSchools"
                                                         placeholder="Select Schools to Manage"
                                                         buttonClass="form-select border"
