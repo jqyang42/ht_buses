@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router";
 import { Link, Navigate, useParams} from "react-router-dom";
-import { UsersTable } from '../tables/users-table';
+import { ImportUsersTable } from '../tables/import-users-table';
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
@@ -71,8 +71,59 @@ class UsersImport extends Component {
                         <HeaderMenu root={"Import Users"} isRoot={true} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
+                                <div className="row d-inline-flex float-end">
+                                    {/* Cancel button */}
+                                    <button type="button" className="btn btn-secondary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                        Cancel
+                                    </button>
+
+                                    {/* Cancel confirmation modal */}
+                                    <div className="modal fade" id="cancelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div className="modal-dialog modal-dialog-centered">
+                                            <div className="modal-content">
+                                                <form onSubmit={this.handleImportSubmit}>
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="staticBackdropLabel">Cancel Import</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        Are you sure you want to cancel your import? Please note that all edits will be discarded.
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="submit" className="btn btn-secondary" data-bs-dismiss="modal">Yes, discard</button>
+                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">No, keep me on this page</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Submit button */}
+                                    <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
+
+                                    {/* Submit confirmation modal */}
+                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div className="modal-dialog modal-dialog-centered">
+                                            <div className="modal-content">
+                                                <form onSubmit={this.handleImportSubmit}>
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="staticBackdropLabel">Import Users</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        Are you sure you want to save and import all users?
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div>
-                                    <UsersTable 
+                                    <ImportUsersTable 
                                     data={this.state.users} 
                                     showAll={this.state.show_all}
                                     pageIndex={this.state.pageIndex}
