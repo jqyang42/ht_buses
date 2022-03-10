@@ -22,6 +22,7 @@ import SchoolsCreate from "./templates/schools/schools-create";
 import SchoolsEdit from "./templates/schools/schools-edit";
 
 import Users from "./templates/users/users";
+import UsersImport from './templates/users/users-import';
 import UsersDetail from "./templates/users/users-detail";
 import UsersCreate from "./templates/users/users-create";
 import UsersEdit from "./templates/users/users-edit";
@@ -48,6 +49,8 @@ import { SCHOOLS_DETAIL_URL } from "./constants";
 import { STUDENTS_DETAIL_URL } from "./constants";
 import { USERS_DETAIL_URL } from "./constants";
 import { ROUTES_DETAIL_URL } from "./constants";
+import { USERS_IMPORT_URL } from "./constants";
+import { STUDENTS_IMPORT_URL } from "./constants";
 import { SCHOOLS_CREATE_URL } from "./constants";
 import { USERS_CREATE_URL } from "./constants";
 import { ROUTES_PLANNER_URL } from "./constants";
@@ -88,6 +91,7 @@ class App extends Component {
           <Route path={SCHOOLS_EMAIL_URL} element={<Email source="Schools" />} />
 
           <Route path={USERS_URL} element={<Users />} />
+          <Route path={USERS_IMPORT_URL} element={<UsersImport />} />
           <Route path={USERS_CREATE_URL} element={<UsersCreate />} />
           <Route path={USERS_DETAIL_URL} element={<UsersDetail />} />
           <Route path={USERS_EDIT_URL} element={<UsersEdit />} />

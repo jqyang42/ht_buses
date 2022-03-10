@@ -258,7 +258,7 @@ class UsersDetail extends Component {
                                             {this.state.user.first_name} {this.state.user.last_name}
                                         </h5>
                                         <h7>
-                                        {this.state.user.role}
+                                            {this.state.user.role ? this.state.user.role.toUpperCase() : ""}
                                         </h7>
                                     </div>
                                     <div className="col">

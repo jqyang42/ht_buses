@@ -29,6 +29,9 @@ export const STUDENTS_URL = "/students";
 export const USERS_URL = "/users";
 export const ROUTES_URL = "/routes";
 
+export const USERS_IMPORT_URL = "/users/import";
+export const STUDENTS_IMPORT_URL = "/students/import";
+
 export const SCHOOLS_DETAIL_URL = "/schools/:id";
 export const STUDENTS_DETAIL_URL = "/students/:id";
 export const USERS_DETAIL_URL = "/users/:id";

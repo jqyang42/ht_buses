@@ -12,6 +12,7 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
+import pdfRender from "../components/export-route";
 
 class BusRoutesDetail extends Component {
     state = {
@@ -250,6 +251,10 @@ class BusRoutesDetail extends Component {
                                                     Send Announcement
                                                 </span>
                                             </Link>
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.students) : ""}>
+                                                <i className="bi bi-download me-2"></i>
+                                                Export
+                                            </button>
                                             <Link to={"/routes/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-pencil-square me-2"></i>
