@@ -1,17 +1,19 @@
 from ...models import Route, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import json
 from ...serializers import RouteSerializer
 import re
 from ..resources import capitalize_reg
 from datetime import datetime
+from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def route_create(request):
     data = {}
     reqBody = json.loads(request.body)
@@ -19,6 +21,7 @@ def route_create(request):
     route_color_num = 51
     try:
         school = School.objects.get(pk=reqBody["route"]["school_id"])
+        accessible_school = get_object_for_user(request.user, school, "change_school")
         description = reqBody["route"]["description"]
         is_complete = reqBody["route"]["is_complete"]
         route = Route.objects.create(name=name, school_id = school, description = description, is_complete=is_complete)

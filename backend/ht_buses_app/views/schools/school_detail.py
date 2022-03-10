@@ -2,19 +2,21 @@ from multiprocessing import allow_connection_pickling
 from ...models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer, LocationSerializer
-
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from ..general.general_tools import get_object_for_user
 # Schools Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def schools_detail(request):
     data = {}
     id = request.query_params["id"]
     try :
-        school = School.objects.get(pk=id)
+        uv_school = School.objects.get(pk=id)
+        school = get_object_for_user(request.user, uv_school, "view_school")
         school_serializer = SchoolSerializer(school, many=False)
         students = Student.objects.filter(school_id=id)
         students_serializer = StudentSerializer(students, many=True)

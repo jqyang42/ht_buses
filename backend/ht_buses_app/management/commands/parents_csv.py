@@ -33,7 +33,7 @@ class Command(BaseCommand):
                     last_name = last_name,
                     email = row[1],
                     is_parent = True,
-                    is_staff = False,
+                    role = 0,
                     location = location
                 )
             end_time = timezone.now()

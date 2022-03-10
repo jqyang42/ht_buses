@@ -1,19 +1,22 @@
 from ...models import School, Route, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
+from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 # Students Detail GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def students_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        student = Student.objects.get(pk=id)
+        uv_student = Student.objects.get(pk=id)
+        student = get_object_for_user(request.user, uv_student, "view_student")
         student_serializer = StudentSerializer(student, many=False)
         if student_serializer.data["route_id"] == None:
             route_id = 0

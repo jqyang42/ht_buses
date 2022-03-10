@@ -2,16 +2,16 @@ from ...models import Stop, Route
 from ...serializers import StopSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from .check_in_range import update_students_in_range
 from ..routes import route_check_is_complete
-
+from ...role_permissions import IsAdmin, IsSchoolStaff
 # Stops PUT API
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def stops_name_edit(request):
     data = {}
     # try:

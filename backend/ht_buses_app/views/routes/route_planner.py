@@ -1,19 +1,22 @@
 from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
 
 # Route Planner API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin|IsSchoolStaff])
 def routeplanner(request):
     data = {}
     id = request.query_params["id"] # This is the school id
     try:
-        school = School.objects.get(pk=id)
+        uv_school = School.objects.get(pk=id)
+        school = get_object_for_user(request.user, uv_school, "change_school")
         school_serializer = SchoolSerializer(school, many=False)
         school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "lng": school.location_id.lng}
         school_arr = {"name": school_serializer.data["name"], "location": school_address} 
