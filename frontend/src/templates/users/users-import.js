@@ -54,6 +54,18 @@ class UsersImport extends Component {
         })
     }
 
+    // TODO: Add method to cancel all changes from table view and return to Users table
+    handleCancelImport = () => {
+        // redirect to USERS_URL (ignoring all changes from import)
+    }
+
+    // TODO: Add method to save all changes from table view and submit the import
+    handleSubmitImport = () => {
+        // save table changes
+        // update backend
+        // redirect to USERS_URL
+    }
+
     render() {
         console.log(this.props.params)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
@@ -81,7 +93,7 @@ class UsersImport extends Component {
                                     <div className="modal fade" id="cancelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
-                                                <form onSubmit={this.handleImportSubmit}>
+                                                <form onSubmit={this.handleCancelImport}>
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="staticBackdropLabel">Cancel Import</h5>
                                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -105,7 +117,7 @@ class UsersImport extends Component {
                                     <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
-                                                <form onSubmit={this.handleImportSubmit}>
+                                                <form onSubmit={this.handleSubmitImport}>
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="staticBackdropLabel">Import Users</h5>
                                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
