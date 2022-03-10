@@ -124,17 +124,22 @@ class StudentsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span className="btn-text">
-                                                    <i className="bi bi-pencil-square me-2"></i>
-                                                    Edit
-                                                </span>
-                                            </Link>
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                <i className="bi bi-trash me-2"></i>
-                                                Delete
-                                            </button>
-
+                                            {
+                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                <>
+                                                    <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                        <span className="btn-text">
+                                                            <i className="bi bi-pencil-square me-2"></i>
+                                                            Edit
+                                                        </span>
+                                                    </Link>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                        <i className="bi bi-trash me-2"></i>
+                                                        Delete
+                                                    </button>
+                                                </>
+                                                : ""
+                                            }
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">

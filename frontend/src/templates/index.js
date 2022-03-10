@@ -41,6 +41,7 @@ class Login extends Component {
             this.setState({message: data.message, valid_login: data.valid_login})
             localStorage.setItem('token', data.token)
             if (data.valid_login) {
+                console.log(data.info)
                 this.emailField.value = ''
                 this.passwordField.value =''
                 localStorage.setItem('user_id', data.info.user_id)
@@ -48,7 +49,7 @@ class Login extends Component {
                 localStorage.setItem('last_name', data.info.last_name)
                 localStorage.setItem('is_staff', data.info.role_id !== 4)
                 localStorage.setItem('is_parent', data.info.is_parent)
-                localStorage.setItem('role',  data.info.role_value)
+                localStorage.setItem('role',  data.info.role_vaue)
                 localStorage.setItem('logged_in', data.valid_login)
                 res.headers['Authorization'] = `Token ${localStorage.getItem('token')}`;
                 window.location.reload()
