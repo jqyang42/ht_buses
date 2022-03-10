@@ -42,7 +42,7 @@ def role_string_to_id(role_string):
         return 1
     if role_string == 'School Staff':
         return 2
-     if role_string == 'Bus Driver':
+    if role_string == 'Bus Driver':
         return 3
     if role_string == 'General':
         return 4
@@ -72,6 +72,7 @@ def new_perms_to_many_objects(user, access_level, object_list):
     return 
 
 def assign_school_staff_perms(user, schools):
+    #need to delete from groups 
     current_perms = [*user.user_permissions.all()]
     user.user_permissions.clear()
     user.save()

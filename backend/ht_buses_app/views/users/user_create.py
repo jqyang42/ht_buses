@@ -37,6 +37,7 @@ def user_create(request):
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
     assign_perm("change_user", user, user)
+    assign_perm("view_user", user, user)
     try:
         if role == 2:
             assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 

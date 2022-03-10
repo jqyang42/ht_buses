@@ -12,6 +12,7 @@ import traceback
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from guardian.shortcuts import get_objects_for_user
 from ..general.general_tools import get_object_for_user
+from ..general.general_tools import assign_school_staff_perms
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -44,6 +45,9 @@ def user_edit(request):
             user_object.role = 4
         else:
             user_object.role = reqBody["user"]["role_id"]
+        user_object.save()
+        assign_perm("change_user", user_object, user_object)
+        assign_perm("view_user", user_object, user_object)
         user_object.save()
         update_student_stop(id)
         data["message"] = "user information was successfully updated"
@@ -80,3 +84,13 @@ def valid_email_edit(request):
         data["message"] = "The email entered is valid"
         data["success"] = True
         return Response(data)
+
+def reassign_perms(user):
+    if user.role == User.SCHOOL_STAFF:
+        assign_school_staff_perms(user, [School.objects.get(pk =1)])
+    elif user.role == User.ADMIN:
+        reassign_groups(user)
+    return 
+
+def reassign_groups():
+    return 
