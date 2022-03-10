@@ -569,11 +569,6 @@ class BusRoutesPlanner extends Component {
                                             <div className="col-auto">
                                                 <button type="button" className="btn btn-primary" onClick={this.state.active_route === 0 ? this.triggerAssignModeWarning : this.handleAssignMode}>Switch to Assign Mode</button>
                                             </div>
-                                            <div> 
-                                            <a href={this.state.map_redirect_dropoff[1]} rel="noreferrer">
-                                                Departing
-                                            </a>
-                                            </div>
                                         </div>
                                         :
                                         <div className="row d-flex align-items-center align-middle mt-2">
@@ -674,6 +669,28 @@ class BusRoutesPlanner extends Component {
                                             handleStopModification={this.handleRouteStopModification}
                                             />
                                         </div>
+                                        { this.state.map_redirect_dropoff.length !== 0 ?
+                                            <div className="mt-3"> 
+                                            <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            </div> : ""
+                                        }
+                                        
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
