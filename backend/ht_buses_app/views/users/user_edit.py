@@ -1,5 +1,6 @@
 from ...serializers import LocationSerializer
 from ...models import User
+from ...groups import admin_group, bus_driver_group
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -46,6 +47,7 @@ def user_edit(request):
         else:
             user_object.role = reqBody["user"]["role_id"]
         user_object.save()
+        reassign_perms(user)
         assign_perm("change_user", user_object, user_object)
         assign_perm("view_user", user_object, user_object)
         user_object.save()
@@ -86,11 +88,16 @@ def valid_email_edit(request):
         return Response(data)
 
 def reassign_perms(user):
+    user.user_permissions.clear()
     if user.role == User.SCHOOL_STAFF:
-        assign_school_staff_perms(user, [School.objects.get(pk =1)])
-    elif user.role == User.ADMIN:
-        reassign_groups(user)
-    return 
+        assign_school_staff_perms(user, [School.objects.get(pk =1)]) #change to take in schools 
+    reassign_groups(user)
+    return True 
 
-def reassign_groups():
-    return 
+def reassign_groups(user):
+    user.groups.clear()
+    if user.role == User.ADMIN:
+        user.groups.add(admin_group)
+    elif user.role == User.DRIVER:
+        user.groups.add(bus_driver_group)
+    return True
