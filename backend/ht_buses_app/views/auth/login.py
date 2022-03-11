@@ -27,7 +27,7 @@ def user_login(request):
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
     info["role_id"] = user.role
-    info["role_vaue"] = get_role_string(user.role)
+    info["role_value"] = get_role_string(user.role)
     info["is_parent"] = user_is_parent(user.id)
     info["email"] = user.email
     info["first_name"] = user.first_name

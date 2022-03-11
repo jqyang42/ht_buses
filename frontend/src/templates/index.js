@@ -49,7 +49,7 @@ class Login extends Component {
                 localStorage.setItem('last_name', data.info.last_name)
                 localStorage.setItem('is_staff', data.info.role_id !== 4)
                 localStorage.setItem('is_parent', data.info.is_parent)
-                localStorage.setItem('role',  data.info.role_vaue)
+                localStorage.setItem('role',  data.info.role_value)
                 localStorage.setItem('logged_in', data.valid_login)
                 res.headers['Authorization'] = `Token ${localStorage.getItem('token')}`;
                 window.location.reload()
