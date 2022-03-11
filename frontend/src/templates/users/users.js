@@ -73,11 +73,9 @@ class Users extends Component {
 
     getFile = (event) => {
         this.fileUploaded = event.target.files[0]
-        // this.setState({fileUploaded: this.fileUploaded })
         console.log(this.fileUploaded)
-        // TODO: handleFile(fileUploaded);
-        // const navigate = useNavigate();
-        // navigate(USERS_IMPORT_URL, { state: { file: this.fileUploaded } });
+        // TODO: @jessica handleFile(fileUploaded);
+
         this.setState({ import_redirect: true })
     };
 

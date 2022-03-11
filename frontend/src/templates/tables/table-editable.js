@@ -128,6 +128,8 @@ export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalF
     //     setRecords(new_records)
     // }
 
+    console.log(data)
+    
     return (
         <>
             { searchOn ?

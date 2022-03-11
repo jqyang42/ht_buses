@@ -27,6 +27,7 @@ class UsersImport extends Component {
     componentDidMount() {
         this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
         // console.log(this.props.location.state)
+        // TODO: @jessica get backend data from file import here
     }
 
     // pagination
@@ -54,12 +55,12 @@ class UsersImport extends Component {
         })
     }
 
-    // TODO: Add method to cancel all changes from table view and return to Users table
+    // TODO: Add method to cancel all changes from table view and return to Users table @jessica
     handleCancelImport = () => {
         // redirect to USERS_URL (ignoring all changes from import)
     }
 
-    // TODO: Add method to save all changes from table view and submit the import
+    // TODO: Add method to save all changes from table view and submit the import @jessica
     handleSubmitImport = () => {
         // save table changes
         // update backend
@@ -67,7 +68,6 @@ class UsersImport extends Component {
     }
 
     render() {
-        console.log(this.props.params)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
@@ -90,7 +90,7 @@ class UsersImport extends Component {
                                     </button>
 
                                     {/* Cancel confirmation modal */}
-                                    <div className="modal fade" id="cancelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div className="modal fade" id="cancelModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
                                                 <form onSubmit={this.handleCancelImport}>
@@ -114,7 +114,7 @@ class UsersImport extends Component {
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
 
                                     {/* Submit confirmation modal */}
-                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
                                                 <form onSubmit={this.handleSubmitImport}>
