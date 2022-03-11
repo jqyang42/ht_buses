@@ -16,7 +16,17 @@ def schools_detail(request):
     id = request.query_params["id"]
     try :
         uv_school = School.objects.get(pk=id)
+    except:
+        data["message"] = "school could not be found"
+        data["success"] = False
+        return Response(data, status = 404)
+    try:
         school = get_object_for_user(request.user, uv_school, "view_school")
+    except:
+        data["message"] = "permission denied"
+        data["success"] = False
+        return Response(data, status = 403)
+    try:
         school_serializer = SchoolSerializer(school, many=False)
         students = Student.objects.filter(school_id=id)
         students_serializer = StudentSerializer(students, many=True)
@@ -46,6 +56,6 @@ def schools_detail(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "school could not be found"
+        data["message"] = "error retrieving data"
         data["success"] = False
-        return Response(data, status = 404)
+        return Response(data, status = 400)
