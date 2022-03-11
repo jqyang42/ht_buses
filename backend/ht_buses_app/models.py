@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import PermissionsMixin 
+from .groups import admin_group, bus_driver_group
 
 class Location(models.Model):
     address = models.CharField(max_length=100)
@@ -83,7 +85,7 @@ class Stop(models.Model):
                       )
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng):
+    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng, role, phone_number):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
@@ -98,24 +100,47 @@ class UserManager(BaseUserManager):
             first_name = first_name,
             last_name = last_name,
             is_parent = is_parent,
+            phone_number = phone_number
             )
         user.location_id = location_obj.id
         user.set_password(password)
+        if role < 5 and role > 0:
+            user.role = role
+            user.save()
+            if role == 1:
+                user.groups.add(admin_group)
+            #elif role == 2:
+            #user.groups.add(school_staff_group)
+            elif role == 3:
+                user.groups.add(bus_driver_group)
+        else:
+            user.role = 4
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng)
-        user.is_staff = True
+    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0,phone_number=None):
+        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=User.ADMIN, phone_number=phone_number)
+        user.role = User.ADMIN
         user.save(using=self._db)
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
+    ADMIN = 1
+    SCHOOL_STAFF = 2
+    DRIVER = 3
+    GENERAL = 4
+    role_choices = (
+        (ADMIN, "Administrator"),
+        (SCHOOL_STAFF, "School Staff"),
+        (DRIVER, "Driver"),
+        (GENERAL, "General")
+    )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email',unique=True,max_length=128)
-    is_staff = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=16, default=None, blank=True, null=True)
     is_parent = models.BooleanField(default=False)
+    role = models.PositiveSmallIntegerField(choices=role_choices, default=GENERAL)
     location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']

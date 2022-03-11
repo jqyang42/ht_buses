@@ -6,7 +6,7 @@
         "first_name": "Abc",
         "last_name": "Buses",
         "email": "example@gmail.com",
-        "is_staff": true,
+        "role": "Administrator",
         "is_parent": false,
         "address": "Address here",
         "lat": 0.0,

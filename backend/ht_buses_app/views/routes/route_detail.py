@@ -1,18 +1,27 @@
 from ...models import Route, School, Student, User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from ..general.general_tools import get_object_for_user
+
 
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver])
 def routes_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
         route = Route.objects.get(pk=id)
+    except:
+        data["message"] = "route was not found"
+        data["success"] = False
+        return Response(data, status = 404)
+    try:
+        accessible_school = get_object_for_user(request.user, route.school_id, "view_school")
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
@@ -42,7 +51,7 @@ def routes_detail(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "route was not found"
+        data["message"] = "permission denied"
         data["success"] = False
-        return Response(data, status = 404)
+        return Response(data, status = 403)
 

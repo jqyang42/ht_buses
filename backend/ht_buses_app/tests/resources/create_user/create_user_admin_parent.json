@@ -5,7 +5,7 @@
     "password": "msilvan",
     "address": "302 Berkshire St. Durham NC",
     "is_parent": true,
-    "is_staff": true,
+    "role": "General",
     "students": [
         {
             "first_name": "James",

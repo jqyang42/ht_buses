@@ -25,7 +25,22 @@ export async function makeSchoolsDropdown() {
     })
 
     dropdown.sort((a, b) => { return ('' + a.display).localeCompare(b.display) })
+
+    console.log(dropdown)
     return dropdown
+}
+
+export async function makeSchoolsMultiSelect() {
+    const schools = await makeSchoolsDropdown()
+    const multiselect_schools = schools.map(school => {
+        return {
+            key: school.value,
+            label: school.display
+        }
+    })
+
+    console.log(multiselect_schools)
+    return multiselect_schools
 }
 
 export async function makeRoutesDropdown({ school_id }) {

@@ -86,7 +86,6 @@ class UsersDetail extends Component {
         .then(res => {
             const user = res.data.user;
             this.setState({ user: user });
-            
         })
         .catch (err => {
             if (err.response.status !== 200) {
@@ -258,7 +257,7 @@ class UsersDetail extends Component {
                                             {this.state.user.first_name} {this.state.user.last_name}
                                         </h5>
                                         <h7>
-                                        {this.state.user.is_staff ? ('ADMINISTRATOR') : ('GENERAL')}
+                                            {this.state.user.role ? this.state.user.role.toUpperCase() : ""}
                                         </h7>
                                     </div>
                                     <div className="col">
@@ -332,19 +331,22 @@ class UsersDetail extends Component {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Link to={"/users/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span className="btn-text">
-                                                    <i className="bi bi-pencil-square me-2"></i>
-                                                    Edit
-                                                </span>
-                                            </Link>
-                                            
                                             {
-                                                localStorage.getItem("user_id") === this.props.params.id ? "" :
+                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                <Link to={"/users/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-pencil-square me-2"></i>
+                                                        Edit
+                                                    </span>
+                                                </Link> : ""
+                                            }
+                                            {
+                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
+                                                (localStorage.getItem("user_id") !== this.props.params.id) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
                                                     Delete
-                                                </button>
+                                                </button> : ""
                                             }
 
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

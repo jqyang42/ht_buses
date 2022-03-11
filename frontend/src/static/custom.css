@@ -230,3 +230,23 @@ li.page-item a[disabled]:hover {
     background-color:#FFC107;
     margin-bottom: 1px;
 }
+
+.dropdown-toggle:after {
+    display: none !important;
+}
+
+.dropdown-menu {
+    height: 240px;
+    overflow-y: scroll;
+}
+
+.dropdown-menu button {
+    margin-left: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    background-color: #F3F3F3;
+}
+
+.dropdown-menu button:hover{
+    background-color: #DEE2E6;
+}
