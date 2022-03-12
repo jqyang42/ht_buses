@@ -109,17 +109,7 @@ def assign_user_perms(user, students):
     for perm in all_user_perms:
         new_perms_to_many_objects(user, perm, filtered_users_helper(students))
     return 
-
-def add_school_staff_perms(user):
-    schools = get_objects_for_user(user, "change_school", School.objects.all())
-    for school in schools:
-        students = Student.objects.filter(school_id = school)
-        assign_student_perms(user, students)
-        assign_user_perms(user, students)
-        #assign_route_perms(user, students)
-    user.save()
-    return 
-
+    
 def reassign_after_creation(new_user):
     if user_is_parent(new_user.pk):
         students = Student.objects.filter(user_id = new_user)
