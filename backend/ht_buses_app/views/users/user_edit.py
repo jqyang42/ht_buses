@@ -22,6 +22,10 @@ from guardian.shortcuts import assign_perm
 @permission_classes([IsAdmin|IsSchoolStaff]) 
 def user_edit(request):
     data = {}
+    reqBody = json.loads(request.body)
+    print(reqBody)
+    schools=reqBody["user"]["managed_schools"]
+    print([sublists.get('key') for sublists in schools])
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)
@@ -56,7 +60,8 @@ def user_edit(request):
         else:
             user_object.role = reqBody["user"]["role_id"]
         user_object.save()
-        reassign_perms(user)
+        
+        reassign_perms(user=user, school_ids = reqBody["user"]["managed_schools"])
         assign_perm("change_user", user_object, user_object)
         assign_perm("view_user", user_object, user_object)
         user_object.save()
@@ -92,11 +97,13 @@ def valid_email_edit(request):
         data["success"] = True
         return Response(data)
 
-def reassign_perms(user):
+def reassign_perms(user, school_ids=[]):
     user.user_permissions.clear()
     user.save()
     if user.role == User.SCHOOL_STAFF:
-        assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: change to take in schools 
+        schools = School.objects.filter(pk__in=school_ids)
+        print(schools)
+        assign_school_staff_perms(user, schools) #TODO: change to take in schools 
     reassign_groups(user)
     assign_perm("change_user", user, user)
     assign_perm("view_user", user, user)

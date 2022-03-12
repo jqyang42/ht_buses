@@ -27,9 +27,9 @@ def student_edit(request):
     except: 
         return response_messages.DoesNotExist(data, "student")
     try:
-        student_object = get_object_for_user(request.user, student_object, "change_student")
+       school = get_object_for_user(request.user, School.objects.get(pk = reqBody["student"]["student_school_id"]), "change_school")
     except: 
-        return response_messages.PermissionDenied(data, "student")
+        return response_messages.PermissionDenied(data, "student's new school")
     try:
         school_id = School.objects.get(pk=reqBody["student"]["school_id"])
         user_id = User.objects.get(pk = reqBody["student"]["user_id"]) 

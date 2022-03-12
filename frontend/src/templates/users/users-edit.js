@@ -182,7 +182,10 @@ class UsersEdit extends Component {
                     const user = {
                         user: this.state.edited_user
                     }
-                    this.editUser(user)
+                    makeSchoolsMultiSelect().then(ret => {
+                        user.user.managed_schools = ret
+                        this.editUser(user)
+                    })
                 }
             })
         }
