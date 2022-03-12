@@ -29,18 +29,18 @@ class ParentDashboard extends Component {
         this.getParentPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
-    // api calls
-    getUserDashboard() {
-        api.get(`dashboard?id=${localStorage.getItem('user_id')}`)
-            .then(res => {
-            const user = res.data.user;
+    // // api calls
+    // getUserDashboard() {
+    //     api.get(`dashboard?id=${localStorage.getItem('user_id')}`)
+    //         .then(res => {
+    //         const user = res.data.user;
 
-            this.setState({ 
-                user: user, 
-                students: user.students
-            })
-        })
-    }
+    //         this.setState({ 
+    //             user: user, 
+    //             students: user.students
+    //         })
+    //     })
+    // }
     
     // render handlers
     handleShowAll = () => {
@@ -53,7 +53,7 @@ class ParentDashboard extends Component {
 
     // pagination
     getParentPage = (page, sortOptions, search) => {
-        getPage({ url: `dashboard?id=${localStorage.getItem('user_id')}`, pageIndex: page, sortOptions: sortOptions, searchValue: search })
+        getPage({ url: `dashboard`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}` })
         .then(res => {
             console.log(res)
             console.log(res.data.user.students)
