@@ -1,4 +1,4 @@
-from ...models import School, Route, Student
+from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -16,11 +16,11 @@ def students_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        uv_student = Student.objects.get(pk=id)
+        student = Student.objects.get(pk=id)
     except:
         return response_messages.DoesNotExist(data, "student")
     try:
-        student = get_object_for_user(request.user, uv_student, "view_student")
+        student_user = get_object_for_user(request.user, student.school_id, "view_school")
     except: 
         return response_messages.PermissionDenied(data, "student")
     try:

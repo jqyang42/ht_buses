@@ -310,17 +310,17 @@ class UsersEdit extends Component {
                                                     <label className="form-check-label" for="general">General</label>
                                                 </div>
                                             </div> */}
-
+                
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75 required">
                                                 <label for="roleType" className="control-label pb-2">User Type</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
-                                                disabled={ localStorage.getItem("user_id") == this.props.params.id}
+                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id}
                                                 onChange={(e) => this.handleRoleChange(e)} required>
                                                     <option value={0} disabled>Select a Role</option>
                                                     <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option>
                                                     <option value={1} id="1" selected={this.state.edited_user.role_id === 1}>Administrator</option>
-                                                    <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>Driver</option>
-                                                    <option value={3} id="3" selected={this.state.edited_user.role_id === 3}>School Staff</option>
+                                                    <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>School Staff</option>
+                                                    <option value={3} id="3" selected={this.state.edited_user.role_id === 3}>Driver</option>
                                                     {/* {this.state.roles_dropdown.map(role => 
                                                         <option value={role.value} id={role.display}>{role.display}</option>
                                                     )} */}
@@ -328,7 +328,7 @@ class UsersEdit extends Component {
                                             </div>
 
                                             {/* if user role is school staff */}
-                                            { this.state.edited_user.role_id === 3 ?
+                                            { this.state.edited_user.role_id === 2 ?
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     {/* TODO: @jessica link up schools in the options field */}

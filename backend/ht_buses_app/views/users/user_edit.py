@@ -25,6 +25,7 @@ def user_edit(request):
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)
+        print(reqBody)
         try:
             uv_user_object = User.objects.get(pk=id)
         except:

@@ -11,7 +11,7 @@ import re
 from ..resources import capitalize_reg
 from ..accounts import account_tools
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import assign_school_staff_perms
+from ..general.general_tools import assign_school_staff_perms, reassign_after_creation
 from guardian.shortcuts import assign_perm
 from ..general import response_messages
 
@@ -27,36 +27,42 @@ def user_create(request):
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['first_name'])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['last_name'])
     address = reqBody["user"]["location"]['address']
-    role = reqBody["user"]['role_id']
+    if request.user.role == User.ADMIN:
+        role = reqBody["user"]['role_id']
+    else:
+        role = User.GENERAL
     is_parent = reqBody["user"]['is_parent']
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
     phone_number = reqBody["user"]["phone_number"]
     password = "password" #account_tools.generate_random_password()
-    if role == 1: 
+    if role == User.ADMIN: 
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
     assign_perm("change_user", user, user)
     assign_perm("view_user", user, user)
-    try:
-        if role == 2:
-            assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
-    except:
-        user.user_permissions.clear()
-        return response_messages.DoesNotExist(data, "school")
     user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
-    if is_parent:
-        try:
-            for student in reqBody["user"]["students"]:
-                student_create.create_student(student, user.id)
-            data["message"] = "user and students created successfully"
-        except:
-            user.location.delete()
-            user.delete()
-            return response_messages.UnsuccessfulAction(data, "user create, adding student to user")
+    try:
+        for student in reqBody["user"]["students"]:
+            student_create.create_student(student, user.id)
+        data["message"] = "user and students created successfully"
+    except:
+        user.location.delete()
+        user.delete()
+        return response_messages.UnsuccessfulAction(data, "user create, adding student to user")
+    try:
+        if role == User.SCHOOL_STAFF:
+            assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
+    except:
+        user.user_permissions.clear()
+        user.location.delete()
+        user.delete()
+        return response_messages.DoesNotExist(data, "school")
+    user.save()
+    reassign_after_creation(user)
     data["message"] = "user created successfully"
     if email_sent:
         data["message"] = data["message"] +  " and activation email sent to user"
