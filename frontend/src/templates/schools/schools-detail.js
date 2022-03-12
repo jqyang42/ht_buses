@@ -33,7 +33,16 @@ class SchoolsDetail extends Component {
             totalPages: null,
             // sortOptions: {},
             // searchValue: ''
-        }
+        },
+        routes_page: [],
+        routes_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+            // sortOptions: {},
+            // searchValue: ''
+        },
     }
 
     // initialize
@@ -57,6 +66,25 @@ class SchoolsDetail extends Component {
             this.setState({
                 students_page: res.data.students,
                 students_table: students_table
+            })
+        })
+    }
+
+    // TODO: @jessica check if evelyn has this up
+    getRoutesPage = (page, sortOptions, search) => {
+        getPage({ url: `routes/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            const routes_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                routes_page: res.data.students,
+                routes_table: routes_table
             })
         })
     }
@@ -252,7 +280,17 @@ class SchoolsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        <SchoolRoutesTable data={this.state.routes} showAll={this.state.routes_show_all}/>
+                                        <SchoolRoutesTable
+                                        data={this.state.routes_page} 
+                                        showAll={this.state.routes_show_all}
+                                        pageIndex={this.state.routes_table.pageIndex}
+                                        canPreviousPage={this.state.routes_table.canPreviousPage}
+                                        canNextPage={this.state.routes_table.canNextPage}
+                                        updatePageCount={this.getRoutesPage}
+                                        pageSize={10}
+                                        totalPages={this.state.routes_table.totalPages}
+                                        searchValue={''} 
+                                        />
                                         <button className="btn btn-secondary align-self-center" onClick={this.handleRoutesShowAll}>
                                             { !this.state.routes_show_all ?
                                                 "Show All" : "Show Pages"
