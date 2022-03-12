@@ -14,6 +14,8 @@ from ...role_permissions import IsAdmin, IsSchoolStaff
 from guardian.shortcuts import get_objects_for_user
 from ..general.general_tools import get_object_for_user
 from ..general.general_tools import assign_school_staff_perms
+from ..general import response_messages
+from guardian.shortcuts import assign_perm
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -23,8 +25,14 @@ def user_edit(request):
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)
-        uv_user_object = User.objects.get(pk=id)
-        user_object = get_object_for_user(request.user, uv_user_object, "change_user")
+        try:
+            uv_user_object = User.objects.get(pk=id)
+        except:
+            return response_messages.DoesNotExist(data, "user")
+        try:
+            user_object = get_object_for_user(request.user, uv_user_object, "change_user")
+        except:
+            return response_messages.PermissionDenied(data, "user")
         user_object.email = reqBody["user"]["email"]
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])
@@ -58,11 +66,7 @@ def user_edit(request):
         data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role_id' : reqBody["user"]["role_id"], 'is_parent' : reqBody["user"]["is_parent"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
         return Response(data)
     except:
-
-        data["message"] = "user information could not be updated"
-        data["success"] = False
-        traceback.print_exc()
-        return Response(data, status = 404)
+        return response_messages.UnsuccessfulAction(data, "user edit")
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -89,15 +93,21 @@ def valid_email_edit(request):
 
 def reassign_perms(user):
     user.user_permissions.clear()
+    user.save()
     if user.role == User.SCHOOL_STAFF:
-        assign_school_staff_perms(user, [School.objects.get(pk =1)]) #change to take in schools 
+        assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: change to take in schools 
     reassign_groups(user)
+    assign_perm("change_user", user, user)
+    assign_perm("view_user", user, user)
+    user.save()
     return True 
 
 def reassign_groups(user):
     user.groups.clear()
+    user.save()
     if user.role == User.ADMIN:
         user.groups.add(admin_group)
     elif user.role == User.DRIVER:
         user.groups.add(bus_driver_group)
+    user.save()
     return True

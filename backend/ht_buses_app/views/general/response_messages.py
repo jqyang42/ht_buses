@@ -7,12 +7,12 @@ def PermissionDenied(data={}, source=""):
     return Response(data, status = 403)
 
 def UnsuccessfulChange(data={}, source=""):
-    data["message"] = soure + "could not be edited"
+    data["message"] = source + " could not be edited"
     data["success"] = False
     return Response(data, status = 400)
 
 def UnsuccessfulAction(data={}, source=""):
-    data["message"] = "action could not be completed"
+    data["message"] = source + ": action could not be completed, make sure all key and value inputs are valid or try again"
     data["success"] = False
     return Response(data, status = 400)
 

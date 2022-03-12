@@ -9,7 +9,7 @@ from ..stops import check_in_range
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
-
+from ..general import response_messages
 # Student Route PUT API
 @csrf_exempt
 @api_view(['PUT'])
@@ -23,8 +23,14 @@ def student_route_edit(request):
             student_id = student["id"]
             route_id = student["route_id"]
             in_range = student["in_range"]
-            uv_student_obj = Student.objects.get(pk=student_id)
-            student_object = get_object_for_user(request.user, student_object, "change_student")
+            try:
+                uv_student_obj = Student.objects.get(pk=student_id)
+            except:
+                return response_messages.DoesNotExist(data, "student")
+            try:
+                student_object = get_object_for_user(request.user, student_object, "change_student")
+            except:
+                return response_messages.PermissionDenied(data, "student")
             if route_id == 0:
                 student_obj.route_id = None
             else:
@@ -48,6 +54,4 @@ def student_route_edit(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "student was not added/removed to route"
-        data["success"] = False
-        return Response(data, status = 404)
+        response_messages.UnsuccessfulAction(data, "adding or removing student from route")

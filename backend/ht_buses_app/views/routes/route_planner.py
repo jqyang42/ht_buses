@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
 
 # Route Planner API
 @csrf_exempt
@@ -16,7 +17,13 @@ def routeplanner(request):
     id = request.query_params["id"] # This is the school id
     try:
         uv_school = School.objects.get(pk=id)
+    except:
+        return response_messages.DoesNotExist(data, "school")
+    try:
         school = get_object_for_user(request.user, uv_school, "change_school")
+    except:
+        return response_messages.PermissionDenied(data, "school")
+    try:
         school_serializer = SchoolSerializer(school, many=False)
         school_address = {"address": school.location_id.address, "lat": school.location_id.lat, "lng": school.location_id.lng}
         school_arr = {"name": school_serializer.data["name"], "location": school_address} 
@@ -54,6 +61,4 @@ def routeplanner(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "school is invalid"
-        data["success"] = False
-        return Response(data, status = 404)
+       return response_messages.UnsuccessfulAction(data, "extracting details for routeplanner")

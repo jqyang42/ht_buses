@@ -32,4 +32,4 @@ def school_create(request):
         data["school"] = {"id": school.id, "name": name, "arrival": school.arrival, "departure": school.departure, "location": location_serializer.data}
         return Response(data)
     except:
-        return UnsuccessfulAction(data, "school")
+        return UnsuccessfulAction(data, "school create")

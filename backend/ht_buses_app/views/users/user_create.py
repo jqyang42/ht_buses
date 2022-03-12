@@ -13,6 +13,7 @@ from ..accounts import account_tools
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import assign_school_staff_perms
 from guardian.shortcuts import assign_perm
+from ..general import response_messages
 
 
 # User POST API
@@ -42,11 +43,11 @@ def user_create(request):
         if role == 2:
             assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
     except:
-        print("no school to assign, make a school")
+        user.user_permissions.clear()
+        return response_messages.DoesNotExist(data, "school")
     user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
-    data["message"] = "user created successfully"
     if is_parent:
         try:
             for student in reqBody["user"]["students"]:
@@ -55,9 +56,8 @@ def user_create(request):
         except:
             user.location.delete()
             user.delete()
-            data["message"] = "user could not be created because student data was invalid"
-            data["success"] = False
-            return Response(data)
+            return response_messages.UnsuccessfulAction(data, "user create, adding student to user")
+    data["message"] = "user created successfully"
     if email_sent:
         data["message"] = data["message"] +  " and activation email sent to user"
     else:
