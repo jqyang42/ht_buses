@@ -24,11 +24,11 @@ def student_route_edit(request):
             route_id = student["route_id"]
             in_range = student["in_range"]
             try:
-                uv_student_obj = Student.objects.get(pk=student_id)
+                student_obj = Student.objects.get(pk=student_id)
             except:
                 return response_messages.DoesNotExist(data, "student")
             try:
-                school = get_object_for_user(request.user, student_object.school_id, "change_school")
+                school = get_object_for_user(request.user, student_obj.school_id, "change_school")
             except:
                 return response_messages.PermissionDenied(data, "student's school")
             if route_id == 0:
