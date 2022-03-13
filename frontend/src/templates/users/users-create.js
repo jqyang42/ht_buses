@@ -30,7 +30,8 @@ class UsersCreate extends Component {
                 lat: 0.0,
                 lng: 0.0
             },
-            students: []
+            students: [],
+            managed_schools: []
         },
         confirm_password: '',
         added_students_list: [],
@@ -173,6 +174,18 @@ class UsersCreate extends Component {
         }
       
     }
+
+    handleManagedSchoolsChange = (selected) => {
+        const selected_schools = selected.map(id => {
+            return { 'id': id }
+        })
+        // console.log(selected)
+        // console.log(selected_schools)
+        let user = {...this.state.new_user}
+        // console.log(user)
+        user.managed_schools = selected_schools
+        this.setState({ new_user: user })
+    }
     
     handleStudentFirstNameChange = (event, student_num) => {
         const index = this.state.added_students_list.indexOf(student_num)
@@ -300,7 +313,7 @@ class UsersCreate extends Component {
 
     handleSubmit = (event) => {        
         event.preventDefault();
-       const valid_address = this.checkNonParentAddress()
+        const valid_address = this.checkNonParentAddress()
         if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
             this.setState({ create_success: -1 })
             return 
@@ -505,6 +518,7 @@ class UsersCreate extends Component {
                                                         buttonClass="form-select border"
                                                         actionBtnStyle="ms-1 mt-1 bg-primary w-75"
                                                         selectDeselectLabel="Select / Deselect All"
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                         // @jessica you can add an onChange method here by using "handleOnChange"
                                                     />
                                                     {/* @jessica for your reference */}
