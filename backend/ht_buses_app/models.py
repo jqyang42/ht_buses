@@ -116,7 +116,7 @@ class UserManager(BaseUserManager):
             elif role == User.DRIVER:
                 user.groups.add(get_driver_group())
         else:
-            user.role = 4
+            user.role = User.GENERAL
         assign_perm("change_user", user, user)
         assign_perm("view_user", user, user)
         user.save(using= self._db)

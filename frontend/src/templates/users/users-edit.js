@@ -179,6 +179,7 @@ class UsersEdit extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
+        
         if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
             return 
         }
@@ -194,11 +195,8 @@ class UsersEdit extends Component {
                     const user = {
                         user: this.state.edited_user
                     }
-                    // makeSchoolsMultiSelect().then(ret => {
-                    //     user.user.managed_schools = ret
-                    // this.editUser(user)
+                    this.editUser(user)
                     console.log(user)
-                    // })
                 }
             })
         }
