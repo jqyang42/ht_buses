@@ -475,8 +475,8 @@ class UsersCreate extends Component {
                                                     <option value={0} disabled selected>Select a Role</option>
                                                     <option value={4} id="4">General</option>
                                                     <option value={1} id="1">Administrator</option>
-                                                    <option value={2} id="2">Driver</option>
-                                                    <option value={3} id="3">School Staff</option>
+                                                    <option value={2} id="2">School Staff</option>
+                                                    <option value={3} id="3">Driver</option>
                                                     {/* { {this.state.roles_dropdown.map(role => 
                                                         <option value={role.value} id={role.display}>{role.display}</option>
                                                     )} } */}
