@@ -33,8 +33,6 @@ class Users extends Component {
         import_redirect: false,
         fileUploaded: null
     }
-
-
     
     componentDidMount() {
         this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
