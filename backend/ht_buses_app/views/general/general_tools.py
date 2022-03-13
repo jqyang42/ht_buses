@@ -5,19 +5,23 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from guardian.shortcuts import assign_perm, remove_perm
 from guardian.shortcuts import get_objects_for_user
-from ...groups import bus_driver_group, admin_group
+from ...groups import get_driver_group, get_admin_group
 
-school_content_type = ContentType.objects.get_for_model(School)
-all_school_perms = Permission.objects.filter(content_type=school_content_type)
+def get_all_school_perms():
+    school_content_type = ContentType.objects.get_for_model(School)
+    return Permission.objects.filter(content_type=school_content_type)
 
-user_content_type = ContentType.objects.get_for_model(User)
-all_user_perms = Permission.objects.filter(content_type=user_content_type)
+def get_all_user_perms():
+    user_content_type = ContentType.objects.get_for_model(User)
+    return Permission.objects.filter(content_type=user_content_type)
 
-student_content_type = ContentType.objects.get_for_model(Student)
-all_student_perms = Permission.objects.filter(content_type=student_content_type)
+def get_all_student_perms():
+    student_content_type = ContentType.objects.get_for_model(Student)
+    return Permission.objects.filter(content_type=student_content_type)
 
-route_content_type = ContentType.objects.get_for_model(Route)
-all_route_perms = Permission.objects.filter(content_type=route_content_type)
+def get_all_route_perms():
+    route_content_type = ContentType.objects.get_for_model(Route)
+    return Permission.objects.filter(content_type=route_content_type)
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
@@ -63,11 +67,11 @@ def get_object_for_user(user, model_object, access_level):
         raise PermissionDenied
 
 def permission_setup():
-    admin_perms = [*all_school_perms, *all_user_perms, *all_student_perms, *all_route_perms]
+    admin_perms = [*get_all_school_perms(), *get_all_user_perms(), *get_all_student_perms(), *get_all_route_perms()]
     #admin_perms = Permission.object.all()
-    admin_group.permissions.set(admin_perms)
-    view_perms = [*all_school_perms.filter(codename__startswith='view_'), *all_user_perms.filter(codename__startswith='view_'), *all_student_perms.filter(codename__startswith='view_'), *all_route_perms.filter(codename__startswith='view_')]
-    bus_driver_group.permissions.set(view_perms)
+    get_admin_group.permissions.set(admin_perms)
+    view_perms = [*get_all_school_perms().filter(codename__startswith='view_'), *get_all_user_perms().filter(codename__startswith='view_'), *get_all_student_perms().filter(codename__startswith='view_'), *get_all_route_perms().filter(codename__startswith='view_')]
+    get_driver_group.permissions.set(view_perms)
 
 def new_perms_to_many_objects(user, access_level, object_list): 
     for model_object in object_list:
@@ -89,12 +93,12 @@ def assign_school_staff_perms(user, schools):
     return 
 
 def assign_school_perms(user, schools):
-    for perm in all_school_perms:
+    for perm in get_all_school_perms():
         new_perms_to_many_objects(user, perm, schools)
     return 
 
 def assign_student_perms(user, students):
-    for perm in all_student_perms:
+    for perm in get_all_student_perms():
             new_perms_to_many_objects(user, perm, students)
     return 
 
@@ -106,7 +110,7 @@ def assign_route_perms(user, students):
 """
 
 def assign_user_perms(user, students):
-    for perm in all_user_perms:
+    for perm in get_all_user_perms():
         new_perms_to_many_objects(user, perm, filtered_users_helper(students))
     return 
     
@@ -117,7 +121,7 @@ def reassign_after_creation(new_user):
         for school in schools:
             users_with_access = User.objects.filter(pk__in=[obj.pk for obj in User.objects.all() if obj.has_perm('change_school', school)])
             for user in users_with_access: 
-                for perm in all_user_perms:
+                for perm in get_all_user_perms():
                     assign_perm(perm, user, new_user)
         return True
     return False

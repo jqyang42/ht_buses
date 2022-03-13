@@ -15,7 +15,7 @@ from ..general.general_tools import get_object_for_user
 from ..general.general_tools import assign_school_staff_perms
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
-from ...groups import admin_group, bus_driver_group
+from ...groups import get_admin_group, get_driver_group
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -114,8 +114,8 @@ def reassign_groups(user):
     user.groups.clear()
     user.save()
     if user.role == User.ADMIN:
-        user.groups.add(admin_group)
+        user.groups.add(get_admin_group)
     elif user.role == User.DRIVER:
-        user.groups.add(bus_driver_group)
+        user.groups.add(get_driver_group)
     user.save()
     return True

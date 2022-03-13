@@ -1,4 +1,6 @@
 from django.urls import path
+from django.db import models
+from . import models 
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
 from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
@@ -14,9 +16,14 @@ from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.general.general_tools import permission_setup
+from . models import User
 
-
-permission_setup() #TODO: figure out better place for this i.e after models, but only one time after runserver called
+try:
+    user = User.objects.get(email = 'AnonymousUser')
+    user.delete()
+except:
+    print("success")
+#permission_setup() #TODO: figure out better place for this i.e after models, but only one time after runserver called
 urlpatterns = [
     path('api/students', students_view.students, name='students'),
     path('api/students/detail', student_detail.students_detail, name="students_detail"),

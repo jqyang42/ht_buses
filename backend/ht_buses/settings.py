@@ -89,8 +89,11 @@ AUTHENTICATION_BACKENDS = [
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'guardian',
+    'permission',
     'django.contrib.auth',
+    'ht_buses_app',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -99,12 +102,11 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',
     'corsheaders',
     'rest_framework',
-    'ht_buses_app',
     'rest_framework.authtoken',
-    'guardian',
-    'permission'
     
 ]
+
+ANONYMOUS_USER_ID = -1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
