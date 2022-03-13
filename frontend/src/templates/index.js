@@ -63,7 +63,7 @@ class Login extends Component {
     }   
     
     render() {
-        if (!JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('is_staff'))) {
+        if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
         else if (JSON.parse(localStorage.getItem('logged_in')) && !JSON.parse(localStorage.getItem('is_staff'))) {
