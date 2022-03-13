@@ -1,6 +1,5 @@
 from ...serializers import LocationSerializer
 from ...models import User
-from ...groups import admin_group, bus_driver_group
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -16,6 +15,7 @@ from ..general.general_tools import get_object_for_user
 from ..general.general_tools import assign_school_staff_perms
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
+from ...groups import admin_group, bus_driver_group
 
 @csrf_exempt
 @api_view(["PUT"])

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import PermissionsMixin 
-from .groups import admin_group, bus_driver_group
+
 
 class Location(models.Model):
     address = models.CharField(max_length=100)
@@ -107,12 +107,14 @@ class UserManager(BaseUserManager):
         if role < 5 and role > 0:
             user.role = role
             user.save()
+            """
             if role == 1:
                 user.groups.add(admin_group)
             #elif role == 2:
             #user.groups.add(school_staff_group)
             elif role == 3:
                 user.groups.add(bus_driver_group)
+            """
         else:
             user.role = 4
         user.save(using= self._db)
@@ -152,6 +154,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                        ("delete", "can delete user"),
                         ("add", "can create user"),
                       )
+
 
 
     

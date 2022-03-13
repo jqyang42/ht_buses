@@ -1,11 +1,11 @@
-from ... import groups
+
 from django.core.exceptions import PermissionDenied
+from ...models import School, User, Student, Route
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
-from ...groups import bus_driver_group, admin_group
-from ...models import School, User, Student, Route
 from guardian.shortcuts import assign_perm, remove_perm
 from guardian.shortcuts import get_objects_for_user
+from ...groups import bus_driver_group, admin_group
 
 school_content_type = ContentType.objects.get_for_model(School)
 all_school_perms = Permission.objects.filter(content_type=school_content_type)
