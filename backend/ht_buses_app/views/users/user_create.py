@@ -40,8 +40,6 @@ def user_create(request):
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
         user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
-    assign_perm("change_user", user, user)
-    assign_perm("view_user", user, user)
     user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]

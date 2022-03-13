@@ -11,10 +11,13 @@ def setup_groups():
 
 def get_admin_group():
     setup_groups()
-    return Group.objects.get(name='Admin')
+    admin_group, created = Group.objects.get_or_create(name='Admin')
+    return admin_group
 
 def get_driver_group():
     setup_groups()
-    return Group.objects.get_or_create(name='BusDriver')
+    bus_driver_group, created = Group.objects.get_or_create(name='BusDriver')
+    return bus_driver_group
+
 
 

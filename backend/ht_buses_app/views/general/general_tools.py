@@ -69,9 +69,9 @@ def get_object_for_user(user, model_object, access_level):
 def permission_setup():
     admin_perms = [*get_all_school_perms(), *get_all_user_perms(), *get_all_student_perms(), *get_all_route_perms()]
     #admin_perms = Permission.object.all()
-    get_admin_group.permissions.set(admin_perms)
+    get_admin_group().permissions.set(admin_perms)
     view_perms = [*get_all_school_perms().filter(codename__startswith='view_'), *get_all_user_perms().filter(codename__startswith='view_'), *get_all_student_perms().filter(codename__startswith='view_'), *get_all_route_perms().filter(codename__startswith='view_')]
-    get_driver_group.permissions.set(view_perms)
+    get_driver_group().permissions.set(view_perms)
 
 def new_perms_to_many_objects(user, access_level, object_list): 
     for model_object in object_list:
