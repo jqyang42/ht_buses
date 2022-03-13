@@ -147,6 +147,18 @@ class UsersEdit extends Component {
         }
     }
 
+    // @jessica check with backend
+    handleManagedSchoolsChange = (selected) => {
+        const selected_schools = selected.map(id => {
+            return { 'id': id }
+        })
+        // console.log(selected)
+        // console.log(selected_schools)
+        let user = {...this.state.edited_user}
+        // console.log(user)
+        user.managed_schools = selected_schools
+        this.setState({ edited_user: user })
+    }
 
     checkNonParentAddress = () => {
         const address = this.state.edited_user.location.address
@@ -182,10 +194,11 @@ class UsersEdit extends Component {
                     const user = {
                         user: this.state.edited_user
                     }
-                    makeSchoolsMultiSelect().then(ret => {
-                        user.user.managed_schools = ret
-                        this.editUser(user)
-                    })
+                    // makeSchoolsMultiSelect().then(ret => {
+                    //     user.user.managed_schools = ret
+                    // this.editUser(user)
+                    console.log(user)
+                    // })
                 }
             })
         }
@@ -343,6 +356,7 @@ class UsersEdit extends Component {
                                                         buttonClass="form-select border"
                                                         actionBtnStyle="ms-1 mt-1 bg-primary w-75"
                                                         selectDeselectLabel="Select / Deselect All"
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                         // @jessica you can add an onChange method here by using "handleOnChange"
                                                     />
                                                     {/* @jessica for your reference */}
