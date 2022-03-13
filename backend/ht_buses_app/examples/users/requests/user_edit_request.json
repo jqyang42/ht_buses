@@ -9,6 +9,7 @@
             "lng": 0.0
         },
         "role": "School Staff",
-        "is_parent": true
+        "is_parent": true,
+        "managed_schools": [{"id": 1}, {"id": 2}]
     }
 }

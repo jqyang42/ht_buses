@@ -18,10 +18,9 @@ from . views.users.detail import user_school
 from . views.general.general_tools import permission_setup
 from . models import User
 
-
 try:
     anon_user = User.objects.get(email = "AnonymousUser")
-    anon.delete()
+    anon_user.delete()
 except:
     print("success")
 #permission_setup() #TODO: figure out better place for this i.e after models, but only one time after runserver called
