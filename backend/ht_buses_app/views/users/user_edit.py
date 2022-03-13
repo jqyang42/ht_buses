@@ -60,7 +60,6 @@ def user_edit(request):
         else:
             user_object.role = reqBody["user"]["role_id"]
         user_object.save()
-        
         reassign_perms(user=user, school_ids = reqBody["user"]["managed_schools"])
         assign_perm("change_user", user_object, user_object)
         assign_perm("view_user", user_object, user_object)

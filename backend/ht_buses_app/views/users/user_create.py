@@ -53,9 +53,11 @@ def user_create(request):
         return response_messages.UnsuccessfulAction(data, "user create, adding student to user")
     try:
         if role == User.SCHOOL_STAFF:
-            assign_school_staff_perms(user, [School.objects.get(pk =1)]) #TODO: hardcoded bc don't have it implmeented in front end 
+            schools =  reqBody['user']['managed_schools']
+            school_ids = [sublists.get('id') for sublists in schools]
+            managed_schools = School.objects.filter(pk__in=school_ids)
+            assign_school_staff_perms(user, managed_schools)
     except:
-        user.user_permissions.clear()
         user.location.delete()
         user.delete()
         return response_messages.DoesNotExist(data, "school")
