@@ -1,7 +1,7 @@
 from ....models import Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.db.models import Q
 from django.db.models import Value as V
@@ -12,7 +12,8 @@ from ....role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 # Students Table: User Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
+@permission_classes([IsAuthenticated]) 
+# @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def students_user(request):
     data = {}
     page_number = request.query_params["page"]

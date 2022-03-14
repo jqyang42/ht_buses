@@ -13,20 +13,23 @@ class ParentDashboard extends Component {
         user: {},
         students: [],
         show_all: false,
-        pageIndex: 1,
-        canPreviousPage: null,
-        canNextPage: null,
-        totalPages: null,
-        sortOptions: {
-            accessor: '',
-            sortDirection: 'none'
-        },
-        searchValue: ''
+        students_page: [],
+        students_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+            sortOptions: {
+                accessor: '',
+                sortDirection: 'none'
+            },
+            searchValue: ''
+        }
     }
 
     componentDidMount() {
-        this.getUserDashboard();
-        this.getParentPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        // this.getUserDashboard();
+        this.getStudentsPage(this.state.students_table.pageIndex, this.state.students_table.sortOptions, this.state.students_table.searchValue)
     }
 
     // // api calls
@@ -52,22 +55,41 @@ class ParentDashboard extends Component {
     } 
 
     // pagination
-    getParentPage = (page, sortOptions, search) => {
-        getPage({ url: `dashboard`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}` })
+    getStudentsPage = (page, sortOptions, search) => {
+        getPage({ url: `students/user`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}` })
         .then(res => {
-            console.log(res)
-            console.log(res.data.user.students)
-            this.setState({
-                students: res.data.user.students,
+            const students_table = {
                 pageIndex: res.pageIndex,
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
                 sortOptions: sortOptions,
                 searchValue: search
+            }
+            this.setState({
+                students_page: res.data.students,
+                students_table: students_table
             })
         })
     }
+
+    // // pagination
+    // getParentPage = (page, sortOptions, search) => {
+    //     getPage({ url: `dashboard`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}` })
+    //     .then(res => {
+    //         console.log(res)
+    //         console.log(res.data.user.students)
+    //         this.setState({
+    //             students: res.data.user.students,
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //             sortOptions: sortOptions,
+    //             searchValue: search
+    //         })
+    //     })
+    // }
 
     render() {
         console.log(this.state.totalPages)
@@ -88,15 +110,15 @@ class ParentDashboard extends Component {
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
                                     <ParentDashboardTable
-                                        data={this.state.students}
-                                        showAll={this.state.show_all}
-                                        pageIndex={this.state.pageIndex}
-                                        canPreviousPage={this.state.canPreviousPage}
-                                        canNextPage={this.state.canNextPage}
-                                        updatePageCount={this.getParentPage}
-                                        pageSize={10}
-                                        totalPages={this.state.totalPages}
-                                        searchValue={this.state.searchValue}
+                                    data={this.state.students_page} 
+                                    showAll={this.state.show_all}
+                                    pageIndex={this.state.students_table.pageIndex}
+                                    canPreviousPage={this.state.students_table.canPreviousPage}
+                                    canNextPage={this.state.students_table.canNextPage}
+                                    updatePageCount={this.getStudentsPage}
+                                    pageSize={10}
+                                    totalPages={this.state.students_table.totalPages}
+                                    searchValue={this.state.students_table.searchValue}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
