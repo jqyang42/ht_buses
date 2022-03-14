@@ -45,15 +45,9 @@ def role_string_to_id(role_string):
     if role_string == 'Administrator':
         return User.ADMIN
     if role_string == 'School Staff':
-<<<<<<< HEAD
-        return 2
-    if role_string == 'Bus Driver':
-        return 3
-=======
         return User.SCHOOL_STAFF
     if role_string == 'Bus Driver':
         return User.DRIVER
->>>>>>> user-edit-fixes
     if role_string == 'General':
         return User.GENERAL
     return None
