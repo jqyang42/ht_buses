@@ -28,32 +28,9 @@ class ParentDashboard extends Component {
     }
 
     componentDidMount() {
-        // this.getUserDashboard();
         this.getStudentsPage(this.state.students_table.pageIndex, this.state.students_table.sortOptions, this.state.students_table.searchValue)
     }
-
-    // // api calls
-    // getUserDashboard() {
-    //     api.get(`dashboard?id=${localStorage.getItem('user_id')}`)
-    //         .then(res => {
-    //         const user = res.data.user;
-
-    //         this.setState({ 
-    //             user: user, 
-    //             students: user.students
-    //         })
-    //     })
-    // }
     
-    // render handlers
-    handleShowAll = () => {
-        this.setState(prevState => ({
-            show_all: !prevState.show_all
-        }), () => {
-            this.getRoutesPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
-        })
-    } 
-
     // pagination
     getStudentsPage = (page, sortOptions, search) => {
         getPage({ url: `students/user`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}` })
@@ -72,24 +49,15 @@ class ParentDashboard extends Component {
             })
         })
     }
-
-    // // pagination
-    // getParentPage = (page, sortOptions, search) => {
-    //     getPage({ url: `dashboard`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}` })
-    //     .then(res => {
-    //         console.log(res)
-    //         console.log(res.data.user.students)
-    //         this.setState({
-    //             students: res.data.user.students,
-    //             pageIndex: res.pageIndex,
-    //             canPreviousPage: res.canPreviousPage,
-    //             canNextPage: res.canNextPage,
-    //             totalPages: res.totalPages,
-    //             sortOptions: sortOptions,
-    //             searchValue: search
-    //         })
-    //     })
-    // }
+    
+    // render handlers
+    handleShowAll = () => {
+        this.setState(prevState => ({
+            show_all: !prevState.show_all
+        }), () => {
+            this.getRoutesPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
+        })
+    } 
 
     render() {
         console.log(this.state.totalPages)
