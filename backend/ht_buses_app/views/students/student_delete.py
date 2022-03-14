@@ -7,6 +7,7 @@ from ...serializers import StudentSerializer
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
 
 
 # Student DELETE API
@@ -18,7 +19,13 @@ def student_delete(request):
     id = request.query_params["id"]
     try:
         uv_student_object =  Student.objects.get(pk=id)
+    except:
+        return response_messages.DoesNotExist(data, "student")
+    try:
         student_object = get_object_for_user(request.user, uv_student_object, "delete_student")
+    except:
+        return response_messages.PermissionDenied(data, "student")
+    try:
         student_serializer = StudentSerializer(student_object, many=False)
         route_id = student_serializer.data["route_id"]
         parent = User.objects.get(pk = student_object.user_id.id)
@@ -35,6 +42,4 @@ def student_delete(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "student could not be deleted"
-        data["success"] = False
-        return Response(data, status = 400)
+       return response_messages.UnsuccessfulAction(data, "student delete")

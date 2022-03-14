@@ -9,6 +9,9 @@ import re
 from ..resources import capitalize_reg
 from datetime import datetime
 from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_object_for_user
+from ..general import response_messages
+
 # Schools Time PUT API
 # Refactor to be a PUT request
 @csrf_exempt
@@ -20,6 +23,13 @@ def school_edit_time(request):
     reqBody = json.loads(request.body)
     try:
         school_object =  School.objects.get(pk = id)
+    except:
+        return response_messages.DoesNotExist(data, "school")
+    try:
+        school_object = get_object_for_user(request.user, school_object, "change_school")
+    except:
+        return response_messages.PermissionDenied(data, "school")
+    try:
         school_object.arrival = datetime.time(datetime.strptime(reqBody["school"]["arrival"], "%H:%M"))
         school_object.departure = datetime.time(datetime.strptime(reqBody["school"]["departure"], "%H:%M"))
         school_object.save()
@@ -29,6 +39,4 @@ def school_edit_time(request):
         data["school"] = {"id": school_object.id, "name": school_object.name, "arrival": school_object.arrival, "departure": school_object.departure, "location": location_serializer.data}
         return Response(data)
     except:
-        data["message"] = "school could not be updated"
-        data["success"] = False
-        return Response(data, status = 400)
+        return response_messages.UnsuccessfulChange(data, "school")

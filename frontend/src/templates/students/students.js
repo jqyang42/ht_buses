@@ -7,8 +7,14 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { STUDENTS_IMPORT_URL } from "../../constants";
 
 class Students extends Component {
+    constructor(props) {
+        super(props)
+        this.hiddenFileInput = React.createRef()
+    }
+
     state = {
         students : [],
         show_all: false,
@@ -20,7 +26,9 @@ class Students extends Component {
             accessor: '',
             sortDirection: 'none'
         },
-        searchValue: ''
+        searchValue: '',
+        import_redirect: false,
+        fileUploaded: null
     }
     
     componentDidMount() {
@@ -52,12 +60,35 @@ class Students extends Component {
         })
     }
 
+    // Programatically click the hidden file input element
+    // when the Button component is clicked
+    importUsers = () => {
+        this.hiddenFileInput.current.click()
+    };
+
+    // Call a function (passed as a prop from the parent component)
+    // to handle the user-selected file 
+    fileUploaded = null
+
+    getFile = (event) => {
+        this.fileUploaded = event.target.files[0]
+        // this.setState({fileUploaded: this.fileUploaded })
+        console.log(this.fileUploaded)
+        // TODO: handleFile(fileUploaded);
+        // const navigate = useNavigate();
+        // navigate(USERS_IMPORT_URL, { state: { file: this.fileUploaded } });
+        this.setState({ import_redirect: true })
+    };
+
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
         else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        if (this.state.import_redirect) {
+            return <Navigate to={ STUDENTS_IMPORT_URL } state={{file: this.fileUploaded}}/>
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -69,6 +100,22 @@ class Students extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
+                                    <div className="row d-inline-flex float-end">
+                                        {
+                                            localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                            <>
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={() => this.importUsers()}>
+                                                    <i className="bi bi-upload me-2"></i>
+                                                    Import
+                                                </button>
+                                                <input
+                                                    type="file"
+                                                    ref={this.hiddenFileInput}
+                                                    onChange={this.getFile}
+                                                    style={{ display: 'none' }} />
+                                            </> : ""
+                                        }
+                                    </div>
                                     <StudentsTable 
                                     data={this.state.students} 
                                     showAll={this.state.show_all}

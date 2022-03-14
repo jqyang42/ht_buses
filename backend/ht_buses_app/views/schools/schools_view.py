@@ -60,7 +60,6 @@ def get_schools_view(order_by, sort_by, page_number, search, school_list):
     data["success"] = True
     return data
 
-
 def school_search_and_sort(sort_by, order_by, search, school_list):
     if sort_by == "address":
         sort_by = "location_id__address"

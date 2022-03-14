@@ -1,4 +1,4 @@
-from ...models import School, Route, Student
+from ...models import School, Route, Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
 
 # Students Detail GET API
 @csrf_exempt
@@ -15,8 +16,14 @@ def students_detail(request):
     data = {}
     id = request.query_params["id"]
     try:
-        uv_student = Student.objects.get(pk=id)
-        student = get_object_for_user(request.user, uv_student, "view_student")
+        student = Student.objects.get(pk=id)
+    except:
+        return response_messages.DoesNotExist(data, "student")
+    try:
+        student_user = get_object_for_user(request.user, student.school_id, "view_school")
+    except: 
+        return response_messages.PermissionDenied(data, "student")
+    try:
         student_serializer = StudentSerializer(student, many=False)
         if student_serializer.data["route_id"] == None:
             route_id = 0
@@ -36,6 +43,4 @@ def students_detail(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "student was not found"
-        data["success"] = False
-        return Response(data, status = 404)
+        return response_messages.UnsuccessfulAction(data, "extracting student details")

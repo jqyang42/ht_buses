@@ -9,6 +9,7 @@ from ..stops import check_in_range
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
 
 # Students PUT API
 @csrf_exempt
@@ -24,11 +25,12 @@ def student_edit(request):
     try:
         student_object = Student.objects.get(pk = id) 
     except: 
-        data["message"] = "student was not found, update was unsucessful"
-        data["success"] = False
-        return Response(data, status = 404)
+        return response_messages.DoesNotExist(data, "student")
     try:
-        student_object = get_object_for_user(request.user, student_object, "change_student")
+       school = get_object_for_user(request.user, School.objects.get(pk = reqBody["student"]["student_school_id"]), "change_school")
+    except: 
+        return response_messages.PermissionDenied(data, "student's new school")
+    try:
         school_id = School.objects.get(pk=reqBody["student"]["school_id"])
         user_id = User.objects.get(pk = reqBody["student"]["user_id"]) 
         student_object.last_name = new_last_name
@@ -37,9 +39,7 @@ def student_edit(request):
         student_object.student_school_id = student_school_id
         student_object.user_id = user_id
     except:
-        data["message"] = "invalid options were chosen. update was unsuccessful"
-        data["success"] = False
-        return Response(data, 403)
+        return response_messages.UnsuccessfulAction(data, "student edit")
     try: 
         student_object.route_id = Route.objects.get(pk=reqBody["student"]["route_id"])
         stop_arr = check_in_range.check_student_in_range(reqBody["student"]["user_id"], reqBody["student"]["route_id"])
@@ -52,12 +52,15 @@ def student_edit(request):
         student_object.route_id = None
         student_object.in_range = False
     student_object.save()
-    if student_object.route_id != None:
-        student_route = Route.objects.get(pk=reqBody["student"]["route_id"])
-        is_complete = route_check_is_complete.route_is_complete(reqBody["student"]["route_id"])
-        student_route.is_complete = is_complete
-        student_route.save()
-    data["message"] = "student information successfully updated"
-    data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
-    data["success"] = True
-    return Response(data)
+    try:
+        if student_object.route_id != None:
+            student_route = Route.objects.get(pk=reqBody["student"]["route_id"])
+            is_complete = route_check_is_complete.route_is_complete(reqBody["student"]["route_id"])
+            student_route.is_complete = is_complete
+            student_route.save()
+        data["message"] = "student information successfully updated"
+        data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
+        data["success"] = True
+        return Response(data)
+    except:
+        return response_messages.UnsuccessfulAction(data, "student edit")
