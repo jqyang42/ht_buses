@@ -50,6 +50,13 @@ class BusRoutesPlanner extends Component {
                 // sortOptions: {},
                 // searchValue: ''
             },
+            stops_page:[],
+            stops_table: {
+                pageIndex: 1,
+                canPreviousPage: null,
+                canNextPage: null,
+                totalPages: null,
+            },
             modal_dismiss: false,
             route_complete: 0,
         }
@@ -63,9 +70,11 @@ class BusRoutesPlanner extends Component {
         } else {
         localStorage.removeItem('reloadCount');
         }
+
         this.handleTableGet();       
         this.handleLocationsGet();
-        this.getStudentsPage(this.state.students_table.pageIndex, null, '') 
+        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        this.getStopsPage(this.state.students_table.pageIndex, null, '') 
         
         if (this.state.active_route !== 0) { this.handleStopsGet() };
         
@@ -93,6 +102,24 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    getStopsPage = (page, sortOptions, search) => {
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            const stops_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                stops_page: res.data.stops,
+                stops_table: stops_table
+            })
+        })
+    }
+
     handleStudentsShowAll = () => {
         this.setState(prevState => ({
             students_show_all: !prevState.students_show_all
@@ -104,7 +131,9 @@ class BusRoutesPlanner extends Component {
     handleStopsShowAll = () => {
         this.setState(prevState => ({
             stops_show_all: !prevState.stops_show_all
-        }))
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleReorder = (new_order) => {
@@ -114,11 +143,12 @@ class BusRoutesPlanner extends Component {
 
     switchStopsEditMode = () => {
         this.setState(prevState => ({
-            stops_edit_mode: !prevState.stops_edit_mode
-        }))
-        this.setState(prevState => ({
-            dnd: !prevState.dnd
-        }))
+            stops_edit_mode: !prevState.stops_edit_mode,
+            dnd: !prevState.dnd,
+            stops_show_all: true
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleTableGet = () => {        
@@ -256,8 +286,7 @@ class BusRoutesPlanner extends Component {
         this.clearAddRouteForm()
     }
 
-    handleRouteCreateSubmit = (event) => {
-        
+    handleRouteCreateSubmit = (event) => {        
         if(this.state.create_route_name === "") {
             event.preventDefault();
             return 
@@ -660,7 +689,18 @@ class BusRoutesPlanner extends Component {
                                                         }
                                                     </div> 
                                                 </div>
-                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd} handleReorder={this.handleReorder}/>
+                                                <StopsTable 
+                                                data={this.state.stops_page}
+                                                showAll={this.state.stops_show_all} 
+                                                pageIndex={this.state.stops_table.pageIndex}
+                                                canPreviousPage={this.state.stops_table.canPreviousPage}
+                                                canNextPage={this.state.stops_table.canNextPage}
+                                                updatePageCount={this.getStopsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.stops_table.totalPages}
+                                                searchValue={''}
+                                                dnd={this.state.dnd} 
+                                                handleReorder={this.handleReorder}/>
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
