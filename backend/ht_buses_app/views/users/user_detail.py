@@ -1,7 +1,7 @@
 from ...models import User, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
