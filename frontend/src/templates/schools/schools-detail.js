@@ -49,6 +49,7 @@ class SchoolsDetail extends Component {
     componentDidMount() {
         this.getSchoolDetails()
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        this.getRoutesPage(this.state.routes_table.pageIndex, null, '')
     }
 
     // pagination
@@ -70,7 +71,6 @@ class SchoolsDetail extends Component {
         })
     }
 
-    // TODO: @jessica check if evelyn has this up
     getRoutesPage = (page, sortOptions, search) => {
         getPage({ url: `routes/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
@@ -83,7 +83,7 @@ class SchoolsDetail extends Component {
                 // searchValue: search
             }
             this.setState({
-                routes_page: res.data.students,
+                routes_page: res.data.routes,
                 routes_table: routes_table
             })
         })
