@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin
 from ..general.general_tools import get_object_for_user
+from ..general.response_messages import UnsuccessfulAction
 
 # Schools DELETE API
 @csrf_exempt
@@ -22,6 +23,4 @@ def school_delete(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "school could not be deleted"
-        data["success"] = False
-        return Response(data, status = 400)
+        return UnsuccessfulAction(data, "school delete")

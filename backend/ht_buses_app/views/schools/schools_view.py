@@ -14,7 +14,7 @@ from guardian.shortcuts import get_objects_for_user
 def schools(request):
     data = {}
     page_number = request.query_params["page"]
-    order_by = "asc"#request.query_params["order_by"] TODO: Not sure if backedn or front but broken
+    order_by = "asc"#request.query_params["order_by"] TODO: Frontend needs to fix, broken 
     sort_by = "address" #request.query_params["sort_by"]
     search = "" #request.query_params["q"]
     school_list = get_objects_for_user(request.user,"view_school", School.objects.all())
@@ -59,7 +59,6 @@ def get_schools_view(order_by, sort_by, page_number, search, school_list):
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True
     return data
-
 
 def school_search_and_sort(sort_by, order_by, search, school_list):
     if sort_by == "address":

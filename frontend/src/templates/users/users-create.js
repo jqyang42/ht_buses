@@ -30,7 +30,8 @@ class UsersCreate extends Component {
                 lat: 0.0,
                 lng: 0.0
             },
-            students: []
+            students: [],
+            managed_schools: []
         },
         confirm_password: '',
         added_students_list: [],
@@ -173,6 +174,18 @@ class UsersCreate extends Component {
         }
       
     }
+
+    handleManagedSchoolsChange = (selected) => {
+        const selected_schools = selected.map(id => {
+            return { 'id': id }
+        })
+        // console.log(selected)
+        // console.log(selected_schools)
+        let user = {...this.state.new_user}
+        // console.log(user)
+        user.managed_schools = selected_schools
+        this.setState({ new_user: user })
+    }
     
     handleStudentFirstNameChange = (event, student_num) => {
         const index = this.state.added_students_list.indexOf(student_num)
@@ -300,7 +313,7 @@ class UsersCreate extends Component {
 
     handleSubmit = (event) => {        
         event.preventDefault();
-       const valid_address = this.checkNonParentAddress()
+        const valid_address = this.checkNonParentAddress()
         if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
             this.setState({ create_success: -1 })
             return 
@@ -462,8 +475,8 @@ class UsersCreate extends Component {
                                                     <option value={0} disabled selected>Select a Role</option>
                                                     <option value={4} id="4">General</option>
                                                     <option value={1} id="1">Administrator</option>
-                                                    <option value={2} id="2">Driver</option>
-                                                    <option value={3} id="3">School Staff</option>
+                                                    <option value={2} id="2">School Staff</option>
+                                                    <option value={3} id="3">Driver</option>
                                                     {/* { {this.state.roles_dropdown.map(role => 
                                                         <option value={role.value} id={role.display}>{role.display}</option>
                                                     )} } */}
@@ -493,7 +506,7 @@ class UsersCreate extends Component {
                                             </div> */}
 
                                             {/* if user role is school staff */}
-                                            { this.state.new_user.role_id == 3 ?
+                                            { this.state.new_user.role_id == 2 ?
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     {/* TODO: @jessica link up schools in the options field */}
@@ -505,6 +518,7 @@ class UsersCreate extends Component {
                                                         buttonClass="form-select border"
                                                         actionBtnStyle="ms-1 mt-1 bg-primary w-75"
                                                         selectDeselectLabel="Select / Deselect All"
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                         // @jessica you can add an onChange method here by using "handleOnChange"
                                                     />
                                                     {/* @jessica for your reference */}
