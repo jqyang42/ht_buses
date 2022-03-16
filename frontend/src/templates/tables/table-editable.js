@@ -80,7 +80,7 @@ export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalF
     } = useTable(
         {
         columns,
-        data: editable ? editedData : data,
+        data: data,
         defaultColumn,
         // use the skipPageReset option to disable page resetting temporarily
         autoResetPage: !skipPageReset,
@@ -127,8 +127,6 @@ export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalF
     //     handleReorder(new_order)
     //     setRecords(new_records)
     // }
-
-    console.log(data)
     
     return (
         <>
