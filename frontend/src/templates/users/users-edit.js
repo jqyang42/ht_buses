@@ -10,7 +10,7 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 import { emailValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { makeSchoolsMultiSelect } from "../components/dropdown";
+import { makeSchoolsDropdown } from "../components/dropdown";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -21,7 +21,7 @@ class UsersEdit extends Component {
     state = {
         user: {},
         edited_user: {},
-        schools_multiselect: [],
+        schools_dropdown: [],
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -33,8 +33,8 @@ class UsersEdit extends Component {
     // initialize page
     componentDidMount() {
         this.getUserDetails()
-        makeSchoolsMultiSelect().then(ret => {
-            this.setState({ schools_multiselect: ret })
+        makeSchoolsDropdown().then(ret => {
+            this.setState({ schools_dropdown: ret })
         })
     }
 
@@ -149,6 +149,7 @@ class UsersEdit extends Component {
 
     // @jessica check with backend
     handleManagedSchoolsChange = (selected) => {
+        // selected.preventDefault()
         const selected_schools = selected.map(id => {
             return { 'id': id }
         })
@@ -345,17 +346,17 @@ class UsersEdit extends Component {
                                             { this.state.edited_user.role_id === 2 ?
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
-                                                    {/* TODO: @jessica link up schools in the options field */}
                                                     <DropdownMultiselect
-                                                        // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
-                                                        options={this.state.schools_multiselect}
+                                                        options={this.state.schools_dropdown}
+                                                        optionKey="value"
+                                                        optionLabel="display"
                                                         id="managedSchools"
                                                         placeholder="Select Schools to Manage"
                                                         buttonClass="form-select border"
                                                         actionBtnStyle="ms-1 mt-1 bg-primary w-75"
                                                         selectDeselectLabel="Select / Deselect All"
+                                                        selected={[1]}
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
-                                                        // @jessica you can add an onChange method here by using "handleOnChange"
                                                     />
                                                     {/* @jessica for your reference */}
                                                     {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
