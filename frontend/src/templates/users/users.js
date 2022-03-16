@@ -9,6 +9,8 @@ import { getPage } from "../tables/server-side-pagination";
 import { LOGIN_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 import { USERS_IMPORT_URL } from "../../constants";
+import api from "../components/api";
+import { API_DOMAIN } from "../../constants";
 
 class Users extends Component {
     constructor(props) {
@@ -31,7 +33,7 @@ class Users extends Component {
         import_redirect: false,
         fileUploaded: null
     }
-
+    
     componentDidMount() {
         this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }

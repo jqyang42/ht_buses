@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer, LocationSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
 # Schools Detail GET API
 @csrf_exempt
 @api_view(['GET'])
@@ -16,7 +17,13 @@ def schools_detail(request):
     id = request.query_params["id"]
     try :
         uv_school = School.objects.get(pk=id)
+    except:
+        return response_messages.DoesNotExist(data, "school")
+    try:
         school = get_object_for_user(request.user, uv_school, "view_school")
+    except:
+        return response_messages.PermissionDenied(data, "school")
+    try:
         school_serializer = SchoolSerializer(school, many=False)
         students = Student.objects.filter(school_id=id)
         students_serializer = StudentSerializer(students, many=True)
@@ -46,6 +53,4 @@ def schools_detail(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "school could not be found"
-        data["success"] = False
-        return Response(data, status = 404)
+       return response_messages.UnsuccessfulAction(data, "school")

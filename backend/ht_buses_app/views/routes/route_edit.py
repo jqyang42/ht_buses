@@ -9,6 +9,8 @@ import re
 from ..resources import capitalize_reg
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
+
 
 # Routes PUT API
 # Switch to a PATCH API, would need to investigate how to rewrite this
@@ -23,21 +25,22 @@ def route_edit(request):
         route_object =  Route.objects.get(pk=id)
     except:
         data["edit_success"] = -1
-        data["message"] = "route could not be updated"
-        data["success"] = False
-        return Response(data, status = 400)
+        return response_messages.DoesNotExist(data, "route")
     try:
         accessible_school = get_object_for_user(request.user, route_object.school_id, "change_school")
+    except:
+        data["edit_success"] = -1
+        return response_messages.PermissionDenied(data, "route's school")
+    try:
         route_object.name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["route"]["name"])
         route_object.description = reqBody["route"]["description"]
         route_object.save()
         data["message"] = "route updated successfully"
         data["success"] = True
+        data["edit_success"] = 1
         route_serializer = RouteSerializer(route_object, many=False)
         data["route"] = route_serializer.data
         return Response(data)
     except:
         data["edit_success"] = -1
-        data["message"] = "permission denied"
-        data["success"] = False
-        return Response(data, status = 403)
+        return response_messages.UnsuccessfulChange(data, "route")
