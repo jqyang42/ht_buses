@@ -62,7 +62,12 @@ def bulk_import(request):
             next_page = False
         else:
             next_page = True
-    data["users"] = users
+    # we need to grab a certain number of users
+    if int(page_number) == 1:
+        pag_users = users[:10*int(page_number)]
+    else:
+        pag_users = users[(1+10*(int(page_number)-1)):10*int(page_number)]
+    data["users"] = pag_users
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True
     return Response(data)
