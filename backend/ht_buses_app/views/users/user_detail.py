@@ -75,12 +75,14 @@ def update_stored_user_info(request):
         user = User.objects.get(pk = user.id)
     except:
         data["success"] = False 
+        data["logged_in"] = False
         message = "User authentication details could not extracted, try logging in again"
-        return Response({"data": data,"message":message, "token":''})
+        return Response({"data": data,"message": message, "token": ''})
     if not user.is_authenticated:
         data["success"] = False 
+        data["logged_in"] = False
         message = "User authentication details could not extracted, try logging in again"
-        return Response({"data": data,"message":message, "token":''})
+        return Response({"data": data, "message": message, "token": ''})
     try:
         token = Token.objects.get_or_create(user=user)[0].key
         data["user_id"] = user.id
@@ -90,12 +92,12 @@ def update_stored_user_info(request):
         data["email"] = user.email
         data["first_name"] = user.first_name
         data["last_name"] = user.last_name
+        data["success"] = True
         data["logged_in"] = user.is_authenticated
         message = "User authentication details are up-to-date"
-        data["success"] = True
-        return Response({"data": data,"message":message, "token":token})
+        return Response({"data": data, "message": message, "token": token})
     except:
         data["success"] = False 
         data["logged_in"] = False
         message = "User authentication details could not extracted, try logging in again"
-        return Response({"data": data,"message":message, "token":''})
+        return Response({"data": data, "message": message, "token": ''})
