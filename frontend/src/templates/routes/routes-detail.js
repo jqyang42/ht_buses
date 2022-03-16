@@ -55,7 +55,7 @@ class BusRoutesDetail extends Component {
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
-        this.getStops()
+        // this.getStops()
     }
 
     // pagination
@@ -362,7 +362,7 @@ class BusRoutesDetail extends Component {
                                         </button>
 
                                         {
-                                            this.state.stops ?
+                                            this.state.stops_page ?
                                             <>
                                                 <div className="row d-flex justify-content-between align-items-center mb-2">
                                                     <h7 className="col w-auto">STOPS</h7>
