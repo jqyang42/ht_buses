@@ -25,27 +25,37 @@ def bulk_import(request):
         # email, name, address, phone_number
         # how should I append errors???
         if row[0] is None:
-            # how would I show email as an error?
             email = ""
         else:
-            email = row[0]
+            if len(row[0]) > 254: # make models for email char higher
+                # error
+                email = ""
+            else:
+                # test regex for email to see if its valid
+                email = row[0]
         if row[1] is None:
             name = ""
         else:
+            # need to check name is
             name = row[1].split()
             first_name = name[0]
             last_name = name[1]
         # call google api
+        # need to check if location limit is 150 chars (need to make address char higher)
         location_arr = geocode_address(row[2])
         if location_arr[0]["lat"] is None or location_arr[0]["lng"] is None:
             # error with address
-            address = row[2]
-        # need to also check char limit
+            address = ""
         if row[3] is None:
             # error with phone number
-            phone_number = row[3]
+            phone_number = ""
         else:
-            phone_number = row[3]
+            # need to check if phone number limit is 18 chars (need to make phone number char higher)
+            if len(row[3]) > 18:
+                # error with phone number
+                phone_number = ""
+            else:
+                phone_number = row[3]
         row_num += 1
         row_obj = {"row_num" : row_num, "name": name, "email": email, "address": address, "phone_number": phone_number}
         users.append(row_obj)
