@@ -317,10 +317,6 @@ class BusRoutesDetail extends Component {
                                                 <i className="bi bi-trash me-2"></i>
                                                 Delete
                                             </button>
-                                            
-                                            <a href={this.state.map_redirect_dropoff[0]} rel="noreferrer">
-                                                Departing
-                                            </a>
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
