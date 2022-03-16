@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
 import { StopsTable } from "../tables/stops-table";
@@ -11,6 +12,7 @@ import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
+import { GOOGLE_MAP_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 import pdfRender from "../components/export-route";
 
@@ -46,6 +48,8 @@ class BusRoutesDetail extends Component {
         // stops_table: {
 
         // }
+        map_redirect_pickup: [],
+        map_redirect_dropoff: [],
     }
 
     componentDidMount() {
@@ -164,6 +168,8 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
+            this.redirectToGoogleMapsPickup(this.state.stops)
+            this.redirectToGoogleMapsDropoff(this.state.stops)
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -172,6 +178,52 @@ class BusRoutesDetail extends Component {
                 this.setState({ error_code: error.response.status });
             }
         })
+    }
+    redirectToGoogleMapsPickup = (stops) => {
+        this.setState({map_redirect_pickup: []})
+        let arrivingLinks = []
+        for (let i=0; i < stops.length; i+=10 ) {
+            let map_redirect_pickup = GOOGLE_MAP_URL
+            map_redirect_pickup += '&waypoints='
+            let j;
+            for (j = i; j < i + 9 && j < stops.length; j+=1) {
+                console.log(stops[j])
+                map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
+            }
+            if (j == stops.length) {
+                map_redirect_pickup += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
+            } else {
+                map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
+            }
+            console.log(map_redirect_pickup)
+            arrivingLinks.push(map_redirect_pickup)
+        }
+        this.setState({
+            map_redirect_pickup: arrivingLinks
+        })
+    }
+
+    redirectToGoogleMapsDropoff = (stops) => {
+        let reversed_stops = stops.slice().reverse();
+        let departingLinks = []
+        let i;
+        for (i = 0; i < reversed_stops.length-1; i+=10 ) {
+            let map_redirect_dropoff = GOOGLE_MAP_URL 
+            if (i == 0) {
+                map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+            }
+            map_redirect_dropoff +=  '&waypoints=';
+            let j;
+            for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
+                console.log(reversed_stops)
+                map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
+            }
+            //Think about cases where this could be in its own link
+            map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
+            departingLinks.push(map_redirect_dropoff)
+        }
+        console.log(departingLinks)
+        this.setState({map_redirect_dropoff: departingLinks})
     }
 
     // handlers
@@ -265,7 +317,10 @@ class BusRoutesDetail extends Component {
                                                 <i className="bi bi-trash me-2"></i>
                                                 Delete
                                             </button>
-
+                                            
+                                            <a href={this.state.map_redirect_dropoff[0]} rel="noreferrer">
+                                                Departing
+                                            </a>
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
