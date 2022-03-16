@@ -126,7 +126,7 @@ class BusRoutesPlanner extends Component {
         getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
         .then(res => {
             const stops = res.data.stops;
-            // const is_complete = res.data.route.is_complete
+            const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
                 console.log(stops)
                 this.handleStopTimeCalc(stops)
@@ -134,13 +134,13 @@ class BusRoutesPlanner extends Component {
                     this.editStops(res)
                     this.setState({ 
                         stops: res,
-                        // route_complete: is_complete ? 1 : -1
+                        route_complete: is_complete ? 1 : -1
                      })
                 })
             } else {
                 this.setState({ 
                     stops: stops,
-                    // route_complete: is_complete ? 1 : -1,
+                    route_complete: is_complete ? 1 : -1,
                 })
             }
         })
