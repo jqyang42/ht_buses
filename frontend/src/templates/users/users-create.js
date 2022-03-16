@@ -10,11 +10,14 @@ import api from "../components/api";
 import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import MultiSelectDropdown from "../components/multi-select";
+import makeAnimated from 'react-select/animated';
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
+
+const animatedComponents = makeAnimated();
 
 class UsersCreate extends Component {
     state = {
@@ -51,7 +54,7 @@ class UsersCreate extends Component {
         redirect_detail: false,
         detail_url: '',
         error404: false,
-        selectedOptions: null
+        selectedOptions: []
     }
 
     // initialize
@@ -366,11 +369,11 @@ class UsersCreate extends Component {
         return this.state.added_students_list.indexOf(count)
     }
 
-    handleMultiSelectChange = (selectedOptions) => {
-        this.setState({ selectedOptions }, () =>
-          console.log(`Option selected:`, this.state.selectedOptions)
-        );
-      };
+    handleMultiSelectDropdownChange = (selectedOptions) => {
+        this.setState({ selectedOptions: selectedOptions })
+        console.log(this.state.selectedOptions)
+        console.log(this.state.options)
+    };
 
     render() {
         const { selectedOptions } = this.state;
@@ -520,9 +523,20 @@ class UsersCreate extends Component {
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <MultiSelectDropdown
-                                                        selectedOptions={[]}
-                                                        options={this.state.schools_multiselect}
+                                                        // selectedOptions={[]}
+                                                        // options={this.state.schools_multiselect}
+                                                        // isMulti={true}
+                                                        // multi={true}
                                                         isMulti={true}
+                                                        value={this.state.selectedOptions}
+                                                        onChange={this.handleChange}
+                                                        options={this.state.schools_multiselect}
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="select"
+                                                        name="schools"
+                                                        placeholder="Select Schools to Manage"
+                                                        components={animatedComponents}
+                                                        closeMenuOnSelect={false}
                                                     />
 
                                                     {/* TODO: @jessica link up schools in the options field */}
