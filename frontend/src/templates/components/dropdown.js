@@ -34,7 +34,7 @@ export async function makeSchoolsMultiSelect() {
     const schools = await makeSchoolsDropdown()
     const multiselect_schools = schools.map(school => {
         return {
-            key: school.value,
+            value: school.value,
             label: school.display
         }
     })
