@@ -8,16 +8,17 @@ import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
 import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+// import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import MultiSelectDropdown from "../components/multi-select";
-import makeAnimated from 'react-select/animated';
+// import makeAnimated from 'react-select/animated';
+// import Select from "react-select";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
 
-const animatedComponents = makeAnimated();
+// const animatedComponents = makeAnimated();
 
 class UsersCreate extends Component {
     state = {
@@ -54,7 +55,7 @@ class UsersCreate extends Component {
         redirect_detail: false,
         detail_url: '',
         error404: false,
-        selectedOptions: []
+        // selectedOptions: []
     }
 
     // initialize
@@ -369,14 +370,14 @@ class UsersCreate extends Component {
         return this.state.added_students_list.indexOf(count)
     }
 
-    handleMultiSelectDropdownChange = (selectedOptions) => {
-        this.setState({ selectedOptions: selectedOptions })
-        console.log(this.state.selectedOptions)
-        console.log(this.state.options)
-    };
+    // handleMultiSelectDropdownChange = (selectedOptions) => {
+    //     this.setState({ selectedOptions: selectedOptions })
+    //     console.log(this.state.selectedOptions)
+    //     console.log(this.state.options)
+    // };
 
     render() {
-        const { selectedOptions } = this.state;
+        // const { selectedOptions } = this.state;
 
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -523,20 +524,20 @@ class UsersCreate extends Component {
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <MultiSelectDropdown
-                                                        // selectedOptions={[]}
-                                                        // options={this.state.schools_multiselect}
-                                                        // isMulti={true}
-                                                        // multi={true}
-                                                        isMulti={true}
-                                                        value={this.state.selectedOptions}
-                                                        onChange={this.handleChange}
+                                                        selectedOptions={[]}
                                                         options={this.state.schools_multiselect}
-                                                        className="basic-multi-select"
-                                                        classNamePrefix="select"
-                                                        name="schools"
-                                                        placeholder="Select Schools to Manage"
-                                                        components={animatedComponents}
-                                                        closeMenuOnSelect={false}
+                                                        isMulti={true}
+                                                        // multi={true}
+                                                        // isMulti={true}
+                                                        // value={this.state.selectedOptions}
+                                                        // onChange={this.handleMultiSelectDropdownChange}
+                                                        // options={this.state.schools_multiselect}
+                                                        // className="basic-multi-select"
+                                                        // classNamePrefix="select"
+                                                        // name="schools"
+                                                        // placeholder="Select Schools to Manage"
+                                                        // components={animatedComponents}
+                                                        // closeMenuOnSelect={false}
                                                     />
 
                                                     {/* TODO: @jessica link up schools in the options field */}
