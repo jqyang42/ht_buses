@@ -81,7 +81,6 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
             searchValue={searchValue}
-            editable={true}
         />
     )
 }
