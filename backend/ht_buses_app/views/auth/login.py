@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
-from ..general.general_tools import user_is_parent, permission_setup
+from ..general.general_tools import user_is_parent, permission_setup, get_role_string
 
 @csrf_exempt
 @api_view(['POST'])
@@ -34,8 +34,4 @@ def user_login(request):
     info["first_name"] = user.first_name
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
-    return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
-
-
-def get_role_string(role_id):
-    return User.role_choices[int(role_id)-1][1]
+    return Response({"info": info,"message":message, "token":token, "valid_login": True})
