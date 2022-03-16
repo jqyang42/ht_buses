@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from ..general.general_tools import get_object_for_user
+from ..general import response_messages
 
 
 @csrf_exempt
@@ -17,11 +18,12 @@ def routes_detail(request):
     try:
         route = Route.objects.get(pk=id)
     except:
-        data["message"] = "route was not found"
-        data["success"] = False
-        return Response(data, status = 404)
+        return response_messages.DoesNotExist(data, "route")  
     try:
         accessible_school = get_object_for_user(request.user, route.school_id, "view_school")
+    except:
+        return response_messages.PermissionDenied(data, "route's school")
+    try:
         route_serializer = RouteSerializer(route, many=False)
         school = School.objects.get(pk=route_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
@@ -51,7 +53,5 @@ def routes_detail(request):
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "permission denied"
-        data["success"] = False
-        return Response(data, status = 403)
+        return response_messages.UnsuccessfulAction(data, "extracting route details")
 

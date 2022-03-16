@@ -9,6 +9,7 @@ import re
 from ..resources import capitalize_reg
 from datetime import datetime
 from ...role_permissions import IsAdmin
+from ..general.response_messages import UnsuccessfulAction
 # Schools POST API
 @csrf_exempt
 @api_view(["POST"])
@@ -31,6 +32,4 @@ def school_create(request):
         data["school"] = {"id": school.id, "name": name, "arrival": school.arrival, "departure": school.departure, "location": location_serializer.data}
         return Response(data)
     except:
-        data["message"] = "school could not be created"
-        data["success"] = False
-        return Response(data, status = 400)
+        return UnsuccessfulAction(data, "school create")

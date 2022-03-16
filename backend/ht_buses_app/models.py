@@ -3,7 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 import datetime
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import PermissionsMixin 
-from .groups import admin_group, bus_driver_group
+from . groups import get_admin_group, get_driver_group
+from guardian.shortcuts import assign_perm
 
 class Location(models.Model):
     address = models.CharField(max_length=100)
@@ -104,17 +105,20 @@ class UserManager(BaseUserManager):
             )
         user.location_id = location_obj.id
         user.set_password(password)
+        
         if role < 5 and role > 0:
             user.role = role
             user.save()
-            if role == 1:
-                user.groups.add(admin_group)
+            if role == User.ADMIN:
+                user.groups.add(get_admin_group())
             #elif role == 2:
             #user.groups.add(school_staff_group)
-            elif role == 3:
-                user.groups.add(bus_driver_group)
+            elif role == User.DRIVER:
+                user.groups.add(get_driver_group())
         else:
-            user.role = 4
+            user.role = User.GENERAL
+        assign_perm("change_user", user, user)
+        assign_perm("view_user", user, user)
         user.save(using= self._db)
         return user 
        
@@ -152,6 +156,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                        ("delete", "can delete user"),
                         ("add", "can create user"),
                       )
+
 
 
     
