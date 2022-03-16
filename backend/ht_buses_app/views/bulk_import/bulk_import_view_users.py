@@ -64,6 +64,7 @@ def bulk_import(request):
             next_page = True
     data["users"] = users
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
+    data["success"] = True
     return Response(data)
 
 

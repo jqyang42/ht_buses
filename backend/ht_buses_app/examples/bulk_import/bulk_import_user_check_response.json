@@ -1,0 +1,18 @@
+{
+    "errors": [
+        {
+            "row_num": 1,
+            "name": ""
+        }
+    ],
+    "users": [
+        {
+            "row_num": 1,
+            "name": "",
+            "email": "example@example.com",
+            "phone_number": "blah",
+            "address": "something valid"
+        }
+    ],
+    "success": true
+}
