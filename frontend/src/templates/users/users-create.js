@@ -519,7 +519,11 @@ class UsersCreate extends Component {
                                             { this.state.new_user.role_id == 2 ?
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
-                                                    <MultiSelectDropdown selectedOptions={[]} options={this.state.schools_multiselect}/>
+                                                    <MultiSelectDropdown
+                                                        selectedOptions={[]}
+                                                        options={this.state.schools_multiselect}
+                                                        isMulti={true}
+                                                    />
 
                                                     {/* TODO: @jessica link up schools in the options field */}
                                                     {/* <DropdownMultiselect

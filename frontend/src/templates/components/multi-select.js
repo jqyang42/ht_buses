@@ -19,10 +19,14 @@ class MultiSelectDropdown extends Component {
   render() {
     return (
       <Select
+        multi={true}
+        isMulti={this.props.isMulti}
         value={this.state.selectedOptions}
         onChange={this.handleChange}
         options={this.props.options}
-        isMulti={true}
+        className="basic-multi-select"
+        classNamePrefix="select"
+        name="schools"
       />
     );
   }
