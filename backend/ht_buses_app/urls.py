@@ -15,6 +15,7 @@ from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
+from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
 from . models import User
 
@@ -65,7 +66,7 @@ urlpatterns = [
     path('api/reset-password', reset_password.reset_password, name='reset_password'),
     path('api/reset-password-valid-url', reset_password.valid_password_reset_url, name='reset_password_valid_url'),
     path('api/stops/create', stops_create.stops_create, name='stops_create'),
-    path('api/stops', stops_view.stops_view, name='stops_view'),
+    path('api/stops', stops_view_pag.stops_view, name='stops_view'),
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
     path('api/stops/delete', stops_delete.stops_delete, name='stops_delete'),
     path('api/stops/edit-name', stops_name_edit.stops_name_edit, name='stops_name_edit'),
