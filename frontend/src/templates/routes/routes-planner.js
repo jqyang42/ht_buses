@@ -50,7 +50,7 @@ class BusRoutesPlanner extends Component {
                 // sortOptions: {},
                 // searchValue: ''
             },
-            stops_page:[],
+            stops_page: [],
             stops_table: {
                 pageIndex: 1,
                 canPreviousPage: null,
@@ -74,7 +74,7 @@ class BusRoutesPlanner extends Component {
         this.handleTableGet();       
         this.handleLocationsGet();
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
-        this.getStopsPage(this.state.students_table.pageIndex, null, '') 
+        // this.getStopsPage(this.state.students_table.pageIndex, null, '') 
         
         if (this.state.active_route !== 0) { this.handleStopsGet() };
         
@@ -103,7 +103,7 @@ class BusRoutesPlanner extends Component {
     }
 
     getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
         .then(res => {
             const stops_table = {
                 pageIndex: res.pageIndex,
@@ -118,6 +118,41 @@ class BusRoutesPlanner extends Component {
                 stops_table: stops_table
             })
         })
+    }
+
+    handleStopsGet = () => {
+        this.getStopsPage(this.state.students_table.pageIndex, null, '')
+        getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
+            const stops = res.data.stops;
+            // const is_complete = res.data.route.is_complete
+            if (stops.length !== 0) {
+                console.log(stops)
+                this.handleStopTimeCalc(stops)
+                .then(res => {
+                    this.editStops(res)
+                    this.setState({ 
+                        stops: res,
+                        // route_complete: is_complete ? 1 : -1
+                     })
+                })
+            } else {
+                this.setState({ 
+                    stops: stops,
+                    // route_complete: is_complete ? 1 : -1,
+                })
+            }
+        })
+        .catch (error => {
+            console.log(error)
+            if (error.response.status !== 200) {
+                this.setState({ error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        } 
+        )
+        console.log(this.state.stops)
     }
 
     handleStudentsShowAll = () => {
@@ -145,7 +180,7 @@ class BusRoutesPlanner extends Component {
         this.setState(prevState => ({
             stops_edit_mode: !prevState.stops_edit_mode,
             dnd: !prevState.dnd,
-            stops_show_all: true
+            stops_show_all: !prevState.stops_edit_mode
         }), () => {
             this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
         })
@@ -213,39 +248,6 @@ class BusRoutesPlanner extends Component {
                 }
             } 
             );
-    }
-
-    handleStopsGet = () => {
-        api.get(`stops?id=${this.state.active_route}`)
-            .then(res => {
-            const stops = res.data.stops;
-            const is_complete = res.data.route.is_complete
-            if (stops.length !== 0) {
-                console.log(stops)
-                this.handleStopTimeCalc(stops)
-                .then(res => {
-                    this.editStops(res)
-                    this.setState({ 
-                        stops: res,
-                        route_complete: is_complete ? 1 : -1
-                     })
-                })
-            } else {
-                this.setState({ 
-                    stops: stops,
-                    route_complete: is_complete ? 1 : -1,
-                })
-            }
-        })
-        .catch (error => {
-            if (error.response.status !== 200) {
-                this.setState({ error_status: true,
-                    error_code: error.response.status 
-                });
-            }
-        } 
-        )
-        console.log(this.state.stops)
     }
 
     handleAssignMode = event => {
@@ -382,7 +384,6 @@ class BusRoutesPlanner extends Component {
     }
 
     submitStopsOrder = () => {
-        this.switchStopsEditMode()
         const order = [...this.state.stops_order]
         const ordered_stops = this.state.stops.slice().map(stop => {
             return {
@@ -394,11 +395,16 @@ class BusRoutesPlanner extends Component {
         .then(res => {
             console.log(res)
             this.editStops(res)
-            this.setState({ stops: res })
+            .then(res => {
+                this.switchStopsEditMode()
+            })
+            // this.setState({ stops: res })
+            
         })
+        
     }
 
-    editStops(stops) {
+    async editStops(stops) {
         const edit_body = {
             stops: stops.map(stop => {
                 return {
@@ -417,14 +423,14 @@ class BusRoutesPlanner extends Component {
         )}
 
         // console.log(edit_body)
-        api.put(`stops/edit`, edit_body)
-        .then(res => {
-            const success = res.data.success
-            const new_stops = res.data.stops
+        await api.put(`stops/edit`, edit_body)
+        // .then(res => {
+        //     const success = res.data.success
+        //     const new_stops = res.data.stops
 
-            // this.setState({ stops: edit_body })
-            // TODO ERROR HANDLING
-        })
+        //     // this.setState({ stops: edit_body })
+        //     // TODO ERROR HANDLING
+        // })
     }
 
     async handleStopTimeCalc(stops) {
@@ -667,7 +673,7 @@ class BusRoutesPlanner extends Component {
                                         </button>
 
                                         {
-                                            this.state.active_route === 0 ? "" : this.state.stops ?
+                                            this.state.active_route === 0 ? "" : this.state.stops_page ?
                                             <>
                                                 <div className="row d-flex justify-content-between align-items-center mb-2">
                                                     <h7 className="col w-auto">STOPS</h7>

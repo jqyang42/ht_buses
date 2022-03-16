@@ -181,20 +181,20 @@ class BusRoutesDetail extends Component {
         this.setState({ markers: markers })
     }
 
-    getStops = () => {
-        api.get(`stops?id=${this.props.params.id}`)
-        .then(res => {
-            const data = res.data;
-            this.setState({ stops: data.stops })
-        })
-        .catch (error => {
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                this.setState({ error_status: true });
-                this.setState({ error_code: error.response.status });
-            }
-        })
-    }
+    // getStops = () => {
+    //     api.get(`stops?id=${this.props.params.id}`)
+    //     .then(res => {
+    //         const data = res.data;
+    //         this.setState({ stops: data.stops })
+    //     })
+    //     .catch (error => {
+    //         if (error.response.status !== 200) {
+    //             // console.log(error.response.data)
+    //             this.setState({ error_status: true });
+    //             this.setState({ error_code: error.response.status });
+    //         }
+    //     })
+    // }
 
     // handlers
     handleDelete = (event) => {
