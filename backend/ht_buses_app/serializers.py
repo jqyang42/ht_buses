@@ -34,5 +34,5 @@ class StopSerializer(serializers.ModelSerializer):
 class ManageSchoolsSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fiels = ('id', 'name')
+        fields = ('id', 'name')
     
