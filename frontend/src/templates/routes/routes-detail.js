@@ -96,7 +96,7 @@ class BusRoutesDetail extends Component {
                     lat: school.location.lat, 
                     lng: school.location.lng 
                 }, 
-            });
+            }, console.log(this.state.center));
 
             this.setMarkers(users)            
         })
@@ -168,6 +168,8 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
+            console.log(this.state.center)
+            // TODO: Fix undefined, undefined center starting error after refreshing
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
         })
@@ -183,6 +185,7 @@ class BusRoutesDetail extends Component {
         this.setState({map_redirect_pickup: []})
         let arrivingLinks = []
         for (let i=0; i < stops.length; i+=10 ) {
+            console.log(i)
             let map_redirect_pickup = GOOGLE_MAP_URL
             map_redirect_pickup += '&waypoints='
             let j;
@@ -209,6 +212,7 @@ class BusRoutesDetail extends Component {
         let i;
         for (i = 0; i < reversed_stops.length-1; i+=10 ) {
             let map_redirect_dropoff = GOOGLE_MAP_URL 
+            console.log(i)
             if (i == 0) {
                 map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
             }
@@ -325,6 +329,10 @@ class BusRoutesDetail extends Component {
                                                 </button>
                                                 </> : ""
                                             }
+                                            {/* Testing purposes only, should be replaced*/}
+                                            <a href={this.state.map_redirect_dropoff[0]} rel="noreferrer">
+                                                Departing
+                                            </a>
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
