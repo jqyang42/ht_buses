@@ -9,6 +9,7 @@ import Geocode from "react-geocode";
 import api from "../components/api";
 import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import MultiSelectDropdown from "../components/multi-select";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -49,7 +50,8 @@ class UsersCreate extends Component {
         create_success: 0,
         redirect_detail: false,
         detail_url: '',
-        error404: false
+        error404: false,
+        selectedOptions: null
     }
 
     // initialize
@@ -364,7 +366,15 @@ class UsersCreate extends Component {
         return this.state.added_students_list.indexOf(count)
     }
 
+    handleMultiSelectChange = (selectedOptions) => {
+        this.setState({ selectedOptions }, () =>
+          console.log(`Option selected:`, this.state.selectedOptions)
+        );
+      };
+
     render() {
+        const { selectedOptions } = this.state;
+
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
@@ -509,8 +519,10 @@ class UsersCreate extends Component {
                                             { this.state.new_user.role_id == 2 ?
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
+                                                    <MultiSelectDropdown selectedOptions={[]} options={this.state.schools_multiselect}/>
+
                                                     {/* TODO: @jessica link up schools in the options field */}
-                                                    <DropdownMultiselect
+                                                    {/* <DropdownMultiselect
                                                         // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
                                                         options={this.state.schools_multiselect}
                                                         id="managedSchools"
@@ -520,7 +532,7 @@ class UsersCreate extends Component {
                                                         selectDeselectLabel="Select / Deselect All"
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                         // @jessica you can add an onChange method here by using "handleOnChange"
-                                                    />
+                                                    /> */}
                                                     {/* @jessica for your reference */}
                                                     {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
                                                     onChange={(e) => this.handleManagedSchoolChange(e)} multiple="multiple" required>
