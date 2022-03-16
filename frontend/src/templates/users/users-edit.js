@@ -149,7 +149,6 @@ class UsersEdit extends Component {
 
     // @jessica check with backend
     handleManagedSchoolsChange = (selected) => {
-        // selected.preventDefault()
         const selected_schools = selected.map(id => {
             return { 'id': id }
         })
@@ -355,8 +354,8 @@ class UsersEdit extends Component {
                                                         buttonClass="form-select border"
                                                         actionBtnStyle="ms-1 mt-1 bg-primary w-75"
                                                         selectDeselectLabel="Select / Deselect All"
-                                                        selected={[1]}
-                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
+                                                        // selected={[]}   // array of ids of schools
+                                                        // handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                     />
                                                     {/* @jessica for your reference */}
                                                     {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
