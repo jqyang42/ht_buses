@@ -129,6 +129,7 @@ class UsersDetail extends Component {
     }
 
     addStudent = (student) => {
+        console.log(student)
         api.post(`users/add-students?id=${this.props.params.id}`, student)
         .then(res => {
             const success = res.data.success
@@ -276,7 +277,7 @@ class UsersDetail extends Component {
                                             <div className="modal fade" show={!this.state.modal_dismiss} id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <form onSubmit={this.handleAddStudentSubmit}> {/* TODO: add onClick handler */}
+                                                        <form onSubmit={this.handleAddStudentSubmit}>
                                                             <div className="modal-header">
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Create New Student</h5>
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

@@ -12,7 +12,8 @@ from ....role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 # Students Table: User Detail GET API
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
+@permission_classes([IsAuthenticated]) 
+# @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def students_user(request):
     data = {}
     page_number = request.query_params["page"]
