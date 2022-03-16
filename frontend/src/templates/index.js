@@ -41,6 +41,7 @@ class Login extends Component {
             this.setState({message: data.message, valid_login: data.valid_login})
             localStorage.setItem('token', data.token)
             if (data.valid_login) {
+                console.log(data.info)
                 this.emailField.value = ''
                 this.passwordField.value =''
                 localStorage.setItem('user_id', data.info.user_id)

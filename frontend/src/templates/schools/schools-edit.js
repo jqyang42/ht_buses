@@ -196,27 +196,31 @@ class SchoolsEdit extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div className="form-group required pb-3 w-75">
-                                                <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                    defaultValue={this.state.school.name} placeholder="Enter school name" required
-                                                    onChange={this.handleSchoolNameChange}></input>
-                                            </div>
-                                            <div className="form-group required pb-3 w-75">
-                                                <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                {/* Uses autocomplete API, only uncomment when needed to */}
-                                                <Autocomplete
-                                                    apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={this.handleSchoolAddressChange}
-                                                    options={{
-                                                        types: ['address']
-                                                    }}
-                                                    placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    defaultValue={this.state.edited_school.location.address} 
-                                                    onChange={this.handleSchoolAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
-                                                    required={true}/>
-                                            </div>
+                                            { localStorage.getItem('is_staff') && localStorage.getItem('role') === 'Administrator' ?
+                                                <>
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                        <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                            defaultValue={this.state.school.name} placeholder="Enter school name" required
+                                                            onChange={this.handleSchoolNameChange}></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3 w-75">
+                                                        <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                        {/* Uses autocomplete API, only uncomment when needed to */}
+                                                        <Autocomplete
+                                                            apiKey={GOOGLE_API_KEY}
+                                                            onPlaceSelected={this.handleSchoolAddressChange}
+                                                            options={{
+                                                                types: ['address']
+                                                            }}
+                                                            placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
+                                                            defaultValue={this.state.edited_school.location.address}
+                                                            onChange={this.handleSchoolAddressChange}
+                                                            onBlur={event => { setTimeout(this.handleAddressValidation, 500); } }
+                                                            required={true} />
+                                                    </div>
+                                                </> : ""
+                                            }
                                             <div className="form-group required pb-3 w-75">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>
                                                 <input type="time" id="default-picker" className="form-control pb-2"

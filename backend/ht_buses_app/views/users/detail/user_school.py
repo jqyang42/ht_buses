@@ -7,12 +7,12 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from ..user_pagination import user_pagination
-from ....role_permissions import IsAdmin, IsSchoolStaff
+from ....role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 
 # This only gets users for 1 school, need this somehow to get multiple
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdmin|IsSchoolStaff]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def user_school_view(request):
     order_by = request.query_params["order_by"]
     sort_by = request.query_params["sort_by"] # will look for asc or desc
