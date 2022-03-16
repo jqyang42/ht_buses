@@ -1,9 +1,9 @@
-from ....models import School, Route, Student, Location, User
+from ....models import Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ....serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
+from ....serializers import StudentSerializer
 from ...stops import check_in_range
 
 @csrf_exempt
