@@ -120,8 +120,9 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    // @jessica add is_complete
     handleStopsGet = () => {
-        this.getStopsPage(this.state.students_table.pageIndex, null, '')
+        this.getStopsPage(this.state.stops_show_all ? 0 : this.state.students_table.pageIndex, null, '')
         getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
         .then(res => {
             const stops = res.data.stops;
@@ -707,11 +708,13 @@ class BusRoutesPlanner extends Component {
                                                 searchValue={''}
                                                 dnd={this.state.dnd} 
                                                 handleReorder={this.handleReorder}/>
+                                                { !this.state.stops_edit_mode ?                                                 
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
-                                                </button>
+                                                </button> : ""
+                                                }
                                                 <div></div>
                                             </> : ""
                                         }
