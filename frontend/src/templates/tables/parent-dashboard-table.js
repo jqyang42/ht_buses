@@ -8,9 +8,9 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
     // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
 
-    // useEffect(() => {
-    //     updatePageCount(pageIndex, sort)
-    // }, [sort])
+    useEffect(() => {
+        updatePageCount(pageIndex, sort, searchValue)
+    }, [sort])
 
     // Filter by multiple columns
     // const ourGlobalFilterFunction = useCallback(
