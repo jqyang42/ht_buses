@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import json
 from rest_framework.response import Response
 from .student_create import create_student
+from ...models import User
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
 from ..general import response_messages
@@ -16,7 +17,7 @@ def add_new_students(request):
     user_id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        user = get_object_for_user(request.user, User.object.get(pk = user_id), "change_user")
+        user = get_object_for_user(request.user, User.objects.get(pk = user_id), "change_user")
     except:
         return response_messages.PermissionDenied(data, "student's parent")
     try:

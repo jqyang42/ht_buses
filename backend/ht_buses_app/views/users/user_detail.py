@@ -64,3 +64,34 @@ def user_account(request):
     except:
         return response_messages.UnsuccessfulAction(data, "extracting user details")
         
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def update_logged_in_user_info(request):
+    data = {}
+    try:
+       user = request.user
+       user = User.objects.get(pk = user.id)
+    except:
+        data["success"] = False 
+        data["token"] = ''
+        message = "User authentication details are up-to-date"
+        return Response({"data": data,"message":message, "token":''})
+    try:
+        user_serializer = UserSerializer(user, many=False)
+        token = Token.objects.get_or_create(user=user)[0].key
+        data["user_id"] = user.id
+        data["role_id"] = user.role
+        data["role_value"] = get_role_string(user.role)
+        data["is_parent"] = user_is_parent(user.id)
+        data["email"] = user.email
+        data["first_name"] = user.first_name
+        data["last_name"] = user.last_name
+        message = "User authentication details are up-to-date"
+        data["success"] = True
+        return Response({"data": data,"message":message, "token":token})
+    except:
+        data["success"] = False 
+        data["token"] = ''
+        message = "User authentication details could not extracted"
+        return Response({"data": data,"message":message, "token":''})

@@ -15,16 +15,6 @@ def get_all_user_perms():
     user_content_type = ContentType.objects.get_for_model(User)
     return Permission.objects.filter(content_type=user_content_type)
 
-"""
-def get_all_student_perms():
-    student_content_type = ContentType.objects.get_for_model(Student)
-    return Permission.objects.filter(content_type=student_content_type)
-
-def get_all_route_perms():
-    route_content_type = ContentType.objects.get_for_model(Route)
-    return Permission.objects.filter(content_type=route_content_type)
-"""
-
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
     return User.objects.filter(pk__in=user_ids)
@@ -40,6 +30,10 @@ def user_is_parent(user_id):
     except:
         return False
     return False
+
+
+def get_role_string(role_id):
+    return User.role_choices[int(role_id)-1][1]
 
 def role_string_to_id(role_string):
     if role_string == 'Administrator':
