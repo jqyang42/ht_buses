@@ -34,13 +34,13 @@ class ParentDetail extends Component {
     }
 
     componentDidMount() {
-        this.getParentStudentDetail()
+        // this.getParentStudentDetail()
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
     }
 
     // pagination
     getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        getPage({ url: `dashboard/students/detail`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
             const stops_table = {
                 pageIndex: res.pageIndex,
