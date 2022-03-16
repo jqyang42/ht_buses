@@ -38,6 +38,7 @@ def routes_detail(request):
             parent = User.objects.get(pk=parent_id)
             if parent_id not in parent_id_arr:
                 parent_id_arr.append(parent_id)
+                parent_serializer = UserSerializer(parent, many=False)
                 parent_student = Student.objects.filter(user_id=parent_id, route_id=id)
                 parent_student_serializer = StudentSerializer(parent_student, many=True)
                 for child in parent_student_serializer.data:
@@ -45,7 +46,9 @@ def routes_detail(request):
                 location = Location.objects.get(pk=parent.location_id)
                 location_serializer = LocationSerializer(location, many=False)
                 parent_address = {"address": location_serializer.data["address"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
-                address_arr.append({"id" : parent_id, "location" : parent_address, "students": parent_student_arr})
+                address_arr.append({"id" : parent_id, "first_name": parent_serializer.data["first_name"], "last_name": parent_serializer.data["last_name"],
+                "email": parent_serializer.data["email"], "phone_number": parent_serializer.data["phone_number"],
+                "location" : parent_address, "students": parent_student_arr})
         data["route"] = route_arr
         data["users"] = address_arr
         data["success"] = True
