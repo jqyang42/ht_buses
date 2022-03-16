@@ -24,7 +24,8 @@ def user_login(request):
     if not check_password(password, user.password):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
     permission_setup()
-    login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
+    login(request._request, user, backend = 'ht_buses_app.authenticate.AuthenticationBackend')
+    print(user.is_authenticated)
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
     info["role_id"] = user.role

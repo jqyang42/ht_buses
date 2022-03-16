@@ -5,9 +5,10 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import get_object_for_user, get_role_string, user_is_parent
 from ..general import response_messages
 from guardian.shortcuts import get_objects_for_user
+from rest_framework.authtoken.models import Token
 
 @csrf_exempt
 @api_view(["GET"])
@@ -67,18 +68,20 @@ def user_account(request):
 @csrf_exempt
 @api_view(["GET"])
 @permission_classes([AllowAny])
-def update_logged_in_user_info(request):
+def update_stored_user_info(request):
     data = {}
     try:
-       user = request.user
-       user = User.objects.get(pk = user.id)
+        user = request.user
+        user = User.objects.get(pk = user.id)
     except:
         data["success"] = False 
-        data["token"] = ''
-        message = "User authentication details are up-to-date"
+        message = "User authentication details could not extracted, try logging in again"
+        return Response({"data": data,"message":message, "token":''})
+    if not user.is_authenticated:
+        data["success"] = False 
+        message = "User authentication details could not extracted, try logging in again"
         return Response({"data": data,"message":message, "token":''})
     try:
-        user_serializer = UserSerializer(user, many=False)
         token = Token.objects.get_or_create(user=user)[0].key
         data["user_id"] = user.id
         data["role_id"] = user.role
@@ -87,11 +90,12 @@ def update_logged_in_user_info(request):
         data["email"] = user.email
         data["first_name"] = user.first_name
         data["last_name"] = user.last_name
+        data["logged_in"] = user.is_authenticated
         message = "User authentication details are up-to-date"
         data["success"] = True
         return Response({"data": data,"message":message, "token":token})
     except:
         data["success"] = False 
-        data["token"] = ''
-        message = "User authentication details could not extracted"
+        data["logged_in"] = False
+        message = "User authentication details could not extracted, try logging in again"
         return Response({"data": data,"message":message, "token":''})
