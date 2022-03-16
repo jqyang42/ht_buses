@@ -30,4 +30,9 @@ class StopSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stop
         fields = ('id', 'location_id', 'route_id', 'name', 'order_by', 'arrival', 'departure')
+
+class ManageSchoolsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fiels = ('id', 'name')
     
