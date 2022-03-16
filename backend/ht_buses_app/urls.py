@@ -14,7 +14,7 @@ from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.general.general_tools import permission_setup
-from . views.bulk_import import bulk_import_view
+from .views.bulk_import import bulk_import_view_users
 
 
 permission_setup() #TODO: figure out better place for this i.e after models, but only one time after runserver called
@@ -67,6 +67,6 @@ urlpatterns = [
     path('api/students/school', student_view_school.students_school, name="student_view_school"),
     path('api/students/user', student_view_user.students_user, name="student_view_user"),
     path('api/routes/school', route_view_school.routes_school, name='route_view_school'),
-    path('api/bulk-import/check', bulk_import_view.bulk_import, name='bulk-import-check')
+    path('api/bulk-import/users-check', bulk_import_view_users.bulk_import, name='bulk-import-check-users')
 ]
 
