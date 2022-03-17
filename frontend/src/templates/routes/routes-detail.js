@@ -313,7 +313,7 @@ class BusRoutesDetail extends Component {
         console.log(this.state.students)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="routes" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -389,7 +389,7 @@ class BusRoutesDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
-                                    <div className="col-7 me-4">
+                                    <div className="col-md-7 me-4">
                                         <h6>Description</h6>
                                         <p>
                                             {this.state.route.description}

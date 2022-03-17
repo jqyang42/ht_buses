@@ -169,7 +169,7 @@ class SchoolsDetail extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -247,7 +247,7 @@ class SchoolsDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-2">
-                                    <div className="col-auto">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Arrival Time
                                         </p>
@@ -255,7 +255,7 @@ class SchoolsDetail extends Component {
                                             Departure Time
                                         </p>
                                     </div>
-                                    <div className="col-5 ms-2 me-4">
+                                    <div className="col-5 me-4">
                                         <p>
                                             {/* TODO: connect school arrival time */}
                                             {toDisplayFormat({ twentyfour_time: this.state.school.arrival})}

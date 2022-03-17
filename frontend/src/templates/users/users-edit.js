@@ -220,7 +220,7 @@ class UsersEdit extends Component {
 
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -242,19 +242,19 @@ class UsersEdit extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
                                                     defaultValue={this.state.user.first_name} placeholder="Enter first name" required
                                                     onChange={this.handleFirstNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
                                                     defaultValue={this.state.user.last_name} placeholder="Enter last name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
                                                 defaultValue={this.state.user.email} placeholder="Enter email" required
@@ -272,7 +272,7 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="phone_number" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" defaultValue={this.state.user.phone_number} id="examplePhone"
                                                     placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
@@ -286,7 +286,7 @@ class UsersEdit extends Component {
                                                 } */}
                                             </div>
                                                 
-                                            <div className={"form-group pb-3 w-75 " + (this.state.edited_user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -325,7 +325,7 @@ class UsersEdit extends Component {
                                                 </div>
                                             </div> */}
                 
-                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75 required">
+                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">User Type</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
                                                 disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id}
@@ -343,7 +343,7 @@ class UsersEdit extends Component {
 
                                             {/* if user role is school staff */}
                                             { this.state.edited_user.role_id === 2 ?
-                                                <div className="form-group required pb-3 w-75">
+                                                <div className="form-group required pb-3 form-col">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <DropdownMultiselect
                                                         options={this.state.schools_dropdown}
@@ -372,7 +372,7 @@ class UsersEdit extends Component {
                                                  : ""                                            
                                             }
                                         </div>
-                                        <div className="col mt-2">
+                                        <div className="col mt-2 extra-col">
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">

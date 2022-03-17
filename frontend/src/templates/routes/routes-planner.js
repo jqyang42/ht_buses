@@ -583,7 +583,7 @@ class BusRoutesPlanner extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="Schools" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.school.name} page="Route Planner" />
@@ -594,7 +594,7 @@ class BusRoutesPlanner extends Component {
                                     <p>{this.state.school.address}</p>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-7 me-4">
+                                    <div className="col-md-7 me-4 mb-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
                                         {!this.state.assign_mode ? 
                                         <div className="row d-flex mt-2 align-items-center align-middle">
@@ -636,7 +636,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
+                                                <select className="w-md-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
                                                     <option selected value={0}>Select a route to assign</option>
                                                     {/* <option value={0}>No Route</option> */}
                                                     {this.state.route_dropdown.map(route => 
@@ -735,7 +735,7 @@ class BusRoutesPlanner extends Component {
                                         }
 
                                         {/* Map Interface */}
-                                        <div className="bg-gray rounded mt-3">
+                                        <div className="bg-gray rounded mt-3 mb-4">
                                             <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 
