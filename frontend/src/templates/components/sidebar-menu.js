@@ -45,9 +45,9 @@ class SidebarMenu extends Component {
         
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
-                <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
-                    <a href={INDEX_URL} className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                        <img src={HT_LOGO} className="img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
+                <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white sidebar">
+                    <a href={INDEX_URL} className="d-flex align-items-center my-0 mx-2 px-4 pb-3 me-md-auto text-white text-decoration-none">
+                        <img src={HT_LOGO} className="img-logo img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
                     </a>
 
                     <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
@@ -70,7 +70,7 @@ class SidebarMenu extends Component {
                             </a>
                         </li>
                         <li className={"nav-item " + usersTab}>
-                            <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                            <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4 mb-sm-4">
                                 <i className="bi bi-people me-2"></i>
                                 <span className="ms-1 d-none d-sm-inline">Manage Users</span>
                             </a>
@@ -94,7 +94,7 @@ class SidebarMenu extends Component {
                                 Change Password
                             </span>
                         </Link> */}
-                        <button className="btn btn-primary w-75 mb-4 mx-auto align-self-bottom" role="button" onClick={this.handleLogout}>
+                        <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                             Log Out
                         </button> 
                     </div>
