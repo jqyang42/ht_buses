@@ -633,6 +633,11 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
+                                                    {(!this.state.added_student_school_staff && localStorage.getItem("role") === "School Staff") ? 
+                                                      (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                          At least one student must be associated with any general parent account.
+                                                      </div>) : ""
+                                                    }
                                                     {(!this.studentIDValidation()) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           The Student ID value for at least one student is invalid. Please edit and try again.
