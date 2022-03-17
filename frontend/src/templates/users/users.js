@@ -89,7 +89,7 @@ class Users extends Component {
                 "Content-Type": "multipart/form-data"
             }
         }
-        api.post(`@jessica update`, formData, config)
+        api.post(`bulk-import/users-upload`, formData, config)
         .then(res => {
             console.log("posted successfully")
         })
