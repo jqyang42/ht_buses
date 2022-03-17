@@ -328,7 +328,7 @@ class UsersCreate extends Component {
         const valid_id = this.studentIDValidation()
         const not_general = this.state.new_user.role_id !== 0
         const added_student_school_staff = this.state.added_student_school_staff
-        if (!(valid_email && valid_address && valid_id && not_general || added_student_school_staff)) {
+        if (!(valid_email && valid_address && valid_id && not_general && added_student_school_staff)) {
             this.setState({ create_success: -1 })
             return 
           }
