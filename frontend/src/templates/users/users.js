@@ -77,9 +77,26 @@ class Users extends Component {
         this.fileUploaded = event.target.files[0]
         console.log(this.fileUploaded)
         // TODO: @jessica handleFile(fileUploaded);
-
-        this.setState({ import_redirect: true })
+        this.submitFile(this.fileUploaded)
+        // this.setState({ import_redirect: true })
     };
+
+    submitFile = (fileUploaded) => {
+        const formData = new FormData()
+        formData.append("bulk_users", fileUploaded)
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+        api.post(`@jessica update`, formData, config)
+        .then(res => {
+            console.log("posted successfully")
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
