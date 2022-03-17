@@ -7,19 +7,21 @@ import csv
 from ...google_funcs import geocode_address
 from rest_framework.response import Response
 import re
+from io import StringIO
 
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdmin]) 
 def bulk_import(request):
-    req_file = request.FILES
+    req_file = request.FILES["bulk_users"]
+    csv_file = StringIO(req_file.read().decode('latin-1'))
     page_number = request.query_params["page"]
     errors = []
-    data = []
+    data = {}
     users = []
     row_num = 1
-    reader = csv.reader(req_file)
+    reader = csv.reader(csv_file)
     # skip the header
     next(reader, None)
     for row in reader:
@@ -72,26 +74,9 @@ def bulk_import(request):
         row_obj = {"row_num" : row_num, "name": row[1], "email": row[0], "address": row[2], "phone_number": row[3], "error": error_obj}
         users.append(row_obj)
         row_num += 1
-    total_page_num = len(users) // 10 + (len(users) % 10 > 0)
-    if int(page_number) == 1 and int(page_number) == total_page_num:
-        prev_page = False
-        next_page = False
-    elif int(page_number) == 1:
-        prev_page = False
-        next_page = True
-    else:
-        prev_page = True
-        if int(page_number) == total_page_num:
-            next_page = False
-        else:
-            next_page = True
+    
     # we need to grab a certain number of users
-    if int(page_number) == 1:
-        pag_users = users[:10*int(page_number)]
-    else:
-        pag_users = users[(1+10*(int(page_number)-1)):10*int(page_number)]
-    data["users"] = pag_users
-    data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
+    data["users"] = users
     data["success"] = True
     return Response(data)
 
