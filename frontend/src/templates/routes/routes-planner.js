@@ -4,6 +4,7 @@ import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
@@ -13,6 +14,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { GOOGLE_MAP_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
 import { getStopInfo } from "./route-time-calc";
@@ -59,6 +61,8 @@ class BusRoutesPlanner extends Component {
             },
             modal_dismiss: false,
             route_complete: 0,
+            map_redirect_pickup: [],
+            map_redirect_dropoff: [],
         }
     }
 
@@ -251,6 +255,44 @@ class BusRoutesPlanner extends Component {
             );
     }
 
+    handleStopsGet = () => {
+        this.getStopsPage(this.state.stops_show_all ? 0 : this.state.students_table.pageIndex, null, '')
+        getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
+            const stops = res.data.stops;
+            const is_complete = res.data.route.is_complete
+            if (stops.length !== 0) {
+                console.log(stops)
+                this.handleStopTimeCalc(stops)
+                .then(res => {
+                    this.editStops(res)
+                    this.setState({ 
+                        stops: res,
+                        route_complete: is_complete ? 1 : -1
+                     })
+                     this.redirectToGoogleMapsPickup(this.state.stops)
+                     this.redirectToGoogleMapsDropoff(this.state.stops)
+                })
+            } else {
+                this.setState({ 
+                    stops: stops,
+                    route_complete: is_complete ? 1 : -1,
+                    map_redirect_pickup: [],
+                    map_redirect_dropoff: [],
+                })
+            }
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        } 
+        )
+        console.log(this.state.stops)
+    }
+
     handleAssignMode = event => {
         this.setState({assign_mode_warning: false, add_route_success: false})
         this.setState(prevState => ({ 
@@ -319,8 +361,62 @@ class BusRoutesPlanner extends Component {
     }
 
     clearAddRouteForm = (event) => {
-        
         document.getElementById("add-route-form").reset();
+    }
+
+    // TODO: Fix undefined, undefined center starting error after refreshing
+    redirectToGoogleMapsPickup = (stops) => {
+        this.setState({map_redirect_pickup: []})
+        let arrivingLinks = []
+        for (let i=0; i < stops.length; i+=10 ) {
+            let map_redirect_pickup = GOOGLE_MAP_URL
+            map_redirect_pickup += '&waypoints='
+            let j;
+            for (j = i; j < i + 9 && j < stops.length; j+=1) {
+                console.log(stops[j])
+                map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
+            }
+            if (j == stops.length) {
+                map_redirect_pickup += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
+            } else {
+                map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
+            }
+            console.log(map_redirect_pickup)
+            arrivingLinks.push(map_redirect_pickup)
+        }
+        this.setState({
+            map_redirect_pickup: arrivingLinks
+        })
+    }
+
+    redirectToGoogleMapsDropoff = (stops) => {
+        let reversed_stops = stops.slice().reverse();
+        let departingLinks = []
+        let i;
+        if (reversed_stops.length == 1) {
+            let map_redirect_dropoff = GOOGLE_MAP_URL
+            map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng
+            map_redirect_dropoff += '&destination=' + reversed_stops[0].location.lat + ',' + reversed_stops[0].location.lng
+            departingLinks.push(map_redirect_dropoff) 
+        } else {
+            for (i = 0; i < reversed_stops.length-1; i+=10 ) {
+                let map_redirect_dropoff = GOOGLE_MAP_URL 
+                if (i == 0) {
+                    map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+                }
+                map_redirect_dropoff +=  '&waypoints=';
+                let j;
+                for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
+                    console.log(reversed_stops)
+                    map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
+                }
+                //Think about cases where this could be in its own link
+                map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
+                departingLinks.push(map_redirect_dropoff)
+            }
+        }
+        console.log(departingLinks)
+        this.setState({map_redirect_dropoff: departingLinks})
     }
 
     students = {"students":[]};
@@ -653,6 +749,44 @@ class BusRoutesPlanner extends Component {
                                             handleStopModification={this.handleRouteStopModification}
                                             />
                                         </div>
+                                        { this.state.map_redirect_dropoff.length !== 0 ?
+                                            <div className="mt-3"> 
+                                            <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            </div> : ""
+                                        }
+                                        
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
