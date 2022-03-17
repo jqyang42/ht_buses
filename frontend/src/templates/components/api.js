@@ -15,12 +15,11 @@ const interceptor_api = axios.create({
 });
 
 api.interceptors.request.use(() => {
-    interceptor_api.get(`users/update-stored-info`)
-    .then(res => {
-        console.log(res)
-        const data = res.data.data
-        console.log(data)
-        if(data.success) {
+    const res = await interceptor_api.get(`users/update-stored-info`)
+    console.log(res)
+    const data = res.data.data
+    console.log(data)
+    if(data.success) {
         localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('role',  data.role_value)
         localStorage.setItem('is_parent', data.is_parent)
@@ -29,11 +28,10 @@ api.interceptors.request.use(() => {
         localStorage.setItem('is_staff', data.role_id !== 4)
         localStorage.setItem('logged_in', data.logged_in)
         localStorage.setItem('token', res.data.token)
-        }
-        else {
-            localStorage.clear()
-        }
-    })
+    }
+    else {
+        localStorage.clear()
+    }
 })
 
 export default api
