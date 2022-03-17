@@ -7,7 +7,7 @@ from rest_framework.response import Response
 import re
 from io import StringIO
 
-# Bulk Import POST API: Checking for Users
+# Bulk Import POST API: Checking for Students
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdmin]) 
