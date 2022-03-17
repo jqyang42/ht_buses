@@ -49,7 +49,7 @@ class UsersCreate extends Component {
         redirect_detail: false,
         detail_url: '',
         error404: false,
-        added_student_school_staff: false
+        added_student_school_staff: true
     }
 
     // initialize
@@ -57,7 +57,6 @@ class UsersCreate extends Component {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
-        this.addedStudentSchoolStaff()
     }
 
     // api calls
@@ -478,18 +477,25 @@ class UsersCreate extends Component {
 
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75 required">
                                                 <label for="roleType" className="control-label pb-2">Role</label>
+                                                {(localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? 
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
-                                                    {}
+                                                    {/* <option value={0} disabled selected>Select a Role</option> */}
+                                                    <option value={4} selected id="4">General</option>
+                                                    {/* <option value={1} id="1">Administrator</option>
+                                                    <option value={2} id="2">School Staff</option>
+                                                    <option value={3} id="3">Driver</option> */}
+                                                </select>
+                                                :
+                                                <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
+                                                onChange={(e) => this.handleRoleChange(e)}>
                                                     <option value={0} disabled selected>Select a Role</option>
                                                     <option value={4} id="4">General</option>
                                                     <option value={1} id="1">Administrator</option>
                                                     <option value={2} id="2">School Staff</option>
                                                     <option value={3} id="3">Driver</option>
-                                                    {/* { {this.state.roles_dropdown.map(role => 
-                                                        <option value={role.value} id={role.display}>{role.display}</option>
-                                                    )} } */}
                                                 </select>
+                                                }
                                             </div>
 
                                             {/* <div onChange={this.handleRoleChange.bind(this)} className="form-group required pb-3 w-75">
