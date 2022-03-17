@@ -100,7 +100,7 @@ class Email extends Component {
 
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab={this.props.source.toLowerCase()} />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -127,7 +127,7 @@ class Email extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div  onChange={this.handleAnnouncementTypeChange.bind(this)} className="form-group required pb-3 w-75">
+                                            <div  onChange={this.handleAnnouncementTypeChange.bind(this)} className="form-group required pb-3 form-col">
                                                 <div>
                                                     <label for="announcementType" className="control-label pb-2">Announcement Type</label>
                                                 </div>
@@ -140,16 +140,16 @@ class Email extends Component {
                                                     <label className="form-check-label" for="route">Route</label>
                                                 </div>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="subject" className="control-label pb-2">Subject</label>
                                                 <input type="text" className="form-control pb-2"   ref={el => this.subjectField = el}  onChange={this.handleSubjectChange} id="subject" 
                                                 placeholder="Add a subject" required></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="email-body" className="control-label pb-2">Message</label>
                                                 <textarea type="text" className="form-control textarea-autosize pb-2"  ref={el => this.bodyField = el}  onChange={this.handleBodyChange} id="email-body"></textarea>
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 <Link to={"/" + this.props.source + "/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
@@ -158,7 +158,7 @@ class Email extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Send</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2"></div>
+                                        <div className="col mt-2 extra-col"></div>
                                     </div>
                                 </form>
                             </div>

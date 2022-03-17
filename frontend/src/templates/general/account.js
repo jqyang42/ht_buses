@@ -53,7 +53,7 @@ class Account extends Component {
         // }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     {
                         localStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
                     }
@@ -85,7 +85,7 @@ class Account extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-1">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Email
                                         </p>

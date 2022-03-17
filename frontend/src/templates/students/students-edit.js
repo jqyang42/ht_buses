@@ -177,7 +177,7 @@ class StudentsEdit extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="students" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -199,19 +199,19 @@ class StudentsEdit extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
                                                     defaultValue={this.state.student.first_name} placeholder="Enter first name" required
                                                     onChange={this.handleFirstNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
                                                     defaultValue={this.state.student.last_name} placeholder="Enter full name" required
                                                     onChange={this.handleLastNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputID1" className="control-label pb-2">Student ID</label>
                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
                                                 defaultValue={this.state.student.student_school_id} placeholder="Enter student ID" required
@@ -223,7 +223,7 @@ class StudentsEdit extends Component {
                                                 }
                                             </div>
                         
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School"
                                                 onChange={this.handleSchoolChange}>
@@ -237,7 +237,7 @@ class StudentsEdit extends Component {
                                                     })}
                                                 </select>
                                             </div>
-                                            <div className="form-group pb-3 w-75">
+                                            <div className="form-group pb-3 form-col">
                                                 <label for="exampleInputRoute1" className="control-label pb-2">Route</label>
                                                 <select className="form-select" placeholder="Select a Route" aria-label="Select a Route"
                                                 onChange={this.handleRouteChange} value={this.state.edited_student.route_id}>
@@ -251,7 +251,7 @@ class StudentsEdit extends Component {
                                                     })}
                                                 </select>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputParent1" className="control-label pb-2">Parent</label>
                                                 <select className="form-select" placeholder="Select a Parent" aria-label="Select a Parent"
                                                 onChange={this.handleParentIDChange}>
@@ -265,7 +265,7 @@ class StudentsEdit extends Component {
                                                     })}
                                                 </select>
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/students/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
@@ -275,7 +275,7 @@ class StudentsEdit extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2"></div>
+                                        <div className="col mt-2 extra-col"></div>
                                     </div>
                                 </form>
                             </div>

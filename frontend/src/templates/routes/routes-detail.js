@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { RouteStudentsTable } from "../tables/route-students-table";
 import { StopsTable } from "../tables/stops-table";
@@ -11,6 +12,7 @@ import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
+import { GOOGLE_MAP_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 import pdfRender from "../components/export-route";
 
@@ -48,7 +50,9 @@ class BusRoutesDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-        }
+        },
+        map_redirect_pickup: [],
+        map_redirect_dropoff: [],
     }
 
     componentDidMount() {
@@ -114,7 +118,7 @@ class BusRoutesDetail extends Component {
                     lat: school.location.lat, 
                     lng: school.location.lng 
                 }, 
-            });
+            }, console.log(this.state.center));
 
             this.setMarkers(users)            
         })
@@ -181,20 +185,81 @@ class BusRoutesDetail extends Component {
         this.setState({ markers: markers })
     }
 
-    // getStops = () => {
-    //     api.get(`stops?id=${this.props.params.id}`)
-    //     .then(res => {
-    //         const data = res.data;
-    //         this.setState({ stops: data.stops })
-    //     })
-    //     .catch (error => {
-    //         if (error.response.status !== 200) {
-    //             // console.log(error.response.data)
-    //             this.setState({ error_status: true });
-    //             this.setState({ error_code: error.response.status });
-    //         }
-    //     })
-    // }
+    getStops = () => {
+        api.get(`stops?id=${this.props.params.id}`)
+        .then(res => {
+            const data = res.data;
+            this.setState({ stops: data.stops })
+            console.log(this.state.center)
+            this.redirectToGoogleMapsPickup(this.state.stops)
+            this.redirectToGoogleMapsDropoff(this.state.stops)
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                // console.log(error.response.data)
+                this.setState({ error_status: true });
+                this.setState({ error_code: error.response.status });
+            }
+        })
+    }
+    
+    // TODO: Fix undefined, undefined center starting error after refreshing
+    redirectToGoogleMapsPickup = (stops) => {
+        this.setState({map_redirect_pickup: []})
+        let arrivingLinks = []
+        for (let i=0; i < stops.length; i+=10 ) {
+            console.log(i)
+            let map_redirect_pickup = GOOGLE_MAP_URL
+            map_redirect_pickup += '&waypoints='
+            let j;
+            for (j = i; j < i + 9 && j < stops.length; j+=1) {
+                console.log(stops[j])
+                map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
+            }
+            if (j == stops.length) {
+                map_redirect_pickup += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
+            } else {
+                map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
+            }
+            console.log(map_redirect_pickup)
+            arrivingLinks.push(map_redirect_pickup)
+        }
+        console.log(arrivingLinks)
+        this.setState({
+            map_redirect_pickup: arrivingLinks
+        })
+    }
+
+    redirectToGoogleMapsDropoff = (stops) => {
+        let reversed_stops = stops.slice().reverse();
+        let departingLinks = []
+        let i;
+        if (reversed_stops.length == 1) {
+            let map_redirect_dropoff = GOOGLE_MAP_URL
+            map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng
+            map_redirect_dropoff += '&destination=' + reversed_stops[0].location.lat + ',' + reversed_stops[0].location.lng
+            departingLinks.push(map_redirect_dropoff) 
+        } else {
+            for (i = 0; i < reversed_stops.length-1; i+=10 ) {
+                let map_redirect_dropoff = GOOGLE_MAP_URL 
+                console.log(i)
+                if (i == 0) {
+                    map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+                }
+                map_redirect_dropoff +=  '&waypoints=';
+                let j;
+                for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
+                    console.log(reversed_stops)
+                    map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
+                }
+                //Think about cases where this could be in its own link
+                map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
+                departingLinks.push(map_redirect_dropoff)
+            }
+        }
+        console.log(departingLinks)
+        this.setState({map_redirect_dropoff: departingLinks})
+    }
 
     // handlers
     handleDelete = (event) => {
@@ -248,7 +313,7 @@ class BusRoutesDetail extends Component {
         console.log(this.state.students)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="routes" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -324,7 +389,11 @@ class BusRoutesDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
-                                    <div className="col-7 me-4">
+                                    <div className="col-md-7 me-4">
+                                        <h6>Description</h6>
+                                        <p>
+                                            {this.state.route.description}
+                                        </p>
                                         <div className="bg-gray rounded mb-4">
                                         {this.state.markers ? 
                                         <RouteMap 
@@ -337,10 +406,43 @@ class BusRoutesDetail extends Component {
                                         />
                                         : "" }
                                         </div>
-                                        <h6>Description</h6>
-                                        <p>
-                                            {this.state.route.description}
-                                        </p>
+                                        { this.state.map_redirect_dropoff.length !== 0 ?
+                                            <div className="mt-3"> 
+                                            <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            </div> : ""
+                                        }
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
