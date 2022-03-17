@@ -310,7 +310,9 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
+        const school_staff_added_student = (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? !(this.state.added_students_list.length === 0) : true
+        console.log(school_staff_added_student)
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !school_staff_added_student) {
             this.setState({ create_success: -1 })
             return 
           }
