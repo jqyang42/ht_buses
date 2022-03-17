@@ -57,6 +57,9 @@ class UsersCreate extends Component {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
+        if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
+            this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
+        }
     }
 
     // api calls
@@ -320,8 +323,12 @@ class UsersCreate extends Component {
 
     handleSubmit = (event) => {        
         event.preventDefault();
+        const valid_email = emailValidation({ email: this.state.new_user.email })
         const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !this.state.added_student_school_staff) {
+        const valid_id = this.studentIDValidation()
+        const not_general = this.state.new_user.role_id !== 0
+        const added_student_school_staff = this.state.added_student_school_staff
+        if (!(valid_email && valid_address && valid_id && not_general || added_student_school_staff)) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -481,7 +488,7 @@ class UsersCreate extends Component {
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
                                                     {/* <option value={0} disabled selected>Select a Role</option> */}
-                                                    <option value={4} selected id="4">General</option>
+                                                    <option value={4} disabled selected id="4">General</option>
                                                     {/* <option value={1} id="1">Administrator</option>
                                                     <option value={2} id="2">School Staff</option>
                                                     <option value={3} id="3">Driver</option> */}
