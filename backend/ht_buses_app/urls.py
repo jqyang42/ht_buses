@@ -10,12 +10,11 @@ from . views.parents import parent_dashboard, parent_student_detail
 from . views.announcements import announcements
 from . views.accounts import reset_password
 from . views.general import general_apis
-from . views.stops import stops_create, stops_view, stops_edit, stops_delete, stops_name_edit
+from . views.stops import stops_create, stops_view_pag, stops_edit, stops_delete, stops_name_edit
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
-from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
 from . views.parents.detail import parent_student_stop
 from . models import User
