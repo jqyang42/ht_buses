@@ -6,6 +6,7 @@ from ...role_permissions import IsAdmin
 import csv
 from ...google_funcs import geocode_address
 from rest_framework.response import Response
+import re
 
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
@@ -14,51 +15,63 @@ from rest_framework.response import Response
 def bulk_import(request):
     req_file = request.FILES
     page_number = request.query_params["page"]
-    error_obj = []
+    errors = []
     data = []
     users = []
-    row_num = 0
+    row_num = 1
     reader = csv.reader(req_file)
     # skip the header
     next(reader, None)
     for row in reader:
         # email, name, address, phone_number
-        # how should I append errors???
         if row[0] is None:
-            email = ""
+            email_error = True
         else:
+            # TODO: need email already exists in system
+            # TODO: need to have check for duplicates
             if len(row[0]) > 254: # make models for email char higher
-                # error
-                email = ""
+                email_error = True
             else:
-                # test regex for email to see if its valid
-                email = row[0]
+                regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+                if re.fullmatch(regex, row[0]):
+                    email_error = False
+                else:
+                    email_error = True
         if row[1] is None:
-            name = ""
+            name_error = True
         else:
-            # need to check name is
-            name = row[1].split()
-            first_name = name[0]
-            last_name = name[1]
-        # call google api
-        # need to check if location limit is 150 chars (need to make address char higher)
+            # check if name is 150 char limit, add to db
+            if len(row[1]) > 150:
+                name_error = True
+            else:
+                name_error = False
+        
         location_arr = geocode_address(row[2])
         if location_arr[0]["lat"] is None or location_arr[0]["lng"] is None:
-            # error with address
-            address = ""
+            address_error = True
+        else:
+            # check if address is 150 char limit, add to db
+            if len(row[2]) > 150:
+                address_error = True
+            else:
+                address_error = False
         if row[3] is None:
-            # error with phone number
-            phone_number = ""
+            phone_number_error = True
         else:
             # need to check if phone number limit is 18 chars (need to make phone number char higher)
-            if len(row[3]) > 18:
+            if len(row[3]) > 18: # phone number char needs to be 18
                 # error with phone number
-                phone_number = ""
+                phone_number_error = True
             else:
-                phone_number = row[3]
-        row_num += 1
-        row_obj = {"row_num" : row_num, "name": name, "email": email, "address": address, "phone_number": phone_number}
+                phone_number_error = False
+        if address_error or phone_number_error or name_error or email_error:
+            error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error}
+            errors.append(error_obj)
+        else:
+            error_obj = {}
+        row_obj = {"row_num" : row_num, "name": row[1], "email": row[0], "address": row[2], "phone_number": row[3], "error": error_obj}
         users.append(row_obj)
+        row_num += 1
     total_page_num = len(users) // 10 + (len(users) % 10 > 0)
     if int(page_number) == 1 and int(page_number) == total_page_num:
         prev_page = False
