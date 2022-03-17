@@ -322,7 +322,7 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !school_staff_added_student) {
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !this.state.school_staff_added_student) {
             this.setState({ create_success: -1 })
             return 
           }
