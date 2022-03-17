@@ -329,10 +329,6 @@ class BusRoutesDetail extends Component {
                                                 </button>
                                                 </> : ""
                                             }
-                                            {/* Testing purposes only, should be replaced*/}
-                                            <a href={this.state.map_redirect_dropoff[0]} rel="noreferrer">
-                                                Departing
-                                            </a>
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
@@ -363,6 +359,10 @@ class BusRoutesDetail extends Component {
                                 }
                                 <div className="row mt-4">
                                     <div className="col-7 me-4">
+                                        <h6>Description</h6>
+                                        <p>
+                                            {this.state.route.description}
+                                        </p>
                                         <div className="bg-gray rounded mb-4">
                                         {this.state.markers ? 
                                         <RouteMap 
@@ -375,10 +375,27 @@ class BusRoutesDetail extends Component {
                                         />
                                         : "" }
                                         </div>
-                                        <h6>Description</h6>
-                                        <p>
-                                            {this.state.route.description}
-                                        </p>
+                                        { this.state.map_redirect_dropoff.length !== 0 ?
+                                            <div className="mt-3"> 
+                                            <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            </div> : ""
+                                        }
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
