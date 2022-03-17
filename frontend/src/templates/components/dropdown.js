@@ -1,7 +1,7 @@
 import api from "./api"
 
 export async function makeParentsDropdown() {
-    const res = await api.get(`users?page=0`)
+    const res = await api.get(`users?page=0&sort_by=&order_by=&q=`)
     const dropdown = res.data.users.filter(user => {
         return user.is_parent === true
     }).sort((a, b) => { return ('' + a.last_name).localeCompare(b.last_name) }).map(parent => {
@@ -15,7 +15,7 @@ export async function makeParentsDropdown() {
 }
 
 export async function makeSchoolsDropdown() {
-    const res = await api.get(`schools?page=0`)
+    const res = await api.get(`schools?page=0&sort_by=&order_by=&q=`)
     console.log(res.data.schools)
     const dropdown = res.data.schools.map(school => {
         return {
@@ -28,19 +28,6 @@ export async function makeSchoolsDropdown() {
 
     console.log(dropdown)
     return dropdown
-}
-
-export async function makeSchoolsMultiSelect() {
-    const schools = await makeSchoolsDropdown()
-    const multiselect_schools = schools.map(school => {
-        return {
-            key: school.value,
-            label: school.display
-        }
-    })
-
-    console.log(multiselect_schools)
-    return multiselect_schools
 }
 
 export async function makeRoutesDropdown({ school_id }) {
