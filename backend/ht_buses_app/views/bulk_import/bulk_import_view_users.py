@@ -16,7 +16,6 @@ from io import StringIO
 def bulk_import(request):
     req_file = request.FILES["bulk_users"]
     csv_file = StringIO(req_file.read().decode('latin-1'))
-    page_number = request.query_params["page"]
     errors = []
     data = {}
     users = []
