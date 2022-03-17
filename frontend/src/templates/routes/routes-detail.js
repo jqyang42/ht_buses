@@ -169,7 +169,6 @@ class BusRoutesDetail extends Component {
             const data = res.data;
             this.setState({ stops: data.stops })
             console.log(this.state.center)
-            // TODO: Fix undefined, undefined center starting error after refreshing
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
         })
@@ -181,6 +180,8 @@ class BusRoutesDetail extends Component {
             }
         })
     }
+    
+    // TODO: Fix undefined, undefined center starting error after refreshing
     redirectToGoogleMapsPickup = (stops) => {
         this.setState({map_redirect_pickup: []})
         let arrivingLinks = []
@@ -201,6 +202,7 @@ class BusRoutesDetail extends Component {
             console.log(map_redirect_pickup)
             arrivingLinks.push(map_redirect_pickup)
         }
+        console.log(arrivingLinks)
         this.setState({
             map_redirect_pickup: arrivingLinks
         })
@@ -210,21 +212,28 @@ class BusRoutesDetail extends Component {
         let reversed_stops = stops.slice().reverse();
         let departingLinks = []
         let i;
-        for (i = 0; i < reversed_stops.length-1; i+=10 ) {
-            let map_redirect_dropoff = GOOGLE_MAP_URL 
-            console.log(i)
-            if (i == 0) {
-                map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+        if (reversed_stops.length == 1) {
+            let map_redirect_dropoff = GOOGLE_MAP_URL
+            map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng
+            map_redirect_dropoff += '&destination=' + reversed_stops[0].location.lat + ',' + reversed_stops[0].location.lng
+            departingLinks.push(map_redirect_dropoff) 
+        } else {
+            for (i = 0; i < reversed_stops.length-1; i+=10 ) {
+                let map_redirect_dropoff = GOOGLE_MAP_URL 
+                console.log(i)
+                if (i == 0) {
+                    map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+                }
+                map_redirect_dropoff +=  '&waypoints=';
+                let j;
+                for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
+                    console.log(reversed_stops)
+                    map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
+                }
+                //Think about cases where this could be in its own link
+                map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
+                departingLinks.push(map_redirect_dropoff)
             }
-            map_redirect_dropoff +=  '&waypoints=';
-            let j;
-            for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
-                console.log(reversed_stops)
-                map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
-            }
-            //Think about cases where this could be in its own link
-            map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
-            departingLinks.push(map_redirect_dropoff)
         }
         console.log(departingLinks)
         this.setState({map_redirect_dropoff: departingLinks})
