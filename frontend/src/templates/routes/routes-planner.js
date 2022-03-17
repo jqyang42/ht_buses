@@ -52,6 +52,13 @@ class BusRoutesPlanner extends Component {
                 // sortOptions: {},
                 // searchValue: ''
             },
+            stops_page: [],
+            stops_table: {
+                pageIndex: 1,
+                canPreviousPage: null,
+                canNextPage: null,
+                totalPages: null,
+            },
             modal_dismiss: false,
             route_complete: 0,
             map_redirect_pickup: [],
@@ -67,9 +74,11 @@ class BusRoutesPlanner extends Component {
         } else {
         localStorage.removeItem('reloadCount');
         }
+
         this.handleTableGet();       
         this.handleLocationsGet();
-        this.getStudentsPage(this.state.students_table.pageIndex, null, '') 
+        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        // this.getStopsPage(this.state.students_table.pageIndex, null, '') 
         
         if (this.state.active_route !== 0) { this.handleStopsGet() };
         
@@ -97,6 +106,60 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    getStopsPage = (page, sortOptions, search) => {
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
+            const stops_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                stops_page: res.data.stops,
+                stops_table: stops_table
+            })
+        })
+    }
+
+    // @jessica add is_complete
+    handleStopsGet = () => {
+        this.getStopsPage(this.state.stops_show_all ? 0 : this.state.students_table.pageIndex, null, '')
+        getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
+            const stops = res.data.stops;
+            const is_complete = res.data.route.is_complete
+            if (stops.length !== 0) {
+                console.log(stops)
+                this.handleStopTimeCalc(stops)
+                .then(res => {
+                    this.editStops(res)
+                    this.setState({ 
+                        stops: res,
+                        route_complete: is_complete ? 1 : -1
+                     })
+                })
+            } else {
+                this.setState({ 
+                    stops: stops,
+                    route_complete: is_complete ? 1 : -1,
+                })
+            }
+        })
+        .catch (error => {
+            console.log(error)
+            if (error.response.status !== 200) {
+                this.setState({ error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        } 
+        )
+        console.log(this.state.stops)
+    }
+
     handleStudentsShowAll = () => {
         this.setState(prevState => ({
             students_show_all: !prevState.students_show_all
@@ -108,7 +171,9 @@ class BusRoutesPlanner extends Component {
     handleStopsShowAll = () => {
         this.setState(prevState => ({
             stops_show_all: !prevState.stops_show_all
-        }))
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleReorder = (new_order) => {
@@ -118,11 +183,12 @@ class BusRoutesPlanner extends Component {
 
     switchStopsEditMode = () => {
         this.setState(prevState => ({
-            stops_edit_mode: !prevState.stops_edit_mode
-        }))
-        this.setState(prevState => ({
-            dnd: !prevState.dnd
-        }))
+            stops_edit_mode: !prevState.stops_edit_mode,
+            dnd: !prevState.dnd,
+            stops_show_all: !prevState.stops_edit_mode
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleTableGet = () => {        
@@ -264,8 +330,7 @@ class BusRoutesPlanner extends Component {
         this.clearAddRouteForm()
     }
 
-    handleRouteCreateSubmit = (event) => {
-        
+    handleRouteCreateSubmit = (event) => {        
         if(this.state.create_route_name === "") {
             event.preventDefault();
             return 
@@ -415,7 +480,6 @@ class BusRoutesPlanner extends Component {
     }
 
     submitStopsOrder = () => {
-        this.switchStopsEditMode()
         const order = [...this.state.stops_order]
         const ordered_stops = this.state.stops.slice().map(stop => {
             return {
@@ -427,11 +491,16 @@ class BusRoutesPlanner extends Component {
         .then(res => {
             console.log(res)
             this.editStops(res)
-            this.setState({ stops: res })
+            .then(res => {
+                this.switchStopsEditMode()
+            })
+            // this.setState({ stops: res })
+            
         })
+        
     }
 
-    editStops(stops) {
+    async editStops(stops) {
         const edit_body = {
             stops: stops.map(stop => {
                 return {
@@ -450,14 +519,14 @@ class BusRoutesPlanner extends Component {
         )}
 
         // console.log(edit_body)
-        api.put(`stops/edit`, edit_body)
-        .then(res => {
-            const success = res.data.success
-            const new_stops = res.data.stops
+        await api.put(`stops/edit`, edit_body)
+        // .then(res => {
+        //     const success = res.data.success
+        //     const new_stops = res.data.stops
 
-            // this.setState({ stops: edit_body })
-            // TODO ERROR HANDLING
-        })
+        //     // this.setState({ stops: edit_body })
+        //     // TODO ERROR HANDLING
+        // })
     }
 
     async handleStopTimeCalc(stops) {
@@ -738,7 +807,7 @@ class BusRoutesPlanner extends Component {
                                         </button>
 
                                         {
-                                            this.state.active_route === 0 ? "" : this.state.stops ?
+                                            this.state.active_route === 0 ? "" : this.state.stops_page ?
                                             <>
                                                 <div className="row d-flex justify-content-between align-items-center mb-2">
                                                     <h7 className="col w-auto">STOPS</h7>
@@ -760,12 +829,25 @@ class BusRoutesPlanner extends Component {
                                                         }
                                                     </div> 
                                                 </div>
-                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd} handleReorder={this.handleReorder}/>
+                                                <StopsTable 
+                                                data={this.state.stops_page}
+                                                showAll={this.state.stops_show_all} 
+                                                pageIndex={this.state.stops_table.pageIndex}
+                                                canPreviousPage={this.state.stops_table.canPreviousPage}
+                                                canNextPage={this.state.stops_table.canNextPage}
+                                                updatePageCount={this.getStopsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.stops_table.totalPages}
+                                                searchValue={''}
+                                                dnd={this.state.dnd} 
+                                                handleReorder={this.handleReorder}/>
+                                                { !this.state.stops_edit_mode ?                                                 
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
-                                                </button>
+                                                </button> : ""
+                                                }
                                                 <div></div>
                                             </> : ""
                                         }

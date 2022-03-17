@@ -44,18 +44,22 @@ class BusRoutesDetail extends Component {
             // },
             // searchValue: ''
         },
-        // stops_page:[],
-        // stops_table: {
-
-        // }
+        stops_page:[],
+        stops_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+        },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
     }
 
     componentDidMount() {
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
-        this.getStops()
+        // this.getStops()
     }
 
     // pagination
@@ -73,6 +77,24 @@ class BusRoutesDetail extends Component {
             this.setState({
                 students_page: res.data.students,
                 students_table: students_table
+            })
+        })
+    }
+
+    getStopsPage = (page, sortOptions, search) => {
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            const stops_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                stops_page: res.data.stops,
+                stops_table: stops_table
             })
         })
     }
@@ -442,12 +464,23 @@ class BusRoutesDetail extends Component {
                                         </button>
 
                                         {
-                                            this.state.stops ?
+                                            this.state.stops_page ?
                                             <>
                                                 <div className="row d-flex justify-content-between align-items-center mb-2">
                                                     <h7 className="col w-auto">STOPS</h7>
                                                 </div>
-                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={false} handleReorder={() => {}}/>
+                                                <StopsTable
+                                                data={this.state.stops_page}
+                                                showAll={this.state.stops_show_all} 
+                                                pageIndex={this.state.stops_table.pageIndex}
+                                                canPreviousPage={this.state.stops_table.canPreviousPage}
+                                                canNextPage={this.state.stops_table.canNextPage}
+                                                updatePageCount={this.getStopsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.stops_table.totalPages}
+                                                searchValue={''}
+                                                dnd={false} 
+                                                handleReorder={() => {}}/>
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"

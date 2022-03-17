@@ -58,10 +58,15 @@ def user_edit(request):
         else:
             user_object.role = reqBody["user"]["role_id"]
         if user_object.role == User.SCHOOL_STAFF:
-            schools = reqBody["user"]["managed_schools"]
-            reassign_success = reassign_perms(edited_user=user_object, schools = schools)
-            if not reassign_success:
+            try:
+                schools = reqBody["user"]["managed_schools"]
+            except:
                 return response_messages.UnsuccessfulAction(data, "user edit")
+        else:
+            schools = []
+        reassign_success = reassign_perms(edited_user=user_object, schools = schools)
+        if not reassign_success:
+            return response_messages.UnsuccessfulAction(data, "user edit")
         user_object.save()
         update_student_stop(id)
         data["message"] = "user information was successfully updated"

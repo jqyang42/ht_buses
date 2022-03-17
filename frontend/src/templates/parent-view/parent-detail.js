@@ -8,6 +8,7 @@ import RouteMap from "../routes/route-map";
 import { StopsTable } from "../tables/stops-table";
 import api from "../components/api";
 import SidebarMenu from '../components/sidebar-menu';
+import { getPage } from "../tables/server-side-pagination";
 
 import { MARKER_ICONS } from '../../constants';
 
@@ -22,11 +23,38 @@ class ParentDetail extends Component {
         active_route: 1,
         error_status: false,
         error_code: 200,
-        stops_show_all: false
+        stops_show_all: false,
+        stops_page:[],
+        stops_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+        }
     }
 
     componentDidMount() {
         this.getParentStudentDetail()
+        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+    }
+
+    // pagination
+    getStopsPage = (page, sortOptions, search) => {
+        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            const stops_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                stops_page: res.data.stops,
+                stops_table: stops_table
+            })
+        })
     }
 
     // api calls
@@ -137,7 +165,18 @@ class ParentDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>STOPS</h7>
-                                            <StopsTable data={this.state.student.stops || []} showAll={this.state.stops_show_all} dnd={false} handleReorder={() => {}}/>
+                                            <StopsTable 
+                                            data={this.state.stops_page}
+                                            showAll={this.state.stops_show_all} 
+                                            pageIndex={this.state.stops_table.pageIndex}
+                                            canPreviousPage={this.state.stops_table.canPreviousPage}
+                                            canNextPage={this.state.stops_table.canNextPage}
+                                            updatePageCount={this.getStopsPage}
+                                            pageSize={10}
+                                            totalPages={this.state.stops_table.totalPages}
+                                            searchValue={''} 
+                                            dnd={false} 
+                                            handleReorder={() => {}}/>
                                             <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                 { !this.state.stops_show_all ?
                                                     "Show All" : "Show Pages"
