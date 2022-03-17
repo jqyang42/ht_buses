@@ -210,6 +210,8 @@ class BusRoutesPlanner extends Component {
                 this.setState({ 
                     stops: stops,
                     route_complete: is_complete ? 1 : -1,
+                    map_redirect_pickup: [],
+                    map_redirect_dropoff: [],
                 })
             }
         })
