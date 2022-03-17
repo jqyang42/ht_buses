@@ -18,8 +18,12 @@ def bulk_import(request):
     # check file type: send error
     try:
         if fnmatch.fnmatch(str(req_file), '*.csv'):
-            # need to check if file is empty or is incorrectly formatted :(
             csv_file = StringIO(req_file.read().decode('latin-1'))
+            if csv_file.st_size == 0:
+                # empty file check
+                data["success"] = False
+                data["students"] = {}
+                return Response(data, status=404)
             students = []
             row_num = 1
             reader = csv.reader(csv_file)
