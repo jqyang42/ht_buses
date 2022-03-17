@@ -14,7 +14,7 @@ const interceptor_api = axios.create({
       }
 });
 
-api.interceptors.request.use(() => {
+api.interceptors.request.use(async () => {
     const res = await interceptor_api.get(`users/update-stored-info`)
     console.log(res)
     const data = res.data.data
@@ -32,6 +32,7 @@ api.interceptors.request.use(() => {
     else {
         localStorage.clear()
     }
+    return data
 })
 
 export default api
