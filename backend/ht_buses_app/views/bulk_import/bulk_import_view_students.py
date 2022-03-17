@@ -25,7 +25,6 @@ def bulk_import(request):
         if row[1] is None:
             email_error = True
         else:
-            # TODO: need email already exists in system
             # TODO: need to have check for duplicates
             if len(row[1]) > 254: # make models for email char higher
                 email_error = True
@@ -52,6 +51,8 @@ def bulk_import(request):
         
         if row[2] is None:
             student_id = 0
+        else:
+            student_id = row[2]
         student_id_error = False
         
         if row[3] is None:
@@ -67,7 +68,7 @@ def bulk_import(request):
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id_error": student_id_error, "school_name_error": school_name_error}
         else:
             error_obj = {}
-        row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_id": row[2], "school_name": row[3], "error": error_obj}
+        row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_id": student_id, "school_name": row[3], "error": error_obj}
         students.append(row_obj)
         row_num += 1
     
