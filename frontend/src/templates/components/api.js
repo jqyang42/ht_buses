@@ -11,6 +11,8 @@ api.interceptors.request.use(() => {
     api.get(`users/update-stored-info`)
     .then(res => {
         const data = res.data
+        console.log("here")
+        if(data.success) {
         localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('role',  data.role_value)
         localStorage.setItem('is_parent', data.is_parent)
@@ -18,6 +20,11 @@ api.interceptors.request.use(() => {
         localStorage.setItem('last_name', data.last_name)
         localStorage.setItem('is_staff', data.role_id !== 4)
         localStorage.setItem('logged_in', data.logged_in)
+        localStorage.setItem('token', res.token)
+        }
+        else {
+            localStorage.clear()
+        }
     })
 })
 
