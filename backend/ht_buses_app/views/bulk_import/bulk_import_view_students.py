@@ -59,7 +59,7 @@ def bulk_import(request):
             school_name_error = True
         else:
             try:
-                schools = School.filter(name__icontains=row[3])
+                schools = School.objects.filter(name__icontains=row[3])
                 school_name_error = False
             except:
                 school_name_error = True
