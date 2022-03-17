@@ -322,7 +322,7 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !this.state.school_staff_added_student) {
+        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !this.state.added_student_school_staff) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -480,6 +480,7 @@ class UsersCreate extends Component {
                                                 <label for="roleType" className="control-label pb-2">Role</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
+                                                    {}
                                                     <option value={0} disabled selected>Select a Role</option>
                                                     <option value={4} id="4">General</option>
                                                     <option value={1} id="1">Administrator</option>
