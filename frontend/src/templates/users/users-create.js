@@ -640,7 +640,7 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    {(!this.state.added_student_school_staff && localStorage.getItem("role") === "School Staff") ? 
+                                                    {(this.state.added_student_school_staff === -1 && localStorage.getItem("role") === "School Staff") ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           At least one student must be associated with any general parent account.
                                                       </div>) : ""
