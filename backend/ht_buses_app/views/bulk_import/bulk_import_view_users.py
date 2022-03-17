@@ -8,6 +8,7 @@ from ...google_funcs import geocode_address
 from rest_framework.response import Response
 import re
 from io import StringIO
+import json
 
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
@@ -76,6 +77,9 @@ def bulk_import(request):
         row_num += 1
     
     # we need to grab a certain number of users
+    print(users)
+    with open('bulk_import_temp.json', 'w') as output:
+        json.dump(users, output)
     data["users"] = users
     data["success"] = True
     return Response(data)
