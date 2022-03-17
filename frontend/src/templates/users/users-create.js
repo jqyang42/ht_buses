@@ -48,7 +48,8 @@ class UsersCreate extends Component {
         create_success: 0,
         redirect_detail: false,
         detail_url: '',
-        error404: false
+        error404: false,
+        added_student_school_staff: false
     }
 
     // initialize
@@ -56,6 +57,7 @@ class UsersCreate extends Component {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
+        this.addedStudentSchoolStaff()
     }
 
     // api calls
@@ -264,6 +266,8 @@ class UsersCreate extends Component {
             added_students_list: new_list,
             students: [...this.state.students, student_field],
             routes_dropdowns: [...this.state.routes_dropdowns, []]
+        }, () => {
+            this.addedStudentSchoolStaff()
         })
         this.checkNonParentAddress()
     }
@@ -283,6 +287,8 @@ class UsersCreate extends Component {
             added_students_list: new_list,
             students: new_students,
             routes_dropdowns: new_routes_dropdowns
+        }, () => {
+            this.addedStudentSchoolStaff()
         })
 
         if (new_list.length === 0) {
@@ -291,6 +297,12 @@ class UsersCreate extends Component {
             this.setState({ new_user: user })
         }
     }
+
+    addedStudentSchoolStaff = () => {
+        const added_student_school_staff = (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? !(this.state.added_students_list.length === 0) : true
+        this.setState({ added_student_school_staff: added_student_school_staff})
+    }
+
     checkNonParentAddress = () => {
         const address = this.state.new_user.location.address
         const empty_address = address === "" || address == undefined
@@ -310,8 +322,6 @@ class UsersCreate extends Component {
     handleSubmit = (event) => {        
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
-        const school_staff_added_student = (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? !(this.state.added_students_list.length === 0) : true
-        console.log(school_staff_added_student)
         if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0 || !school_staff_added_student) {
             this.setState({ create_success: -1 })
             return 
