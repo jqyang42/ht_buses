@@ -44,9 +44,10 @@ def user_create(request):
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     try:
-        for student in reqBody["user"]["students"]:
-            student_create.create_student(student, user.id)
-        data["message"] = "user and students created successfully"
+        if is_parent:
+            for student in reqBody["user"]["students"]:
+                student_create.create_student(student, user.id)
+            data["message"] = "user and students created successfully"
     except:
         user.location.delete()
         user.delete()

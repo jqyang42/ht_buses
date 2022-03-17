@@ -30,6 +30,7 @@ def parent_student_detail(request):
 
 def student_arr_data(student):
     student_arr = {}
+    # add pagination
     student_serializer = StudentSerializer(student, many=False)
     student_arr["school_student_id"] = student_serializer.data["student_school_id"]
     student_arr["first_name"] = student_serializer.data["first_name"]
@@ -50,6 +51,5 @@ def student_arr_data(student):
         route_description = route_serializer.data["description"]
         route_arr = {'id': route_serializer.data["id"], 'name' : route_name, 'description' : route_description, 'color_id': route_serializer.data['color_id']}
     student_arr["route"] = route_arr
-    student_arr["stops"] = check_in_range.check_student_in_range(student_serializer.data["user_id"], student_serializer.data["route_id"])
     student_arr["location"] = location_arr
     return student_arr
