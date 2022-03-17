@@ -8,6 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { STUDENTS_IMPORT_URL } from "../../constants";
+import api from "../components/api";
 
 class Students extends Component {
     constructor(props) {
@@ -74,11 +75,30 @@ class Students extends Component {
         this.fileUploaded = event.target.files[0]
         // this.setState({fileUploaded: this.fileUploaded })
         console.log(this.fileUploaded)
+        this.submitFile(this.fileUploaded)
         // TODO: handleFile(fileUploaded);
         // const navigate = useNavigate();
         // navigate(USERS_IMPORT_URL, { state: { file: this.fileUploaded } });
         this.setState({ import_redirect: true })
     };
+
+    submitFile = (fileUploaded) => {
+        const formData = new FormData()
+        formData.append("bulk_students", fileUploaded)
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+        api.post(`bulk-import/students-upload`, formData, config)
+        .then(res => {
+            console.log("posted successfully")
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
