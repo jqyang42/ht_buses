@@ -256,8 +256,9 @@ class BusRoutesPlanner extends Component {
     }
 
     handleStopsGet = () => {
-        api.get(`stops?id=${this.state.active_route}`)
-            .then(res => {
+        this.getStopsPage(this.state.stops_show_all ? 0 : this.state.students_table.pageIndex, null, '')
+        getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
