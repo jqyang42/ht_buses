@@ -676,10 +676,26 @@ class BusRoutesPlanner extends Component {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
                                                                 <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
                                                                     <span>
                                                                         Open in Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
