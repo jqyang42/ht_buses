@@ -50,29 +50,29 @@ class SidebarMenu extends Component {
                         <img src={HT_LOGO} className="img-logo img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
                     </a>
 
-                    <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
+                    <ul className="nav nav-pills flex-column mb-md-auto mb-4 mb-0 w-100" id="menu">
                         <li className={"nav-item " + studentsTab}>
                             <a href={STUDENTS_URL} className="nav-link align-middle mx-4 px-4">
                                 <i className="bi bi-list-ul me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">Students</span>
+                                <span className="ms-1 d-inline">Students</span>
                             </a>
                         </li>
                         <li className={"nav-item " + routesTab}>
                             <a href={ROUTES_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                 <i className="bi bi-geo-alt me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">Bus Routes</span>
+                                <span className="ms-1 d-inline">Bus Routes</span>
                             </a>
                         </li>
                         <li className={"nav-item " + schoolsTab}>
                             <a href={SCHOOLS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                 <i className="bi bi-building me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">Schools</span>
+                                <span className="ms-1 d-inline">Schools</span>
                             </a>
                         </li>
                         <li className={"nav-item " + usersTab}>
-                            <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4 mb-sm-4">
+                            <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                 <i className="bi bi-people me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">Manage Users</span>
+                                <span className="ms-1 d-inline">Manage Users</span>
                             </a>
                         </li>
                         {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
@@ -81,7 +81,7 @@ class SidebarMenu extends Component {
                                 <li className={"nav-item " + dashboardTab}>
                                     <a href={PARENT_DASHBOARD_URL} className="nav-link align-middle mx-4 px-4">
                                         <i className="bi bi-house me-2"></i>
-                                        <span className="ms-1 d-none d-sm-inline">My Dashboard</span>
+                                        <span className="ms-1 d-inline">My Dashboard</span>
                                     </a>
                                 </li>
                             </> : ""

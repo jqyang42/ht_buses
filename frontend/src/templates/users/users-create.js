@@ -377,7 +377,7 @@ class UsersCreate extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -395,19 +395,19 @@ class UsersCreate extends Component {
                                     </div>) : ""
                                 }
                                 <form onSubmit={this.handleSubmit}>
-                                    <div className="row">
+                                    <div className="row flex-wrap">
                                         <div className="col mt-2 w-50">
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
                                                     placeholder="Enter first name" required onChange={this.handleFirstNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
                                                     placeholder="Enter last name" required onChange={this.handleLastNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
                                                 placeholder="Enter email" required ref={el => this.emailField = el} onChange={this.handleEmailChange}></input>
@@ -439,13 +439,13 @@ class UsersCreate extends Component {
                                                 } */}
                                             {/* </div> */}
 
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="phone_number" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="examplePhone"
                                                     placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
                                             </div>
 
-                                            <div className={"form-group pb-3 w-75 " + (this.state.new_user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 form-col " + (this.state.new_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -464,7 +464,7 @@ class UsersCreate extends Component {
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>
 
-                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75 required">
+                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">Role</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>

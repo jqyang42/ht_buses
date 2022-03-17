@@ -389,7 +389,7 @@ class BusRoutesDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
-                                    <div className="col-7 me-4">
+                                    <div className="col-md-7 me-4">
                                         <h6>Description</h6>
                                         <p>
                                             {this.state.route.description}

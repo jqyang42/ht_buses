@@ -185,7 +185,22 @@ li.page-item a[disabled]:hover {
     }
 
     .sidebar {
-        max-height: 25vh;
+        max-height: 50vh;
+    }
+
+    .extra-col {
+        width: 0px;
+        max-width: 0px;
+    }
+
+    .form-col {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .search-bar {
+        width: 50%;
+        max-width: 50%;
     }
 }
 
@@ -198,6 +213,16 @@ li.page-item a[disabled]:hover {
 
     .sidebar {
         min-height: 100vh;
+    }
+
+    .form-col {
+        width: 75%;
+        max-width: 75%;
+    }
+
+    .search-bar {
+        width: 25%;
+        max-width: 25%;
     }
 }
 
