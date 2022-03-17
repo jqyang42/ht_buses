@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
-from ..general.general_tools import user_is_parent, permission_setup
+from ..general.general_tools import user_is_parent, permission_setup, get_role_string
 
 @csrf_exempt
 @api_view(['POST'])
@@ -24,7 +24,7 @@ def user_login(request):
     if not check_password(password, user.password):
         return Response({"message": "Password was incorrect.",  "token":'', "valid_login": False})
     permission_setup()
-    login(request._request, user,backend = 'ht_buses_app.authenticate.AuthenticationBackend')
+    login(request._request, user, backend = 'ht_buses_app.authenticate.AuthenticationBackend')
     token = Token.objects.get_or_create(user=user)[0].key
     info["user_id"] = user.id
     info["role_id"] = user.role
@@ -34,8 +34,4 @@ def user_login(request):
     info["first_name"] = user.first_name
     info["last_name"] = user.last_name
     message = "User was logged in successfully"
-    return Response({"info": info,"mesage":message, "token":token, "valid_login": True})
-
-
-def get_role_string(role_id):
-    return User.role_choices[int(role_id)-1][1]
+    return Response({"info": info,"message":message, "token":token, "valid_login": True})

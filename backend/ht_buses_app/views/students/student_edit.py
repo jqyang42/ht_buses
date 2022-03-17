@@ -21,21 +21,22 @@ def student_edit(request):
     reqBody = json.loads(request.body)
     new_first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["student"]["first_name"])
     new_last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["student"]["last_name"])
-    student_school_id = reqBody["student"]["student_school_id"]
     try:
         student_object = Student.objects.get(pk = id) 
     except: 
         return response_messages.DoesNotExist(data, "student")
     try:
-       school = get_object_for_user(request.user, School.objects.get(pk = reqBody["student"]["student_school_id"]), "change_school")
+        uv_school = School.objects.get(pk=reqBody["student"]["school_id"])
+        school = get_object_for_user(request.user, uv_school, "change_school")
     except: 
         return response_messages.PermissionDenied(data, "student's new school")
     try:
-        school_id = School.objects.get(pk=reqBody["student"]["school_id"])
+        school = School.objects.get(pk=reqBody["student"]["school_id"])
         user_id = User.objects.get(pk = reqBody["student"]["user_id"]) 
         student_object.last_name = new_last_name
         student_object.first_name = new_first_name
-        student_object.school_id = school_id
+        student_object.school_id = school
+        student_school_id = reqBody["student"]["student_school_id"]
         student_object.student_school_id = student_school_id
         student_object.user_id = user_id
     except:
@@ -59,8 +60,9 @@ def student_edit(request):
             student_route.is_complete = is_complete
             student_route.save()
         data["message"] = "student information successfully updated"
-        data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
+        data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "school_name": student_object.school_id.name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
         data["success"] = True
+        print(data)
         return Response(data)
     except:
         return response_messages.UnsuccessfulAction(data, "student edit")
