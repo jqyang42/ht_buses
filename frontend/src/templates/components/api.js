@@ -7,11 +7,19 @@ const api = axios.create({
       }
 });
 
+const interceptor_api = axios.create({
+    baseURL: `http://localhost:8000/api/`,
+    headers: {
+        Authorization: localStorage.getItem('token') ? `Token ${localStorage.getItem('token')}` : ``
+      }
+});
+
 api.interceptors.request.use(() => {
-    api.get(`users/update-stored-info`)
+    interceptor_api.get(`users/update-stored-info`)
     .then(res => {
-        const data = res.data
-        console.log("here")
+        console.log(res)
+        const data = res.data.data
+        console.log(data)
         if(data.success) {
         localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('role',  data.role_value)
@@ -20,7 +28,7 @@ api.interceptors.request.use(() => {
         localStorage.setItem('last_name', data.last_name)
         localStorage.setItem('is_staff', data.role_id !== 4)
         localStorage.setItem('logged_in', data.logged_in)
-        localStorage.setItem('token', res.token)
+        localStorage.setItem('token', res.data.token)
         }
         else {
             localStorage.clear()
