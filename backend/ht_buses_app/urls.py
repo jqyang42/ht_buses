@@ -15,8 +15,10 @@ from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
+from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
-from .views.bulk_import import bulk_import_view_users
+from . views.parents.detail import parent_student_stop
+from . views.bulk_import import bulk_import_view_users
 from . models import User
 
 try:
@@ -41,7 +43,6 @@ urlpatterns = [
     path('api/routes/delete', route_delete.route_delete, name="route_delete"),
     path('api/users', users_view.user_view, name="users"),
     path('api/users/detail', user_detail.users_detail, name="users_detail"),
-    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
     path('api/users/create', user_create.user_create, name="users_create"),
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
@@ -67,7 +68,7 @@ urlpatterns = [
     path('api/reset-password', reset_password.reset_password, name='reset_password'),
     path('api/reset-password-valid-url', reset_password.valid_password_reset_url, name='reset_password_valid_url'),
     path('api/stops/create', stops_create.stops_create, name='stops_create'),
-    path('api/stops', stops_view.stops_view, name='stops_view'),
+    path('api/stops', stops_view_pag.stops_view, name='stops_view'),
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
     path('api/stops/delete', stops_delete.stops_delete, name='stops_delete'),
     path('api/stops/edit-name', stops_name_edit.stops_name_edit, name='stops_name_edit'),
@@ -75,6 +76,7 @@ urlpatterns = [
     path('api/students/school', student_view_school.students_school, name="student_view_school"),
     path('api/students/user', student_view_user.students_user, name="student_view_user"),
     path('api/routes/school', route_view_school.routes_school, name='route_view_school'),
-    path('api/bulk-import/users-check', bulk_import_view_users.bulk_import, name='bulk-import-check-users')
+    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
+    path('api/bulk-import/users-upload', bulk_import_view_users.bulk_import, name='bulk-import-users-upload')
 ]
 
