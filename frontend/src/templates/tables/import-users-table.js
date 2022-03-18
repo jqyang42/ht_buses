@@ -8,15 +8,15 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
-    useEffect(() => {
-        updatePageCount(pageIndex, sort, searchValue)
-    }, [sort])
+    // useEffect(() => {
+    //     updatePageCount(pageIndex, sort, searchValue)
+    // }, [sort])
 
     const columns = React.useMemo(
         () => [
             {
                 Header: 'Name',
-                accessor: d => `${d.first_name} ${d.last_name}`,
+                accessor: 'name',
                 id: 'name',
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
@@ -26,16 +26,23 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 id: 'email',
                 sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
+            // {
+            //     id:'role',
+            //     Header: 'User Type',
+            //     accessor: d => { return d.role },
+            //     disableFilter: true,
+            //     sortDirection: sort.accessor === 'is_staff' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
+            // },
             {
-                id:'role',
-                Header: 'User Type',
-                accessor: d => { return d.role },
+                Header: 'Phone Number',
+                accessor: 'phone_number',
                 disableFilter: true,
-                sortDirection: sort.accessor === 'is_staff' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
-            },            
+                id: 'phone_number',
+                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
+            },       
             {
                 Header: 'Address',
-                accessor: 'location.address',
+                accessor: 'address',
                 disableFilter: true,
                 id: 'address',
                 sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
