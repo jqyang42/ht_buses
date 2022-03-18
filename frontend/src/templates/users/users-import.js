@@ -12,7 +12,8 @@ import api from "../components/api";
 
 class UsersImport extends Component {
     state = {
-        users : [],
+        users: [],
+        edited_users: [],
         show_all: false,
         pageIndex: 1,
         canPreviousPage: null,
@@ -65,6 +66,12 @@ class UsersImport extends Component {
         })
     }
 
+    handleGetTableEdits = (new_data) => {
+        this.setState({ edited_users: new_data }, () => {
+            console.log(this.state.edited_users)
+        })
+    }
+
     // TODO: Add method to cancel all changes from table view and return to Users table @jessica
     handleCancelImport = () => {
         // redirect to USERS_URL (ignoring all changes from import)
@@ -77,7 +84,7 @@ class UsersImport extends Component {
 
         // save table changes
         const data = {
-            users: this.state.users
+            users: this.state.edited_users
         }
 
         api.post(`bulk-import/users/create`, data)
@@ -158,6 +165,7 @@ class UsersImport extends Component {
                                         </div>
                                     </div>
                                 </div>
+                                {this.state.users.length !== 0 ? 
                                 <div>
                                     <ImportUsersTable 
                                     data={this.state.users} 
@@ -169,6 +177,7 @@ class UsersImport extends Component {
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
                                     searchValue={this.state.searchValue}
+                                    updateImportData={this.handleGetTableEdits}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
@@ -176,6 +185,8 @@ class UsersImport extends Component {
                                         }
                                     </button>
                                 </div>
+                                : ""
+                                }
                             </div>
                         </div>
                     </div>
