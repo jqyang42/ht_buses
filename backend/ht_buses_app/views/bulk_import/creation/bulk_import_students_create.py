@@ -16,9 +16,9 @@ def students_create(request):
     reqBody = json.loads(request.body)
     for student in reqBody["students"]:
         # name, parent_email, student_id, school_name
-        name = student["name"].split()
+        name = student["name"].split(" ", 1)
         first_name = name[0]
-        last_name = name[1:]
+        last_name = name[1]
         student_school_id = student["student_school_id"]
         school = School.objects.filter(name=student["school_name"])
         school_serializer = SchoolSerializer(school, many=False)
