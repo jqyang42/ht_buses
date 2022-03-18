@@ -66,7 +66,7 @@ class ParentDashboard extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                     <SidebarMenu activeTab="dashboard" /> :
                     <ParentSidebarMenu activeTab="Dashboard"/>

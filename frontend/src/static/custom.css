@@ -177,6 +177,55 @@ li.page-item a[disabled]:hover {
     padding-bottom: 2px;
 }
 
+@media (max-width: 768px) {
+    img.img-logo {
+        display: block;
+        width: 50%;
+        max-width: 50%;
+    }
+
+    .sidebar {
+        max-height: 50vh;
+    }
+
+    .extra-col {
+        width: 0px;
+        max-width: 0px;
+    }
+
+    .form-col {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .search-bar {
+        width: 50%;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 768px) {
+    img.img-logo {
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .sidebar {
+        min-height: 100vh;
+    }
+
+    .form-col {
+        width: 75%;
+        max-width: 75%;
+    }
+
+    .search-bar {
+        width: 25%;
+        max-width: 25%;
+    }
+}
+
 .unassigned {
     color: #dc3545;
 }

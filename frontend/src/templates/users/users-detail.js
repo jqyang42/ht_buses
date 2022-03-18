@@ -243,9 +243,11 @@ class UsersDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+
+        console.log(this.state.user.managed_schools)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -383,7 +385,7 @@ class UsersDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
-                                    <div className="col-1">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Email
                                         </p>
@@ -406,6 +408,16 @@ class UsersDetail extends Component {
                                         Please input an address before you add a student.
                                     </div>) : ""
                                 }
+
+                                {this.state.user.managed_schools?.length !== 0 ? 
+                                    <div className="mt-4">      
+                                        <h7 className="mb-4">MANAGED SCHOOLS</h7>
+                                        {this.state.user.managed_schools?.map(school => {
+                                            return <><p className="mt-2">{school.name}</p><p className="mt-2">{school.name}</p></>
+                                        })}
+                                    </div> : ""
+                                }
+                                
 
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>

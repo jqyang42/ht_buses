@@ -106,7 +106,7 @@ class ParentDetail extends Component {
         }
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                 {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                     <SidebarMenu activeTab="dashboard" />:
                     <ParentSidebarMenu activeTab="Dashboard"/>
@@ -125,7 +125,7 @@ class ParentDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-1">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             School
                                         </p>
@@ -149,7 +149,7 @@ class ParentDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-7 me-4">
+                                    <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
                                         {Object.keys(this.state.student).length ? 
                                         <RouteMap 
