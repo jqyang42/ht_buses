@@ -95,6 +95,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a last name')
         if is_parent is True and not address:
                 raise ValueError('Users must have an address')
+        email = email.lower()
         location_obj = Location.objects.create(address=address, lat=lat, lng=lng)
         user = self.model(
             email= self.normalize_email(email),

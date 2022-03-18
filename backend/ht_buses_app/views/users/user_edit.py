@@ -88,7 +88,7 @@ def valid_email_edit(request):
     reqBody = json.loads(request.body)
     email = reqBody["user"]['email']
     try: 
-        user = User.objects.get(email = email)
+        user = User.objects.get(email = email.lower())
         if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["success"] = False
