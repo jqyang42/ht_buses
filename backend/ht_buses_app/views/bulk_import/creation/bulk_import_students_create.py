@@ -11,7 +11,7 @@ import json
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdmin]) 
-def bulk_import_validate(request):
+def students_create(request):
     data = {}
     reqBody = json.loads(request.body)
     for student in reqBody["students"]:

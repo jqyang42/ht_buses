@@ -7,12 +7,11 @@ from rest_framework.response import Response
 import re
 import json
 
-# Bulk Import POST Validate API: Checking for Users
+# Bulk Import POST API: Create Users
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdmin]) 
-# TODO: missing duplicate validation check
-def bulk_import_validate(request):
+def users_create(request):
     data = {}
     reqBody = json.loads(request.body)
     for user in reqBody["users"]:
