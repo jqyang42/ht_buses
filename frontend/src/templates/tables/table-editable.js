@@ -246,7 +246,23 @@ const EditableCell = ({
       setValue(initialValue)
     }, [initialValue])
   
-    return <input className="form-control pb-2 w-75" value={value} onChange={onChange} onBlur={onBlur} />
+    return <div>
+                {Array.isArray(value) && value[1] ? 
+                    <>
+                        <a href="#" data-bs-toggle="tooltip" title="Error!">
+                            <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
+                        </a>
+                        <div class="tooltip bs-tooltip-top" role="tooltip">
+                            <div class="tooltip-arrow"></div>
+                            <div class="tooltip-inner">
+                                Some tooltip text!
+                            </div>
+                        </div>
+                    </>
+                     : ""
+                }
+                <input className={Array.isArray(value) && value[1] ? "form-control pb-2 w-90 error" : "form-control pb-2  w-90"} value={+Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+            </div>
 }
 
 // const DND_ITEM_TYPE = 'row'

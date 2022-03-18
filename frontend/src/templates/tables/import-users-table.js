@@ -27,13 +27,15 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             {
                 Header: 'Name',
                 accessor: 'name',
+                // accessor: d => Array(`${d.name}`,`${d.error.name}`),
                 id: 'name',
-                disableSort: true
+                disableSort: true,
                 // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Email',
-                accessor: 'email',
+                // accessor: 'email',
+                accessor: d => Array(`${d.email}`,`${d.error.email}`),
                 id: 'email',
                 disableSort: true
                 // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
