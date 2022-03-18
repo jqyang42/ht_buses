@@ -2,11 +2,15 @@ from ...models import School, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from ...role_permissions import IsAdmin
-import csv
 from rest_framework.response import Response
-import re
 from io import StringIO
+from .bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
+import csv
 import fnmatch
+import re
+
+# Bulk import temporary file name
+FILENAME = 'bulk_import_students_temp.json'
 
 # Bulk Import POST API: Checking for Students
 @csrf_exempt
@@ -84,6 +88,8 @@ def bulk_import(request):
         data["students"] = {}
         data["success"] = False
         return Response(data, status=404)
+    bulk_import_file_save(FILENAME, students)
+    bulk_import_file_read(FILENAME)
     data["students"] = students
     data["success"] = True
     return Response(data)

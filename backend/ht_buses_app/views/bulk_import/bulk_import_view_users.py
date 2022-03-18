@@ -3,11 +3,15 @@ from ...serializers import LocationSerializer, SchoolSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from ...role_permissions import IsAdmin
-import csv
 from ...google_funcs import geocode_address
 from rest_framework.response import Response
-import re
 from io import StringIO
+from .bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
+import csv
+import re
+
+# Bulk import temporary file name
+FILENAME = 'bulk_import_users_temp.json'
 
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
@@ -75,6 +79,10 @@ def bulk_import(request):
         row_num += 1
     
     # we need to grab a certain number of users
+    print(users) 
+    
+    bulk_import_file_save(FILENAME, users)
+    print(bulk_import_file_read(FILENAME))
     data["users"] = users
     data["success"] = True
     return Response(data)
