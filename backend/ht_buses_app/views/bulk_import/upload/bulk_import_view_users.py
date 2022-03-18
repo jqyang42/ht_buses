@@ -1,7 +1,7 @@
 from ....models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ....role_permissions import IsAdmin
+from ....role_permissions import IsAdmin, IsSchoolStaff
 from ....google_funcs import geocode_address
 from rest_framework.response import Response
 from io import StringIO
@@ -15,7 +15,7 @@ FILENAME = 'bulk_import_users_temp.json'
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def bulk_import(request):
     req_file = request.FILES["bulk_users"]
     csv_file = StringIO(req_file.read().decode('latin-1'))

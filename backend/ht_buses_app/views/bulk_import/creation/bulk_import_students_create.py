@@ -1,7 +1,7 @@
 from ....models import School, User, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ....role_permissions import IsAdmin
+from ....role_permissions import IsAdmin, IsSchoolStaff
 from rest_framework.response import Response
 from ....serializers import SchoolSerializer, UserSerializer
 import json
@@ -10,7 +10,7 @@ import json
 # Bulk Import POST API: Create Students :)
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def students_create(request):
     data = {}
     reqBody = json.loads(request.body)
