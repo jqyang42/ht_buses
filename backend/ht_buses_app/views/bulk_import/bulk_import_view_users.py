@@ -45,13 +45,11 @@ def bulk_import(request):
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row[0]):
                     email_error = False
-                    try:
-                        users_obj = User.objects.filter(email=row[0])
-                        email_error = True
-                    except:
+                    users_obj = User.objects.filter(email=row[0])
+                    if len(users_obj) == 0:
                         email_error = False
-                else:
-                    email_error = True
+                    else:
+                        email_error = True
         if row[1] is None:
             name_error = True
         else:
