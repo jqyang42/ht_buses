@@ -17,8 +17,7 @@ from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
-from . views.bulk_import import bulk_import_view_users
-from . views.bulk_import import bulk_import_view_students
+from . views.bulk_import import bulk_import_view_users, bulk_import_view_students, bulk_import_json_students,  bulk_import_json_users
 from . models import User
 
 try:
@@ -77,6 +76,8 @@ urlpatterns = [
     path('api/students/user', student_view_user.students_user, name="student_view_user"),
     path('api/routes/school', route_view_school.routes_school, name='route_view_school'),
     path('api/bulk-import/users-upload', bulk_import_view_users.bulk_import, name='bulk-import-users-upload'),
-    path('api/bulk-import/students-upload', bulk_import_view_students.bulk_import, name='bulk-import-students-upload')
+    path('api/bulk-import/students-upload', bulk_import_view_students.bulk_import, name='bulk-import-students-upload'),
+    path('api/bulk-import/users', bulk_import_json_users.bulk_import, name='bulk-import-users'),
+    path('api/bulk-import/students', bulk_import_json_students.bulk_import, name='bulk-import-students'),
 ]
 
