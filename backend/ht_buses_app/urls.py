@@ -1,5 +1,8 @@
 from django.urls import path
 from django.db import models
+
+
+from . views.bulk_import.upload import bulk_import_view_students, bulk_import_view_users
 from . import models 
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
@@ -17,7 +20,9 @@ from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
-from . views.bulk_import import bulk_import_view_users, bulk_import_view_students, bulk_import_json_students,  bulk_import_json_users
+from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
+from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
+from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . models import User
 
 try:
@@ -79,5 +84,10 @@ urlpatterns = [
     path('api/bulk-import/students-upload', bulk_import_view_students.bulk_import, name='bulk-import-students-upload'),
     path('api/bulk-import/users', bulk_import_json_users.bulk_import, name='bulk-import-users'),
     path('api/bulk-import/students', bulk_import_json_students.bulk_import, name='bulk-import-students'),
+    path('api/bulk-import/users/validate', bulk_import_validate_users.bulk_import_validate, name='bulk-import-users-validate'),
+    path('api/bulk-import/students/validate', bulk_import_validate_students.bulk_import_validate, name='bulk-import-students-validate'),
+    path('api/bulk-import/users/create', bulk_import_users_create.users_create, name='bulk-import-users-create'),
+    path('api/bulk-import/students/create', bulk_import_students_create.students_create, name='bulk-import-students-create'),
+
 ]
 

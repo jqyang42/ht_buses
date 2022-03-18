@@ -1,11 +1,11 @@
-from ...models import User
+from ....models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ...role_permissions import IsAdmin
-from ...google_funcs import geocode_address
+from ....role_permissions import IsAdmin
+from ....google_funcs import geocode_address
 from rest_framework.response import Response
 from io import StringIO
-from .bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
+from ..bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
 import csv
 import re
 
@@ -45,13 +45,11 @@ def bulk_import(request):
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row[0]):
                     email_error = False
-                    try:
-                        users_obj = User.objects.filter(email=row[0])
-                        email_error = True
-                    except:
+                    users_obj = User.objects.filter(email=row[0])
+                    if len(users_obj) == 0:
                         email_error = False
-                else:
-                    email_error = True
+                    else:
+                        email_error = True
         if row[1] is None:
             name_error = True
         else:

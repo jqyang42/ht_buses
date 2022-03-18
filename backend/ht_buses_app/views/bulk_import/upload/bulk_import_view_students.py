@@ -1,10 +1,10 @@
-from ...models import School, User
+from ....models import School, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ...role_permissions import IsAdmin
+from ....role_permissions import IsAdmin
 from rest_framework.response import Response
 from io import StringIO
-from .bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
+from ..bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
 import csv
 import re
 
@@ -43,15 +43,13 @@ def bulk_import(request):
             else:
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row[0]):
-                    email_error = False
-                else:
                     # check email is associated with parent
-                    try:
-                        user = User.objects.filter(email=row[1])
-                        email_error = False
-                    except:
+                    user = User.objects.filter(email=row[0])
+                    if len(user) == 0:
                         email_error = True
-        
+                    else:
+                        email_error = False
+
         if row[0] is None:
             name_error = True
         else:
@@ -69,18 +67,19 @@ def bulk_import(request):
         if row[3] is None:
             school_name_error = True
         else:
-            try:
-                schools = School.objects.filter(name__icontains=row[3])
+            # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
+            schools = School.objects.filter(name_icontains=row[3])
+            if len(schools) == 0:
+                    school_name_error = True
+            else:
                 school_name_error = False
-            except:
-                school_name_error = True
             
         if name_error or email_error or student_id_error or school_name_error:
-            error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id_error": student_id_error, "school_name_error": school_name_error}
+            error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_school_id_error": student_id_error, "school_name_error": school_name_error}
             errors.append(error_obj)
         else:
             error_obj = {}
-        row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_id": student_id, "school_name": row[3], "error": error_obj}
+        row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_school_id": student_id, "school_name": row[3], "error": error_obj}
         students.append(row_obj)
         row_num += 1
     # empty file check
