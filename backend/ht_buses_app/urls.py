@@ -80,6 +80,8 @@ urlpatterns = [
     path('api/bulk-import/students-upload', bulk_import_view_students.bulk_import, name='bulk-import-students-upload'),
     path('api/bulk-import/users', bulk_import_json_users.bulk_import, name='bulk-import-users'),
     path('api/bulk-import/students', bulk_import_json_students.bulk_import, name='bulk-import-students'),
-    path('api/bulk-import/users/validate', bulk_import_validate_users.bulk_import_validate, name='bulk-import-users-validate')
+    path('api/bulk-import/users/validate', bulk_import_validate_users.bulk_import_validate, name='bulk-import-users-validate'),
+    path('api/bulk-import/students/validate', bulk_import_validate_students.bulk_import_validate, name='bulk-import-students-validate'),
+
 ]
 

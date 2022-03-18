@@ -7,7 +7,7 @@ from rest_framework.response import Response
 import re
 import json
 
-# Bulk Import POST API: Checking for Users
+# Bulk Import POST Validate API: Checking for Users
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdmin]) 
