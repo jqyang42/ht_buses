@@ -6,7 +6,7 @@ import { TableEditable } from "./table-editable";
 export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue }) {
 
-    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+    // const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
     // useEffect(() => {
     //     updatePageCount(pageIndex, sort, searchValue)
@@ -15,16 +15,25 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
     const columns = React.useMemo(
         () => [
             {
+                Header: '#',
+                accessor: 'row_num',
+                id: 'row_num',
+                disableFilter: true,
+                disableSort: true
+            },
+            {
                 Header: 'Name',
                 accessor: 'name',
                 id: 'name',
-                sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+                disableSort: true
+                // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Email',
                 accessor: 'email',
                 id: 'email',
-                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
+                disableSort: true
+                // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
             // {
             //     id:'role',
@@ -38,55 +47,57 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 accessor: 'phone_number',
                 disableFilter: true,
                 id: 'phone_number',
-                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
+                disableSort: true
+                // sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
             },       
             {
                 Header: 'Address',
                 accessor: 'address',
                 disableFilter: true,
                 id: 'address',
-                sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
+                disableSort: true
+                // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
             },
         ],
-        [sort]
+        // [sort]
     )
 
-    const columnHeaderClick = async (column) => {
-        switch (column.sortDirection) {
-          case 'none':
-            setSort({ sortDirection: 'ASC', accessor: column.id });
-            break;
-          case 'ASC':
-            setSort({ sortDirection: 'DESC', accessor: column.id });
-            break;
-          case 'DESC':
-            setSort({ sortDirection: 'none', accessor: column.id });
-            break;
-        }
-    };
+    // const columnHeaderClick = async (column) => {
+    //     switch (column.sortDirection) {
+    //       case 'none':
+    //         setSort({ sortDirection: 'ASC', accessor: column.id });
+    //         break;
+    //       case 'ASC':
+    //         setSort({ sortDirection: 'DESC', accessor: column.id });
+    //         break;
+    //       case 'DESC':
+    //         setSort({ sortDirection: 'none', accessor: column.id });
+    //         break;
+    //     }
+    // };
 
     return (
         <TableEditable
             columns={columns}
             data={data}
-            searchOn={true}
-            searchLabel="Search by name or email..."
+            searchOn={false}
+            // searchLabel="Search by name or email..."
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
-            showAll={showAll}
+            // showAll={showAll}
             navUrl={"/users/"}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
                 }
             })}
-            pageIndex={pageIndex}
-            canPreviousPage={canPreviousPage}
-            canNextPage={canNextPage}
-            updatePageCount={updatePageCount}
-            pageSize={pageSize}
-            totalPages={totalPages}
-            columnHeaderClick={columnHeaderClick}
-            sortOptions={sort}
+            // pageIndex={pageIndex}
+            // canPreviousPage={canPreviousPage}
+            // canNextPage={canNextPage}
+            // updatePageCount={updatePageCount}
+            // pageSize={pageSize}
+            // totalPages={totalPages}
+            // columnHeaderClick={columnHeaderClick}
+            // sortOptions={sort}
             searchValue={searchValue}
         />
     )
