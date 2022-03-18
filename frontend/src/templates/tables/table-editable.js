@@ -256,15 +256,15 @@ const EditableCell = ({
     );
   
     return <div>
-                {Array.isArray(value) && (value[1] === true || value[3] === true) ? 
+                {Array.isArray(value) && (value[1] || value[3]) ? 
                     <OverlayTrigger placement="top" overlay={
                         renderTooltip(
-                            value[1] === true ? value[2] + (value[3] === true ? " and " + value[4].toLowerCase() : "") : value[4]
+                            value[1] ? value[2] + (value[3] ? " and " + value[4].toLowerCase() : "") : value[4]
                         )}>
                         <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
                     </OverlayTrigger> : ""
                 }
-                <input className={Array.isArray(value) && (value[1] === true || value[3] === true) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+                <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
             </div>
 }
 
