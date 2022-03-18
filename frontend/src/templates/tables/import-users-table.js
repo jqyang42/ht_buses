@@ -4,7 +4,7 @@ import { useState } from "react";
 import { TableEditable } from "./table-editable";
     
 export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
-    updatePageCount, pageSize, totalPages, searchValue }) {
+    updatePageCount, pageSize, totalPages, searchValue, updateImportData }) {
 
     // const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
@@ -134,6 +134,7 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             // columnHeaderClick={columnHeaderClick}
             // sortOptions={sort}
             searchValue={searchValue}
+            updateData={updateImportData}
         />
     )
 }
