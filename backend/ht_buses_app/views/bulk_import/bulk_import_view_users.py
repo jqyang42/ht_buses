@@ -22,6 +22,13 @@ def bulk_import(request):
     data = {}
     users = []
     row_num = 1
+    # regex
+    file_regex = r'.*\.csv$'
+    # check file type: send error
+    if re.fullmatch(file_regex, req_file.name) is None:
+        data["users"] = {}
+        data["success"] = False
+        return Response(data, status=404)
     reader = csv.reader(csv_file)
     # skip the header
     next(reader, None)
@@ -78,9 +85,11 @@ def bulk_import(request):
         row_obj = {"row_num" : row_num, "name": row[1], "email": row[0], "address": row[2], "phone_number": row[3], "error": error_obj}
         users.append(row_obj)
         row_num += 1
-
+    if len(users) == 0:
+        data["users"] = {}
+        data["success"] = False
+        return Response(data, status=404)
     bulk_import_file_save(FILENAME, users)
-    print(bulk_import_file_read(FILENAME))
     data["users"] = users
     data["success"] = True
     return Response(data)
