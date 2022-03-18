@@ -15,19 +15,13 @@ import fnmatch
 def bulk_import(request):
     req_file = request.FILES["bulk_students"]
     data = {}
-    # check file type: send error
     csv_file = StringIO(req_file.read().decode('latin-1'))
-    if req_file.size == 0:
-        # empty file check
-        data["success"] = False
-        data["students"] = {}
-        return Response(data, status=404)
     # regex
-    # file_regex = r'^.*\.(csv)'
-    elif req_file.name != :
-        # empty file check
-        data["success"] = False
+    file_regex = r'.*\.csv$'
+    # check file type: send error
+    if re.fullmatch(file_regex, req_file.name) is None:
         data["students"] = {}
+        data["success"] = False
         return Response(data, status=404)
     students = []
     row_num = 1
@@ -85,8 +79,11 @@ def bulk_import(request):
         row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_id": student_id, "school_name": row[3], "error": error_obj}
         students.append(row_obj)
         row_num += 1
-    
     # we need to grab a certain number of users
+    if len(students) == 0:
+        data["students"] = {}
+        data["success"] = False
+        return Response(data, status=404)
     data["students"] = students
     data["success"] = True
     return Response(data)
