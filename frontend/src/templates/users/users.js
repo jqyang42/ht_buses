@@ -78,7 +78,6 @@ class Users extends Component {
         console.log(this.fileUploaded)
         // TODO: @jessica handleFile(fileUploaded);
         this.submitFile(this.fileUploaded)
-        // this.setState({ import_redirect: true })
     };
 
     submitFile = (fileUploaded) => {
@@ -93,6 +92,7 @@ class Users extends Component {
         .then(res => {
             console.log("posted successfully")
             console.log(res)
+            this.setState({ import_redirect: true })
         })
         .catch(err => {
             console.log(err)

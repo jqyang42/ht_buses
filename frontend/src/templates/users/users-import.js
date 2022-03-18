@@ -8,6 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import api from "../components/api";
 
 class UsersImport extends Component {
     state = {
@@ -25,33 +26,41 @@ class UsersImport extends Component {
     }
 
     componentDidMount() {
-        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        // this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
         // console.log(this.props.location.state)
         // TODO: @jessica get backend data from file import here
+        this.getUploadedUsers()
     }
 
     // pagination
-    getUsersPage = (page, sortOptions, search) => {
-        getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
-        .then(res => {
-            this.setState({
-                users: res.data.users,
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-                sortOptions: sortOptions,
-                searchValue: search
-            })
-        })
-    }
+    // getUsersPage = (page, sortOptions, search) => {
+    //     getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
+    //     .then(res => {
+    //         this.setState({
+    //             users: res.data.users,
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //             sortOptions: sortOptions,
+    //             searchValue: search
+    //         })
+    //     })
+    // }
     
     // render handlers
-    handleShowAll = () => {
-        this.setState(prev => ({
-            show_all: !prev.show_all
-        }), () => {
-            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
+    // handleShowAll = () => {
+    //     this.setState(prev => ({
+    //         show_all: !prev.show_all
+    //     }), () => {
+    //         this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
+    //     })
+    // }
+    getUploadedUsers = () => {
+        api.get(`bulk-import/users`)
+        .then(res => {
+            console.log(res)
+            this.setState({ users: res.data.users })
         })
     }
 
@@ -141,7 +150,7 @@ class UsersImport extends Component {
                                     pageIndex={this.state.pageIndex}
                                     canPreviousPage={this.state.canPreviousPage}
                                     canNextPage={this.state.canNextPage}
-                                    updatePageCount={this.getUsersPage}
+                                    // updatePageCount={this.getUsersPage}
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
                                     searchValue={this.state.searchValue}
