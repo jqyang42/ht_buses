@@ -1,7 +1,7 @@
 from ....models import User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ....role_permissions import IsAdmin
+from ....role_permissions import IsAdmin, IsSchoolStaff
 from ....google_funcs import geocode_address
 from rest_framework.response import Response
 import re
@@ -10,7 +10,7 @@ import json
 # Bulk Import POST API: Create Users
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def users_create(request):
     data = {}
     reqBody = json.loads(request.body)
