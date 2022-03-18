@@ -79,7 +79,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
         headerGroups,
         prepareRow,
         rows,
-        setGlobalFilter,
+        // setGlobalFilter,
     } = useTable(
         {
         columns,
@@ -94,26 +94,26 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
         // cell renderer!
         updateMyData,
         getRowId,
-        globalFilter: ourGlobalFilterFunction,
-        manualPagination: true,
-        manualSortBy: true,
-        initialState: { 
-            searchInput: "",
+        // globalFilter: ourGlobalFilterFunction,
+        // manualPagination: true,
+        // manualSortBy: true,
+        // initialState: { 
+            // searchInput: "",
             // pageIndex: 0,
             // pageSize: 10,
-            sortBy: hasCustomSortBy ? customSortBy : [
-                {
-                    id: 'name',
-                    desc: false
-                }
-            ],
+            // sortBy: hasCustomSortBy ? customSortBy : [
+            //     {
+            //         id: 'name',
+            //         desc: false
+            //     }
+            // ],
             // hiddenColumns: customHiddenColumn || []
+        // },
         },
-        },
-        useFilters,
-        useGlobalFilter,
-        useSortBy,
-        usePagination,
+        // useFilters,
+        // useGlobalFilter,
+        // useSortBy,
+        // usePagination,
     )
 
     // const moveRow = (dragIndex, hoverIndex) => {
@@ -133,10 +133,10 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     
     return (
         <>
-            { searchOn ?
+            {/* { searchOn ?
             // <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> 
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
-            : "" }
+            : "" } */}
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
@@ -150,7 +150,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
                     {// Loop over the headers in each row
                     headerGroup.headers.map(column => (
                         // Apply the header cell props
-                        <th {...column.getHeaderProps(column.getSortByToggleProps())} onClick={() => columnHeaderClick(column)}>
+                        <th {...column.getHeaderProps()} onClick={() => columnHeaderClick(column)}>
                         {// Render the header
                         column.render('Header')}
                         
@@ -158,13 +158,13 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
                         {/* <div>{column.canFilter ? column.render('Filter') : null}</div> */}
                         
                         {/* Sorting UI */}
-                        <span className="w-auto ms-2 me-0 float-right text-end">
+                        {/* <span className="w-auto ms-2 me-0 float-right text-end">
                             {!column.disableSortBy ? (column.sortDirection === 'ASC' ?
                             <img src={SORT_ASC} className="img-icon"></img> :
                             column.sortDirection === 'DESC'
                                 ? <img src={SORT_DESC} className="img-icon"></img>
                                 : <img src={SORT} className="img-icon"></img>) : ''}
-                        </span>
+                        </span> */}
                         </th>
                     ))}
                     </tr>
@@ -204,7 +204,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
             </table>
             </DndProvider>
 
-            {
+            {/* {
                 showAll ? "" :
                 <TablePagination
                     pageIndex={pageIndex}
@@ -220,7 +220,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
                     searchValue={searchValue}
                     // page={page}
                 />
-            }
+            } */}
         </>
     )
 }
