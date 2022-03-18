@@ -21,7 +21,7 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 disableFilter: true,
                 disableSort: true,
                 Cell: ({ cell: { value } }) => (
-                    <div>{value}</div>
+                    <div className="text-center mt-2">{value}</div>
                 )
             },
             {
@@ -66,8 +66,16 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 accessor: 'exclude',
                 disableFilter: true,
                 id: 'exclude',
-                disableSort: true
+                disableSort: true,
                 // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
+                Cell: ({ cell: { value } }) => (
+                    <div className="mt-2 d-flex align-items-center justify-content-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value={value} id="flexCheckDefault" />
+                        </div>
+                    </div>
+                    
+                )
             },
         ],
         // [sort]
