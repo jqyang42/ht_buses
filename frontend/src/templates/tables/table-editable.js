@@ -7,6 +7,8 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
+import Tooltip from "react-bootstrap/Tooltip";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, 
     rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData }) {
@@ -248,19 +250,19 @@ const EditableCell = ({
     useEffect(() => {
       setValue(initialValue)
     }, [initialValue])
+
+    const renderTooltip = error => (
+        <Tooltip className="text-center">{error}</Tooltip>
+    );
   
     return <div>
                 {Array.isArray(value) && value[1] ? 
                     <>
-                        <a href="#" data-bs-toggle="tooltip" title="Error!">
-                            <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
-                        </a>
-                        <div class="tooltip bs-tooltip-top" role="tooltip">
-                            <div class="tooltip-arrow"></div>
-                            <div class="tooltip-inner">
-                                Some tooltip text!
-                            </div>
-                        </div>
+                        <OverlayTrigger placement="top" overlay={renderTooltip("Email already exists")}>
+                            {/* <a href="#" rel="tooltip" data-bs-toggle="tooltip" data-bs-target="tooltip" title="Error!"> */}
+                                <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
+                            {/* </a> */}
+                        </OverlayTrigger>
                     </>
                      : ""
                 }
