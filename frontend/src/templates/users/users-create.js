@@ -48,7 +48,8 @@ class UsersCreate extends Component {
         create_success: 0,
         redirect_detail: false,
         detail_url: '',
-        error404: false
+        error404: false,
+        added_student_school_staff: true
     }
 
     // initialize
@@ -56,6 +57,9 @@ class UsersCreate extends Component {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
+        if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
+            this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
+        }
     }
 
     // api calls
@@ -264,6 +268,8 @@ class UsersCreate extends Component {
             added_students_list: new_list,
             students: [...this.state.students, student_field],
             routes_dropdowns: [...this.state.routes_dropdowns, []]
+        }, () => {
+            this.addedStudentSchoolStaff()
         })
         this.checkNonParentAddress()
     }
@@ -283,6 +289,8 @@ class UsersCreate extends Component {
             added_students_list: new_list,
             students: new_students,
             routes_dropdowns: new_routes_dropdowns
+        }, () => {
+            this.addedStudentSchoolStaff()
         })
 
         if (new_list.length === 0) {
@@ -291,6 +299,12 @@ class UsersCreate extends Component {
             this.setState({ new_user: user })
         }
     }
+
+    addedStudentSchoolStaff = () => {
+        const added_student_school_staff = (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? !(this.state.added_students_list.length === 0) : true
+        this.setState({ added_student_school_staff: added_student_school_staff})
+    }
+
     checkNonParentAddress = () => {
         const address = this.state.new_user.location.address
         const empty_address = address === "" || address == undefined
@@ -309,8 +323,12 @@ class UsersCreate extends Component {
 
     handleSubmit = (event) => {        
         event.preventDefault();
+        const valid_email = emailValidation({ email: this.state.new_user.email })
         const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
+        const valid_id = this.studentIDValidation()
+        const not_general = this.state.new_user.role_id !== 0
+        const added_student_school_staff = this.state.added_student_school_staff
+        if (!(valid_email && valid_address && valid_id && not_general && added_student_school_staff)) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -466,6 +484,16 @@ class UsersCreate extends Component {
 
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">Role</label>
+                                                {(localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? 
+                                                <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
+                                                onChange={(e) => this.handleRoleChange(e)}>
+                                                    {/* <option value={0} disabled selected>Select a Role</option> */}
+                                                    <option value={4} disabled selected id="4">General</option>
+                                                    {/* <option value={1} id="1">Administrator</option>
+                                                    <option value={2} id="2">School Staff</option>
+                                                    <option value={3} id="3">Driver</option> */}
+                                                </select>
+                                                :
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
                                                     <option value={0} disabled selected>Select a Role</option>
@@ -473,10 +501,8 @@ class UsersCreate extends Component {
                                                     <option value={1} id="1">Administrator</option>
                                                     <option value={2} id="2">School Staff</option>
                                                     <option value={3} id="3">Driver</option>
-                                                    {/* { {this.state.roles_dropdown.map(role => 
-                                                        <option value={role.value} id={role.display}>{role.display}</option>
-                                                    )} } */}
                                                 </select>
+                                                }
                                             </div>
 
                                             {/* <div onChange={this.handleRoleChange.bind(this)} className="form-group required pb-3 w-75">
@@ -621,6 +647,11 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
+                                                    {(!this.state.added_student_school_staff && localStorage.getItem("role") === "School Staff") ? 
+                                                      (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                          At least one student must be associated with any general parent account.
+                                                      </div>) : ""
+                                                    }
                                                     {(!this.studentIDValidation()) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           The Student ID value for at least one student is invalid. Please edit and try again.
