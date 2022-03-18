@@ -271,11 +271,12 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link> */}
+                                            {(localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.user.location?.address ? "#addModal" : ""} onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
-                                            </button>
-
+                                            </button> : ""
+                                            }
                                             <div className="modal fade" show={!this.state.modal_dismiss} id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
@@ -335,7 +336,7 @@ class UsersDetail extends Component {
                                                 </div>
                                             </div>
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <Link to={"/users/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>
@@ -344,7 +345,7 @@ class UsersDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
+                                               (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
                                                 (localStorage.getItem("user_id") !== this.props.params.id) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>

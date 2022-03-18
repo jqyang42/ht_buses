@@ -125,7 +125,7 @@ class StudentsDetail extends Component {
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                     <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                         <span className="btn-text">

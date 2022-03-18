@@ -333,7 +333,7 @@ class BusRoutesDetail extends Component {
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <Link to={"/routes/" + this.props.params.id + "/email"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
                                                         <i className="bi bi-envelope me-2"></i>
@@ -346,7 +346,7 @@ class BusRoutesDetail extends Component {
                                                 Export
                                             </button>
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                 <Link to={"/routes/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
