@@ -23,7 +23,6 @@ def bulk_import_validate(request):
         else:
             # TODO: need to have check for duplicates
             if len(user["email"]) > 254:
-                print("do we enter for char limit")
                 email_error = True
             else:
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -34,7 +33,6 @@ def bulk_import_validate(request):
                     else:
                         email_error = True
                 else:
-                    print("do we enter here mistakenly?")
                     email_error = True
         if user["name"] is None or user["name"] == "":
             name_error = True
