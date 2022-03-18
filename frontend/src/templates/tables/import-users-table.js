@@ -35,7 +35,8 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             {
                 Header: 'Email',
                 // accessor: 'email',
-                accessor: d => Array(`${d.email}`,`${d.error.email}`),
+                accessor: d => Array(`${d.email}`,`${false}`,`Invalid email`,`${false}`,`Email already exists`),
+                // accessor: d => Array(`${d.email}`,`${d.error.email}`,`${d.error_message.email}`,`${d.error.duplicate_email}`,`${d.error_message.duplicate_email}`),
                 id: 'email',
                 disableSort: true
                 // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
