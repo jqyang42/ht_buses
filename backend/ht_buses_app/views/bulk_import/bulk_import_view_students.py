@@ -55,7 +55,6 @@ def bulk_import(request):
         if row[0] is None:
             name_error = True
         else:
-            # check if name is 150 char limit, add to db
             if len(row[0]) > 150:
                 name_error = True
             else:
@@ -83,7 +82,7 @@ def bulk_import(request):
         row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_id": student_id, "school_name": row[3], "error": error_obj}
         students.append(row_obj)
         row_num += 1
-    # we need to grab a certain number of users
+    # empty file check
     if len(students) == 0:
         data["students"] = {}
         data["success"] = False

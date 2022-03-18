@@ -45,7 +45,7 @@ def bulk_import(request):
         if row[1] is None:
             name_error = True
         else:
-            # check if name is 150 char limit, add to db
+            # check if name is 150 char limit
             if len(row[1]) > 150:
                 name_error = True
             else:
@@ -55,7 +55,7 @@ def bulk_import(request):
         if location_arr[0]["lat"] is None or location_arr[0]["lng"] is None:
             address_error = True
         else:
-            # check if address is 150 char limit, add to db
+            # check if address is 150 char limit
             if len(row[2]) > 150:
                 address_error = True
             else:
@@ -63,8 +63,8 @@ def bulk_import(request):
         if row[3] is None:
             phone_number_error = True
         else:
-            # need to check if phone number limit is 18 chars (need to make phone number char higher)
-            if len(row[3]) > 18: # phone number char needs to be 18
+            # need to check if phone number limit is 18 chars
+            if len(row[3]) > 18:
                 # error with phone number
                 phone_number_error = True
             else:
