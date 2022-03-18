@@ -6,7 +6,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
 
-import { LOGIN_URL } from '../../constants';
+import { LOGIN_URL, USERS_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 import api from "../components/api";
 
@@ -23,12 +23,12 @@ class UsersImport extends Component {
             sortDirection: 'none'
         },
         searchValue: '',
+        users_redirect: false
     }
 
     componentDidMount() {
         // this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
         // console.log(this.props.location.state)
-        // TODO: @jessica get backend data from file import here
         this.getUploadedUsers()
     }
 
@@ -56,6 +56,7 @@ class UsersImport extends Component {
     //         this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
     //     })
     // }
+
     getUploadedUsers = () => {
         api.get(`bulk-import/users`)
         .then(res => {
@@ -70,10 +71,21 @@ class UsersImport extends Component {
     }
 
     // TODO: Add method to save all changes from table view and submit the import @jessica
-    handleSubmitImport = () => {
+    handleSubmitImport = (event) => {
+        event.preventDefault()
+        // console.log(this.state.users)
+
         // save table changes
+        const data = {
+            users: this.state.users
+        }
+
+        api.post(`bulk-import/users/create`, data)
+        .then(res => {
+            console.log(res)
+            // this.setState({ users_redirect: true })
+        })
         // update backend
-        // redirect to USERS_URL
     }
 
     render() {
@@ -82,6 +94,9 @@ class UsersImport extends Component {
         }
         else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        if (this.state.users_redirect) {
+            return <Navigate to={ USERS_URL }/>
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
