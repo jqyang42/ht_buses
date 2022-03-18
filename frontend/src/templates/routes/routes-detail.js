@@ -188,7 +188,7 @@ class BusRoutesDetail extends Component {
     }
 
     getStops = () => {     
-        this.getStopsPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
