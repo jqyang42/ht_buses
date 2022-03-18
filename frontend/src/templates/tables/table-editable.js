@@ -8,7 +8,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable }) {
+export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, 
+    rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData }) {
 
     const navigate = useNavigate();
 
@@ -19,9 +20,10 @@ export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalF
     };
 
     // const [records, setRecords] = useState(data)
-    const [editedData, setData] = useState(data)
-    const [originalData] = useState(data)
+    const [data, setData] = useState(origData)
+    // const [originalData] = useState(data)
     const [skipPageReset, setSkipPageReset] = React.useState(false)
+    console.log(data)
 
     // useEffect(() => {
     //     setRecords(data)
@@ -60,11 +62,12 @@ export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalF
     // editing it, the page is reset
     useEffect(() => {
         setSkipPageReset(false)
+        updateData(data)
     }, [data])
 
     // Let's add a data resetter/randomizer to help
     // illustrate that flow...
-    const resetData = () => setData(originalData)
+    const resetData = () => setData(origData)
 
     const getRowId = React.useCallback(row => {
         return row.id
@@ -80,7 +83,7 @@ export function TableEditable({ columns, data, searchOn, searchLabel, ourGlobalF
     } = useTable(
         {
         columns,
-        data: data,
+        data,
         defaultColumn,
         // use the skipPageReset option to disable page resetting temporarily
         autoResetPage: !skipPageReset,
