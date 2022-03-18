@@ -57,9 +57,11 @@ def user_edit(request):
             user_object.role = User.GENERAL
         else:
             user_object.role = reqBody["user"]["role_id"]
+        print(reqBody)
         if user_object.role == User.SCHOOL_STAFF:
             try:
                 schools = reqBody["user"]["managed_schools"]
+                print(schools)
             except:
                 return response_messages.UnsuccessfulAction(data, "user edit")
         else:

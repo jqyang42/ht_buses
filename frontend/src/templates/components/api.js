@@ -16,9 +16,7 @@ const interceptor_api = axios.create({
 
 api.interceptors.request.use(async (config) => {
     const res = await interceptor_api.get(`users/update-stored-info`)
-    console.log(res)
     const data = res.data.data
-    console.log(data)
     if(data.success) {
         localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('role',  data.role_value)
