@@ -12,4 +12,5 @@ def bulk_import_file_read(filename):
     json_stream = ''
     with open(os.path.join(__location__, filename), 'r') as output:
         json_stream = json.load(output)
+    os.remove(os.path.join(__location__, filename))
     return json_stream
