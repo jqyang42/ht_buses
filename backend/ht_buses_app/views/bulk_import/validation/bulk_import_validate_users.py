@@ -11,6 +11,7 @@ import json
 @csrf_exempt
 @api_view(["POST"])
 @permission_classes([IsAdmin]) 
+# TODO: missing duplicate validation check
 def bulk_import_validate(request):
     data = {}
     errors = []
