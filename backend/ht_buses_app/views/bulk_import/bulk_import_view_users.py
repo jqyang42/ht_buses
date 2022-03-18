@@ -21,6 +21,7 @@ def bulk_import(request):
     csv_file = StringIO(req_file.read().decode('latin-1'))
     data = {}
     users = []
+    errors = []
     row_num = 1
     # regex
     file_regex = r'.*\.csv$'
@@ -80,6 +81,7 @@ def bulk_import(request):
                 phone_number_error = False
         if address_error or phone_number_error or name_error or email_error:
             error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error}
+            errors.append(error_obj)
         else:
             error_obj = {}
         row_obj = {"row_num" : row_num, "name": row[1], "email": row[0], "address": row[2], "phone_number": row[3], "error": error_obj}
@@ -91,6 +93,7 @@ def bulk_import(request):
         return Response(data, status=404)
     bulk_import_file_save(FILENAME, users)
     data["users"] = users
+    data["errors"] = errors
     data["success"] = True
     return Response(data)
 

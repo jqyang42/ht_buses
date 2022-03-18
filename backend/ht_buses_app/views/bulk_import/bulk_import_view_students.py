@@ -27,6 +27,7 @@ def bulk_import(request):
         data["success"] = False
         return Response(data, status=404)
     students = []
+    errors = []
     row_num = 1
     reader = csv.reader(csv_file)
     # skip the header
@@ -76,6 +77,7 @@ def bulk_import(request):
             
         if name_error or email_error or student_id_error or school_name_error:
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id_error": student_id_error, "school_name_error": school_name_error}
+            errors.append(error_obj)
         else:
             error_obj = {}
         row_obj = {"row_num" : row_num, "name": row[0], "parent_email": row[1], "student_id": student_id, "school_name": row[3], "error": error_obj}
@@ -89,6 +91,7 @@ def bulk_import(request):
     bulk_import_file_save(FILENAME, students)
     bulk_import_file_read(FILENAME)
     data["students"] = students
+    data["errors"] = errors
     data["success"] = True
     return Response(data)
 
