@@ -1,5 +1,8 @@
 from django.urls import path
 from django.db import models
+
+
+from . views.bulk_import.upload import bulk_import_view_students, bulk_import_view_users
 from . import models 
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
@@ -17,7 +20,7 @@ from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
-from . views.bulk_import import bulk_import_view_users, bulk_import_view_students, bulk_import_json_students,  bulk_import_json_users
+from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . models import User
 
