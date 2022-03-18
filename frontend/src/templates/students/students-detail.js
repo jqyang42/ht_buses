@@ -67,17 +67,7 @@ class StudentsDetail extends Component {
 
 
     updateIsParent = () => {
-        api.get(`users/detail?id=${localStorage.getItem('user_id')}`)
-        .then(res => {
-            const user = res.data.user;
-            const prev = JSON.parse(localStorage.getItem('is_parent'))
-            localStorage.setItem('is_parent', user.is_parent)
-            if(!user.is_parent && prev) {
-               window.location.reload()
-            }
-        })
-        .catch (err => {
-        })
+       
     }
 
 

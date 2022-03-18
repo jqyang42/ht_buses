@@ -20,7 +20,7 @@ def students_detail(request):
     except:
         return response_messages.DoesNotExist(data, "student")
     try:
-        student_user = get_object_for_user(request.user, student.school_id, "view_school")
+        student_school = get_object_for_user(request.user, student.school_id, "view_school")
     except: 
         return response_messages.PermissionDenied(data, "student")
     try:

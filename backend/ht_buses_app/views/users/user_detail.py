@@ -96,6 +96,7 @@ def update_stored_user_info(request):
         data["success"] = True
         data["logged_in"] = user.is_authenticated
         message = "User authentication details are up-to-date"
+        print(data)
         return Response({"data": data, "message": message, "token": token})
     except:
         data["success"] = False 

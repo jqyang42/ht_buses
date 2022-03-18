@@ -18,19 +18,18 @@ def student_delete(request):
     data = {}
     id = request.query_params["id"]
     try:
-        uv_student_object =  Student.objects.get(pk=id)
+        student_object =  Student.objects.get(pk=id)
     except:
         return response_messages.DoesNotExist(data, "student")
     try:
-        student_object = get_object_for_user(request.user, uv_student_object, "delete_student")
-    except:
+        student_school = get_object_for_user(request.user, student_object.school_id, "change_school")
+    except: 
         return response_messages.PermissionDenied(data, "student")
     try:
         student_serializer = StudentSerializer(student_object, many=False)
         route_id = student_serializer.data["route_id"]
         parent = User.objects.get(pk = student_object.user_id.id)
-        if(Student.objects.filter(user_id = parent).count() == 1):
-            parent.is_parent = False
+        #if(Student.objects.filter(user_id = parent).count() == 1): #parent.is_parent = False
         student_object.delete()
         parent.save()
         if route_id != None:
