@@ -16,9 +16,9 @@ def users_create(request):
     reqBody = json.loads(request.body)
     for user in reqBody["users"]:
         # email, name, address, phone_number
-        name = user["name"].split()
+        name = user["name"].split(" ", 1)
         first_name = name[0]
-        last_name = name[1:]
+        last_name = name[1]
         location_arr = geocode_address(user["address"])
         location = Location.objects.create(
             address=user["address"],
