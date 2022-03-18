@@ -19,7 +19,10 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 accessor: 'row_num',
                 id: 'row_num',
                 disableFilter: true,
-                disableSort: true
+                disableSort: true,
+                Cell: ({ cell: { value } }) => (
+                    <div>{value}</div>
+                )
             },
             {
                 Header: 'Name',
@@ -55,6 +58,14 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 accessor: 'address',
                 disableFilter: true,
                 id: 'address',
+                disableSort: true
+                // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Exclude?',
+                accessor: 'exclude',
+                disableFilter: true,
+                id: 'exclude',
                 disableSort: true
                 // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
             },
