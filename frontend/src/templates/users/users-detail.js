@@ -413,7 +413,7 @@ class UsersDetail extends Component {
                                     <div className="mt-4">      
                                         <h7 className="mb-4">MANAGED SCHOOLS</h7>
                                         {this.state.user.managed_schools?.map(school => {
-                                            return <><p className="mt-2">{school.name}</p><p className="mt-2">{school.name}</p></>
+                                            return <><p className="mt-2">{school.name}</p></>
                                         })}
                                     </div> : ""
                                 }
