@@ -79,7 +79,6 @@ class Students extends Component {
         // TODO: handleFile(fileUploaded);
         // const navigate = useNavigate();
         // navigate(USERS_IMPORT_URL, { state: { file: this.fileUploaded } });
-        this.setState({ import_redirect: true })
     };
 
     submitFile = (fileUploaded) => {
@@ -94,6 +93,7 @@ class Students extends Component {
         .then(res => {
             console.log("posted successfully")
             console.log(res)
+            this.setState({ import_redirect: true })
         })
         .catch(err => {
             console.log(err)
