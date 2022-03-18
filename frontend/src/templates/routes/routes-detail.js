@@ -21,7 +21,7 @@ class BusRoutesDetail extends Component {
         route : [],
         students : [],
         school : [],
-        stops: null,
+        stops: [],
         center: {},
         markers: null,
         assign_mode: false,
@@ -192,6 +192,7 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
+            console.log(data.stops)
             console.log(this.state.center)
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
