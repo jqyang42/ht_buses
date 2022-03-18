@@ -113,7 +113,7 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
     return (
         <TableEditable
             columns={columns}
-            data={data}
+            origData={data}
             searchOn={false}
             // searchLabel="Search by name or email..."
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
