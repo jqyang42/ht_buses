@@ -58,7 +58,23 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 accessor: 'address',
                 disableFilter: true,
                 id: 'address',
-                disableSort: true
+                disableSort: true,
+                Cell: ({ cell: { value } }) => (
+                    <div>
+                        <Autocomplete
+                        apiKey={GOOGLE_API_KEY}
+                        onPlaceSelected={this.handleAddressChange}
+                        options={{
+                            types: ['address']
+                        }}
+                        value={this.state.new_user?.location?.address}
+                        defaultValue=""
+                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
+                        onChange={this.handleAddressChange}
+                        onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                        required={this.state.new_user.is_parent} />
+                    </div>
+                )
                 // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
             },
             {
