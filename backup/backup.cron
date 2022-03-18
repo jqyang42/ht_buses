@@ -1,3 +1,5 @@
+# Edit this file to introduce tasks to be run by cron.
+#
 # Each task to run has to be defined through a single line
 # indicating with different fields when the task will be run
 # and what command to run for the task
@@ -21,5 +23,7 @@
 # m h  dom mon dow   command
 30 1 2 * *      /usr/bin/rsnapshot monthly
 0 2 * * 1       /usr/bin/rsnapshot weekly
-30 2 * * *      /usr/bin/rsnapshot daily 2> /home/jqy2/error_report/rsnapshot.daily.err; /home/jqy2/error_report/alert.sh rsnapshot rsnapshot.daily.err jqy2@duke.edu
-0 3 * * *       /home/jqy2/error_report/alert.sh pg_dump /mnt/backup/daily.0/ht_buses/var/lib/postgresql/backups/ht_buses.dump.err jqy2@duke.edu
+30 2 * * *      /usr/bin/rsnapshot daily 2> /home/jqy2/backup_report/rsnapshot.daily.err; /home/jqy2/backup_report/alert.sh rsnapshot rsnapshot.daily.err jqy2@duke.edu
+0 3 * * *       /home/jqy2/backup_report/alert.sh pg_dump /mnt/backup/daily.0/ht_buses/var/lib/postgresql/backups/ht_buses.dump.err jqy2@duke.edu
+30 3 * * *      /usr/bin/stat --printf='Size: \%s bytes\nBackup taken time: \%y' /mnt/backup/daily.0/ht_buses/var/lib/postgresql/backups/ht_buses.dump > /home/jqy2/backup_report/backup_meta0 
+4 * * *       /home/jqy2/backup_report/progress.sh /home/jqy2/backup_report/backup_meta jqy2@duke.edu
