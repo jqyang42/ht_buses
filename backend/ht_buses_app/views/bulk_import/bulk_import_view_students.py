@@ -6,7 +6,6 @@ from rest_framework.response import Response
 from io import StringIO
 from .bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
 import csv
-import fnmatch
 import re
 
 # Bulk import temporary file name
