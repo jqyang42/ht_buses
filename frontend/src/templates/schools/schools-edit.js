@@ -174,7 +174,7 @@ class SchoolsEdit extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -221,13 +221,13 @@ class SchoolsEdit extends Component {
                                                     </div>
                                                 </> : ""
                                             }
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>
                                                 <input type="time" id="default-picker" className="form-control pb-2"
                                                     placeholder="Select arrival time" defaultValue={this.state.edited_school.arrival} required
                                                     onChange={this.handleArrivalChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="default-picker-2" className="control-label pb-2">Departure Time</label>
                                                 <input type="time" id="default-picker-2" className="form-control pb-2"
                                                     placeholder="Select departure time" defaultValue={this.state.edited_school.departure} required
@@ -238,7 +238,7 @@ class SchoolsEdit extends Component {
                                                 </div>) : ""
                                                 }
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
@@ -247,7 +247,7 @@ class SchoolsEdit extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2"></div>
+                                        <div className="col extra-col mt-2"></div>
                                     </div>
                                 </form>
                             </div>

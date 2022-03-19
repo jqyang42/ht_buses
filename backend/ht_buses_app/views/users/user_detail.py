@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, UserSerializer
+from ...serializers import LocationSerializer, UserSerializer, ManageSchoolsSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from ..general.general_tools import get_object_for_user, get_role_string, user_is_parent
 from ..general import response_messages
@@ -33,7 +33,8 @@ def users_detail(request):
         else:
             role = User.role_choices[int(user_serializer.data["role"])-1][1]
         schools = get_objects_for_user(user,"view_school", School.objects.all())
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_serializer.data["is_parent"], "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools":[]}
+        manage_schools_serializer = ManageSchoolsSerializer(schools, many=True)
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_serializer.data["is_parent"], "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools": manage_schools_serializer.data}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)

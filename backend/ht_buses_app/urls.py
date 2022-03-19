@@ -10,12 +10,13 @@ from . views.parents import parent_dashboard, parent_student_detail
 from . views.announcements import announcements
 from . views.accounts import reset_password
 from . views.general import general_apis
-from . views.stops import stops_create, stops_view, stops_edit, stops_delete, stops_name_edit
+from . views.stops import stops_create, stops_view_pag, stops_edit, stops_delete, stops_name_edit
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.general.general_tools import permission_setup
+from . views.parents.detail import parent_student_stop
 from . models import User
 
 try:
@@ -66,14 +67,15 @@ urlpatterns = [
     path('api/reset-password', reset_password.reset_password, name='reset_password'),
     path('api/reset-password-valid-url', reset_password.valid_password_reset_url, name='reset_password_valid_url'),
     path('api/stops/create', stops_create.stops_create, name='stops_create'),
-    path('api/stops', stops_view.stops_view, name='stops_view'),
+    path('api/stops', stops_view_pag.stops_view, name='stops_view'),
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
     path('api/stops/delete', stops_delete.stops_delete, name='stops_delete'),
     path('api/stops/edit-name', stops_name_edit.stops_name_edit, name='stops_name_edit'),
     path('api/students/route', student_view_route.students_route, name="student_view_route"),
     path('api/students/school', student_view_school.students_school, name="student_view_school"),
     path('api/students/user', student_view_user.students_user, name="student_view_user"),
-    path('api/routes/school', route_view_school.routes_school, name='route_view_school')
+    path('api/routes/school', route_view_school.routes_school, name='route_view_school'),
+    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop')
 
 ]
 

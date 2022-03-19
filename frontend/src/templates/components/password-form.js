@@ -99,7 +99,7 @@ class PasswordForm extends Component {
                                     </div>) : ""
                                 }
                             </div> */}
-                            <div className="form-group required pb-3 w-75">
+                            <div className="form-group required pb-3 form-col">
                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
                                 placeholder="Enter new password" required ref={el => this.password1Field = el} onClick={this.props.checkURL} onChange={this.handlePasswordChange}></input>
@@ -109,7 +109,7 @@ class PasswordForm extends Component {
                                     </div>) : ""
                                 }
                             </div>
-                            <div className="form-group required pb-3 w-75">
+                            <div className="form-group required pb-3 form-col">
                                 <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
                                 <input type="password" className="form-control pb-2" id="exampleInputPassword3" 
                                 placeholder="Re-enter password" required ref={el => this.password2Field = el} onClick={this.props.checkURL} onChange={this.handleConfirmPasswordChange}></input>
@@ -123,7 +123,7 @@ class PasswordForm extends Component {
                                 ) : ""
                                 }
                             </div>
-                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                 <Link to={"/dashboard"} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                     <span className="btn-text">
                                         Cancel
@@ -132,7 +132,7 @@ class PasswordForm extends Component {
                                 <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                             </div>
                         </div>
-                        <div className="col mt-2">
+                        <div className="col mt-2 extra-col">
                         </div>
                     </div>
                 </form>

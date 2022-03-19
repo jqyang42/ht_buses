@@ -140,7 +140,7 @@ class SchoolsCreate extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -162,13 +162,13 @@ class SchoolsCreate extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label className="control-label pb-2">Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputName1"
                                                     placeholder="Enter school name" required
                                                     onChange={this.handleSchoolNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -183,13 +183,13 @@ class SchoolsCreate extends Component {
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }
                                                     required={true}/>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="default-picker" className="control-label pb-2">Arrival Time</label>
                                                 <input type="time" id="default-picker" className="form-control pb-2"
                                                     placeholder="Select arrival time" required
                                                     onChange={this.handleArrivalChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="default-picker-2" className="control-label pb-2">Departure Time</label>
                                                 <input type="time" id="default-picker-2" className="form-control pb-2"
                                                     placeholder="Select departure time" required
@@ -200,7 +200,7 @@ class SchoolsCreate extends Component {
                                                 </div>) : ""
                                                 }
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 <Link to={SCHOOLS_URL} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
@@ -209,7 +209,7 @@ class SchoolsCreate extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Create</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2"></div>
+                                        <div className="col mt-2 extra-col"></div>
                                     </div>
                                 </form>
                             </div>
