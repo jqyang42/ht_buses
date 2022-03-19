@@ -182,8 +182,8 @@ class UsersCreate extends Component {
     }
 
     handleManagedSchoolsChange = (selected) => {
-        const selected_schools = selected.map(id => {
-            return { 'id': id }
+        const selected_schools = selected.map(school => {
+            return { 'id': school.value, 'name': school.label }
         })
         // console.log(selected)
         // console.log(selected_schools)
@@ -527,6 +527,7 @@ class UsersCreate extends Component {
                                                         selectedOptions={[]}
                                                         options={this.state.schools_multiselect}
                                                         isMulti={true}
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                         // multi={true}
                                                         // isMulti={true}
                                                         // value={this.state.selectedOptions}

@@ -23,6 +23,7 @@ class UsersEdit extends Component {
         user: {},
         edited_user: {},
         schools_multiselect: [],
+        currently_managed_schools: [{value: 1, label: "Example School"}], //TODO: @fern @jessica, change back to empty array
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -33,9 +34,9 @@ class UsersEdit extends Component {
 
     // initialize page
     componentDidMount() {
-        this.getUserDetails()
         makeSchoolsMultiSelect().then(ret => {
             this.setState({ schools_multiselect: ret })
+            this.getUserDetails()
         })
     }
 
@@ -49,6 +50,19 @@ class UsersEdit extends Component {
                 edited_user: user
             });
             console.log(user)
+            /*TODO: page finishes loading before this is setup
+            if(this.state.edited_user.role === "School Staff" ) {
+                console.log(this.state.edited_user.managed_schools)
+                const currently_managed_schools = this.state.edited_user.managed_schools?.map(school => {
+                    return { 'value': school.id, 'label': school.name }
+                })
+                this.setState({
+                    currently_managed_schools: currently_managed_schools
+                });
+                console.log(currently_managed_schools)
+                
+            }
+            */
         })
         .catch(err => {
             if (err.response.status !== 200) {
@@ -150,13 +164,11 @@ class UsersEdit extends Component {
 
     // @jessica check with backend
     handleManagedSchoolsChange = (selected) => {
-        const selected_schools = selected.map(id => {
-            return { 'id': id }
+        const selected_schools = selected.map(school => {
+            return { 'id': school.value, 'name': school.label }
         })
-        // console.log(selected)
-        // console.log(selected_schools)
         let user = {...this.state.edited_user}
-        // console.log(user)
+        console.log(user)
         user.managed_schools = selected_schools
         this.setState({ edited_user: user })
     }
@@ -347,9 +359,10 @@ class UsersEdit extends Component {
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <MultiSelectDropdown
-                                                        selectedOptions={[]}
+                                                        selectedOptions={this.state.currently_managed_schools}
                                                         options={this.state.schools_multiselect}
-                                                        isMulti={true}/>
+                                                        isMulti={true}
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
                                                     {/* TODO: @jessica link up schools in the options field */}
                                                     {/* <DropdownMultiselect
                                                         // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
