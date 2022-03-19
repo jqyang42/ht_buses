@@ -83,8 +83,16 @@ class UsersImport extends Component {
     }
 
     // TODO: Add method to cancel all changes from table view and return to Users table @jessica
-    handleCancelImport = () => {
+    handleCancelImport = (event) => {
         // redirect to USERS_URL (ignoring all changes from import)
+        event.preventDefault()
+        api.delete(`bulk-import/users/delete-temp-file`)
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     // TODO: Add method to save all changes from table view and submit the import @jessica
