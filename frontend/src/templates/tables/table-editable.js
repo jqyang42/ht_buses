@@ -235,10 +235,11 @@ const EditableCell = ({
     updateMyData, // This is a custom function that we supplied to our table instance
 }) => {
     // We need to keep and update the state of the cell normally
+    console.log(initialValue)
     const [value, setValue] = React.useState(initialValue)
   
     const onChange = e => {
-      setValue(e.target.value)
+        setValue(e.target.value)
     }
   
     // We'll only update the external data when the input is blurred

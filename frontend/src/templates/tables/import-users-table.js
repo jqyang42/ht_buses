@@ -6,12 +6,6 @@ import { TableEditable } from "./table-editable";
 export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue, updateImportData }) {
 
-    // const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
-
-    // useEffect(() => {
-    //     updatePageCount(pageIndex, sort, searchValue)
-    // }, [sort])
-
     const columns = React.useMemo(
         () => [
             {
