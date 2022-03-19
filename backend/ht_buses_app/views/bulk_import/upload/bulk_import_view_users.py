@@ -70,11 +70,13 @@ def bulk_import(request):
                         last_name = user_serializer.data[0]["last_name"]
                         address = location_serializer.data["address"]
                         if address == None or address == "":
-                            address_str = "not provided"
+                            address_str = ""
+                            no_address = "no"
                         else:
                             address_str = address
+                            no_address = ""
                         phone_number = user_serializer.data[0]["phone_number"]
-                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with address " + address_str + " and phone number " + phone_number
+                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + " address " + address_str + " and phone number " + phone_number
                         email_error = True
         if row["name"] is None or row["name"] == "":
             name_error = True
@@ -136,14 +138,11 @@ def bulk_import(request):
         if address_error or phone_number_error or name_error or email_error:
             error_message = {"row_num": row_num, "name": name_error_message, "email": email_error_message, "address": address_error_message, "phone_number": phone_number_error_message}
             error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users}
-            # global_error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users}
             errors.append(error_obj)
-            # global_errors.append(global_error_obj)
             errors_msg.append(error_message)
         else:
             error_message = {"row_num": row_num, "name": name_error_message, "email": email_error_message, "address": address_error_message, "phone_number": phone_number_error_message}
             error_obj = {"row_num" : row_num, "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users}
-            # global_error_obj = {"row_num" : row_num, "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users}
         row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": error_obj, "exclude": False}
         users.append(row_obj)
         row_num += 1
