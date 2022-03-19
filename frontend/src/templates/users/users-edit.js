@@ -23,7 +23,6 @@ class UsersEdit extends Component {
         user: {},
         edited_user: {},
         schools_multiselect: [],
-        // currently_managed_schools: [{value: 1, label: "Example School"}], //TODO: @fern @jessica, change back to empty array
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -58,19 +57,6 @@ class UsersEdit extends Component {
                 edited_user: user
             });
             console.log(user)
-            /*TODO: page finishes loading before this is setup
-            if(this.state.edited_user.role === "School Staff" ) {
-                console.log(this.state.edited_user.managed_schools)
-                const currently_managed_schools = this.state.edited_user.managed_schools?.map(school => {
-                    return { 'value': school.id, 'label': school.name }
-                })
-                this.setState({
-                    currently_managed_schools: currently_managed_schools
-                });
-                console.log(currently_managed_schools)
-                
-            }
-            */
         })
         .catch(err => {
             if (err.response.status !== 200) {
