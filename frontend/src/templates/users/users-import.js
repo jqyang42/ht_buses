@@ -13,6 +13,7 @@ import api from "../components/api";
 class UsersImport extends Component {
     state = {
         users: [],
+        errors: [],
         edited_users: [],
         // show_all: false,
         // pageIndex: 1,
@@ -64,6 +65,9 @@ class UsersImport extends Component {
             console.log(res)
             const temp = res.data.users
             this.setState({ users: res.data.users })
+            if (res.data.errors) {
+                this.setState({ errors: res.data.errors })
+            }
         })
         // getPage({ url: 'users', pageIndex: 0, sortOptions: null, searchValue: '' })
         // .then(res => {
@@ -171,7 +175,27 @@ class UsersImport extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                {this.state.users.length !== 0 ? 
+
+                                {(this.state.errors.length !== 0) ? 
+                                    this.state.errors.map(error => 
+                                        <div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                            <p>Row {error.row_num} contains the errors:</p>
+                                            <ul>
+                                                {error.name ? <li>{error.error_message.name}</li> : ""}
+                                                {error.email ? <li>{error.error_message.email}</li> : ""}
+                                                {error.address ? <li>{error.error_message.address}</li> : ""}
+                                                {error.phone_number ? <li>{error.error_message.phone_number}</li> : ""}
+                                                {error.duplicate_name ? <li>Name may be a duplicate</li> : ""}
+                                                {error.duplicate_email ? <li>Email already exists</li> : ""}
+                                            </ul>
+                                        </div>
+                                    ) : ""
+                                    // <div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                    //     Unable to edit user details. Please correct all errors before submitting.
+                                    // </div> : ""
+                                }
+
+                                {/* {this.state.users.length !== 0 ? 
                                 <div>
                                     <ImportUsersTable 
                                     data={this.state.users} 
@@ -192,7 +216,7 @@ class UsersImport extends Component {
                                     </button>
                                 </div>
                                 : ""
-                                }
+                                } */}
                             </div>
                         </div>
                     </div>

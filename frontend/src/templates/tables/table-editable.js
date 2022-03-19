@@ -278,7 +278,7 @@ const EditableCell = ({
     );
   
     return <div>
-                {Array.isArray(completeValue) && !(completeValue[1] || completeValue[3]) ? 
+                {Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? 
                     <OverlayTrigger placement="top" overlay={
                         renderTooltip(
                             completeValue[1] ? completeValue[2] + (completeValue[3] ? " and " + completeValue[4].toLowerCase() : "") : completeValue[4]
@@ -300,7 +300,7 @@ const EditableCell = ({
                         onBlur={onBlur} />
                     </div>
                 : 
-                    <input className={Array.isArray(completeValue) && !(completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
+                    <input className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
                 }
             </div>
 }
