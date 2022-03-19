@@ -49,6 +49,8 @@ def bulk_import(request):
                         email_error = True
                     else:
                         email_error = False
+                else:
+                    email_error = False
 
         if row[0] is None:
             name_error = True
@@ -68,7 +70,7 @@ def bulk_import(request):
             school_name_error = True
         else:
             # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
-            schools = School.objects.filter(name_icontains=row[3])
+            schools = School.objects.filter(name__icontains=row[3])
             if len(schools) == 0:
                     school_name_error = True
             else:
