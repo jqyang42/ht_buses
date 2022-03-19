@@ -27,6 +27,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     const [data, setData] = useState(origData)
     // const [originalData] = useState(data)
     const [skipPageReset, setSkipPageReset] = React.useState(false)
+    console.log(origData)
     console.log(data)
 
     // useEffect(() => {
@@ -75,7 +76,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     const resetData = () => setData(origData)
 
     const getRowId = React.useCallback(row => {
-        return row.id
+        return row.row_num
     }, [])
 
     const {
@@ -238,7 +239,7 @@ const EditableCell = ({
     updateMyData, // This is a custom function that we supplied to our table instance
 }) => {
     // We need to keep and update the state of the cell normally
-    console.log(initialValue)
+    // console.log(initialValue)
     const [value, setValue] = React.useState(initialValue[0])
     const [selectValue, setSelectValue] = React.useState(initialValue[0])
     const [completeValue, setComplete] = React.useState(initialValue)
@@ -277,7 +278,7 @@ const EditableCell = ({
     );
   
     return <div>
-                {Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? 
+                {Array.isArray(completeValue) && !(completeValue[1] || completeValue[3]) ? 
                     <OverlayTrigger placement="top" overlay={
                         renderTooltip(
                             completeValue[1] ? completeValue[2] + (completeValue[3] ? " and " + completeValue[4].toLowerCase() : "") : completeValue[4]
@@ -292,14 +293,14 @@ const EditableCell = ({
                         options={{
                             types: ['address']
                         }}
-                        placeholder="Enter home address" className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
+                        placeholder="Enter home address" className={Array.isArray(completeValue) && !(completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
                         onChange={onChange}
                         defaultValue={value}
                         onPlaceSelected={onSelectChange}
                         onBlur={onBlur} />
                     </div>
                 : 
-                    <input className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
+                    <input className={Array.isArray(completeValue) && !(completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
                 }
             </div>
 }

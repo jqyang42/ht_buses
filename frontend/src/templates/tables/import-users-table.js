@@ -36,13 +36,6 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 disableSort: true
                 // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
-            // {
-            //     id:'role',
-            //     Header: 'User Type',
-            //     accessor: d => { return d.role },
-            //     disableFilter: true,
-            //     sortDirection: sort.accessor === 'is_staff' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
-            // },
             {
                 Header: 'Phone Number',
                 accessor: d => Array(`${d.phone_number}`,`${d.error.phone_number}`,`phone number invalid`),
@@ -82,7 +75,7 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 Cell: ({ cell: { value } }) => (
                     <div className="mt-2 d-flex align-items-center justify-content-center">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value={value} id="flexCheckDefault" />
+                            <input class="form-check-input" type="checkbox" checked={value} id="flexCheckDefault" />
                         </div>
                     </div>
                     
@@ -128,7 +121,7 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             // totalPages={totalPages}
             // columnHeaderClick={columnHeaderClick}
             // sortOptions={sort}
-            searchValue={searchValue}
+            // searchValue={searchValue}
             updateData={updateImportData}
         />
     )

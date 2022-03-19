@@ -14,16 +14,16 @@ class UsersImport extends Component {
     state = {
         users: [],
         edited_users: [],
-        show_all: false,
-        pageIndex: 1,
-        canPreviousPage: null,
-        canNextPage: null,
-        totalPages: null,
-        sortOptions: {
-            accessor: '',
-            sortDirection: 'none'
-        },
-        searchValue: '',
+        // show_all: false,
+        // pageIndex: 1,
+        // canPreviousPage: null,
+        // canNextPage: null,
+        // totalPages: null,
+        // sortOptions: {
+        //     accessor: '',
+        //     sortDirection: 'none'
+        // },
+        // searchValue: '',
         users_redirect: false
     }
 
@@ -62,8 +62,14 @@ class UsersImport extends Component {
         api.get(`bulk-import/users`)
         .then(res => {
             console.log(res)
+            const temp = res.data.users
             this.setState({ users: res.data.users })
         })
+        // getPage({ url: 'users', pageIndex: 0, sortOptions: null, searchValue: '' })
+        // .then(res => {
+        //     console.log(res)
+        //     this.setState({ users: res.data.users })
+        // })
     }
 
     handleGetTableEdits = (new_data) => {
@@ -169,14 +175,14 @@ class UsersImport extends Component {
                                 <div>
                                     <ImportUsersTable 
                                     data={this.state.users} 
-                                    showAll={this.state.show_all}
-                                    pageIndex={this.state.pageIndex}
-                                    canPreviousPage={this.state.canPreviousPage}
-                                    canNextPage={this.state.canNextPage}
+                                    // showAll={this.state.show_all}
+                                    // pageIndex={this.state.pageIndex}
+                                    // canPreviousPage={this.state.canPreviousPage}
+                                    // canNextPage={this.state.canNextPage}
                                     // updatePageCount={this.getUsersPage}
-                                    pageSize={10}
-                                    totalPages={this.state.totalPages}
-                                    searchValue={this.state.searchValue}
+                                    // pageSize={10}
+                                    // totalPages={this.state.totalPages}
+                                    // searchValue={this.state.searchValue}
                                     updateImportData={this.handleGetTableEdits}
                                     />
                                     <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
