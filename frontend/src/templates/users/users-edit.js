@@ -122,6 +122,8 @@ class UsersEdit extends Component {
     handleRoleChange = (event) => {
         const role_value = event.target.value
         let user = this.state.edited_user
+        console.log(role_value)
+        user.role = this.role_conversion(role_value)
         user.role_id = parseInt(role_value)
         this.setState({ edited_user: user });
     }
@@ -144,6 +146,21 @@ class UsersEdit extends Component {
                     this.setState({ valid_address: false })
                 }
             )
+        }
+    }
+
+    role_conversion(role_id) {
+        if (role_id == 1) {
+            return 'Administrator'
+        }
+        else if (role_id == 2) {
+            return 'School Staff'
+        }
+        else if (role_id == 3) {
+            return 'Driver'
+        }
+        else {
+            return 'General'
         }
     }
 
@@ -196,7 +213,6 @@ class UsersEdit extends Component {
                         user: this.state.edited_user
                     }
                     this.editUser(user)
-                    console.log(user)
                 }
             })
         }

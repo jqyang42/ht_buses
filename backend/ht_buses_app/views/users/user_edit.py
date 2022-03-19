@@ -57,9 +57,11 @@ def user_edit(request):
             user_object.role = User.GENERAL
         else:
             user_object.role = reqBody["user"]["role_id"]
+        print(reqBody)
         if user_object.role == User.SCHOOL_STAFF:
             try:
                 schools = reqBody["user"]["managed_schools"]
+                print(schools)
             except:
                 return response_messages.UnsuccessfulAction(data, "user edit")
         else:
@@ -86,7 +88,7 @@ def valid_email_edit(request):
     reqBody = json.loads(request.body)
     email = reqBody["user"]['email']
     try: 
-        user = User.objects.get(email = email)
+        user = User.objects.get(email = email.lower())
         if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["success"] = False
