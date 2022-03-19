@@ -8,6 +8,7 @@ from ...models import User
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import get_object_for_user
 from ..general import response_messages
+from guardian.shortcuts import assign_perm
 
 @api_view(["POST"])
 @csrf_exempt
@@ -17,16 +18,16 @@ def add_new_students(request):
     user_id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        user = get_object_for_user(request.user, User.objects.get(pk = user_id), "change_user")
+        user = User.objects.get(pk = user_id)
     except:
-        return response_messages.PermissionDenied(data, "student's parent")
+        return response_messages.DoesNotExist(data, "student's parent")
     try:
+        if request.user.role == User.SCHOOL_STAFF:
+            assign_perm("change_user", request.user, user)
         for student in reqBody["students"]:
             create_student(student, user_id)
         data["message"] = "students created successfully"
         data["success"] = True
         return Response(data)
     except:
-        data["message"] = "user does not exist, you can only add students to an existing user"
-        data["success"] = False
-        return Response(data, status = 404) 
+        return response_messages.UnsuccessfulAction(data, "adding student(s)")
