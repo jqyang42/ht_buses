@@ -9,6 +9,8 @@ import TablePagination from "./pagination";
 import update from 'immutability-helper';
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Autocomplete from "react-google-autocomplete";
+import { GOOGLE_API_KEY } from "../../constants";
 
 export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, 
     rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData }) {
@@ -65,6 +67,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     useEffect(() => {
         setSkipPageReset(false)
         updateData(data)
+        // console.log(data)
     }, [data])
 
     // Let's add a data resetter/randomizer to help
@@ -237,14 +240,26 @@ const EditableCell = ({
     // We need to keep and update the state of the cell normally
     console.log(initialValue)
     const [value, setValue] = React.useState(initialValue)
+    const [selectValue, setSelectValue] = React.useState(initialValue)
   
     const onChange = e => {
-        setValue(e.target.value)
+        const val = e.target?.value || e.formatted_address
+        setValue(val)
     }
+
+    const onSelectChange = e => {
+        setSelectValue(e.formatted_address)
+    }
+
+    useEffect(() => {
+        setValue(selectValue)
+        updateMyData(index, id, selectValue)
+    }, [selectValue])
   
     // We'll only update the external data when the input is blurred
     const onBlur = () => {
       updateMyData(index, id, value)
+      console.log(index, id, value)
     }
   
     // If the initialValue is changed external, sync it up with our state
@@ -265,7 +280,21 @@ const EditableCell = ({
                         <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
                     </OverlayTrigger> : ""
                 }
-                <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+                {id === 'address' ?  
+                    <div>
+                        <Autocomplete
+                        apiKey={GOOGLE_API_KEY}
+                        options={{
+                            types: ['address']
+                        }}
+                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
+                        onChange={onChange}
+                        onPlaceSelected={onSelectChange}
+                        onBlur={onBlur} />
+                    </div>
+                : 
+                    <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+                }
             </div>
 }
 

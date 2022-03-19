@@ -2,6 +2,8 @@ import React, { useCallback, useEffect } from "react";
 import { Table } from "./table";
 import { useState } from "react";
 import { TableEditable } from "./table-editable";
+import Autocomplete from "react-google-autocomplete";
+import { GOOGLE_API_KEY } from "../../constants";
     
 export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue, updateImportData }) {
@@ -56,7 +58,18 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 // accessor: d => Array(`${d.address}`,`${d.error.address}`,`${d.error_message.address}`),
                 disableFilter: true,
                 id: 'address',
-                disableSort: true
+                disableSort: true,
+                // Cell: ({ cell: { value } }) => (
+                //     <div>
+                //         <Autocomplete
+                //         apiKey={GOOGLE_API_KEY}
+                //         options={{
+                //             types: ['address']
+                //         }}
+                //         inputAutocompleteValue={value}
+                //         placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
+                //     </div>
+                // )
                 // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
             },
             {
