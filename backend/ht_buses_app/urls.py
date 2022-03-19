@@ -23,6 +23,8 @@ from . views.general.general_tools import permission_setup
 from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
+from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
+
 from . models import User
 
 try:
@@ -88,6 +90,8 @@ urlpatterns = [
     path('api/bulk-import/students/validate', bulk_import_validate_students.bulk_import_validate, name='bulk-import-students-validate'),
     path('api/bulk-import/users/create', bulk_import_users_create.users_create, name='bulk-import-users-create'),
     path('api/bulk-import/students/create', bulk_import_students_create.students_create, name='bulk-import-students-create'),
+    path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
+    path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete')
 
 ]
 
