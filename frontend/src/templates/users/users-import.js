@@ -194,7 +194,7 @@ class UsersImport extends Component {
                                                     error.existing_users.length !== 0 ?
                                                     <ul className="mb-0">
                                                     {error.existing_users.map(user => 
-                                                        <li>{user.name} with address {user.address} and phone number {user.phone_number}</li>
+                                                        <li>{user.name} with {user.address !== "" ? "" : "no"} address {user.address} and {user.phone_number !== "" ? "" : "no"} phone number {user.phone_number}</li>
                                                     )}
                                                     </ul>
                                                  : ""
