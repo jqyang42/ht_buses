@@ -23,7 +23,7 @@ class UsersEdit extends Component {
         user: {},
         edited_user: {},
         schools_multiselect: [],
-        currently_managed_schools: [{value: 1, label: "Example School"}], //TODO: @fern @jessica, change back to empty array
+        // currently_managed_schools: [{value: 1, label: "Example School"}], //TODO: @fern @jessica, change back to empty array
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -35,6 +35,7 @@ class UsersEdit extends Component {
     // initialize page
     componentDidMount() {
         makeSchoolsMultiSelect().then(ret => {
+            // console.log(ret)
             this.setState({ schools_multiselect: ret })
             this.getUserDetails()
         })
@@ -45,6 +46,13 @@ class UsersEdit extends Component {
         api.get(`users/detail?id=${this.props.params.id}`)
         .then(res => {
             const user = res.data.user;
+            const managed_schools = user.managed_schools.map(school => {
+                return {
+                    value: school.id,
+                    label: school.name
+                }
+            })
+            user.managed_schools = managed_schools
             this.setState({ 
                 user: user,
                 edited_user: user
@@ -375,7 +383,7 @@ class UsersEdit extends Component {
                                                 <div className="form-group required pb-3 form-col">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <MultiSelectDropdown
-                                                        selectedOptions={this.state.currently_managed_schools}
+                                                        selectedOptions={this.state.edited_user.managed_schools}
                                                         options={this.state.schools_multiselect}
                                                         isMulti={true}
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
