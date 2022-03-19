@@ -150,6 +150,7 @@ class UsersImport extends Component {
                                             </div>
                                         </div>
                                     </div>
+                                    
 
                                     {/* Submit button */}
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
@@ -176,9 +177,10 @@ class UsersImport extends Component {
                                     </div>
                                 </div>
 
+                                <div className="extra-margin">
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
-                                        <div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                                        <div class="alert alert-danger mt-2 mb-2" role="alert">
                                             <p>Row {error.row_num} contains the errors:</p>
                                             <ul>
                                                 {error.name ? <li>{error.error_message.name}</li> : ""}
@@ -217,6 +219,7 @@ class UsersImport extends Component {
                                 </div>
                                 : ""
                                 } */}
+                                </div>
                             </div>
                         </div>
                     </div>

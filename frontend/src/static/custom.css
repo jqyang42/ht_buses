@@ -181,6 +181,10 @@ li.page-item a[disabled]:hover {
     color: #dc3545;
 }
 
+.extra-margin {
+    margin-top: 50px;
+}
+
 .error {
     border: 1px solid #dc3545;
     background-color: #f8d7da;
