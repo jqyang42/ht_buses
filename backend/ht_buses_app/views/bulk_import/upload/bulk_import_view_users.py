@@ -1,9 +1,10 @@
-from ....models import User
+from ....models import User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from ....role_permissions import IsAdmin, IsSchoolStaff
 from ....google_funcs import geocode_address
 from rest_framework.response import Response
+from ....serializers import UserSerializer, LocationSerializer
 from io import StringIO
 from ..bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
 import csv
@@ -57,7 +58,23 @@ def bulk_import(request):
                     if len(users_obj) == 0:
                         email_error = False
                     else:
-                        email_error_message = "Email is being used already in the system"
+                        print(users_obj)
+                        user_serializer = UserSerializer(users_obj, many=True)
+                        location = Location.objects.get(pk=user_serializer.data[0]["location"])
+                        location_serializer = LocationSerializer(location, many=False)
+                        first_name = user_serializer.data[0]["first_name"]
+                        last_name = user_serializer.data[0]["last_name"]
+                        address = location_serializer.data["address"]
+                        if address == None or address == "":
+                            address_str = "not provided"
+                        else:
+                            address_str = address
+                        phone_number = user_serializer.data[0]["phone_number"]
+                        if phone_number == None:
+                            phone_number_str = "not provided"
+                        else:
+                            phone_number_str = phone_number
+                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with address " + address_str + " and phone number " + phone_number_str
                         email_error = True
         if row["name"] is None or row["name"] == "":
             name_error = True
