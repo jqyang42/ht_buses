@@ -10,12 +10,8 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 import { emailValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-<<<<<<< HEAD
 import { makeSchoolsMultiSelect } from "../components/dropdown";
 import MultiSelectDropdown from "../components/multi-select";
-=======
-import { makeSchoolsDropdown } from "../components/dropdown";
->>>>>>> dev
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -26,12 +22,8 @@ class UsersEdit extends Component {
     state = {
         user: {},
         edited_user: {},
-<<<<<<< HEAD
         schools_multiselect: [],
         currently_managed_schools: [{value: 1, label: "Example School"}], //TODO: @fern @jessica, change back to empty array
-=======
-        schools_dropdown: [],
->>>>>>> dev
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -382,7 +374,6 @@ class UsersEdit extends Component {
                                             { this.state.edited_user.role_id === 2 ?
                                                 <div className="form-group required pb-3 form-col">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
-<<<<<<< HEAD
                                                     <MultiSelectDropdown
                                                         selectedOptions={this.state.currently_managed_schools}
                                                         options={this.state.schools_multiselect}
@@ -392,26 +383,14 @@ class UsersEdit extends Component {
                                                     {/* <DropdownMultiselect
                                                         // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
                                                         options={this.state.schools_multiselect}
-=======
-                                                    <DropdownMultiselect
-                                                        options={this.state.schools_dropdown}
-                                                        optionKey="value"
-                                                        optionLabel="display"
->>>>>>> dev
                                                         id="managedSchools"
                                                         placeholder="Select Schools to Manage"
                                                         buttonClass="form-select border"
                                                         actionBtnStyle="ms-1 mt-1 bg-primary w-75"
                                                         selectDeselectLabel="Select / Deselect All"
-<<<<<<< HEAD
-                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
-                                                        // @jessica you can add an onChange method here by using "handleOnChange"
-                                                    /> */}
-=======
                                                         // selected={[]}   // array of ids of schools
                                                         // handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                     />
->>>>>>> dev
                                                     {/* @jessica for your reference */}
                                                     {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
                                                     onChange={(e) => this.handleManagedSchoolChange(e)} multiple="multiple" required>

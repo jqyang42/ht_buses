@@ -544,7 +544,6 @@ class UsersCreate extends Component {
                                             { this.state.new_user.role_id == 2 ?
                                                 <div className="form-group required pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
-<<<<<<< HEAD
                                                     <MultiSelectDropdown
                                                         selectedOptions={[]}
                                                         options={this.state.schools_multiselect}
@@ -567,12 +566,6 @@ class UsersCreate extends Component {
                                                     {/* <DropdownMultiselect
                                                         // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
                                                         options={this.state.schools_multiselect}
-=======
-                                                    <DropdownMultiselect
-                                                        options={this.state.schools_dropdown}
-                                                        optionKey="value"
-                                                        optionLabel="display"
->>>>>>> dev
                                                         id="managedSchools"
                                                         placeholder="Select Schools to Manage"
                                                         buttonClass="form-select border"
