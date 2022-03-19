@@ -18,6 +18,15 @@ FILENAME = 'bulk_import_students_temp.json'
 def bulk_import(request):
     req_file = request.FILES["bulk_students"]
     data = {}
+    errors_msg = []
+    students = []
+    errors = []
+    row_num = 1
+    email_error_message = ""
+    phone_number_error_message = ""
+    name_error_message = ""
+    address_error_message = ""
+    headers = ["name", "parent_email", "student_id", "school_name"]
     csv_file = StringIO(req_file.read().decode('latin-1'))
     # regex
     file_regex = r'.*\.csv$'
@@ -26,19 +35,16 @@ def bulk_import(request):
         data["students"] = {}
         data["success"] = False
         return Response(data, status=404)
-    students = []
-    errors = []
-    row_num = 1
-    reader = csv.reader(csv_file)
+    reader = csv.DictReader(csv_file, headers, delimiter=',')
     # skip the header
     next(reader, None)
     for row in reader:
         # name, parent_email, student_id, school_name
-        if row[1] is None:
+        if row["parent_email"] is None or row["parent_email"] == "":
             email_error = True
+            email_error_message = "Parent email field cannot be empty."
         else:
-            # TODO: need to have check for duplicates
-            if len(row[1]) > 254: # make models for email char higher
+            if len(row["parent_email"]) > 254: 
                 email_error = True
             else:
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'

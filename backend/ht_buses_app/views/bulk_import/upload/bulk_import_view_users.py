@@ -190,11 +190,10 @@ def bulk_import(request):
                             new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
                             errors.append(new_error)
 
-
-    bulk_import_file_save(FILENAME, users)
     data["users"] = users
     data["errors"] = errors
     data["success"] = True
+    bulk_import_file_save(FILENAME, data)
     return Response(data)
 
 
