@@ -63,11 +63,11 @@ class UsersImport extends Component {
         api.get(`bulk-import/users`)
         .then(res => {
             console.log(res)
-            const temp = res.data.users
-            this.setState({ users: res.data.users })
-            if (res.data.errors) {
-                this.setState({ errors: res.data.errors })
-            }
+            // const temp = res.data.users
+            this.setState({ 
+                users: res.data.users,
+                errors: res.data.errors
+            })
         })
         // getPage({ url: 'users', pageIndex: 0, sortOptions: null, searchValue: '' })
         // .then(res => {
@@ -195,7 +195,7 @@ class UsersImport extends Component {
                                     // </div> : ""
                                 }
 
-                                {/* {this.state.users.length !== 0 ? 
+                                {this.state.users.length !== 0 ? 
                                 <div>
                                     <ImportUsersTable 
                                     data={this.state.users} 
@@ -216,7 +216,7 @@ class UsersImport extends Component {
                                     </button>
                                 </div>
                                 : ""
-                                } */}
+                                }
                             </div>
                         </div>
                     </div>
