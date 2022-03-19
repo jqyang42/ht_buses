@@ -183,7 +183,15 @@ class UsersImport extends Component {
                                         <div class="alert alert-danger mt-2 mb-2" role="alert">
                                             <p className="mb-1">Row {error.row_num} contains the errors:</p>
                                             <ul className="mb-0">
-                                                {error.name ? <li>{error.error_message.name}</li> : ""}
+                                                {!error.name ? "" : <li>{error.error_message.name}</li> +
+                                                    error.existing_users.length !== 0 ?
+                                                    <ul className="mb-0">
+                                                    {error.existing_users.map(user => 
+                                                        <li>{user.name} with address {user.address} and phone number {user.phone_number}</li>
+                                                    )}
+                                                    </ul>
+                                                 : ""
+                                                }
                                                 {error.email ? <li>{error.error_message.email}</li> : ""}
                                                 {error.address ? <li>{error.error_message.address}</li> : ""}
                                                 {error.phone_number ? <li>{error.error_message.phone_number}</li> : ""}
