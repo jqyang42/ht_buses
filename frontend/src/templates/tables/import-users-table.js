@@ -65,17 +65,17 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                 disableFilter: true,
                 id: 'address',
                 disableSort: true,
-                Cell: ({ cell: { value } }) => (
-                    <div>
-                        <Autocomplete
-                        apiKey={GOOGLE_API_KEY}
-                        options={{
-                            types: ['address']
-                        }}
-                        defaultValue={value}
-                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
-                    </div>
-                )
+                // Cell: ({ cell: { value } }) => (
+                //     <div>
+                //         <Autocomplete
+                //         apiKey={GOOGLE_API_KEY}
+                //         options={{
+                //             types: ['address']
+                //         }}
+                //         inputAutocompleteValue={value}
+                //         placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
+                //     </div>
+                // )
                 // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
             },
             {

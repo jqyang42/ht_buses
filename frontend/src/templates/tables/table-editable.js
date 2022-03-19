@@ -9,6 +9,8 @@ import TablePagination from "./pagination";
 import update from 'immutability-helper';
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Autocomplete from "react-google-autocomplete";
+import { GOOGLE_API_KEY } from "../../constants";
 
 export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, 
     rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData }) {
@@ -239,11 +241,13 @@ const EditableCell = ({
   
     const onChange = e => {
       setValue(e.target.value)
+      console.log(e.target.value)
     }
   
     // We'll only update the external data when the input is blurred
     const onBlur = () => {
       updateMyData(index, id, value)
+      console.log(index, id, value)
     }
   
     // If the initialValue is changed external, sync it up with our state
@@ -264,8 +268,22 @@ const EditableCell = ({
                         <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
                     </OverlayTrigger> : ""
                 }
-                <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
-            </div>
+                {id === 'address' ?  
+                    <div>
+                        <Autocomplete
+                        apiKey={GOOGLE_API_KEY}
+                        options={{
+                            types: ['address']
+                        }}
+                        inputAutocompleteValue={value}
+                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
+                        onChange = {onChange}
+                        onPlaceSelected = {onChange} />
+                    </div>
+                    : 
+                    <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+                    }
+                    </div>
 }
 
 // const DND_ITEM_TYPE = 'row'
