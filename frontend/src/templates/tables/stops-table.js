@@ -1,8 +1,9 @@
 import React, { useCallback } from "react";  
-import { TableOld } from "./table-old";
+import { Table } from "./table";
 import { toDisplayFormat } from "../components/time";
 
-export function StopsTable({ data, showAll, dnd, handleReorder }) {
+export function StopsTable({ data, showAll, dnd, handleReorder, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages, searchValue }) {
 
     const columns = React.useMemo(
         () => [
@@ -39,7 +40,7 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
     )
 
     return (
-        <TableOld
+        <Table
             columns={columns}
             data={data}
             searchOn={false}
@@ -57,6 +58,15 @@ export function StopsTable({ data, showAll, dnd, handleReorder }) {
                 desc: false
             }]}
             customHiddenColumn={['order_by']}
+            pageIndex={pageIndex}
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            updatePageCount={updatePageCount}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            // columnHeaderClick={columnHeaderClick}
+            sortOptions={null}
+            searchValue={''}
         />
     )
 }

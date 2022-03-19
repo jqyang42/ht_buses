@@ -24,6 +24,7 @@ def user_create(request):
     data = {}
     reqBody = json.loads(request.body)
     email = reqBody["user"]['email']
+    email = email.lower()
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['first_name'])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]['last_name'])
     address = reqBody["user"]["location"]['address']
@@ -35,7 +36,7 @@ def user_create(request):
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
     phone_number = reqBody["user"]["phone_number"]
-    password = "password" #account_tools.generate_random_password()
+    password = "asdf1234" #account_tools.generate_random_password()
     if role == User.ADMIN: 
         user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
@@ -44,9 +45,10 @@ def user_create(request):
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     try:
-        for student in reqBody["user"]["students"]:
-            student_create.create_student(student, user.id)
-        data["message"] = "user and students created successfully"
+        if is_parent:
+            for student in reqBody["user"]["students"]:
+                student_create.create_student(student, user.id)
+            data["message"] = "user and students created successfully"
     except:
         user.location.delete()
         user.delete()

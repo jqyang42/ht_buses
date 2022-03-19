@@ -10,7 +10,7 @@ class SearchBar extends Component {
             <input
                 id="search-input"
                 type="search" 
-                className="form-control w-25 mb-3"
+                className="form-control search-bar mb-3"
                 placeholder={label}
                 onChange={handleFilterInputChange}
             />

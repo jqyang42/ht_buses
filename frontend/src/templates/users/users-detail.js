@@ -98,17 +98,7 @@ class UsersDetail extends Component {
     }
 
     updateIsParent = () => {
-        api.get(`users/detail?id=${localStorage.getItem('user_id')}`)
-        .then(res => {
-            const user = res.data.user;
-            const prev = JSON.parse(localStorage.getItem('is_parent'))
-            localStorage.setItem('is_parent', user.is_parent)
-            if(user.is_parent && !prev) {
-               window.location.reload()
-            }
-        })
-        .catch (err => {
-        })
+       
     }
 
     deleteUser() {
@@ -129,6 +119,7 @@ class UsersDetail extends Component {
     }
 
     addStudent = (student) => {
+        console.log(student)
         api.post(`users/add-students?id=${this.props.params.id}`, student)
         .then(res => {
             const success = res.data.success
@@ -214,6 +205,7 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
+        console.log("here")
         if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
             event.preventDefault();
             return
@@ -242,9 +234,11 @@ class UsersDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+
+        console.log(this.state.user.managed_schools)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -268,15 +262,16 @@ class UsersDetail extends Component {
                                                     Change Password
                                                 </span>
                                             </Link> */}
+                                            {(localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.user.location?.address ? "#addModal" : ""} onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
-                                            </button>
-
+                                            </button> : ""
+                                            }
                                             <div className="modal fade" show={!this.state.modal_dismiss} id="addModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
-                                                        <form onSubmit={this.handleAddStudentSubmit}> {/* TODO: add onClick handler */}
+                                                        <form onSubmit={this.handleAddStudentSubmit}>
                                                             <div className="modal-header">
                                                                 <h5 className="modal-title" id="staticBackdropLabel">Create New Student</h5>
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -332,7 +327,7 @@ class UsersDetail extends Component {
                                                 </div>
                                             </div>
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <Link to={"/users/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>
@@ -341,7 +336,7 @@ class UsersDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
+                                               (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
                                                 (localStorage.getItem("user_id") !== this.props.params.id) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
@@ -382,7 +377,7 @@ class UsersDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
-                                    <div className="col-1">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Email
                                         </p>
@@ -405,6 +400,16 @@ class UsersDetail extends Component {
                                         Please input an address before you add a student.
                                     </div>) : ""
                                 }
+
+                                {this.state.user.managed_schools?.length !== 0 ? 
+                                    <div className="mt-4">      
+                                        <h7 className="mb-4">MANAGED SCHOOLS</h7>
+                                        {this.state.user.managed_schools?.map(school => {
+                                            return <><p className="mt-2">{school.name}</p></>
+                                        })}
+                                    </div> : ""
+                                }
+                                
 
                                 <div className="mt-4">
                                     <h7>STUDENTS</h7>

@@ -14,7 +14,7 @@ def email_exists(request):
     reqBody = json.loads(request.body)
     email = reqBody['user']['email']
     try: 
-        User.objects.get(email = email)
+        user = User.objects.get(email = email.lower())
         data["message"] = "User email exists"
         data["user_email_exists"] = True
         data["success"] = True

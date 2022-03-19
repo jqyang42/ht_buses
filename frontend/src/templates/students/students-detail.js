@@ -67,17 +67,7 @@ class StudentsDetail extends Component {
 
 
     updateIsParent = () => {
-        api.get(`users/detail?id=${localStorage.getItem('user_id')}`)
-        .then(res => {
-            const user = res.data.user;
-            const prev = JSON.parse(localStorage.getItem('is_parent'))
-            localStorage.setItem('is_parent', user.is_parent)
-            if(!user.is_parent && prev) {
-               window.location.reload()
-            }
-        })
-        .catch (err => {
-        })
+       
     }
 
 
@@ -105,7 +95,7 @@ class StudentsDetail extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="students" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -125,7 +115,7 @@ class StudentsDetail extends Component {
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                     <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                         <span className="btn-text">

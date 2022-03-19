@@ -92,7 +92,7 @@ class Students extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="students" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -102,7 +102,7 @@ class Students extends Component {
                                 <div>
                                     <div className="row d-inline-flex float-end">
                                         {
-                                            localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                              (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                             <>
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={() => this.importUsers()}>
                                                     <i className="bi bi-upload me-2"></i>
