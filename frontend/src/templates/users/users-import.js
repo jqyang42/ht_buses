@@ -89,6 +89,7 @@ class UsersImport extends Component {
         api.delete(`bulk-import/users/delete-temp-file`)
         .then(res => {
             console.log(res)
+            this.setState({ users_redirect: true })
         })
         .catch(err => {
             console.log(err)
@@ -98,7 +99,6 @@ class UsersImport extends Component {
     // TODO: Add method to save all changes from table view and submit the import @jessica
     handleSubmitImport = (event) => {
         event.preventDefault()
-        // console.log(this.state.users)
 
         // save table changes
         const data = {
@@ -110,7 +110,6 @@ class UsersImport extends Component {
             console.log(res)
             // this.setState({ users_redirect: true })
         })
-        // update backend
     }
 
     render() {
