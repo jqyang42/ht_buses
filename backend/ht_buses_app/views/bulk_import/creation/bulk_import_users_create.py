@@ -35,6 +35,7 @@ def users_create(request):
             location = location
         )
     data["success"] = True
+    data["user_count"] = len(reqBody["users"])
     return Response(data)
 
 
