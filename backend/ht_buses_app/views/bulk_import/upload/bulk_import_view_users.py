@@ -4,11 +4,14 @@ from django.views.decorators.csrf import csrf_exempt
 from ....role_permissions import IsAdmin, IsSchoolStaff
 from ....google_funcs import geocode_address
 from rest_framework.response import Response
-from ....serializers import UserSerializer, LocationSerializer
+from ....serializers import UserSerializer, LocationSerializer, BulkImportUserSerializer
 from io import StringIO
-from ..bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
+from ..bulk_import_file_manage import bulk_import_file_save
 import csv
 import re
+from django.db.models import Q
+from django.db.models import Value as V
+from django.db.models.functions import Concat 
 
 # Bulk import temporary file name
 FILENAME = 'bulk_import_users_temp.json'
@@ -41,6 +44,7 @@ def bulk_import(request):
     # skip the header
     next(reader, None)
     for row in reader:
+        existing_users = []
         # email, name, address, phone_number
         if row["email"] is None or row["email"] == "":
             email_error = True
@@ -66,15 +70,13 @@ def bulk_import(request):
                         last_name = user_serializer.data[0]["last_name"]
                         address = location_serializer.data["address"]
                         if address == None or address == "":
-                            address_str = "not provided"
+                            address_str = ""
+                            no_address = "no"
                         else:
                             address_str = address
+                            no_address = ""
                         phone_number = user_serializer.data[0]["phone_number"]
-                        if phone_number == None:
-                            phone_number_str = "not provided"
-                        else:
-                            phone_number_str = phone_number
-                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with address " + address_str + " and phone number " + phone_number_str
+                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + "address " + address_str + " and phone number " + phone_number
                         email_error = True
         if row["name"] is None or row["name"] == "":
             name_error = True
@@ -85,7 +87,28 @@ def bulk_import(request):
                 name_error = True
                 name_error_message = "Name cannot be more that 150 characters"
             else:
-                name_error = False
+                # check if name is part of an existing user tears
+                users_names = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=row["name"]) | Q(first_name__icontains=row["name"]) | Q(last_name__icontains=row["name"]))
+                if len(users) == 0:
+                    name_error = False
+                else:
+                    user_name_serializer = BulkImportUserSerializer(users_names, many=True)
+                    user_name_arr = []
+                    for i in range(0, len(user_name_serializer.data)):
+                        user_name_first_name = user_name_serializer.data[i]["first_name"]
+                        user_name_last_name = user_name_serializer.data[i]["last_name"]
+                        user_name_location = user_name_serializer.data[i]["location"]
+                        user_name_phone_number = user_name_serializer.data[i]["phone_number"]
+                        user_name_email = user_name_serializer.data[i]["email"]
+                        user_location = Location.objects.get(pk=user_name_location)
+                        user_name_location_serializer = LocationSerializer(user_location, many=False)
+                        user_name_address = user_name_location_serializer.data["address"]
+                        user_name_arr.append({"id": user_name_serializer.data[i]["id"], "first_name": user_name_first_name, "last_name": user_name_last_name, "address": user_name_address, "email": user_name_email, "phone_number": user_name_phone_number})
+                    existing_users = user_name_arr
+                    name_error = True
+                    name_error_message= "Name may already exist in the system"
+
         if row["address"] is None or row["address"] == "":
             address_error = True
             address_error_message = "Address cannot be empty"
@@ -114,12 +137,12 @@ def bulk_import(request):
                 phone_number_error = False
         if address_error or phone_number_error or name_error or email_error:
             error_message = {"row_num": row_num, "name": name_error_message, "email": email_error_message, "address": address_error_message, "phone_number": phone_number_error_message}
-            error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error, "duplicate_email": False, "duplicate_name": False, "error_message": error_message}
+            error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users}
             errors.append(error_obj)
             errors_msg.append(error_message)
         else:
             error_message = {"row_num": row_num, "name": name_error_message, "email": email_error_message, "address": address_error_message, "phone_number": phone_number_error_message}
-            error_obj = {"row_num" : row_num, "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": False, "error_message": error_message}
+            error_obj = {"row_num" : row_num, "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users}
         row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": error_obj, "exclude": False}
         users.append(row_obj)
         row_num += 1
@@ -141,8 +164,8 @@ def bulk_import(request):
                 users[i]["exclude"] = True
                 users[j]["exclude"] = True
                 if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True}
+                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users}
+                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users}
                     errors.append(new_error)
                     errors.append(new_errors)
                 else:
@@ -161,8 +184,8 @@ def bulk_import(request):
                 users[i]["exclude"] = True
                 users[j]["exclude"] = True
                 if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True}
+                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": []}
+                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": []}
                     errors.append(new_error)
                     errors.append(new_errors)
                 else:
@@ -178,8 +201,8 @@ def bulk_import(request):
                 users[i]["exclude"] = True
                 users[j]["exclude"] = True
                 if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
+                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": []}
+                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": []}
                     errors.append(new_error)
                     errors.append(new_errors)
                 else: 
