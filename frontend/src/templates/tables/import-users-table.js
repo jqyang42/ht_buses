@@ -26,16 +26,15 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             },
             {
                 Header: 'Name',
-                accessor: 'name',
-                // accessor: d => Array(`${d.name}`,`${d.error.name}`),
+                accessor: d => Array(`${d.name}`, false,``, true,`Name may be a duplicate`),
+                // accessor: d => Array(`${d.name}`,`${d.error.name}`,`${d.error_message.name}`,`${d.error.duplicate_name}`,`${d.error_message.duplicate_name}`),
                 id: 'name',
                 disableSort: true,
                 // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Email',
-                // accessor: 'email',
-                accessor: d => Array(`${d.email}`, true,``, false,`Email already exists`),
+                accessor: d => Array(`${d.email}`, true,`Email is invalid`, false,``),
                 // accessor: d => Array(`${d.email}`,`${d.error.email}`,`${d.error_message.email}`,`${d.error.duplicate_email}`,`${d.error_message.duplicate_email}`),
                 id: 'email',
                 disableSort: true
@@ -50,7 +49,8 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             // },
             {
                 Header: 'Phone Number',
-                accessor: 'phone_number',
+                accessor: d => Array(`${d.phone_number}`,`${d.error.phone_number}`,`phone number invalid`),
+                // accessor: d => Array(`${d.phone_number}`,`${d.error.phone_number}`,`${d.error_message.phone_number}`),
                 disableFilter: true,
                 id: 'phone_number',
                 disableSort: true
@@ -58,7 +58,8 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             },       
             {
                 Header: 'Address',
-                accessor: 'address',
+                accessor: d => Array(`${d.address}`,`${d.error.address}`,`address invalid`),
+                // accessor: d => Array(`${d.address}`,`${d.error.address}`,`${d.error_message.address}`),
                 disableFilter: true,
                 id: 'address',
                 disableSort: true
