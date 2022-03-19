@@ -12,6 +12,5 @@ FILENAME = 'bulk_import_students_temp.json'
 @api_view(["GET"])
 @permission_classes([IsAdmin, IsSchoolStaff]) 
 def bulk_import(request):
-    data = {}
-    data["students"] = bulk_import_file_read(FILENAME)
+    data = bulk_import_file_read(FILENAME)
     return Response(data)
