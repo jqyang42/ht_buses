@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .student_create import create_student
 from ...models import User
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import get_object_for_user, reassign_after_creation
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
 
@@ -22,10 +22,9 @@ def add_new_students(request):
     except:
         return response_messages.DoesNotExist(data, "student's parent")
     try:
-        if request.user.role == User.SCHOOL_STAFF:
-            assign_perm("change_user", request.user, user)
         for student in reqBody["students"]:
             create_student(student, user_id)
+        reassign_after_creation(user)
         data["message"] = "students created successfully"
         data["success"] = True
         return Response(data)
