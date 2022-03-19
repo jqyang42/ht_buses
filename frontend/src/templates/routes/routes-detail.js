@@ -22,7 +22,7 @@ class BusRoutesDetail extends Component {
         students : [],
         users: [],
         school : [],
-        stops: null,
+        stops: [],
         center: {},
         markers: null,
         assign_mode: false,
@@ -60,7 +60,7 @@ class BusRoutesDetail extends Component {
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
-        // this.getStops()
+        this.getStops()
     }
 
     // pagination
@@ -121,7 +121,9 @@ class BusRoutesDetail extends Component {
                     lng: school.location.lng 
                 }, 
             }, console.log(this.state.center));
-
+            
+            this.redirectToGoogleMapsPickup(this.state.stops)
+            this.redirectToGoogleMapsDropoff(this.state.stops)
             this.setMarkers(users)            
         })
         .catch(error => {
@@ -187,11 +189,12 @@ class BusRoutesDetail extends Component {
         this.setState({ markers: markers })
     }
 
-    getStops = () => {
-        api.get(`stops?id=${this.props.params.id}`)
+    getStops = () => {     
+        getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
+            console.log(data.stops)
             console.log(this.state.center)
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
