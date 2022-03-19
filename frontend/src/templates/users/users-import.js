@@ -27,6 +27,7 @@ class UsersImport extends Component {
         // },
         // searchValue: '',
         users_redirect: false,
+        loading: true
     }
 
     componentDidMount() {
@@ -67,7 +68,8 @@ class UsersImport extends Component {
             // const temp = res.data.users
             this.setState({ 
                 users: res.data.users,
-                errors: res.data.errors
+                errors: res.data.errors,
+                loading: false
             })
         })
         // getPage({ url: 'users', pageIndex: 0, sortOptions: null, searchValue: '' })
@@ -105,14 +107,16 @@ class UsersImport extends Component {
         const data = {
             users: this.state.edited_users
         }
-
+        
+        this.setState({ loading: true })
         api.post(`bulk-import/users/validate`, data)
         .then(res => {
             console.log(res)
             // const data = res.data
             // this.setState({
             //     verifyCheck: data.verified,
-            //     errors: data.errors
+            //     errors: data.errors,
+            //     loading: false
             // })
         })
     }
@@ -126,6 +130,7 @@ class UsersImport extends Component {
             users: this.state.edited_users
         }
 
+        this.setState({ loading: true })
         api.post(`bulk-import/users/create`, data)
         .then(res => {
             console.log(res)
