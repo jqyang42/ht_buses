@@ -184,7 +184,7 @@ class SchoolsDetail extends Component {
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                 <Link to={"/schools/" + this.props.params.id + "/email"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
@@ -207,7 +207,7 @@ class SchoolsDetail extends Component {
                                                 </> : ""
                                             }
                                             {
-                                                localStorage.getItem('is_staff') && localStorage.getItem('role') === 'Administrator' ? 
+                                                  localStorage.getItem('role') === 'Administrator' ? 
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
                                                     Delete

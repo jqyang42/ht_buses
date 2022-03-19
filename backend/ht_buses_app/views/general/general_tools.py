@@ -141,7 +141,6 @@ def reassign_perms(edited_user, schools=[]):
         except:
             return False
     reassign_groups(edited_user)
-    assign_perm("change_user", edited_user, edited_user)
     assign_perm("view_user", edited_user, edited_user)
     edited_user.save()
     return True 
