@@ -40,7 +40,6 @@ def bulk_import(request):
     # skip the header
     next(reader, None)
     for row in reader:
-        print(row)
         # email, name, address, phone_number
         if row["email"] is None or row["email"] == "":
             email_error = True
@@ -70,7 +69,6 @@ def bulk_import(request):
                 name_error_message = "Name cannot be more that 150 characters."
             else:
                 name_error = False
-        print(row["address"])
         if row["address"] is None or row["address"] == "":
             address_error = True
             address_error_message = "Address cannot be empty."
@@ -109,7 +107,6 @@ def bulk_import(request):
         users.append(row_obj)
         row_num += 1
 
-    print(users)
 
     if len(users) == 0:
         data["users"] = {}
@@ -171,7 +168,6 @@ def bulk_import(request):
                             errors.append(new_error)
             
             elif users[i]["email"] == users[j]["email"]:
-                print("we need to enter here")
                 users[i]["error"]["duplicate_email"] = True
                 users[j]["error"]["duplicate_email"] = True
                 users[i]["exclude"] = True
@@ -195,13 +191,10 @@ def bulk_import(request):
                             errors.append(new_error)
 
 
-    print("do we end up getting stuck here")
     bulk_import_file_save(FILENAME, users)
     data["users"] = users
     data["errors"] = errors
-    data["error_messages"] = errors_msg
     data["success"] = True
-    print(data)
     return Response(data)
 
 
