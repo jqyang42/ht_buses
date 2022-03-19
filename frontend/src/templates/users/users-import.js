@@ -158,6 +158,30 @@ class UsersImport extends Component {
                                         </div>
                                     </div>
                                     
+                                    {/* Verify button */}
+                                    <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#verifyModal" onClick={this.verifyImport}>Verify</button>
+
+                                    {/* Verify confirmation modal */}
+                                    <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div className="modal-dialog modal-dialog-centered">
+                                            <div className="modal-content">
+                                                <form onSubmit={this.handleSubmitImport}>
+                                                    <div className="modal-header">
+                                                        <h5 className="modal-title" id="staticBackdropLabel">Verify Users</h5>
+                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div className="modal-body">
+                                                        { this.state.verifyCheck ? "All users have been verified and no errors exist. Your import is ready to be submitted!" :
+                                                        "Errors still exist in the file import. Please correct them before submitting."
+                                                        }
+                                                    </div>
+                                                    <div className="modal-footer">
+                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     {/* Submit button */}
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
