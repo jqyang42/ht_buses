@@ -133,15 +133,15 @@ def bulk_import(request):
                         if errors[k]["row_num"] == users[i]["row_num"]:
                             errors[k]["duplicate_name"] = True
                             errors[k]["duplicate_email"] = True
-                        else:
-                            new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True}
-                            errors.append(new_error)
+                        # else:
+                        #     new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True}
+                        #     errors.append(new_error)
                         if errors[k]["row_num"] == users[j]["row_num"]:
                             errors[k]["duplicate_name"] = True
                             errors[k]["duplicate_email"] = True
-                        else:
-                            new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True}
-                            errors.append(new_error)
+                        # else:
+                        #     new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True}
+                        #     errors.append(new_error)
 
 
             elif users[i]["name"] == users[j]["name"]:
@@ -158,14 +158,14 @@ def bulk_import(request):
                     for k in range(0, len(errors)):
                         if errors[k]["row_num"] == users[i]["row_num"]:
                             errors[k]["duplicate_name"] = True
-                        else:
-                            new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True}
-                            errors.append(new_error)
+                        # else:
+                        #     new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True}
+                        #     errors.append(new_error)
                         if errors[k]["row_num"] == users[j]["row_num"]:
                             errors[k]["duplicate_name"] = True
-                        else:
-                            new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True}
-                            errors.append(new_error)
+                        # else:
+                        #     new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True}
+                        #     errors.append(new_error)
             
             elif users[i]["email"] == users[j]["email"]:
                 users[i]["error"]["duplicate_email"] = True
@@ -181,14 +181,14 @@ def bulk_import(request):
                     for k in range(0, len(errors)):
                         if errors[k]["row_num"] == users[i]["row_num"]:
                             errors[k]["duplicate_email"] = True
-                        else:
-                            new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
-                            errors.append(new_error)
+                        # else:
+                        #     new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
+                        #     errors.append(new_error)
                         if errors[k]["row_num"] == users[j]["row_num"]:
                             errors[k]["duplicate"] = True
-                        else:
-                            new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
-                            errors.append(new_error)
+                        # else:
+                        #     new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False}
+                        #     errors.append(new_error)
 
     data["users"] = users
     data["errors"] = errors
