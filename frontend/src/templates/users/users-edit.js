@@ -23,6 +23,7 @@ class UsersEdit extends Component {
         user: {},
         edited_user: {},
         schools_multiselect: [],
+        managed_schools: [],
         redirect: false,
         valid_address: true,
         valid_email: true,
@@ -51,10 +52,10 @@ class UsersEdit extends Component {
                     label: school.name
                 }
             })
-            user.managed_schools = managed_schools
             this.setState({ 
                 user: user,
-                edited_user: user
+                edited_user: user,
+                managed_schools: managed_schools
             });
             console.log(user)
         })
@@ -369,7 +370,7 @@ class UsersEdit extends Component {
                                                 <div className="form-group required pb-3 form-col">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <MultiSelectDropdown
-                                                        selectedOptions={this.state.edited_user.managed_schools}
+                                                        selectedOptions={this.state.managed_schools}
                                                         options={this.state.schools_multiselect}
                                                         isMulti={true}
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
