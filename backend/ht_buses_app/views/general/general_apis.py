@@ -19,6 +19,7 @@ def email_exists(request):
         data["message"] = "User email exists"
         data["user_email_exists"] = True
         data["is_parent_email"] = user_is_parent(user) and user.location.address is not ""
+        data["user_id"] = user.pk
         data["success"] = True
         return Response(data)
     except: 
