@@ -68,10 +68,8 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
                         options={{
                             types: ['address']
                         }}
-                        value={this.state.new_user?.location?.address}
-                        defaultValue=""
-                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
-                        required={this.state.new_user.is_parent} />
+                        defaultValue={value}
+                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" />
                     </div>
                 )
                 // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
