@@ -67,6 +67,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     useEffect(() => {
         setSkipPageReset(false)
         updateData(data)
+        // console.log(data)
     }, [data])
 
     // Let's add a data resetter/randomizer to help
@@ -238,11 +239,21 @@ const EditableCell = ({
 }) => {
     // We need to keep and update the state of the cell normally
     const [value, setValue] = React.useState(initialValue)
+    const [selectValue, setSelectValue] = React.useState(initialValue)
   
     const onChange = e => {
-      setValue(e.target.value)
-      console.log(e.target.value)
+        const val = e.target?.value || e.formatted_address
+      setValue(val)
     }
+
+    const onSelectChange = e => {
+        setSelectValue(e.formatted_address)
+    }
+
+    useEffect(() => {
+        setValue(selectValue)
+        updateMyData(index, id, selectValue)
+    }, [selectValue])
   
     // We'll only update the external data when the input is blurred
     const onBlur = () => {
@@ -275,15 +286,15 @@ const EditableCell = ({
                         options={{
                             types: ['address']
                         }}
-                        inputAutocompleteValue={value}
                         placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
-                        onChange = {onChange}
-                        onPlaceSelected = {onChange} />
+                        onChange={onChange}
+                        onPlaceSelected={onSelectChange}
+                        onBlur={onBlur} />
                     </div>
-                    : 
+                : 
                     <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
-                    }
-                    </div>
+                }
+            </div>
 }
 
 // const DND_ITEM_TYPE = 'row'
