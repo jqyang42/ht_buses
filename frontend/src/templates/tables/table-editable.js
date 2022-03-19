@@ -242,8 +242,8 @@ const EditableCell = ({
     const [selectValue, setSelectValue] = React.useState(initialValue)
   
     const onChange = e => {
-        const val = e.target?.value || e.formatted_address
-      setValue(val)
+        const val = e.target.value
+        setValue(val)
     }
 
     const onSelectChange = e => {
