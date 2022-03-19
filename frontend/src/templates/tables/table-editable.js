@@ -243,6 +243,7 @@ const EditableCell = ({
     const [value, setValue] = React.useState(initialValue[0])
     const [selectValue, setSelectValue] = React.useState(initialValue[0])
     const [completeValue, setComplete] = React.useState(initialValue)
+    console.log(completeValue)
   
     const onChange = e => {
         const val = e.target.value
@@ -293,7 +294,7 @@ const EditableCell = ({
                         options={{
                             types: ['address']
                         }}
-                        placeholder="Enter home address" className={Array.isArray(completeValue) && !(completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
+                        placeholder="Enter home address" className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
                         onChange={onChange}
                         defaultValue={value}
                         onPlaceSelected={onSelectChange}
