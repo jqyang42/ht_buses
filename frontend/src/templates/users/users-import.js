@@ -15,6 +15,7 @@ class UsersImport extends Component {
         users: [],
         errors: [],
         edited_users: [],
+        verifyCheck: false,
         // show_all: false,
         // pageIndex: 1,
         // canPreviousPage: null,
@@ -25,7 +26,7 @@ class UsersImport extends Component {
         //     sortDirection: 'none'
         // },
         // searchValue: '',
-        users_redirect: false
+        users_redirect: false,
     }
 
     componentDidMount() {
@@ -77,7 +78,10 @@ class UsersImport extends Component {
     }
 
     handleGetTableEdits = (new_data) => {
-        this.setState({ edited_users: new_data }, () => {
+        this.setState({ 
+            edited_users: new_data,
+            verifyCheck: false
+        }, () => {
             console.log(this.state.edited_users)
         })
     }
@@ -208,7 +212,9 @@ class UsersImport extends Component {
                                     </div>
 
                                     {/* Submit button */}
+                                    {/* @jessica add  */}
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
+                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
 
                                     {/* Submit confirmation modal */}
                                     <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
