@@ -239,12 +239,17 @@ const EditableCell = ({
 }) => {
     // We need to keep and update the state of the cell normally
     console.log(initialValue)
-    const [value, setValue] = React.useState(initialValue)
-    const [selectValue, setSelectValue] = React.useState(initialValue)
+    const [value, setValue] = React.useState(initialValue[0])
+    const [selectValue, setSelectValue] = React.useState(initialValue[0])
+    const [completeValue, setComplete] = React.useState(initialValue)
   
     const onChange = e => {
         const val = e.target.value
         setValue(val)
+
+        const updated_complete = completeValue
+        updated_complete[0] = val
+        setComplete(updated_complete)
     }
 
     const onSelectChange = e => {
@@ -264,7 +269,7 @@ const EditableCell = ({
   
     // If the initialValue is changed external, sync it up with our state
     useEffect(() => {
-      setValue(initialValue)
+        setComplete(initialValue)
     }, [initialValue])
 
     const renderTooltip = error => (
@@ -272,10 +277,10 @@ const EditableCell = ({
     );
   
     return <div>
-                {Array.isArray(value) && (value[1] || value[3]) ? 
+                {Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? 
                     <OverlayTrigger placement="top" overlay={
                         renderTooltip(
-                            value[1] ? value[2] + (value[3] ? " and " + value[4].toLowerCase() : "") : value[4]
+                            completeValue[1] ? completeValue[2] + (completeValue[3] ? " and " + completeValue[4].toLowerCase() : "") : completeValue[4]
                         )}>
                         <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
                     </OverlayTrigger> : ""
@@ -287,13 +292,14 @@ const EditableCell = ({
                         options={{
                             types: ['address']
                         }}
-                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
+                        placeholder="Enter home address" className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
                         onChange={onChange}
+                        defaultValue={value}
                         onPlaceSelected={onSelectChange}
                         onBlur={onBlur} />
                     </div>
                 : 
-                    <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+                    <input className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
                 }
             </div>
 }
