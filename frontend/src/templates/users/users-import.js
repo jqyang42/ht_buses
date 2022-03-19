@@ -188,8 +188,8 @@ class UsersImport extends Component {
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
                                         <div class="alert alert-danger mt-2 mb-2" role="alert">
-                                            <p>Row {error.row_num} contains the errors:</p>
-                                            <ul>
+                                            <p className="mb-1">Row {error.row_num} contains the errors:</p>
+                                            <ul className="mb-0">
                                                 {error.name ? <li>{error.error_message.name}</li> : ""}
                                                 {error.email ? <li>{error.error_message.email}</li> : ""}
                                                 {error.address ? <li>{error.error_message.address}</li> : ""}
