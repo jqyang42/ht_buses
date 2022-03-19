@@ -192,9 +192,6 @@ class UsersImport extends Component {
                                             </ul>
                                         </div>
                                     ) : ""
-                                    // <div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
-                                    //     Unable to edit user details. Please correct all errors before submitting.
-                                    // </div> : ""
                                 }
 
                                 {this.state.users.length !== 0 ? 
@@ -211,11 +208,11 @@ class UsersImport extends Component {
                                     // searchValue={this.state.searchValue}
                                     updateImportData={this.handleGetTableEdits}
                                     />
-                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                    {/* <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"
                                         }
-                                    </button>
+                                    </button> */}
                                 </div>
                                 : ""
                                 }
