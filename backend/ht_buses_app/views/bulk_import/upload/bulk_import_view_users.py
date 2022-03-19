@@ -76,7 +76,7 @@ def bulk_import(request):
                             address_str = address
                             no_address = ""
                         phone_number = user_serializer.data[0]["phone_number"]
-                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + "address " + address_str + " and phone number " + phone_number
+                        email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + " address " + address_str + "and phone number " + phone_number
                         email_error = True
         if row["name"] is None or row["name"] == "":
             name_error = True
@@ -90,7 +90,8 @@ def bulk_import(request):
                 # check if name is part of an existing user tears
                 users_names = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=row["name"]) | Q(first_name__icontains=row["name"]) | Q(last_name__icontains=row["name"]))
-                if len(users) == 0:
+                print(users_names)
+                if len(users_names) == 0:
                     name_error = False
                 else:
                     user_name_serializer = BulkImportUserSerializer(users_names, many=True)

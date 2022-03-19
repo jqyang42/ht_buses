@@ -78,7 +78,7 @@ def bulk_import_validate(request):
                 # check if name is part of an existing user tears
                 users_names = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=row["name"]) | Q(first_name__icontains=row["name"]) | Q(last_name__icontains=row["name"]))
-                if len(users) == 0:
+                if len(users_names) == 0:
                     name_error = False
                 else:
                     user_name_serializer = BulkImportUserSerializer(users_names, many=True)
