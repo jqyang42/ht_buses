@@ -125,7 +125,14 @@ class UsersImport extends Component {
         api.post(`bulk-import/users/create`, data)
         .then(res => {
             console.log(res)
-            // this.setState({ users_redirect: true })
+            api.delete(`bulk-import/users/delete-temp-file`)
+            .then(res => {
+                console.log(res)
+                this.setState({ users_redirect: true })
+            })
+            .catch(err => {
+                console.log(err)
+            })
         })
     }
 
