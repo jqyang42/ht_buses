@@ -194,7 +194,7 @@ class UsersImport extends Component {
                                                     error.existing_users.length !== 0 ?
                                                     <ul className="mb-0">
                                                     {error.existing_users.map(user => 
-                                                        <li>{user.name} with {user.address !== "" ? "" : "no"} address {user.address} and {user.phone_number !== "" ? "" : "no"} phone number {user.phone_number}</li>
+                                                        <li>{user.name} with {user.address !== "" ? "" : "no"} address {user.address} and phone number {user.phone_number}</li>
                                                     )}
                                                     </ul>
                                                  : ""
@@ -202,8 +202,8 @@ class UsersImport extends Component {
                                                 {error.email ? <li>{error.error_message.email}</li> : ""}
                                                 {error.address ? <li>{error.error_message.address}</li> : ""}
                                                 {error.phone_number ? <li>{error.error_message.phone_number}</li> : ""}
-                                                {error.duplicate_name ? <li>Name may be a duplicate</li> : ""}
-                                                {error.duplicate_email ? <li>Email already exists</li> : ""}
+                                                {error.duplicate_name ? <li>Name may be a duplicate in file import</li> : ""}
+                                                {error.duplicate_email ? <li>Email is a duplicate in file import</li> : ""}
                                             </ul>
                                         </div>
                                     ) : ""
