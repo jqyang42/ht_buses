@@ -10,7 +10,7 @@ import api from "../components/api";
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeParentsDropdown, makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
-import { studentIDValidation } from "../components/validation";
+import { validNumber } from "../components/validation";
 
 class StudentsEdit extends Component {
     state = {
@@ -148,7 +148,7 @@ class StudentsEdit extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if(!studentIDValidation({ student_id: this.state.edited_student.student_school_id })) {
+        if(!validNumber({ value_to_check: this.state.edited_student.student_school_id })) {
             this.setState({ edit_success: -1 })
             return
         }
@@ -216,7 +216,7 @@ class StudentsEdit extends Component {
                                                 <input type="id" className="form-control pb-2" id="exampleInputID1" 
                                                 defaultValue={this.state.student.student_school_id} placeholder="Enter student ID" required
                                                 onChange={this.handleStudentIDChange}></input>
-                                                 {(!studentIDValidation({ student_id: this.state.edited_student.student_school_id })) ? 
+                                                 {(!validNumber({ value_to_check: this.state.edited_student.student_school_id })) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                            The Student ID value is invalid. Please edit and try again.
                                                       </div>) : ""

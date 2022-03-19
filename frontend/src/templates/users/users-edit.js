@@ -8,7 +8,7 @@ import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import ErrorPage from "../error-page";
 import api from "../components/api";
-import { emailValidation } from "../components/validation";
+import { emailValidation, phoneValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import { makeSchoolsDropdown } from "../components/dropdown";
 
@@ -25,6 +25,7 @@ class UsersEdit extends Component {
         redirect: false,
         valid_address: true,
         valid_email: true,
+        valid_phone: 0,
         edit_success: 0,
         error_status: false,
         error_code: 200,
@@ -114,9 +115,16 @@ class UsersEdit extends Component {
 
     handlePhoneChange = (event) => {
         const phone_number = event.target.value
-        let user = this.state.edited_user
-        user.phone_number = phone_number
-        this.setState({ edited_user: user  });
+        if(!phoneValidation({ phone_number: phone_number })) {
+            this.setState({ valid_phone: -1 });
+        }
+        else {
+            let user = this.state.edited_user
+            user.phone_number = phone_number.replace(/\D/g, '');
+            this.setState({ new_user: user });
+            this.setState({ valid_phone: 1 });
+            this.setState({ edited_user: user  });
+        }
     }
 
     handleRoleChange = (event) => {
@@ -272,19 +280,17 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className="form-group required pb-3 form-col">
-                                                <label for="phone_number" className="control-label pb-2">Phone</label>
-                                                <input type="tel" className="form-control pb-2" defaultValue={this.state.user.phone_number} id="examplePhone"
-                                                    placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
-                                                
-                                                {/* TODO: add phoneValidation() method to check if phone number is valid @fern */}
-
-                                                {/* {(!phoneValidation({ phone: this.state.new_user.phone }) && this.state.new_user.phone !== "") ? 
+                                            { <div className="form-group required pb-3 w-75">
+                                                <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
+                                                <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
+                                                placeholder="Enter phone number" required defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
+                                            
+                                                 {(!phoneValidation({ phone_number: this.state.edited_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Please enter a valid phone number.
+                                                        Please enter a valid North American phone number.
                                                     </div>) : ""
-                                                } */}
-                                            </div>
+                                                }
+                                            </div> }
                                                 
                                             <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
