@@ -1,11 +1,11 @@
-from ....models import User
+from ...models import User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ....role_permissions import IsAdmin, IsSchoolStaff
-from ....google_funcs import geocode_address
+from ...role_permissions import IsAdmin
+from ...google_funcs import geocode_address
 from rest_framework.response import Response
 from io import StringIO
-from ..bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
+from .bulk_import_file_manage import bulk_import_file_save, bulk_import_file_read
 import csv
 import re
 
@@ -15,7 +15,7 @@ FILENAME = 'bulk_import_users_temp.json'
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin|IsSchoolStaff]) 
+@permission_classes([IsAdmin]) 
 def bulk_import(request):
     req_file = request.FILES["bulk_users"]
     csv_file = StringIO(req_file.read().decode('latin-1'))
@@ -97,46 +97,12 @@ def bulk_import(request):
                 users[j]["error"]["duplicate"] = True
                 users[i]["exclude"] = True
                 users[j]["exclude"] = True
-                for error in errors:
-                    if error["row_num"] == users[i]["row_num"]:
-                        error["duplicate"] = True
-                    else:
-                        new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                        errors.append(new_error)
-                    if error["row_num"] == users[j]["row_num"]:
-                        error["duplicate"] = True
-                    else:
-                        new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                        errors.append(new_error)
-                if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-            
-            if users[i]["email"] == users[j]["email"]:
+
+            if users[i][j]["email"] == users[j]["email"]:
                 users[i]["error"]["duplicate"] = True
                 users[j]["error"]["duplicate"] = True
                 users[i]["exclude"] = True
                 users[j]["exclude"] = True
-                for error in errors:
-                    if error["row_num"] == users[i]["row_num"]:
-                        error["duplicate"] = True
-                    else:
-                        new_error = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                        errors.append(new_error)
-                    if error["row_num"] == users[j]["row_num"]:
-                        error["duplicate"] = True
-                    else:
-                        new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                        errors.append(new_error)
-                if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate": True}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                   
-
 
     bulk_import_file_save(FILENAME, users)
     data["users"] = users

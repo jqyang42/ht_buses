@@ -1,1 +1,1 @@
-[{"row_num": 1, "name": "Axa Hillsborough", "email": "axa@example.com", "address": "1104 Rock St, Durham, NC 27707, USA", "phone_number": "000-000-0000", "error": {"row_num": 1, "name": false, "email": true, "address": false, "phone_number": false}}]
+[{"row_num": 1, "name": "Axa Hillsborough", "email": "axa@example.com", "address": "1104 Rock St, Durham, NC 27707, USA", "phone_number": "000-000-0000", "error": {"row_num": 1, "name": false, "email": true, "address": false, "phone_number": false, "duplicate": false}, "exclude": false}]

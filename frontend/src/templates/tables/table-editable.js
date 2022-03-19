@@ -7,6 +7,8 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
+import Tooltip from "react-bootstrap/Tooltip";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 
 export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, 
     rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData }) {
@@ -248,8 +250,22 @@ const EditableCell = ({
     useEffect(() => {
       setValue(initialValue)
     }, [initialValue])
+
+    const renderTooltip = error => (
+        <Tooltip className="text-center">{error}</Tooltip>
+    );
   
-    return <input className="form-control pb-2 w-75" value={value} onChange={onChange} onBlur={onBlur} />
+    return <div>
+                {Array.isArray(value) && (value[1] || value[3]) ? 
+                    <OverlayTrigger placement="top" overlay={
+                        renderTooltip(
+                            value[1] ? value[2] + (value[3] ? " and " + value[4].toLowerCase() : "") : value[4]
+                        )}>
+                        <i className="input-icon bi bi-exclamation-circle mt-2 me-6 float-end"></i>
+                    </OverlayTrigger> : ""
+                }
+                <input className={Array.isArray(value) && (value[1] || value[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={Array.isArray(value) ? value[0] : value} onChange={onChange} onBlur={onBlur}></input>
+            </div>
 }
 
 // const DND_ITEM_TYPE = 'row'

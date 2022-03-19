@@ -181,6 +181,22 @@ li.page-item a[disabled]:hover {
     color: #dc3545;
 }
 
+.error {
+    border: 1px solid #dc3545;
+    background-color: #f8d7da;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.input-icon {
+    /* padding-left: 150px;
+    margin-top: 7px;
+    margin-right: 4px; */
+    color: #dc3545;
+}
+
 .gigantic {
     font-size: 20em;
     line-height: 1.2em;
