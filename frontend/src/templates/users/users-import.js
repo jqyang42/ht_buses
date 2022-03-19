@@ -96,6 +96,23 @@ class UsersImport extends Component {
         })
     }
 
+    verifyImport = (event) => {
+        event.preventDefault()
+        const data = {
+            users: this.state.edited_users
+        }
+
+        api.post(`bulk-import/users/validate`, data)
+        .then(res => {
+            console.log(res)
+            // const data = res.data
+            // this.setState({
+            //     verifyCheck: data.verified,
+            //     errors: data.errors
+            // })
+        })
+    }
+
     // TODO: Add method to save all changes from table view and submit the import @jessica
     handleSubmitImport = (event) => {
         event.preventDefault()
