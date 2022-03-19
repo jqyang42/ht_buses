@@ -42,7 +42,7 @@ def user_edit(request):
         user_object.location.lat = reqBody["user"]["location"]["lat"]
         user_object.location.lng = reqBody["user"]["location"]["lng"]
         user_object.phone_number = reqBody["user"]["phone_number"]
-        #user_object.location.save()
+        user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
         """
         if User.role_choices[0][1] == reqBody["user"]["role"]:
@@ -68,6 +68,11 @@ def user_edit(request):
         if not reassign_success:
             return response_messages.UnsuccessfulAction(data, "user edit")
         user_object.save()
+        user_object = User.objects.get(pk = user_object.pk)
+        print(user_object.last_name)
+        print("bottom")
+        print(user_object.location.address)
+        print(user_object.location.address)
         update_student_stop(id)
         data["message"] = "user information was successfully updated"
         data["success"] = True
