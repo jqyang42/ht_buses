@@ -183,6 +183,7 @@ class UsersEdit extends Component {
         console.log(user)
         user.managed_schools = selected_schools
         this.setState({ edited_user: user })
+        this.setState({ managed_schools: selected })
     }
 
     checkNonParentAddress = () => {
@@ -205,7 +206,8 @@ class UsersEdit extends Component {
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
         
-        if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
+        if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address) {
+            this.setState({ edit_success: -1 })
             return 
         }
         else {
