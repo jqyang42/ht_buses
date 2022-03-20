@@ -243,7 +243,7 @@ class UsersImport extends Component {
 
                                 <div className="extra-margin">
                                 {this.state.loading ? 
-                                    <div class="alert alert-primary mt-2 mb-3 extra-margin" role="alert">
+                                    <div class="alert alert-primary mt-2 mb-3" role="alert">
                                         Please wait patiently while we load and verify your file import.
                                     </div> : ""
                                 }
