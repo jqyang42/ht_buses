@@ -390,6 +390,7 @@ class UsersCreate extends Component {
           }
     }
         
+    // @kyra call this method to add students to existing
     addStudentsToExisting = () => {
         const students = {
             students: this.state.students
@@ -397,7 +398,16 @@ class UsersCreate extends Component {
 
         api.post(`users/add-students?id=${this.props.params.id}`, students)
         .then(res => {
-            
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    create_success: 1,
+                    redirect_detail: true,
+                    detail_url: USERS_URL + "/" + res.data.user.id
+                });
+            } else {
+                this.setState({ create_success: -1 })
+            }
         })
     }
 
