@@ -48,6 +48,7 @@ class Students extends Component {
                 sortOptions: sortOptions,
                 searchValue: search
             })
+            console.log(res.data.students)
         })
     }
 

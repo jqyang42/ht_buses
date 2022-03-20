@@ -14,6 +14,7 @@ from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import assign_school_staff_perms, reassign_after_creation
 from guardian.shortcuts import assign_perm
 from ..general import response_messages
+import traceback
 
 
 # User POST API
@@ -52,6 +53,7 @@ def user_create(request):
     except:
         user.location.delete()
         user.delete()
+        traceback.print_exc()
         return response_messages.UnsuccessfulAction(data, "user create, adding student to user")
     try:
         if role == User.SCHOOL_STAFF:
@@ -62,6 +64,7 @@ def user_create(request):
     except:
         user.location.delete()
         user.delete()
+        traceback.print_exc()
         return response_messages.DoesNotExist(data, "school")
     user.save()
     reassign_after_creation(user)
