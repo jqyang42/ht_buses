@@ -93,7 +93,8 @@ urlpatterns = [
     path('api/bulk-import/students/create', bulk_import_students_create.students_create, name='bulk-import-students-create'),
     path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
     path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete'),
-    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop')
+    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
+    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info")
 
 ]
 
