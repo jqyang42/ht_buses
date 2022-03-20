@@ -72,13 +72,13 @@ class Login extends Component {
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
-                    <div className="row flex-nowrap">
+                    <div className="row flex-wrap">
                         <UnauthenticatedSidebarMenu />
-                        <div className="col mx-0 px-0 bg-gray w-100">
+                        <div className="col mx-0 px-0 bg-gray w-100 min-vh-100">
                             <UnauthenticatedHeaderMenu />
-                            <div className="container mt-4 mx-2">
+                            <div className="container mt-4 mx-4 mx-md-2">
                                 <div className="row">
-                                    <div className="col-6">
+                                    <div className="col-md-6">
                                         <h2 className="pb-3">Log In</h2>
                                         {(!this.state.valid_login && this.state.message !== "") ? 
                                             (<div>
