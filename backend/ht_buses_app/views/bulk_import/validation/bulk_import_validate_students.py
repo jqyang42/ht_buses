@@ -30,11 +30,11 @@ def bulk_import_validate(request):
         # name, parent_email, student_id, school_name
         if row["parent_email"] is None or row["parent_email"] == "":
             email_error = True
-            email_error_message = "Parent email field cannot be empty."
+            email_error_message = "Parent email field cannot be empty"
         else:
             if len(row["parent_email"]) > 254: 
                 email_error = True
-                email_error_message = "Parent email cannot be more than 254 characters."
+                email_error_message = "Parent email cannot be more than 254 characters"
             else:
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row["parent_email"]):
@@ -42,7 +42,7 @@ def bulk_import_validate(request):
                     user = User.objects.filter(email=row["parent_email"])
                     if len(user) == 0:
                         email_error = True
-                        email_error_message = "Parent does not exist in system."
+                        email_error_message = "Parent does not exist in system"
                     else:
                         email_error = False
                 else:
@@ -50,11 +50,11 @@ def bulk_import_validate(request):
 
         if row["name"] is None or row["name"] == "":
             name_error = True
-            name_error_message = "Name field cannot be empty."
+            name_error_message = "Name field cannot be empty"
         else:
             if len(row["name"]) > 150:
                 name_error = True
-                name_error_message = "Name cannot be more that 150 characters."
+                name_error_message = "Name cannot be more that 150 characters"
             else:
                 # check if name exists in system
                 exist_students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
@@ -87,7 +87,7 @@ def bulk_import_validate(request):
         
         if row["school_name"] is None or row["school_name"] == "":
             school_name_error = True
-            school_name_error_message = "School name field cannot be empty."
+            school_name_error_message = "School name field cannot be empty"
         else:
             # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
             school_name_clean = ' '.join(row["school_name"].split())
@@ -95,7 +95,7 @@ def bulk_import_validate(request):
             schools = School.objects.filter(name__iexact=school_name_clean)
             if len(schools) == 0:
                     school_name_error = True
-                    school_name_error_message = "School does not exist."
+                    school_name_error_message = "School does not exist"
             else:
                 school_name_error = False
             
