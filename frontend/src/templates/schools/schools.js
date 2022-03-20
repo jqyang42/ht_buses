@@ -26,7 +26,7 @@ class Schools extends Component {
 
     // initialize
     componentDidMount() {
-        this.getSchoolsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        // this.getSchoolsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination

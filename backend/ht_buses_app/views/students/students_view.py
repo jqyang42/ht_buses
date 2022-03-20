@@ -40,7 +40,7 @@ def student_search_and_sort(order_by, sort_by, search, student_list):
     
     # search only
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
-        students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("id")
     else:
         if order_by == "asc":
