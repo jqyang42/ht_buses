@@ -60,7 +60,14 @@ def bulk_import(request):
                         email_error = True
                         email_error_message = "Parent does not exist in system"
                     else:
-                        email_error = False
+                        print(user)
+                        user_email_serializer = UserSerializer(user, many=True)
+                        print(user_email_serializer.data)
+                        if user_email_serializer.data[0]["location"] == None or user_email_serializer.data[0]["location"] == "":
+                            email_error = True
+                            email_error_message = "User has an invalid addresss"
+                        else:
+                            email_error = False
                 else:
                     email_error = False
 
@@ -117,12 +124,12 @@ def bulk_import(request):
                 school_name_error = False
             
         if name_error or email_error or student_id_error or school_name_error:
-            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": False, "school_name": school_name_error_message}
+            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": "", "school_name": school_name_error_message}
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students}
             errors.append(error_obj)
             errors_msg.append(error_message)
         else:
-            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": False, "school_name": school_name_error_message}
+            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": "", "school_name": school_name_error_message}
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students}
         row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": student_id, "school_name": row["school_name"], "error": error_obj, "exclude": False}
         students.append(row_obj)
