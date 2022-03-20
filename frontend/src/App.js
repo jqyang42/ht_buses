@@ -15,6 +15,7 @@ import Account from './templates/general/account';
 import Students from "./templates/students/students";
 import StudentsDetail from "./templates/students/students-detail";
 import StudentsEdit from "./templates/students/students-edit";
+import StudentsImport from './templates/students/students-import';
 
 import Schools from "./templates/schools/schools";
 import SchoolsDetail from "./templates/schools/schools-detail";
@@ -83,6 +84,7 @@ class App extends Component {
           <Route path={STUDENTS_URL} element={<Students />} />
           <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />
           <Route path={STUDENTS_EDIT_URL} element={<StudentsEdit />} />
+          <Route path={STUDENTS_IMPORT_URL} element={<StudentsImport />} />
 
           <Route path={SCHOOLS_URL} element={<Schools />} />
           <Route path={SCHOOLS_CREATE_URL} element={<SchoolsCreate />} />
