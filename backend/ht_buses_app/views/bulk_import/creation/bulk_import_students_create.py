@@ -35,6 +35,7 @@ def students_create(request):
             user_id = parent
         )
     data["success"] = True
+    data["student_count"] = len(reqBody["students"])
     return Response(data)
 
 
