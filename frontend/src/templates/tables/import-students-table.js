@@ -62,7 +62,7 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 Cell: ({ cell: { value } }) => (
                     <div className="mt-2 d-flex align-items-center justify-content-center">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" checked={value} id="flexCheckDefault" />
+                            <input class="form-check-input" type="checkbox" defaultChecked={value} id="flexCheckDefault" />
                         </div>
                     </div>
                     
