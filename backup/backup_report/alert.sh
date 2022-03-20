@@ -6,7 +6,7 @@ cat $2 >> email_err;
 
 if [[ -n $(cat $2) ]];
 then
-        mailx -s "Backup Error Alert: $1" $3 < email_err;
+        mailx -r "HT-Backup-Server" -s "Backup Error Alert: $1" $3 < email_err;
 fi
 
 rm email_err;
