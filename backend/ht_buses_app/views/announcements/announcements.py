@@ -58,8 +58,9 @@ def announcement_route(request):
         uv_route_id = Route.objects.get(pk=id)
     except:
         return response_messages.DoesNotExist(data, "route")
+    route_id = has_access_to_object(request.user, uv_route_id)
     try:
-        route_id = has_access_to_object(user, uv_route_id)
+        route_id = has_access_to_object(request.user, uv_route_id)
     except:
         return response_messages.PermissionDenied(data, "route")
     try:
