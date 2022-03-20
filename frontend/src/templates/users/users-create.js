@@ -57,7 +57,8 @@ class UsersCreate extends Component {
         error404: false,
         is_school_staff: false,
         is_parent_email: false,
-        appendToParent: false
+        appendToParent: false,
+        existing_user_id: null
         // selectedOptions: []
     }
 
@@ -371,23 +372,34 @@ class UsersCreate extends Component {
     
             api.post(`email_exists`, request)
             .then(res => {
+                console.log(res)
                 const email_exists = res.data.user_email_exists
                 const is_parent_email = res.data.is_parent_email
+                const existing_user_id = res.data?.user_id
 
-                // @jessica keep working
                 if (!email_exists) {
                     this.sendCreateRequest()
                 }
                 this.setState({ 
                     appendToParent: email_exists && is_parent_email,
-                    valid_email: email_exists
+                    valid_email: !email_exists,
+                    existing_user_id: existing_user_id
                 })
-                // @kyra: needs a modal that will popup (if this.state.is_school_staff is true) with 2 buttons: to append to existing parent or to edit the email address
+                // @kyra: needs a modal that will popup (if this.state.is_school_staff and this.state.appendToParent are true) with 2 buttons: to append to existing parent or to escape to allow the email address to be edited
             })
           }
     }
         
+    addStudentsToExisting = () => {
+        const students = {
+            students: this.state.students
+        }
 
+        api.post(`users/add-students?id=${this.props.params.id}`, students)
+        .then(res => {
+            
+        })
+    }
 
     // helper functions
     sendCreateRequest = () => {
