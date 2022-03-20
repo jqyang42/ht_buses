@@ -31,6 +31,11 @@ class StopSerializer(serializers.ModelSerializer):
         model = Stop
         fields = ('id', 'location_id', 'route_id', 'name', 'order_by', 'arrival', 'departure')
 
+class BulkImportUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'first_name', 'last_name', 'email', 'location', 'phone_number')
+
 class ManageSchoolsSerializer(serializers.ModelSerializer):
     class Meta:
         model = School

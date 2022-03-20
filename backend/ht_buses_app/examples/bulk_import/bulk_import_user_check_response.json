@@ -1,0 +1,24 @@
+{
+    "errors": [
+        {
+            "row_num": 1,
+            "name": ""
+        }
+    ],
+    "users": [
+        {
+            "row_num": 1,
+            "name": "",
+            "email": "example@example.com",
+            "phone_number": "blah",
+            "address": "something valid"
+        }
+    ],
+    "page": {
+        "current_page": 1,
+        "can_prev_page": false,
+        "can_next_page": false,
+        "total_pages": 1
+    },
+    "success": true
+}

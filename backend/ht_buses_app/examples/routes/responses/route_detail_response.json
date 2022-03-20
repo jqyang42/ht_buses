@@ -16,6 +16,10 @@
     "users": [
         {
             "id": 1,
+            "first_name": "Tom",
+            "last_name": "Smith",
+            "email": "tom.smith@example.com",
+            "phone_number": "000000",
             "location": {
                 "address": "Duke St. Durham NC",
                 "lat": 0.0,
