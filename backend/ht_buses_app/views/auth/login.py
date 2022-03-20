@@ -17,6 +17,7 @@ def user_login(request):
     reqBody = json.loads(request.body)
     email = reqBody['email']
     password = reqBody['password']
+    email = email.lower()
     try:
         user = User.objects.get(email=email)
     except BaseException as e:

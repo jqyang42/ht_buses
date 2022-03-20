@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 
@@ -22,7 +22,7 @@ def student_delete(request):
     except:
         return response_messages.DoesNotExist(data, "student")
     try:
-        student_school = get_object_for_user(request.user, student_object.school_id, "change_school")
+        student_school = has_access_to_object(request.user, student_object)
     except: 
         return response_messages.PermissionDenied(data, "student")
     try:

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import json
 from rest_framework.response import Response
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 @csrf_exempt

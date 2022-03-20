@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 # Route Planner API
@@ -20,7 +20,7 @@ def routeplanner(request):
     except:
         return response_messages.DoesNotExist(data, "school")
     try:
-        school = get_object_for_user(request.user, uv_school, "change_school")
+        school = has_access_to_object(request.user, uv_school)
     except:
         return response_messages.PermissionDenied(data, "school")
     try:

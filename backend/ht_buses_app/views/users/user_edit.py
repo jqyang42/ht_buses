@@ -10,8 +10,8 @@ from ..resources import capitalize_reg
 from .user_address_update import update_student_stop
 import traceback
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from guardian.shortcuts import get_objects_for_user
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import get_users_for_user
+from ..general.general_tools import has_access_to_object
 from ..general.general_tools import assign_school_staff_perms, reassign_perms, reassign_groups
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
@@ -32,7 +32,7 @@ def user_edit(request):
         except:
             return response_messages.DoesNotExist(data, "user")
         try:
-            user_object = get_object_for_user(request.user, uv_user_object, "change_user")
+            user_object = has_access_to_object(request.user, uv_user_object)
         except:
             return response_messages.PermissionDenied(data, "user")
         user_object.email = reqBody["user"]["email"]
@@ -60,6 +60,7 @@ def user_edit(request):
         if user_object.role == User.SCHOOL_STAFF:
             try:
                 schools = reqBody["user"]["managed_schools"]
+                schools = [sublists.get('id') for sublists in schools]
             except:
                 return response_messages.UnsuccessfulAction(data, "user edit")
         else:

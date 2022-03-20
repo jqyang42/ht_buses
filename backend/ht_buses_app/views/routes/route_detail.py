@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 
@@ -20,7 +20,7 @@ def routes_detail(request):
     except:
         return response_messages.DoesNotExist(data, "route")  
     try:
-        accessible_school = get_object_for_user(request.user, route.school_id, "view_school")
+        accessible_school = has_access_to_object(request.user, route.school_id)
     except:
         return response_messages.PermissionDenied(data, "route's school")
     try:
