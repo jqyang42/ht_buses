@@ -122,6 +122,11 @@ class Students extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
+                                    {this.state.loading ? 
+                                        <div class="alert alert-primary mt-2 mb-4" role="alert">
+                                            Please wait patiently while we load and verify your file import.
+                                        </div> : ""
+                                    }
                                     <div className="row d-inline-flex float-end">
                                         {
                                             localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?

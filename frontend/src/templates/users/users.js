@@ -123,7 +123,7 @@ class Users extends Component {
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
                                     {this.state.loading ? 
-                                        <div class="alert alert-primary mt-2 mb-4 extra-margin" role="alert">
+                                        <div class="alert alert-primary mt-2 mb-4" role="alert">
                                             Please wait patiently while we load and verify your file import.
                                         </div> : ""
                                     }
