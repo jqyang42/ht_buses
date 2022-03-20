@@ -7,6 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
+import { Modal } from "react-bootstrap";
 import { emailValidation, passwordValidation, validNumber, phoneValidation } from "../components/validation";
 // import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import MultiSelectDropdown from "../components/multi-select";
@@ -55,6 +56,13 @@ class UsersCreate extends Component {
         redirect_detail: false,
         detail_url: '',
         error404: false,
+        is_school_staff: false,
+        is_parent_email: false,
+        appendToParent: false,
+        existing_user_id: null,
+        email_api_checked: false,
+        addStudentsModalIsOpen: false,
+        // selectedOptions: []
         added_student_school_staff: true
     }
 
@@ -67,18 +75,25 @@ class UsersCreate extends Component {
             this.setState({ schools_multiselect: ret })
         })
         if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
-            this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
+            this.setState({ 
+                new_user: { ...this.state.new_user, role_id: 4}, 
+                is_school_staff: true
+            })
         }
         this.addedStudentSchoolStaff()        
     }
 
     // api calls
-    validateNewEmail = async (request) => {
-        const res = await api.post(`email_exists`, request)
-        const valid_email = !res.data.user_email_exists
-        this.setState({ valid_email: valid_email })
-        return valid_email
-    }
+    // validateNewEmail = async (request) => {
+    //     const res = await api.post(`email_exists`, request)
+    //     const email_exists = res.data.user_email_exists
+    //     const is_parent_email = res.data.is_parent_email
+
+    //     this.setState({ 
+    //         valid_email: email_exists,
+    //         is_parent_email: is_parent_email
+    //     })
+    // }
 
     createUser = (request) => {
         api.post(`users/create`, request)
@@ -361,14 +376,52 @@ class UsersCreate extends Component {
                 }            
             }
     
-            this.validateNewEmail(request).then(success => {
-                if (success) {
+            api.post(`email_exists`, request)
+            .then(res => {
+                console.log(res)
+                const email_exists = res.data.user_email_exists
+                const is_parent_email = res.data.is_parent_email
+                const existing_user_id = res.data?.user_id
+
+                if (!email_exists) {
                     this.sendCreateRequest()
                 }
+
+                this.setState({ 
+                    valid_email: !email_exists,
+                    existing_user_id: existing_user_id,
+                    email_api_checked: true
+                }, () => {
+                    if (email_exists && is_parent_email && this.state.is_school_staff) {
+                        this.openAddStudentsModal()
+                    }
+                })
+                
+                // @kyra: needs a modal that will popup (if this.state.is_school_staff and this.state.appendToParent are true) with 2 buttons: to append to existing parent or to escape to allow the email address to be edited
             })
           }
     }
         
+    // @kyra call this method to add students to existing - wait this.state.email_api_checked -> once true, show modal
+    addStudentsToExisting = () => {
+        const students = {
+            students: this.state.students
+        }
+
+        api.post(`users/add-students?id=${this.state.existing_user_id}`, students)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    create_success: 1,
+                    redirect_detail: true,
+                    detail_url: USERS_URL + "/" + this.state.existing_user_id
+                });
+            } else {
+                this.setState({ create_success: -1 })
+            }
+        })
+    }
 
     // helper functions
     sendCreateRequest = () => {
@@ -405,6 +458,9 @@ class UsersCreate extends Component {
     //     console.log(this.state.selectedOptions)
     //     console.log(this.state.options)
     // };
+
+    openAddStudentsModal = () => this.setState({ addStudentsModalIsOpen: true });
+    closeAddStudentsModal = () => this.setState({ addStudentsModalIsOpen: false });
 
     render() {
         // const { selectedOptions } = this.state;
@@ -713,6 +769,19 @@ class UsersCreate extends Component {
                                 </form>
                             </div>
                         </div>
+
+                        <Modal show={this.state.addStudentsModalIsOpen} onHide={this.closeAddStudentsModal}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add Student to User</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Oops! This user already exists as a parent in our database. You may choose to either add these students to the existing parent or you may modify the parent email to create a new user.
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button type="button" className="btn btn-secondary" onClick={this.closeAddStudentsModal}>Continue Editing</button>
+                                <button type="submit" className="btn btn-primary" onClick={this.addStudentsToExisting}>Add to Existing Parent</button>
+                            </Modal.Footer>
+                        </Modal>
                     </div>
                 </div> 
             </div>
