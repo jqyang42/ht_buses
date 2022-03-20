@@ -160,6 +160,7 @@ class Students extends Component {
                                                 <input
                                                     type="file"
                                                     ref={this.hiddenFileInput}
+                                                    accept={".csv"}
                                                     onChange={this.getFile}
                                                     style={{ display: 'none' }} />
                                             </> : ""
