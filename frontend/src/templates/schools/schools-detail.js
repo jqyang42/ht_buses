@@ -33,13 +33,23 @@ class SchoolsDetail extends Component {
             totalPages: null,
             // sortOptions: {},
             // searchValue: ''
-        }
+        },
+        routes_page: [],
+        routes_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+            // sortOptions: {},
+            // searchValue: ''
+        },
     }
 
     // initialize
     componentDidMount() {
         this.getSchoolDetails()
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        this.getRoutesPage(this.state.routes_table.pageIndex, null, '')
     }
 
     // pagination
@@ -57,6 +67,24 @@ class SchoolsDetail extends Component {
             this.setState({
                 students_page: res.data.students,
                 students_table: students_table
+            })
+        })
+    }
+
+    getRoutesPage = (page, sortOptions, search) => {
+        getPage({ url: `routes/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            const routes_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                routes_page: res.data.routes,
+                routes_table: routes_table
             })
         })
     }
@@ -141,7 +169,7 @@ class SchoolsDetail extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -156,7 +184,7 @@ class SchoolsDetail extends Component {
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                 <Link to={"/schools/" + this.props.params.id + "/email"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
@@ -179,7 +207,7 @@ class SchoolsDetail extends Component {
                                                 </> : ""
                                             }
                                             {
-                                                localStorage.getItem('is_staff') && localStorage.getItem('role') === 'Administrator' ? 
+                                                  localStorage.getItem('role') === 'Administrator' ? 
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
                                                     Delete
@@ -219,7 +247,7 @@ class SchoolsDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-2">
-                                    <div className="col-auto">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Arrival Time
                                         </p>
@@ -227,7 +255,7 @@ class SchoolsDetail extends Component {
                                             Departure Time
                                         </p>
                                     </div>
-                                    <div className="col-5 ms-2 me-4">
+                                    <div className="col-5 me-4">
                                         <p>
                                             {/* TODO: connect school arrival time */}
                                             {toDisplayFormat({ twentyfour_time: this.state.school.arrival})}
@@ -260,7 +288,17 @@ class SchoolsDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        <SchoolRoutesTable data={this.state.routes} showAll={this.state.routes_show_all}/>
+                                        <SchoolRoutesTable
+                                        data={this.state.routes_page} 
+                                        showAll={this.state.routes_show_all}
+                                        pageIndex={this.state.routes_table.pageIndex}
+                                        canPreviousPage={this.state.routes_table.canPreviousPage}
+                                        canNextPage={this.state.routes_table.canNextPage}
+                                        updatePageCount={this.getRoutesPage}
+                                        pageSize={10}
+                                        totalPages={this.state.routes_table.totalPages}
+                                        searchValue={''} 
+                                        />
                                         <button className="btn btn-secondary align-self-center" onClick={this.handleRoutesShowAll}>
                                             { !this.state.routes_show_all ?
                                                 "Show All" : "Show Pages"

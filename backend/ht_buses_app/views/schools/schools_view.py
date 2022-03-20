@@ -1,4 +1,4 @@
-from ...models import School, Location
+from ...models import School, Location, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny
@@ -14,10 +14,13 @@ from guardian.shortcuts import get_objects_for_user
 def schools(request):
     data = {}
     page_number = request.query_params["page"]
-    order_by = "asc"#request.query_params["order_by"] TODO: Frontend needs to fix, broken 
-    sort_by = "address" #request.query_params["sort_by"]
-    search = "" #request.query_params["q"]
-    school_list = get_objects_for_user(request.user,"view_school", School.objects.all())
+    order_by = request.query_params["order_by"] # TODO: Recheck when testing,previously broken
+    sort_by = request.query_params["sort_by"]
+    search = request.query_params["q"]
+    if request.user.role == User.SCHOOL_STAFF or request.user.role == User.ADMIN:
+        school_list = get_objects_for_user(request.user,"change_school", School.objects.all())
+    else:
+        school_list = get_objects_for_user(request.user,"view_school", School.objects.all())
     data = get_schools_view(order_by, sort_by, page_number, search, school_list)
     return Response(data)
 

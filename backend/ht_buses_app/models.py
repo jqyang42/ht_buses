@@ -95,6 +95,7 @@ class UserManager(BaseUserManager):
             raise ValueError('Users must have a last name')
         if is_parent is True and not address:
                 raise ValueError('Users must have an address')
+        email = email.lower()
         location_obj = Location.objects.create(address=address, lat=lat, lng=lng)
         user = self.model(
             email= self.normalize_email(email),
@@ -111,13 +112,13 @@ class UserManager(BaseUserManager):
             user.save()
             if role == User.ADMIN:
                 user.groups.add(get_admin_group())
+                assign_perm("change_user", user, user)
             #elif role == 2:
             #user.groups.add(school_staff_group)
             elif role == User.DRIVER:
                 user.groups.add(get_driver_group())
         else:
             user.role = User.GENERAL
-        assign_perm("change_user", user, user)
         assign_perm("view_user", user, user)
         user.save(using= self._db)
         return user 

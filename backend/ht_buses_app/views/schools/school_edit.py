@@ -11,9 +11,8 @@ from ..resources import capitalize_reg
 from datetime import datetime
 from django.contrib.auth.decorators import permission_required
 from guardian.shortcuts import assign_perm
-from guardian.shortcuts import get_objects_for_user
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
  
@@ -29,7 +28,7 @@ def school_edit(request):
     except:
         return response_messages.DoesNotExist(data, "school")
     try:
-        school_object = get_object_for_user(request.user, uv_school_object, "change_school")
+        school_object = has_access_to_object(request.user, uv_school_object)
     except:
         return response_messages.PermissionDenied(data, "school")
     try:

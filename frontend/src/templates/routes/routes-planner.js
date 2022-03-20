@@ -4,6 +4,7 @@ import RouteMap from './route-map';
 import { SchoolStudentsTable } from "../tables/school-students-table";
 import Geocode from "react-geocode";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
@@ -13,6 +14,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
+import { GOOGLE_MAP_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
 import { getStopInfo } from "./route-time-calc";
@@ -50,8 +52,17 @@ class BusRoutesPlanner extends Component {
                 // sortOptions: {},
                 // searchValue: ''
             },
+            stops_page: [],
+            stops_table: {
+                pageIndex: 1,
+                canPreviousPage: null,
+                canNextPage: null,
+                totalPages: null,
+            },
             modal_dismiss: false,
             route_complete: 0,
+            map_redirect_pickup: [],
+            map_redirect_dropoff: [],
         }
     }
 
@@ -63,9 +74,11 @@ class BusRoutesPlanner extends Component {
         } else {
         localStorage.removeItem('reloadCount');
         }
+
         this.handleTableGet();       
         this.handleLocationsGet();
-        this.getStudentsPage(this.state.students_table.pageIndex, null, '') 
+        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        // this.getStopsPage(this.state.students_table.pageIndex, null, '') 
         
         if (this.state.active_route !== 0) { this.handleStopsGet() };
         
@@ -93,6 +106,60 @@ class BusRoutesPlanner extends Component {
         })
     }
 
+    getStopsPage = (page, sortOptions, search) => {
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
+            const stops_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+                // sortOptions: sortOptions,
+                // searchValue: search
+            }
+            this.setState({
+                stops_page: res.data.stops,
+                stops_table: stops_table
+            })
+        })
+    }
+
+    // @jessica add is_complete
+    handleStopsGet = () => {
+        // this.getStopsPage(this.state.stops_show_all ? 0 : this.state.students_table.pageIndex, null, '')
+        getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
+            const stops = res.data.stops;
+            const is_complete = res.data.route.is_complete
+            if (stops.length !== 0) {
+                console.log(stops)
+                this.handleStopTimeCalc(stops)
+                .then(res => {
+                    this.editStops(res)
+                    this.setState({ 
+                        stops: res,
+                        route_complete: is_complete ? 1 : -1
+                     })
+                })
+            } else {
+                this.setState({ 
+                    stops: stops,
+                    route_complete: is_complete ? 1 : -1,
+                })
+            }
+        })
+        .catch (error => {
+            console.log(error)
+            if (error.response.status !== 200) {
+                this.setState({ error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        } 
+        )
+        console.log(this.state.stops)
+    }
+
     handleStudentsShowAll = () => {
         this.setState(prevState => ({
             students_show_all: !prevState.students_show_all
@@ -104,7 +171,9 @@ class BusRoutesPlanner extends Component {
     handleStopsShowAll = () => {
         this.setState(prevState => ({
             stops_show_all: !prevState.stops_show_all
-        }))
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleReorder = (new_order) => {
@@ -114,11 +183,12 @@ class BusRoutesPlanner extends Component {
 
     switchStopsEditMode = () => {
         this.setState(prevState => ({
-            stops_edit_mode: !prevState.stops_edit_mode
-        }))
-        this.setState(prevState => ({
-            dnd: !prevState.dnd
-        }))
+            stops_edit_mode: !prevState.stops_edit_mode,
+            dnd: !prevState.dnd,
+            stops_show_all: !prevState.stops_edit_mode
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     handleTableGet = () => {        
@@ -186,8 +256,9 @@ class BusRoutesPlanner extends Component {
     }
 
     handleStopsGet = () => {
-        api.get(`stops?id=${this.state.active_route}`)
-            .then(res => {
+        this.getStopsPage(this.state.stops_show_all ? 0 : this.state.students_table.pageIndex, null, '')
+        getPage({ url: `stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.state.active_route}`, only_pagination: true })
+        .then(res => {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
@@ -199,11 +270,15 @@ class BusRoutesPlanner extends Component {
                         stops: res,
                         route_complete: is_complete ? 1 : -1
                      })
+                     this.redirectToGoogleMapsPickup(this.state.stops)
+                     this.redirectToGoogleMapsDropoff(this.state.stops)
                 })
             } else {
                 this.setState({ 
                     stops: stops,
                     route_complete: is_complete ? 1 : -1,
+                    map_redirect_pickup: [],
+                    map_redirect_dropoff: [],
                 })
             }
         })
@@ -256,8 +331,7 @@ class BusRoutesPlanner extends Component {
         this.clearAddRouteForm()
     }
 
-    handleRouteCreateSubmit = (event) => {
-        
+    handleRouteCreateSubmit = (event) => {        
         if(this.state.create_route_name === "") {
             event.preventDefault();
             return 
@@ -287,8 +361,62 @@ class BusRoutesPlanner extends Component {
     }
 
     clearAddRouteForm = (event) => {
-        
         document.getElementById("add-route-form").reset();
+    }
+
+    // TODO: Fix undefined, undefined center starting error after refreshing
+    redirectToGoogleMapsPickup = (stops) => {
+        this.setState({map_redirect_pickup: []})
+        let arrivingLinks = []
+        for (let i=0; i < stops.length; i+=10 ) {
+            let map_redirect_pickup = GOOGLE_MAP_URL
+            map_redirect_pickup += '&waypoints='
+            let j;
+            for (j = i; j < i + 9 && j < stops.length; j+=1) {
+                console.log(stops[j])
+                map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
+            }
+            if (j == stops.length) {
+                map_redirect_pickup += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
+            } else {
+                map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
+            }
+            console.log(map_redirect_pickup)
+            arrivingLinks.push(map_redirect_pickup)
+        }
+        this.setState({
+            map_redirect_pickup: arrivingLinks
+        })
+    }
+
+    redirectToGoogleMapsDropoff = (stops) => {
+        let reversed_stops = stops.slice().reverse();
+        let departingLinks = []
+        let i;
+        if (reversed_stops.length == 1) {
+            let map_redirect_dropoff = GOOGLE_MAP_URL
+            map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng
+            map_redirect_dropoff += '&destination=' + reversed_stops[0].location.lat + ',' + reversed_stops[0].location.lng
+            departingLinks.push(map_redirect_dropoff) 
+        } else {
+            for (i = 0; i < reversed_stops.length-1; i+=10 ) {
+                let map_redirect_dropoff = GOOGLE_MAP_URL 
+                if (i == 0) {
+                    map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
+                }
+                map_redirect_dropoff +=  '&waypoints=';
+                let j;
+                for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
+                    console.log(reversed_stops)
+                    map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
+                }
+                //Think about cases where this could be in its own link
+                map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
+                departingLinks.push(map_redirect_dropoff)
+            }
+        }
+        console.log(departingLinks)
+        this.setState({map_redirect_dropoff: departingLinks})
     }
 
     students = {"students":[]};
@@ -353,7 +481,6 @@ class BusRoutesPlanner extends Component {
     }
 
     submitStopsOrder = () => {
-        this.switchStopsEditMode()
         const order = [...this.state.stops_order]
         const ordered_stops = this.state.stops.slice().map(stop => {
             return {
@@ -365,11 +492,16 @@ class BusRoutesPlanner extends Component {
         .then(res => {
             console.log(res)
             this.editStops(res)
-            this.setState({ stops: res })
+            .then(res => {
+                this.switchStopsEditMode()
+            })
+            // this.setState({ stops: res })
+            
         })
+        
     }
 
-    editStops(stops) {
+    async editStops(stops) {
         const edit_body = {
             stops: stops.map(stop => {
                 return {
@@ -388,14 +520,14 @@ class BusRoutesPlanner extends Component {
         )}
 
         // console.log(edit_body)
-        api.put(`stops/edit`, edit_body)
-        .then(res => {
-            const success = res.data.success
-            const new_stops = res.data.stops
+        await api.put(`stops/edit`, edit_body)
+        // .then(res => {
+        //     const success = res.data.success
+        //     const new_stops = res.data.stops
 
-            // this.setState({ stops: edit_body })
-            // TODO ERROR HANDLING
-        })
+        //     // this.setState({ stops: edit_body })
+        //     // TODO ERROR HANDLING
+        // })
     }
 
     async handleStopTimeCalc(stops) {
@@ -451,7 +583,7 @@ class BusRoutesPlanner extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="Schools" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.school.name} page="Route Planner" />
@@ -462,7 +594,7 @@ class BusRoutesPlanner extends Component {
                                     <p>{this.state.school.address}</p>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-7 me-4">
+                                    <div className="col-md-7 me-4 mb-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
                                         {!this.state.assign_mode ? 
                                         <div className="row d-flex mt-2 align-items-center align-middle">
@@ -504,7 +636,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
+                                                <select className="w-md-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
                                                     <option selected value={0}>Select a route to assign</option>
                                                     {/* <option value={0}>No Route</option> */}
                                                     {this.state.route_dropdown.map(route => 
@@ -603,7 +735,7 @@ class BusRoutesPlanner extends Component {
                                         }
 
                                         {/* Map Interface */}
-                                        <div className="bg-gray rounded mt-3">
+                                        <div className="bg-gray rounded mt-3 mb-4">
                                             <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 
@@ -617,6 +749,44 @@ class BusRoutesPlanner extends Component {
                                             handleStopModification={this.handleRouteStopModification}
                                             />
                                         </div>
+                                        { this.state.map_redirect_dropoff.length !== 0 ?
+                                            <div className="mt-3"> 
+                                            <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                                let num = index + 1
+                                                return  <div className="row d-flex align-items-center align-middle mt-2">
+                                                            <div className="col-auto align-items-center">
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                            </div>
+                                                            <div className="col-auto align-items-center">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                    <span>
+                                                                        Open in Google Maps
+                                                                        <i className="bi bi-box-arrow-up-right ms-2"></i>
+                                                                    </span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                            })}
+                                            </div> : ""
+                                        }
+                                        
                                     </div>
                                     <div className="col">
                                         <h7>STUDENTS</h7>
@@ -638,7 +808,7 @@ class BusRoutesPlanner extends Component {
                                         </button>
 
                                         {
-                                            this.state.active_route === 0 ? "" : this.state.stops ?
+                                            this.state.active_route === 0 ? "" : this.state.stops_page ?
                                             <>
                                                 <div className="row d-flex justify-content-between align-items-center mb-2">
                                                     <h7 className="col w-auto">STOPS</h7>
@@ -660,12 +830,25 @@ class BusRoutesPlanner extends Component {
                                                         }
                                                     </div> 
                                                 </div>
-                                                <StopsTable data={this.state.stops || []} showAll={this.state.stops_show_all} dnd={this.state.dnd} handleReorder={this.handleReorder}/>
+                                                <StopsTable 
+                                                data={this.state.stops_page}
+                                                showAll={this.state.stops_show_all} 
+                                                pageIndex={this.state.stops_table.pageIndex}
+                                                canPreviousPage={this.state.stops_table.canPreviousPage}
+                                                canNextPage={this.state.stops_table.canNextPage}
+                                                updatePageCount={this.getStopsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.stops_table.totalPages}
+                                                searchValue={''}
+                                                dnd={this.state.dnd} 
+                                                handleReorder={this.handleReorder}/>
+                                                { !this.state.stops_edit_mode ?                                                 
                                                 <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
-                                                </button>
+                                                </button> : ""
+                                                }
                                                 <div></div>
                                             </> : ""
                                         }

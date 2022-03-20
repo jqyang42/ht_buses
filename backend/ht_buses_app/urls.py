@@ -13,18 +13,22 @@ from . views.parents import parent_dashboard, parent_student_detail
 from . views.announcements import announcements
 from . views.accounts import reset_password
 from . views.general import general_apis
-from . views.stops import stops_create, stops_view, stops_edit, stops_delete, stops_name_edit
+from . views.stops import stops_create, stops_view_pag, stops_edit, stops_delete, stops_name_edit
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
+<<<<<<< HEAD
 from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
 
+=======
+from . views.parents.detail import parent_student_stop
+>>>>>>> dev
 from . models import User
 
 try:
@@ -92,6 +96,7 @@ urlpatterns = [
     path('api/bulk-import/students/create', bulk_import_students_create.students_create, name='bulk-import-students-create'),
     path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
     path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete')
+    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop')
 
 ]
 

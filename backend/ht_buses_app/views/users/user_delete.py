@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
   
 @csrf_exempt
@@ -18,7 +18,7 @@ def user_delete(request):
     except:
         return response_messages.DoesNotExist(data, "user")
     try:
-        user_object = get_object_for_user(request.user, uv_user_object, "delete_user")
+        user_object = has_access_to_object(request.user, uv_user_object)
     except:
         return response_messages.PermissionDenied(data, "user")
     try:

@@ -7,13 +7,19 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
-import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
-import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import { Modal } from "react-bootstrap";
+import { emailValidation, passwordValidation, validNumber, phoneValidation } from "../components/validation";
+// import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
+import MultiSelectDropdown from "../components/multi-select";
+// import makeAnimated from 'react-select/animated';
+// import Select from "react-select";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
+
+// const animatedComponents = makeAnimated();
 
 class UsersCreate extends Component {
     state = {
@@ -46,10 +52,18 @@ class UsersCreate extends Component {
         valid_email: true,
         student_ids_changed: false,
         valid_address: true,
-        create_success: 0,
+        valid_phone: 0,
         redirect_detail: false,
         detail_url: '',
-        error404: false
+        error404: false,
+        is_school_staff: false,
+        is_parent_email: false,
+        appendToParent: false,
+        existing_user_id: null,
+        email_api_checked: false,
+        addStudentsModalIsOpen: false,
+        // selectedOptions: []
+        added_student_school_staff: true
     }
 
     // initialize
@@ -60,15 +74,26 @@ class UsersCreate extends Component {
         makeSchoolsMultiSelect().then(ret => {
             this.setState({ schools_multiselect: ret })
         })
+        if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
+            this.setState({ 
+                new_user: { ...this.state.new_user, role_id: 4}, 
+                is_school_staff: true
+            })
+        }
+        this.addedStudentSchoolStaff()        
     }
 
     // api calls
-    validateNewEmail = async (request) => {
-        const res = await api.post(`email_exists`, request)
-        const valid_email = !res.data.user_email_exists
-        this.setState({ valid_email: valid_email })
-        return valid_email
-    }
+    // validateNewEmail = async (request) => {
+    //     const res = await api.post(`email_exists`, request)
+    //     const email_exists = res.data.user_email_exists
+    //     const is_parent_email = res.data.is_parent_email
+
+    //     this.setState({ 
+    //         valid_email: email_exists,
+    //         is_parent_email: is_parent_email
+    //     })
+    // }
 
     createUser = (request) => {
         api.post(`users/create`, request)
@@ -142,6 +167,17 @@ class UsersCreate extends Component {
         let user = this.state.new_user
         user.phone_number = phone_number
         this.setState({ new_user: user });
+        /* //Phone validation
+        if(!phoneValidation({ phone_number: phone_number })) {
+            this.setState({ valid_phone: -1 });
+        }
+        else {
+            let user = this.state.new_user
+            user.phone_number = phone_number.replace(/\D/g, '');
+            this.setState({ new_user: user });
+            this.setState({ valid_phone: 1 });
+        }
+        */
     }
 
     handleRoleChange = (event) => {
@@ -176,8 +212,8 @@ class UsersCreate extends Component {
     }
 
     handleManagedSchoolsChange = (selected) => {
-        const selected_schools = selected.map(id => {
-            return { 'id': id }
+        const selected_schools = selected.map(school => {
+            return { 'id': school.value, 'name': school.label }
         })
         // console.log(selected)
         // console.log(selected_schools)
@@ -268,6 +304,8 @@ class UsersCreate extends Component {
             added_students_list: new_list,
             students: [...this.state.students, student_field],
             routes_dropdowns: [...this.state.routes_dropdowns, []]
+        }, () => {
+            this.addedStudentSchoolStaff()
         })
         this.checkNonParentAddress()
     }
@@ -287,6 +325,8 @@ class UsersCreate extends Component {
             added_students_list: new_list,
             students: new_students,
             routes_dropdowns: new_routes_dropdowns
+        }, () => {
+            this.addedStudentSchoolStaff()
         })
 
         if (new_list.length === 0) {
@@ -295,6 +335,12 @@ class UsersCreate extends Component {
             this.setState({ new_user: user })
         }
     }
+
+    addedStudentSchoolStaff = () => {
+        const added_student_school_staff = (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? !(this.state.added_students_list.length === 0) : true
+        this.setState({ added_student_school_staff: added_student_school_staff})
+    }
+
     checkNonParentAddress = () => {
         const address = this.state.new_user.location.address
         const empty_address = address === "" || address == undefined
@@ -313,8 +359,13 @@ class UsersCreate extends Component {
 
     handleSubmit = (event) => {        
         event.preventDefault();
+        const valid_email = emailValidation({ email: this.state.new_user.email })
         const valid_address = this.checkNonParentAddress()
-        if (!emailValidation({ email: this.state.new_user.email }) || !valid_address || !this.studentIDValidation() || this.state.new_user.role_id === 0) {
+        //const valid_phone = phoneValidation({ phone_number: this.state.new_user.phone_number})
+        const valid_id = this.validatedStudentIDS()
+        const not_general = this.state.new_user.role_id !== 0
+        const added_student_school_staff = this.state.added_student_school_staff
+        if (!(valid_email && valid_address && valid_id && not_general && added_student_school_staff)) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -325,14 +376,52 @@ class UsersCreate extends Component {
                 }            
             }
     
-            this.validateNewEmail(request).then(success => {
-                if (success) {
+            api.post(`email_exists`, request)
+            .then(res => {
+                console.log(res)
+                const email_exists = res.data.user_email_exists
+                const is_parent_email = res.data.is_parent_email
+                const existing_user_id = res.data?.user_id
+
+                if (!email_exists) {
                     this.sendCreateRequest()
                 }
+
+                this.setState({ 
+                    valid_email: !email_exists,
+                    existing_user_id: existing_user_id,
+                    email_api_checked: true
+                }, () => {
+                    if (email_exists && is_parent_email && this.state.is_school_staff) {
+                        this.openAddStudentsModal()
+                    }
+                })
+                
+                // @kyra: needs a modal that will popup (if this.state.is_school_staff and this.state.appendToParent are true) with 2 buttons: to append to existing parent or to escape to allow the email address to be edited
             })
           }
     }
         
+    // @kyra call this method to add students to existing - wait this.state.email_api_checked -> once true, show modal
+    addStudentsToExisting = () => {
+        const students = {
+            students: this.state.students
+        }
+
+        api.post(`users/add-students?id=${this.state.existing_user_id}`, students)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    create_success: 1,
+                    redirect_detail: true,
+                    detail_url: USERS_URL + "/" + this.state.existing_user_id
+                });
+            } else {
+                this.setState({ create_success: -1 })
+            }
+        })
+    }
 
     // helper functions
     sendCreateRequest = () => {
@@ -347,13 +436,13 @@ class UsersCreate extends Component {
         this.createUser(request)
     }
 
-    studentIDValidation = () => {
+    validatedStudentIDS = () => {
         if(!this.state.student_ids_changed) {
             return true
         }
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
-            if (!studentIDValidation({ student_id: id })) {
+            if (!validNumber({ value_to_check: id })) {
                 return false
             }
         }
@@ -364,7 +453,18 @@ class UsersCreate extends Component {
         return this.state.added_students_list.indexOf(count)
     }
 
+    // handleMultiSelectDropdownChange = (selectedOptions) => {
+    //     this.setState({ selectedOptions: selectedOptions })
+    //     console.log(this.state.selectedOptions)
+    //     console.log(this.state.options)
+    // };
+
+    openAddStudentsModal = () => this.setState({ addStudentsModalIsOpen: true });
+    closeAddStudentsModal = () => this.setState({ addStudentsModalIsOpen: false });
+
     render() {
+        // const { selectedOptions } = this.state;
+
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
@@ -381,7 +481,7 @@ class UsersCreate extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -399,19 +499,19 @@ class UsersCreate extends Component {
                                     </div>) : ""
                                 }
                                 <form onSubmit={this.handleSubmit}>
-                                    <div className="row">
+                                    <div className="row flex-wrap">
                                         <div className="col mt-2 w-50">
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputFirstName1" className="control-label pb-2">First Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputFirstName1"
                                                     placeholder="Enter first name" required onChange={this.handleFirstNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputLastName1" className="control-label pb-2">Last Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputLastName1"
                                                     placeholder="Enter last name" required onChange={this.handleLastNameChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
                                                 placeholder="Enter email" required ref={el => this.emailField = el} onChange={this.handleEmailChange}></input>
@@ -429,27 +529,20 @@ class UsersCreate extends Component {
                                                 }
                                             </div>
 
-                                            {/* <div className="form-group required pb-3 w-75">
+                                            { <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
-                                                placeholder="Enter phone number" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" onChange={this.handlePhoneChange}></input> */}
-
-                                                {/* TODO: add phoneValidation() method to check if phone number is valid @fern */}
-
-                                                {/* {(!phoneValidation({ phone: this.state.new_user.phone }) && this.state.new_user.phone !== "") ? 
+                                                placeholder="Enter phone number" required onChange={this.handlePhoneChange}></input> 
+                                                {/*
+                                                 {(!phoneValidation({ phone_number: this.state.new_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Please enter a valid phone number.
+                                                        Please enter a valid North American phone number.
                                                     </div>) : ""
-                                                } */}
-                                            {/* </div> */}
+                                                }
+                                            */}
+                                            </div> }
 
-                                            <div className="form-group required pb-3 w-75">
-                                                <label for="phone_number" className="control-label pb-2">Phone</label>
-                                                <input type="tel" className="form-control pb-2" id="examplePhone"
-                                                    placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
-                                            </div>
-
-                                            <div className={"form-group pb-3 w-75 " + (this.state.new_user.is_parent ? "required" : "")}>
+                                            <div className={"form-group pb-3 form-col " + (this.state.new_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                 {/* Uses autocomplete API, only uncomment when needed to */}
                                                 <Autocomplete
@@ -468,8 +561,18 @@ class UsersCreate extends Component {
                                                 onChange={this.handleAddressChange}></input> */}
                                             </div>
 
-                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 w-75 required">
+                                            <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">Role</label>
+                                                {(localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? 
+                                                <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
+                                                onChange={(e) => this.handleRoleChange(e)}>
+                                                    {/* <option value={0} disabled selected>Select a Role</option> */}
+                                                    <option value={4} disabled selected id="4">General</option>
+                                                    {/* <option value={1} id="1">Administrator</option>
+                                                    <option value={2} id="2">School Staff</option>
+                                                    <option value={3} id="3">Driver</option> */}
+                                                </select>
+                                                :
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
                                                     <option value={0} disabled selected>Select a Role</option>
@@ -477,10 +580,8 @@ class UsersCreate extends Component {
                                                     <option value={1} id="1">Administrator</option>
                                                     <option value={2} id="2">School Staff</option>
                                                     <option value={3} id="3">Driver</option>
-                                                    {/* { {this.state.roles_dropdown.map(role => 
-                                                        <option value={role.value} id={role.display}>{role.display}</option>
-                                                    )} } */}
                                                 </select>
+                                                }
                                             </div>
 
                                             {/* <div onChange={this.handleRoleChange.bind(this)} className="form-group required pb-3 w-75">
@@ -509,8 +610,26 @@ class UsersCreate extends Component {
                                             { this.state.new_user.role_id == 2 ?
                                                 <div className="form-group pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
+                                                    <MultiSelectDropdown
+                                                        selectedOptions={[]}
+                                                        options={this.state.schools_multiselect}
+                                                        isMulti={true}
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
+                                                        // multi={true}
+                                                        // isMulti={true}
+                                                        // value={this.state.selectedOptions}
+                                                        // onChange={this.handleMultiSelectDropdownChange}
+                                                        // options={this.state.schools_multiselect}
+                                                        // className="basic-multi-select"
+                                                        // classNamePrefix="select"
+                                                        // name="schools"
+                                                        // placeholder="Select Schools to Manage"
+                                                        // components={animatedComponents}
+                                                        // closeMenuOnSelect={false}
+                                                    />
+
                                                     {/* TODO: @jessica link up schools in the options field */}
-                                                    <DropdownMultiselect
+                                                    {/* <DropdownMultiselect
                                                         // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
                                                         options={this.state.schools_multiselect}
                                                         id="managedSchools"
@@ -520,7 +639,7 @@ class UsersCreate extends Component {
                                                         selectDeselectLabel="Select / Deselect All"
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
                                                         // @jessica you can add an onChange method here by using "handleOnChange"
-                                                    />
+                                                    /> */}
                                                     {/* @jessica for your reference */}
                                                     {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
                                                     onChange={(e) => this.handleManagedSchoolChange(e)} multiple="multiple" required>
@@ -625,7 +744,12 @@ class UsersCreate extends Component {
                                                             </div>
                                                         </div>
                                                     )}
-                                                    {(!this.studentIDValidation()) ? 
+                                                    {(!this.state.added_student_school_staff && localStorage.getItem("role") === "School Staff") ? 
+                                                      (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                          At least one student must be associated with any general parent account.
+                                                      </div>) : ""
+                                                    }
+                                                    {(!this.validatedStudentIDS()) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           The Student ID value for at least one student is invalid. Please edit and try again.
                                                       </div>) : ""
@@ -645,6 +769,19 @@ class UsersCreate extends Component {
                                 </form>
                             </div>
                         </div>
+
+                        <Modal show={this.state.addStudentsModalIsOpen} onHide={this.closeAddStudentsModal}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add Student to User</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Oops! This user already exists as a parent in our database. You may choose to either add these students to the existing parent or you may modify the parent email to create a new user.
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button type="button" className="btn btn-secondary" onClick={this.closeAddStudentsModal}>Continue Editing</button>
+                                <button type="submit" className="btn btn-primary" onClick={this.addStudentsToExisting}>Add to Existing Parent</button>
+                            </Modal.Footer>
+                        </Modal>
                     </div>
                 </div> 
             </div>

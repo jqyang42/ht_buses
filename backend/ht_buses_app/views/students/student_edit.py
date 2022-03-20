@@ -8,7 +8,7 @@ from ..resources import capitalize_reg
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 # Students PUT API
@@ -27,7 +27,7 @@ def student_edit(request):
         return response_messages.DoesNotExist(data, "student")
     try:
         uv_school = School.objects.get(pk=reqBody["student"]["school_id"])
-        school = get_object_for_user(request.user, uv_school, "change_school")
+        school = has_access_to_object(request.user, uv_school)
     except: 
         return response_messages.PermissionDenied(data, "student's new school")
     try:

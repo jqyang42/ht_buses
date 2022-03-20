@@ -3,9 +3,9 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, UserSerializer
+from ...serializers import LocationSerializer, UserSerializer, ManageSchoolsSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from ..general.general_tools import get_object_for_user, get_role_string, user_is_parent
+from ..general.general_tools import has_access_to_object, get_role_string, user_is_parent
 from ..general import response_messages
 from guardian.shortcuts import get_objects_for_user
 from rest_framework.authtoken.models import Token
@@ -20,10 +20,13 @@ def users_detail(request):
         uv_user = User.objects.get(pk=id)
     except: 
         return response_messages.DoesNotExist(data, "user")
-    try:
-        user = get_object_for_user(request.user, uv_user, "view_user")
-    except:
-        return response_messages.PermissionDenied(data, "user")
+    if request.user.id != int(id):
+        try:
+            user = has_access_to_object(request.user, uv_user)
+        except:
+            return response_messages.PermissionDenied(data, "user")
+    else:
+        user = User.objects.get(pk = request.user.pk)
     try:
         user_serializer = UserSerializer(user, many=False)
         location_serializer = LocationSerializer(user.location, many=False)
@@ -33,7 +36,8 @@ def users_detail(request):
         else:
             role = User.role_choices[int(user_serializer.data["role"])-1][1]
         schools = get_objects_for_user(user,"view_school", School.objects.all())
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_serializer.data["is_parent"], "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools":[]}
+        manage_schools_serializer = ManageSchoolsSerializer(schools, many=True)
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_serializer.data["is_parent"], "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools": manage_schools_serializer.data}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)
@@ -51,10 +55,13 @@ def user_account(request):
         uv_user = User.objects.get(pk=id)
     except:
         return response_messages.DoesNotExist(data, "user")
-    try:
-        user = get_object_for_user(request.user, uv_user, "view_user")
-    except:
-        return response_messages.PermissionDenied(data, "user")
+    if request.user.id != int(id):
+        try:
+            user = has_access_to_object(request.user, uv_user)
+        except:
+            return response_messages.PermissionDenied(data, "user")
+    else:
+        user = User.objects.get(pk = request.user.pk)
     try:
         user_serializer = UserSerializer(user, many=False)
         location_arr = {"address": user.location.address}

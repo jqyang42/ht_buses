@@ -1,4 +1,4 @@
-from ...models import Student, School
+from ...models import Student, School, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -19,7 +19,10 @@ def students(request):
     order_by = request.query_params["order_by"]
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     search = request.query_params["q"]
-    schools = get_objects_for_user(request.user, "view_school", School.objects.values_list('pk', flat=True))
+    if request.user.role == User.ADMIN or request.user.role == User.SCHOOL_STAFF:
+        schools = get_objects_for_user(request.user, "change_school", School.objects.all())
+    else:
+        schools = get_objects_for_user(request.user, "view_school", School.objects.all())
     student_list = Student.objects.filter(school_id__in = schools)
     data = get_student_view(page_number, order_by, sort_by, search, student_list)
     return Response(data)

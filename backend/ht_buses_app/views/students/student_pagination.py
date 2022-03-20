@@ -36,7 +36,7 @@ def student_pagination(students, page_number):
         parent_serializer = UserSerializer(parent, many=False)
         parent_first = parent_serializer.data["first_name"]
         parent_last = parent_serializer.data["last_name"]
-        parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
+        parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last, 'phone_number': parent_serializer.data["phone_number"]}
         school = School.objects.get(pk=student["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
         school_name = school_serializer.data["name"]

@@ -6,7 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...serializers import SchoolSerializer, RouteSerializer, StudentSerializer, LocationSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 # Schools Detail GET API
 @csrf_exempt
@@ -20,7 +20,7 @@ def schools_detail(request):
     except:
         return response_messages.DoesNotExist(data, "school")
     try:
-        school = get_object_for_user(request.user, uv_school, "view_school")
+        school = has_access_to_object(request.user, uv_school)
     except:
         return response_messages.PermissionDenied(data, "school")
     try:

@@ -10,8 +10,8 @@ from ..resources import capitalize_reg
 from .user_address_update import update_student_stop
 import traceback
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from guardian.shortcuts import get_objects_for_user
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import get_users_for_user
+from ..general.general_tools import has_access_to_object
 from ..general.general_tools import assign_school_staff_perms, reassign_perms, reassign_groups
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
@@ -32,7 +32,7 @@ def user_edit(request):
         except:
             return response_messages.DoesNotExist(data, "user")
         try:
-            user_object = get_object_for_user(request.user, uv_user_object, "change_user")
+            user_object = has_access_to_object(request.user, uv_user_object)
         except:
             return response_messages.PermissionDenied(data, "user")
         user_object.email = reqBody["user"]["email"]
@@ -42,7 +42,7 @@ def user_edit(request):
         user_object.location.lat = reqBody["user"]["location"]["lat"]
         user_object.location.lng = reqBody["user"]["location"]["lng"]
         user_object.phone_number = reqBody["user"]["phone_number"]
-        #user_object.location.save()
+        user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
         """
         if User.role_choices[0][1] == reqBody["user"]["role"]:
@@ -58,11 +58,18 @@ def user_edit(request):
         else:
             user_object.role = reqBody["user"]["role_id"]
         if user_object.role == User.SCHOOL_STAFF:
-            schools = reqBody["user"]["managed_schools"]
-            reassign_success = reassign_perms(edited_user=user_object, schools = schools)
-            if not reassign_success:
+            try:
+                schools = reqBody["user"]["managed_schools"]
+                schools = [sublists.get('id') for sublists in schools]
+            except:
                 return response_messages.UnsuccessfulAction(data, "user edit")
+        else:
+            schools = []
+        reassign_success = reassign_perms(edited_user=user_object, schools = schools)
+        if not reassign_success:
+            return response_messages.UnsuccessfulAction(data, "user edit")
         user_object.save()
+        user_object = User.objects.get(pk = user_object.pk)
         update_student_stop(id)
         data["message"] = "user information was successfully updated"
         data["success"] = True
@@ -81,7 +88,7 @@ def valid_email_edit(request):
     reqBody = json.loads(request.body)
     email = reqBody["user"]['email']
     try: 
-        user = User.objects.get(email = email)
+        user = User.objects.get(email = email.lower())
         if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["success"] = False
