@@ -39,7 +39,7 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 Header: 'Parent Email',
                 // accessor: d => Array(`${d.email}`, true,`Email is invalid`, false,``),
                 accessor: d => Array(`${d.parent_email}`,d.error.parent_email,`${d.error.error_message.parent_email}`,d.error.duplicate_parent_email,`Parent email is a duplicate in file import`),
-                id: 'email',
+                id: 'parent_email',
                 disableSort: true
                 // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
@@ -62,7 +62,7 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 Cell: ({ cell: { value } }) => (
                     <div className="mt-2 d-flex align-items-center justify-content-center">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" checked={value} id="flexCheckDefault" />
+                            <input class="form-check-input" type="checkbox" defaultChecked={value} id="flexCheckDefault" />
                         </div>
                     </div>
                     
