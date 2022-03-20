@@ -82,8 +82,6 @@ def bulk_import(request):
                     name_error_message = "Name may already exist in the system"
                     ex_students = []
                     exist_student_serializer = StudentSerializer(exist_students, many=True)
-                    print(exist_students)
-                    print(exist_student_serializer.data)
                     for i in range(0, len(exist_student_serializer.data)):
                         exist_first_name = exist_student_serializer.data[i]["first_name"]
                         exist_last_name = exist_student_serializer.data[i]["last_name"]
