@@ -20,6 +20,7 @@ class BusRoutesDetail extends Component {
     state = {
         route : [],
         students : [],
+        users: [],
         school : [],
         stops: [],
         center: {},
@@ -112,6 +113,7 @@ class BusRoutesDetail extends Component {
             
             this.setState({ 
                 students: students,
+                users: users,
                 route: route, 
                 school: school, 
                 center: { 
@@ -344,7 +346,7 @@ class BusRoutesDetail extends Component {
                                                     </span>
                                                 </Link> : ""
                                             }
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.students) : ""}>
+                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
                                                 Export
                                             </button>

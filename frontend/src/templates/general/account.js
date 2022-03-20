@@ -90,12 +90,18 @@ class Account extends Component {
                                             Email
                                         </p>
                                         <p className="gray-600">
+                                            Phone
+                                        </p>
+                                        <p className="gray-600">
                                             Address
                                         </p>
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
                                             {this.state.user.email}
+                                        </p>
+                                        <p>
+                                            {this.state.user.phone_number}
                                         </p>
                                         <p>
                                             {this.state.location.address ? this.state.location.address : ""}
