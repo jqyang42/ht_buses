@@ -280,6 +280,8 @@ class StudentsImport extends Component {
                                         </div>
                                     </div>
                                 </div>
+ 
+                                
 
                                 <div className="extra-margin">
                                 {this.state.loading ? 
@@ -287,6 +289,9 @@ class StudentsImport extends Component {
                                         Please wait patiently while we load and verify your file import.
                                     </div> : ""
                                 }
+                                <div class="alert alert-primary mt-2 mb-3" role="alert">
+                                    Please note that all parent users must be imported before students can be associated to them.
+                                </div>
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
                                         <div class="alert alert-danger mt-2 mb-2" role="alert">
