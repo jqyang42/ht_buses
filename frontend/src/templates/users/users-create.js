@@ -55,6 +55,9 @@ class UsersCreate extends Component {
         redirect_detail: false,
         detail_url: '',
         error404: false,
+        is_school_staff: false,
+        is_parent_email: false,
+        appendToParent: false
         // selectedOptions: []
     }
 
@@ -67,17 +70,24 @@ class UsersCreate extends Component {
             this.setState({ schools_multiselect: ret })
         })
         if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
-            this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
+            this.setState({ 
+                new_user: { ...this.state.new_user, role_id: 4}, 
+                is_school_staff: true
+            })
         }
     }
 
     // api calls
-    validateNewEmail = async (request) => {
-        const res = await api.post(`email_exists`, request)
-        const valid_email = !res.data.user_email_exists
-        this.setState({ valid_email: valid_email })
-        return valid_email
-    }
+    // validateNewEmail = async (request) => {
+    //     const res = await api.post(`email_exists`, request)
+    //     const email_exists = res.data.user_email_exists
+    //     const is_parent_email = res.data.is_parent_email
+
+    //     this.setState({ 
+    //         valid_email: email_exists,
+    //         is_parent_email: is_parent_email
+    //     })
+    // }
 
     createUser = (request) => {
         api.post(`users/create`, request)
@@ -359,14 +369,25 @@ class UsersCreate extends Component {
                 }            
             }
     
-            this.validateNewEmail(request).then(success => {
-                if (success) {
+            api.post(`email_exists`, request)
+            .then(res => {
+                const email_exists = res.data.user_email_exists
+                const is_parent_email = res.data.is_parent_email
+
+                // @jessica keep working
+                if (!email_exists) {
                     this.sendCreateRequest()
                 }
+                this.setState({ 
+                    appendToParent: email_exists && is_parent_email,
+                    valid_email: email_exists
+                })
+                // @kyra: needs a modal that will popup (if this.state.is_school_staff is true) with 2 buttons: to append to existing parent or to edit the email address
             })
           }
     }
         
+
 
     // helper functions
     sendCreateRequest = () => {
