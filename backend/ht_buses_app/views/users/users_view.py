@@ -9,6 +9,7 @@ from django.db.models.functions import Concat
 from .user_pagination import user_pagination
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from guardian.shortcuts import get_objects_for_user
+from ..general.general_tools import  get_users_for_user
 
 # Basically we can use this api just for search by sending order_by/sort_by to be none
 @csrf_exempt
@@ -20,7 +21,7 @@ def user_view(request):
     page_num = request.query_params["page"]
     search = request.query_params["q"]
     if request.user.role == User.SCHOOL_STAFF or request.user.role == User.ADMIN:
-        user_list = get_objects_for_user(request.user,"change_user", User.objects.all())
+        user_list = get_users_for_user(request.user)
     else: 
         user_list = get_objects_for_user(request.user,"view_user", User.objects.all())
     data = get_user_view(order_by, sort_by, page_num, search, user_list)

@@ -31,7 +31,6 @@ def user_is_parent(user_id):
         return False
     return False
 
-
 def get_role_string(role_id):
     return User.role_choices[int(role_id)-1][1]
 
@@ -67,8 +66,6 @@ def new_perms_to_many_objects(user, access_level, object_list):
     return 
 
 def assign_school_staff_perms(user, schools):
-    print("new_schools")
-    print(schools)
     user.user_permissions.clear()
     user.groups.clear()
     remove_object_level_perms(user)
@@ -167,3 +164,15 @@ def reassign_groups(edited_user):
         edited_user.groups.add(get_driver_group())
     edited_user.save()
     return True
+
+def get_users_for_user(user):
+    schools = School.objects.all()
+    students = Student.objects.filter(school_id__in = schools)
+    if user.role == User.DRIVER or user.role == User.ADMIN:
+        return User.objects.all()
+    if students.exists(): 
+        return filtered_users_helper(students)
+    else:
+        return User.objects.none()
+
+
