@@ -77,7 +77,7 @@ def bulk_import_validate(request):
             else:
                 # check if name is part of an existing user tears
                 users_names = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
-        .filter(Q(full_name__icontains=row["name"]) | Q(first_name__icontains=row["name"]) | Q(last_name__icontains=row["name"]))
+        .filter(Q(full_name__iexact=row["name"]) | Q(first_name__iexact=row["name"]) | Q(last_name__iexact=row["name"]))
                 if len(users_names) == 0:
                     name_error = False
                 else:
@@ -198,7 +198,7 @@ def bulk_import_validate(request):
                         if errors[k]["row_num"] == users[i]["row_num"]:
                             errors[k]["duplicate_email"] = True
                         if errors[k]["row_num"] == users[j]["row_num"]:
-                            errors[k]["duplicate"] = True
+                            errors[k]["duplicate_email"] = True
 
     data["users"] = users
     data["errors"] = errors
