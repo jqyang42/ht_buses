@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
+import { toDisplayFormat } from "../components/time";
 import { Table } from "./table";
-import { colors } from "../../static/colors";
+import { useState } from "react";
     
-export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+export function ManagedSchoolsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage,
     updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
-    // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
-
+    
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
@@ -16,7 +16,6 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
     // const ourGlobalFilterFunction = useCallback(
     //     (rows, ids, query) => {
     //         return rows.filter((row) => 
-    //             row.values["id"].toString().includes(query.toString()) ||
     //             row.values["name"].toLowerCase().includes(query.toLowerCase())
     //         );
     //     },
@@ -26,37 +25,13 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
     const columns = React.useMemo(
         () => [
             {
-                Header: 'ID',
-                accessor: 'student_school_id',
-                id: 'id', // accessor is the "key" in the data
-                sortDirection: sort.accessor === 'id' ? sort.sortDirection : 'none'
-            },
-            {
                 Header: 'Name',
-                accessor: d => `${d.first_name} ${d.last_name}`,
+                accessor: 'name',
                 id: 'name',
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
-            {
-                Header: 'School',
-                accessor: 'school_name',
-                disableFilter: true,
-                id: 'school_name',
-                sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
-            },
-            {
-                Header: 'Bus Route',
-                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
-                disableFilter: true,
-                Cell: ({ cell: { value } }) => (
-                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
-                ),
-                id: 'route',
-                sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
-            },            
         ],
         [sort]
-        // []
     )
 
     const columnHeaderClick = async (column) => {
@@ -88,11 +63,11 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
         <Table
             columns={columns}
             data={data}
-            searchOn={true}
-            searchLabel="Search by id or name..."
+            searchOn={false}
+            // searchLabel="Search by name..."
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
-            navUrl={"/dashboard/"}
+            navUrl={"/schools/"}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
@@ -106,6 +81,7 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
             totalPages={totalPages}
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
+            searchValue={searchValue}
         />
     )
 }

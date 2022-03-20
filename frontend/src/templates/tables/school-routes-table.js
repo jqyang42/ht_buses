@@ -1,7 +1,8 @@
 import React from "react";
-import { TableOld } from "./table-old";
+import { Table } from "./table";
     
-export function SchoolRoutesTable({ data, showAll }) {
+export function SchoolRoutesTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages, searchValue }) {
 
     const columns = React.useMemo(
         () => [
@@ -34,7 +35,7 @@ export function SchoolRoutesTable({ data, showAll }) {
     )
 
     return (
-        <TableOld
+        <Table
             columns={columns}
             data={data}
             searchOn={false}
@@ -45,6 +46,15 @@ export function SchoolRoutesTable({ data, showAll }) {
                     cursor: "pointer"
                 }
             })}
+            pageIndex={pageIndex}
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            updatePageCount={updatePageCount}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            // columnHeaderClick={columnHeaderClick}
+            sortOptions={null}
+            searchValue={''}
         />
     )
 }

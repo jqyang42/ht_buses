@@ -13,6 +13,7 @@ import ErrorPage from '../error-page';
 class StudentsDetail extends Component {
     state = {
         student: {},
+        user: {},
         route: {},
         school: {},
         redirect: false,
@@ -37,7 +38,8 @@ class StudentsDetail extends Component {
             this.setState({ 
                 student: data.student, 
                 route: data.route, 
-                school: data.school 
+                school: data.school,
+                user: data.user
             });
         })
         .catch (error => {
@@ -67,17 +69,7 @@ class StudentsDetail extends Component {
 
 
     updateIsParent = () => {
-        api.get(`users/detail?id=${localStorage.getItem('user_id')}`)
-        .then(res => {
-            const user = res.data.user;
-            const prev = JSON.parse(localStorage.getItem('is_parent'))
-            localStorage.setItem('is_parent', user.is_parent)
-            if(!user.is_parent && prev) {
-               window.location.reload()
-            }
-        })
-        .catch (err => {
-        })
+       
     }
 
 
@@ -105,7 +97,7 @@ class StudentsDetail extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="students" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -120,12 +112,11 @@ class StudentsDetail extends Component {
                                             <h7>
                                                 ID #{this.state.student.student_school_id}
                                             </h7>
-                                        
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                     <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                         <span className="btn-text">
@@ -197,6 +188,39 @@ class StudentsDetail extends Component {
                                                 <p className="unassigned"> {"Out of Range"}</p> 
                                             )
                                         }
+                                    </div>
+                                </div>
+                                <div className="row mt-4">
+                                    <h7 className="mb-3">
+                                        PARENT CONTACT INFO
+                                    </h7>
+                                    <div className="col-auto me-2">
+                                        <p className="gray-600">
+                                            Name
+                                        </p>
+                                        <p className="gray-600">
+                                            Email
+                                        </p>
+                                        <p className="gray-600">
+                                            Phone
+                                        </p>
+                                        <p className="gray-600">
+                                            Address
+                                        </p>
+                                    </div>
+                                    <div className="col-5 me-6">
+                                        <p>
+                                            {this.state.user.first_name} {this.state.user.last_name}
+                                        </p>
+                                        <p>
+                                            {this.state.user.email}
+                                        </p>
+                                        <p>
+                                            {this.state.user.phone_number}
+                                        </p>
+                                        <p>
+                                            {this.state.user.address}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

@@ -1,17 +1,17 @@
-from ...models import School, Route, Student, User
+from ...models import School, Route, Student, User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer
-from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer, LocationSerializer
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 # Students Detail GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin|IsSchoolStaff]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def students_detail(request):
     data = {}
     id = request.query_params["id"]
@@ -20,7 +20,7 @@ def students_detail(request):
     except:
         return response_messages.DoesNotExist(data, "student")
     try:
-        student_user = get_object_for_user(request.user, student.school_id, "view_school")
+        student_school = has_access_to_object(request.user, student.school_id)
     except: 
         return response_messages.PermissionDenied(data, "student")
     try:
@@ -36,8 +36,14 @@ def students_detail(request):
         in_range = student_serializer.data["in_range"]
         school = School.objects.get(pk=student_serializer.data["school_id"])
         school_serializer = SchoolSerializer(school, many=False)
-        student_arr = {"user_id": student_serializer.data["user_id"], "student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "in_range": in_range}
+        user = User.objects.get(pk=student_serializer.data["user_id"])
+        user_serializer = UserSerializer(user,many=False)
+        location = Location.objects.get(pk=user_serializer.data["location"])
+        location_serializer = LocationSerializer(location, many=False)
+        user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "address": location_serializer.data["address"], "phone_number": user_serializer.data["phone_number"], "email": user_serializer.data["email"]}
+        student_arr = {"student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "in_range": in_range}
         data["student"] = student_arr
+        data["user"] = user_arr
         data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
         data["route"] = {'id' : route_id, 'name' : route_name}
         data["success"] = True

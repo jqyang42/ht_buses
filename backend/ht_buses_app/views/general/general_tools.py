@@ -11,10 +11,6 @@ def get_all_school_perms():
     school_content_type = ContentType.objects.get_for_model(School)
     return Permission.objects.filter(content_type=school_content_type)
 
-def get_all_user_perms():
-    user_content_type = ContentType.objects.get_for_model(User)
-    return Permission.objects.filter(content_type=user_content_type)
-
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
     return User.objects.filter(pk__in=user_ids)
@@ -46,6 +42,7 @@ def role_string_to_id(role_string):
         return User.GENERAL
     return None
 
+"""
 def get_object_for_user(user, model_object, access_level):
     if user.has_perm('ht_buses_app.'+access_level):
         return model_object
@@ -53,11 +50,12 @@ def get_object_for_user(user, model_object, access_level):
         return model_object
     else:
         raise PermissionDenied
+"""
 
 def permission_setup():
-    admin_perms = [*get_all_school_perms(), *get_all_user_perms()]
+    admin_perms = [*get_all_school_perms()]
     get_admin_group().permissions.set(admin_perms)
-    view_perms = [*get_all_school_perms().filter(codename__startswith='view_'), *get_all_user_perms().filter(codename__startswith='view_')]
+    view_perms = [*get_all_school_perms().filter(codename__startswith='view_')]
     get_driver_group().permissions.set(view_perms)
     return 
 
@@ -68,13 +66,11 @@ def new_perms_to_many_objects(user, access_level, object_list):
 
 def assign_school_staff_perms(user, schools):
     user.user_permissions.clear()
+    remove_object_level_perms(user)
     user.groups.clear()
     user.save()
     user = User.objects.get(pk = user.pk)
     assign_school_perms(user, schools)
-    for school in schools:
-        students = Student.objects.filter(school_id = school)
-        assign_user_perms(user, students)
     user.save()
     return 
 
@@ -83,16 +79,12 @@ def assign_school_perms(user, schools):
         new_perms_to_many_objects(user, perm, schools)
     return 
 
-def assign_student_perms(user, students):
-    for perm in get_all_student_perms():
-            new_perms_to_many_objects(user, perm, students)
-    return 
-
 def assign_user_perms(user, students):
     for perm in get_all_user_perms():
         new_perms_to_many_objects(user, perm, filtered_users_helper(students))
     return 
     
+#todo: get rid
 def reassign_after_creation(new_user):
     if user_is_parent(new_user.pk):
         students = Student.objects.filter(user_id = new_user)
@@ -112,19 +104,12 @@ def remove_perms_to_many_objects(user, access_level, object_list):
     return 
 
 def remove_object_level_perms(user):
-    #print(user.has_perm("view_school", School.objects.get(pk = 1) ))
 
     view_schools = get_objects_for_user(user,"view_school", School.objects.all())
     remove_perms_to_many_objects(user, "view_school", view_schools)
 
     change_schools = get_objects_for_user(user,"change_school", School.objects.all())
     remove_perms_to_many_objects(user, "change_school", change_schools)
-
-    view_users = get_objects_for_user(user,"view_user", User.objects.all())
-    remove_perms_to_many_objects(user, "view_user", view_users)
-
-    change_users = get_objects_for_user(user,"change_user", User.objects.all())
-    remove_perms_to_many_objects(user, "change_user", change_users)
 
     return 
 
@@ -135,13 +120,12 @@ def reassign_perms(edited_user, schools=[]):
     remove_object_level_perms(edited_user)
     if edited_user.role == User.SCHOOL_STAFF:
         try:
-            school_ids = [sublists.get('id') for sublists in schools]
+            school_ids = schools
             managed_schools = School.objects.filter(pk__in=school_ids)
             assign_school_staff_perms(edited_user, managed_schools) 
         except:
             return False
     reassign_groups(edited_user)
-    assign_perm("change_user", edited_user, edited_user)
     assign_perm("view_user", edited_user, edited_user)
     edited_user.save()
     return True 
@@ -155,3 +139,52 @@ def reassign_groups(edited_user):
         edited_user.groups.add(get_driver_group())
     edited_user.save()
     return True
+
+
+def update_schools_staff_rights():
+    school_staffs = User.objects.filter(role = User.SCHOOL_STAFF)
+    for school_staff in school_staffs:
+        schools = get_objects_for_user(school_staff,"change_school", School.objects.all())
+        assign_school_staff_perms(school_staff, schools)
+    return True
+
+def get_users_for_user(user):
+    schools = get_objects_for_user(user,"change_school", School.objects.all())
+    students = Student.objects.filter(school_id__in = schools)
+    if user.role == User.DRIVER or user.role == User.ADMIN:
+        return User.objects.all()
+    if students.exists(): 
+        return filtered_users_helper(students)
+    else:
+        return User.objects.none()
+
+def has_access_to_object(user, model_object):
+    if user.role == User.ADMIN or user.role == User.DRIVER:
+        return model_object
+    schools = get_objects_for_user(user,"change_school", School.objects.all())
+    if user.role == User.SCHOOL_STAFF:
+        schools = get_objects_for_user(user,"change_school", School.objects.all())
+        try:
+            if type(model_object) is Student:
+                schools.filter(pk = model_object.school_id.pk)
+                return model_object
+            if type(model_object) is Route:
+                schools.get(pk = model_object.school_id.pk)
+                return model_object
+            if type(model_object) is User:
+                students = Student.objects.filter(user_id = model_object.pk)
+                for student in students:
+                    try:
+                        schools.get(pk = student.school_id.pk)
+                        return model_object
+                    except:
+                        continue 
+                raise PermissionDenied
+            if type(model_object) is School:
+                schools.get(pk = model_object.pk)
+                return model_object
+        except:
+            raise PermissionDenied
+
+
+
