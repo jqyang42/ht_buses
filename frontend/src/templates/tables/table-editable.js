@@ -71,9 +71,10 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
         // console.log(data)
     }, [data])
 
-    // Let's add a data resetter/randomizer to help
-    // illustrate that flow...
-    const resetData = () => setData(origData)
+    // updates data if origdata changes
+    useEffect(() => {
+        setData(origData)
+    }, [origData])
 
     const getRowId = React.useCallback(row => {
         return row.row_num

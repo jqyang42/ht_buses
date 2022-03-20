@@ -32,7 +32,7 @@ class Users extends Component {
         searchValue: '',
         import_redirect: false,
         fileUploaded: null,
-        import_in_progress: false
+        loading: false
     }
     
     componentDidMount() {
@@ -89,7 +89,8 @@ class Users extends Component {
                 "Content-Type": "multipart/form-data"
             }
         }
-        this.setState({ import_in_progress: true })
+        
+        this.setState({ loading: true })
         api.post(`bulk-import/users-upload`, formData, config)
         .then(res => {
             console.log("posted successfully")

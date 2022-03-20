@@ -72,11 +72,6 @@ class UsersImport extends Component {
                 loading: false
             })
         })
-        // getPage({ url: 'users', pageIndex: 0, sortOptions: null, searchValue: '' })
-        // .then(res => {
-        //     console.log(res)
-        //     this.setState({ users: res.data.users })
-        // })
     }
 
     handleGetTableEdits = (new_data) => {
@@ -112,12 +107,13 @@ class UsersImport extends Component {
         api.post(`bulk-import/users/validate`, data)
         .then(res => {
             console.log(res)
-            // const data = res.data
-            // this.setState({
-            //     verifyCheck: data.verified,
-            //     errors: data.errors,
-            //     loading: false
-            // })
+            const data = res.data
+            this.setState({
+                verifyCheck: data.errors.length === 0,
+                errors: data.errors,
+                users: data.users,
+                loading: false
+            })
         })
     }
 
@@ -198,7 +194,7 @@ class UsersImport extends Component {
                                     <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
-                                                <form onSubmit={this.handleSubmitImport}>
+                                                <form>
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="staticBackdropLabel">Verify Users</h5>
                                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -215,7 +211,6 @@ class UsersImport extends Component {
                                             </div>
                                         </div>
                                     </div>
-
                                     {/* Submit button */}
                                     {/* @jessica add  */}
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
