@@ -41,8 +41,8 @@ def bulk_import(request):
         data["success"] = False
         return Response(data, status=404)
     reader = csv.DictReader(csv_file, headers, delimiter=',')
-    # header check
-    if reader[0]["name"] != "name" and reader[0]["parent_email"] != "parent_email" and reader[0]["student_id"] != "student_id" and reader[0]["school_name"] != "school_name":
+    header_csv = reader.fieldnames
+    if header_csv != headers:
         data["students"] = {}
         data["success"] = False
         return Response(data, status=404)
