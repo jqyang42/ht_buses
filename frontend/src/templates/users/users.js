@@ -112,7 +112,10 @@ class Users extends Component {
             this.setState({ import_redirect: true })
         })
         .catch(err => {
-            this.setState({ import_headers_error: true })
+            this.setState({ 
+                import_headers_error: true,
+                loading: false
+            })
             console.log(err)
         })
     }
