@@ -126,6 +126,11 @@ def bulk_import_validate(request):
             row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": student_id, "school_name": row["school_name"], "error": error_obj, "exclude": False}
             students.append(row_obj)
             row_num += 1
+        else:
+            row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": student_id, "school_name": row["school_name"], "error": [], "exclude": True}
+            students.append(row_obj)
+            row_num += 1
+            
         # empty file check
         if len(students) == 0:
             data["students"] = {}
