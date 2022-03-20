@@ -7,6 +7,7 @@ from ....serializers import StudentSerializer, RouteSerializer, SchoolSerializer
 from django.core.paginator import Paginator
 from ..student_pagination import student_pagination
 from ....role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from ...general.general_tools import get_students_for_user
 
 # Students Table: School Detail GET API
 @csrf_exempt
@@ -16,6 +17,6 @@ def students_school(request):
     data = {}
     page_number = request.query_params["page"]
     school_id = request.query_params["id"]
-    students = Student.objects.filter(school_id=school_id).order_by("id")
+    students = get_students_for_user(request.user).filter(school_id=school_id).order_by("id")
     data = student_pagination(students, page_number)
     return Response(data)
