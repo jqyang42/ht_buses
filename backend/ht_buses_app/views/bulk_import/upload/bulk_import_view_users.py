@@ -60,7 +60,7 @@ def bulk_import(request):
                 if re.fullmatch(regex, row["email"]):
                     email_error = False
                     # Need permissions
-                    users_perm = get_objects_for_user(request.users, "view_user", User.objects.all())
+                    #users_perm = get_objects_for_user(request.users, "view_user", User.objects.all())
                     users_obj = User.objects.filter(email=row["email"])
                     if len(users_obj) == 0:
                         email_error = False
@@ -91,7 +91,7 @@ def bulk_import(request):
                 name_error_message = "Name cannot be more that 150 characters"
             else:
                 # check if name is part of an existing user tears
-                users_name_perm = get_objects_for_user(request.users, "view_user", User.objects.all())
+                #users_name_perm = get_objects_for_user(request.users, "view_user", User.objects.all())
                 users_names = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__iexact=row["name"]) | Q(first_name__iexact=row["name"]) | Q(last_name__iexact=row["name"]))
                 print(users_names)
