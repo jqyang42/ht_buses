@@ -138,7 +138,10 @@ def bulk_import_validate(request):
             row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": error_obj, "exclude": False}
             users.append(row_obj)
             row_num += 1
-
+        else:
+            row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": [], "exclude": True}
+            users.append(row_obj)
+            row_num += 1
 
         if len(users) == 0:
             data["users"] = {}
@@ -204,6 +207,7 @@ def bulk_import_validate(request):
                                     errors[k]["duplicate_email"] = True
                                 if errors[k]["row_num"] == users[j]["row_num"]:
                                     errors[k]["duplicate_email"] = True
+
     data["users"] = users
     data["errors"] = errors
     data["success"] = True
