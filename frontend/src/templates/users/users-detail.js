@@ -7,7 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import ErrorPage from "../error-page";
 import api from '../components/api';
-import { studentIDValidation } from '../components/validation';
+import { validNumber } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 import { ManagedSchoolsTable } from '../tables/managed-schools-table';
 
@@ -203,7 +203,7 @@ class UsersDetail extends Component {
         let student = this.state.new_student
         student.student_school_id = student_school_id
         this.setState({ new_student: student })
-        this.setState({ valid_id: studentIDValidation({ student_id: student_school_id}) ? 1 : -1})
+        this.setState({ valid_id: validNumber({ value_to_check: student_school_id}) ? 1 : -1})
     }
 
     handleSchoolChange = (event) => {
@@ -225,8 +225,7 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
-        console.log("here")
-        if (!studentIDValidation({ student_id: this.state.new_student.student_school_id })) {
+        if (!validNumber({ value_to_check: this.state.new_student.student_school_id })) {
             event.preventDefault();
             return
         }
@@ -311,7 +310,7 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputID"} className="control-label pb-2">Student ID</label>
                                                                     <input type="id" className="form-control pb-2" id={"exampleInputID"} 
                                                                     placeholder="Enter student ID" required ref={el => this.idField = el} onChange={(e) => this.handleStudentIDChange(e)}></input>
-                                                                    {(studentIDValidation({ student_id: this.state.new_student.student_school_id}) || (this.state.new_student.student_school_id === '')) ? "" :                                                                 
+                                                                    {(validNumber({ value_to_check: this.state.new_student.student_school_id}) || (this.state.new_student.student_school_id === '')) ? "" :                                                                 
                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                         The Student ID value is invalid. Please edit and try again.
                                                                     </div>)

@@ -7,7 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
-import { emailValidation, passwordValidation, studentIDValidation } from "../components/validation";
+import { emailValidation, passwordValidation, validNumber, phoneValidation } from "../components/validation";
 // import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import MultiSelectDropdown from "../components/multi-select";
 // import makeAnimated from 'react-select/animated';
@@ -16,7 +16,7 @@ import MultiSelectDropdown from "../components/multi-select";
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
-import { makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
+import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
 
 // const animatedComponents = makeAnimated();
 
@@ -42,6 +42,7 @@ class UsersCreate extends Component {
         added_students_list: [],
         students: [],
         schools_dropdown: [],
+        schools_multiselect: [],
         routes_dropdowns: [],
         redirect: false,
         valid_password: false,
@@ -50,7 +51,7 @@ class UsersCreate extends Component {
         valid_email: true,
         student_ids_changed: false,
         valid_address: true,
-        create_success: 0,
+        valid_phone: 0,
         redirect_detail: false,
         detail_url: '',
         error404: false,
@@ -61,6 +62,9 @@ class UsersCreate extends Component {
     componentDidMount() {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
+        })
+        makeSchoolsMultiSelect().then(ret => {
+            this.setState({ schools_multiselect: ret })
         })
         if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
             this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
@@ -147,6 +151,17 @@ class UsersCreate extends Component {
         let user = this.state.new_user
         user.phone_number = phone_number
         this.setState({ new_user: user });
+        /* //Phone validation
+        if(!phoneValidation({ phone_number: phone_number })) {
+            this.setState({ valid_phone: -1 });
+        }
+        else {
+            let user = this.state.new_user
+            user.phone_number = phone_number.replace(/\D/g, '');
+            this.setState({ new_user: user });
+            this.setState({ valid_phone: 1 });
+        }
+        */
     }
 
     handleRoleChange = (event) => {
@@ -330,10 +345,10 @@ class UsersCreate extends Component {
         event.preventDefault();
         const valid_email = emailValidation({ email: this.state.new_user.email })
         const valid_address = this.checkNonParentAddress()
-        const valid_id = this.studentIDValidation()
+        //const valid_phone = phoneValidation({ phone_number: this.state.new_user.phone_number})
+        const valid_id = this.validatedStudentIDS()
         const not_general = this.state.new_user.role_id !== 0
-        const added_student_school_staff = this.state.added_student_school_staff
-        if (!(valid_email && valid_address && valid_id && not_general && added_student_school_staff)) {
+        if (!(valid_email && valid_address && valid_id && not_general)) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -366,13 +381,13 @@ class UsersCreate extends Component {
         this.createUser(request)
     }
 
-    studentIDValidation = () => {
+    validatedStudentIDS = () => {
         if(!this.state.student_ids_changed) {
             return true
         }
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
-            if (!studentIDValidation({ student_id: id })) {
+            if (!validNumber({ value_to_check: id })) {
                 return false
             }
         }
@@ -456,25 +471,18 @@ class UsersCreate extends Component {
                                                 }
                                             </div>
 
-                                            {/* <div className="form-group required pb-3 w-75">
+                                            { <div className="form-group required pb-3 w-75">
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
-                                                placeholder="Enter phone number" required pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" onChange={this.handlePhoneChange}></input> */}
-
-                                                {/* TODO: add phoneValidation() method to check if phone number is valid @fern */}
-
-                                                {/* {(!phoneValidation({ phone: this.state.new_user.phone }) && this.state.new_user.phone !== "") ? 
+                                                placeholder="Enter phone number" required onChange={this.handlePhoneChange}></input> 
+                                                {/*
+                                                 {(!phoneValidation({ phone_number: this.state.new_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Please enter a valid phone number.
+                                                        Please enter a valid North American phone number.
                                                     </div>) : ""
-                                                } */}
-                                            {/* </div> */}
-
-                                            <div className="form-group required pb-3 form-col">
-                                                <label for="phone_number" className="control-label pb-2">Phone</label>
-                                                <input type="tel" className="form-control pb-2" id="examplePhone"
-                                                    placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
-                                            </div>
+                                                }
+                                            */}
+                                            </div> }
 
                                             <div className={"form-group pb-3 form-col " + (this.state.new_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
@@ -683,7 +691,7 @@ class UsersCreate extends Component {
                                                           At least one student must be associated with any general parent account.
                                                       </div>) : ""
                                                     }
-                                                    {(!this.studentIDValidation()) ? 
+                                                    {(!this.validatedStudentIDS()) ? 
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                           The Student ID value for at least one student is invalid. Please edit and try again.
                                                       </div>) : ""
