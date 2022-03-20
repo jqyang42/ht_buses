@@ -17,6 +17,11 @@
     color: #495057;
 }
 
+.btn-primary:disabled {
+    background-color: #FFE69C;
+    color: #6C757D;
+}
+
 .btn-primary:hover {
     background-color: #FFC107;
     border: #FFC107;
