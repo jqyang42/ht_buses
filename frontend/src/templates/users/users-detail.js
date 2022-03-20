@@ -9,6 +9,7 @@ import ErrorPage from "../error-page";
 import api from '../components/api';
 import { studentIDValidation } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
+import { ManagedSchoolsTable } from '../tables/managed-schools-table';
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -27,7 +28,7 @@ class UsersDetail extends Component {
         },
         schools_dropdown: [],
         routes_dropdown: [],
-        show_all: false,
+        students_show_all: false,
         redirect: false,
         add_student_clicked: false,
         create_success: 0,
@@ -38,6 +39,17 @@ class UsersDetail extends Component {
         valid_id: 0,
         students_page: [],
         students_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+            sortOptions: {
+                accessor: '',
+                sortDirection: 'none'
+            },
+            searchValue: ''
+        },
+        schools_table: {
             pageIndex: 1,
             canPreviousPage: null,
             canNextPage: null,
@@ -135,11 +147,19 @@ class UsersDetail extends Component {
     } 
 
     // render handlers
-    handleShowAll = () => {
+    handleStudentShowAll = () => {
         this.setState(prevState => ({
-            show_all: !prevState.show_all
+            students_show_all: !prevState.students_show_all
         }), () => {
-            this.getStudentsPage(this.state.show_all ? 0 : 1, null, '')
+            this.getStudentsPage(this.state.students_show_all ? 0 : 1, null, '')
+        })
+    }
+
+    handleSchoolShowAll = () => {
+        this.setState(prevState => ({
+            schools_show_all: !prevState.schools_show_all
+        }), () => {
+            this.getSchoolsPage(this.state.schools_show_all ? 0 : 1, null, '')
         })
     }
 
@@ -382,12 +402,18 @@ class UsersDetail extends Component {
                                             Email
                                         </p>
                                         <p className="gray-600">
+                                            Phone
+                                        </p>
+                                        <p className="gray-600">
                                             Address
                                         </p>
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
                                             {this.state.user.email}
+                                        </p>
+                                        <p>
+                                            {this.state.user.phone_number}
                                         </p>
                                         <p>
                                             {this.state.user.location?.address}
@@ -400,7 +426,7 @@ class UsersDetail extends Component {
                                         Please input an address before you add a student.
                                     </div>) : ""
                                 }
-
+{/* 
                                 {this.state.user.managed_schools?.length !== 0 ? 
                                     <div className="mt-4">      
                                         <h7 className="mb-4">MANAGED SCHOOLS</h7>
@@ -408,27 +434,53 @@ class UsersDetail extends Component {
                                             return <><p className="mt-2">{school.name}</p></>
                                         })}
                                     </div> : ""
-                                }
-                                
+                                } */}
 
-                                <div className="mt-4">
-                                    <h7>STUDENTS</h7>
-                                    <UserStudentsTable 
-                                    data={this.state.students_page} 
-                                    showAll={this.state.show_all}
-                                    pageIndex={this.state.students_table.pageIndex}
-                                    canPreviousPage={this.state.students_table.canPreviousPage}
-                                    canNextPage={this.state.students_table.canNextPage}
-                                    updatePageCount={this.getStudentsPage}
-                                    pageSize={10}
-                                    totalPages={this.state.students_table.totalPages}
-                                    searchValue={this.state.students_table.searchValue}
-                                    />
-                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
-                                        { !this.state.show_all ?
-                                            "Show All" : "Show Pages"
-                                        }
-                                    </button>
+                                <div className="row mt-4 flex-wrap">
+                                    {this.state.user.managed_schools?.length !== 0 ? 
+                                        <div className="col me-4">      
+                                            <h7 className="mb-4">MANAGED SCHOOLS</h7>
+                                            {/* <ManagedSchoolsTable 
+                                                data={this.state.user.managed_schools} 
+                                                showAll={this.state.schools_show_all}
+                                                pageIndex={this.state.schools_table.pageIndex}
+                                                canPreviousPage={this.state.schools_table.canPreviousPage}
+                                                canNextPage={this.state.schools_table.canNextPage}
+                                                updatePageCount={this.getSchoolsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.schools_table.totalPages}
+                                                searchValue={this.state.schools_table.searchValue}
+                                            />
+                                            <button className="btn btn-secondary align-self-center" onClick={this.handleSchoolShowAll}>
+                                                { !this.state.schools_show_all ?
+                                                    "Show All" : "Show Pages"
+                                                }
+                                            </button> */}
+                                            {this.state.user.managed_schools?.map(school => {
+                                                return <p className="mt-2">{school.name}</p>
+                                            })}
+                                        </div> : ""
+                                    }
+                                    <div className="col">
+                                        <h7>STUDENTS</h7>
+                                        <UserStudentsTable 
+                                        data={this.state.students_page} 
+                                        showAll={this.state.students_show_all}
+                                        pageIndex={this.state.students_table.pageIndex}
+                                        canPreviousPage={this.state.students_table.canPreviousPage}
+                                        canNextPage={this.state.students_table.canNextPage}
+                                        updatePageCount={this.getStudentsPage}
+                                        pageSize={10}
+                                        totalPages={this.state.students_table.totalPages}
+                                        searchValue={this.state.students_table.searchValue}
+                                        />
+                                        <button className="btn btn-secondary align-self-center" onClick={this.handleStudentShowAll}>
+                                            { !this.state.students_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
+                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

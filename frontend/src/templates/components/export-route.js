@@ -1,9 +1,9 @@
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 
-export default function pdfRender (route, students) {
+export default function pdfRender (route, users) {
     console.log(route)
-    console.log(students)
+    console.log(users)
 
     var line = 18 // Line height to start text at
     var lineHeight = 5
@@ -12,19 +12,21 @@ export default function pdfRender (route, students) {
     var routeSchool = "School: " + route.school.name
     var routeStatus = route.is_complete ? "Status: Complete" : "Status: Incomplete"
     var routeInfo = [routeName, routeSchool, routeStatus]
-    var studentsList = []
     var studentsObj = []
 
-    for (var i = 0; i < students.length; i++) {
-        var dict = students[i]
-        studentsObj.push({ 
-            "name": dict["first_name"].toString() + " " + dict["last_name"].toString(),
-            "student_school_id": dict["student_school_id"].toString(),
-            "address": "Address is a even more longer very very very very long address",
-            "parent": "Parent First Last",
-            "email": "first.last@gmail.com",
-            "phone": "9195648284"
-        })
+    for (var i = 0; i < users.length; i++) {
+        var dict = users[i]
+        console.log(dict["students"])
+        for (var j = 0; j < dict["students"].length; j++) {
+            studentsObj.push({ 
+                "name": dict["students"][j]["first_name"].toString() + " " + dict["students"][j]["last_name"].toString(),
+                "student_school_id": dict["students"][j]["student_school_id"].toString(),
+                "address": dict["location"]["address"],
+                "parent": dict["first_name"].toString() + " " + dict["last_name"].toString(),
+                "email": dict["email"],
+                "phone": dict["phone_number"]
+            })
+        }
     }
 
     const doc = new jsPDF();
