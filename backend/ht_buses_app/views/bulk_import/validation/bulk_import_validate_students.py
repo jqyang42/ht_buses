@@ -9,6 +9,7 @@ import json
 from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
+from guardian.shortcuts import get_objects_for_user
 
 # Bulk Import POST Validate API: Checking for Students
 @csrf_exempt
@@ -39,7 +40,9 @@ def bulk_import_validate(request):
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row["parent_email"]):
                     # check email is associated with parent
-                    user = User.objects.filter(email=row["parent_email"])
+                    user_email = get_objects_for_user(request.users, "view_user", User.objects.all())
+                    user = user_email.filter(email=row["parent_email"])
+
                     if len(user) == 0:
                         email_error = True
                         email_error_message = "Parent does not exist in system"

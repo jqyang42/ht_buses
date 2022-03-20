@@ -163,6 +163,11 @@ class UsersImport extends Component {
                         <HeaderMenu root={"Import Users"} isRoot={true} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
+                                {this.state.loading ? 
+                                    <div class="alert alert-primary mt-2 mb-4 extra-margin" role="alert">
+                                        Please wait patiently while we load and verify your file import.
+                                    </div> : ""
+                                }
                                 <div className="row d-inline-flex float-end mb-4">
                                     {/* Cancel button */}
                                     <button type="button" className="btn btn-secondary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#cancelModal">
