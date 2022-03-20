@@ -40,13 +40,18 @@ def bulk_import_validate(request):
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row["parent_email"]):
                     # check email is associated with parent
-                    user_email = get_objects_for_user(request.users, "view_user", User.objects.all())
-                    user = user_email.filter(email=row["parent_email"])
+                    #user_email = get_objects_for_user(request.users, "view_user", User.objects.all())
+                    user = User.objects.filter(email=row["parent_email"])
 
                     if len(user) == 0:
                         email_error = True
                         email_error_message = "Parent does not exist in system"
                     else:
+                        user_email_serializer = UserSerializer(user, many=False)
+                        if user_email_serializer.data["location"] == None or user_email_serializer.data["location"] == "":
+                            email_error = True
+                            email_error_message = "User has an invalid addresss"
+
                         email_error = False
                 else:
                     email_error = False
@@ -92,9 +97,10 @@ def bulk_import_validate(request):
             school_name_error = True
             school_name_error_message = "School name field cannot be empty"
         else:
-            # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
             school_name_clean = ' '.join(row["school_name"].split())
             school_name_clean = school_name_clean.lower()
+            # need to be filtered by managed schools
+            #school_obj = get_objects_for_user(request.user,"view_school", School.objects.all())
             schools = School.objects.filter(name__iexact=school_name_clean)
             if len(schools) == 0:
                     school_name_error = True
