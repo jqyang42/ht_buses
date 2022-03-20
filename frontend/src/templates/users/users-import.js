@@ -115,6 +115,9 @@ class UsersImport extends Component {
                 loading: false
             })
         })
+        .catch(err => {
+            console.log('VALIDATE API FAILED')
+        })
     }
 
     // TODO: Add method to save all changes from table view and submit the import @jessica
