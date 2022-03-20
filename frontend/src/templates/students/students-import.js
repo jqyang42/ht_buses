@@ -253,7 +253,7 @@ class StudentsImport extends Component {
                                                 {error.existing_students.length !== 0 ?
                                                 <ul className="mb-0">
                                                     {error.existing_students.map(student => 
-                                                    <li>{student.first_name} {student.last_name} with student ID {student.student_id} at {student.school_name}, belonging to a parent with email{student.parent_email}</li>
+                                                    <li>{student.first_name} {student.last_name} with student ID {student.student_id} at {student.school_name}, belonging to a parent with email {student.parent_email}</li>
                                                     )}
                                                 </ul> : ""
                                                 }
