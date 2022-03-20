@@ -53,7 +53,7 @@ def bulk_import_validate(request):
                             location_serializer = LocationSerializer(location, many=False)
                             if location_serializer.data["address"] == None or location_serializer.data["address"] == "":
                                 email_error = True
-                                email_error_message = "Parent has an invalid address"
+                                email_error_message = "Student cannot be linked to user because user does not have an address"
                             else:
                                 email_error = False
                     else:
