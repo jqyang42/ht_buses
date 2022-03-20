@@ -16,24 +16,25 @@ def users_create(request):
     reqBody = json.loads(request.body)
     for user in reqBody["users"]:
         # email, name, address, phone_number
-        name = user["name"].split(" ", 1)
-        first_name = name[0]
-        last_name = name[1]
-        location_arr = geocode_address(user["address"])
-        location = Location.objects.create(
-            address=user["address"],
-            lat=location_arr[0]["lat"],
-            lng=location_arr[0]["lng"]
-        )
-        user = User.objects.create(
-            first_name = first_name,
-            last_name = last_name,
-            email = user["email"],
-            phone_number = user["phone_number"],
-            is_parent = True,
-            role = 4,
-            location = location
-        )
+        if user["exclude"] == False:
+            name = user["name"].split(" ", 1)
+            first_name = name[0]
+            last_name = name[1]
+            location_arr = geocode_address(user["address"])
+            location = Location.objects.create(
+                address=user["address"],
+                lat=location_arr[0]["lat"],
+                lng=location_arr[0]["lng"]
+            )
+            user = User.objects.create(
+                first_name = first_name,
+                last_name = last_name,
+                email = user["email"],
+                phone_number = user["phone_number"],
+                is_parent = True,
+                role = 4,
+                location = location
+            )
     data["success"] = True
     data["user_count"] = len(reqBody["users"])
     return Response(data)
