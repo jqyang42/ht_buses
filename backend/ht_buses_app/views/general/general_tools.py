@@ -119,14 +119,12 @@ def reassign_perms(edited_user, schools=[]):
     edited_user = User.objects.get(pk = edited_user.pk)
     remove_object_level_perms(edited_user)
     if edited_user.role == User.SCHOOL_STAFF:
-        #try:
-        school_ids = schools
-        managed_schools = School.objects.filter(pk__in=school_ids)
-        assign_school_staff_perms(edited_user, managed_schools) 
-        """
+        try:
+            school_ids = schools
+            managed_schools = School.objects.filter(pk__in=school_ids)
+            assign_school_staff_perms(edited_user, managed_schools) 
         except:
             return False
-        """
     reassign_groups(edited_user)
     assign_perm("view_user", edited_user, edited_user)
     edited_user.save()
@@ -176,7 +174,6 @@ def has_access_to_object(user, model_object):
                 return model_object
             if type(model_object) is User:
                 students = Student.objects.filter(user_id = model_object.pk)
-                print(students)
                 for student in students:
                     try:
                         schools.get(pk = student.school_id.pk)
