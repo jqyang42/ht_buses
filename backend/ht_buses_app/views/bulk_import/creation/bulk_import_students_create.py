@@ -19,7 +19,7 @@ def students_create(request):
         name = student["name"].split(" ", 1)
         first_name = name[0]
         last_name = name[1]
-        student_school_id = student["student_school_id"]
+        student_school_id = student["student_id"]
         school = School.objects.filter(name=student["school_name"])
         school_serializer = SchoolSerializer(school, many=False)
         student_school = School.objects.get(pk=school_serializer.data["id"])
