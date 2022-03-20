@@ -244,7 +244,7 @@ const EditableCell = ({
     const [value, setValue] = React.useState(initialValue[0])
     const [selectValue, setSelectValue] = React.useState(initialValue[0])
     const [completeValue, setComplete] = React.useState(initialValue)
-    console.log(completeValue)
+    // console.log(completeValue)
   
     const onChange = e => {
         const val = e.target.value

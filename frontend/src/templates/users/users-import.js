@@ -197,7 +197,7 @@ class UsersImport extends Component {
                                     <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
-                                                <form>
+                                                <form onSubmit={this.state.verifyCheck ? this.handleSubmitImport : ''}>
                                                     <div className="modal-header">
                                                         <h5 className="modal-title" id="staticBackdropLabel">Verify Users</h5>
                                                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -208,7 +208,8 @@ class UsersImport extends Component {
                                                         }
                                                     </div>
                                                     <div className="modal-footer">
-                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                                                        <button type={this.state.verifyCheck ? "submit" : "button"} className="btn btn-secondary" data-bs-dismiss="modal">Save and Import</button>
+                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Continue Editing</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -216,8 +217,7 @@ class UsersImport extends Component {
                                     </div>
                                     {/* Submit button */}
                                     {/* @jessica add  */}
-                                    <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button>
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
+                                    <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button>
 
                                     {/* Submit confirmation modal */}
                                     <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
