@@ -205,7 +205,7 @@ class UsersImport extends Component {
                                                         }
                                                     </div>
                                                     <div className="modal-footer">
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">OK</button>
                                                     </div>
                                                 </form>
                                             </div>
