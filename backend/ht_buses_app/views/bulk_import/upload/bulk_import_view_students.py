@@ -11,6 +11,7 @@ import re
 from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
+from guardian.shortcuts import get_objects_for_user
 
 # Bulk import temporary file name
 FILENAME = 'bulk_import_students_temp.json'
@@ -116,10 +117,15 @@ def bulk_import(request):
             # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
             school_name_clean = ' '.join(row["school_name"].split())
             school_name_clean = school_name_clean.lower()
-            schools = School.objects.filter(name__iexact=school_name_clean)
-            if len(schools) == 0:
+            school_exists =  School.objects.filter(name__iexact=school_name_clean)
+            if len(school_exists) == 0:
                     school_name_error = True
                     school_name_error_message = "School does not exist"
+            all_validated_schools = get_objects_for_user(request.user, "change_school", School.objects.all())
+            validated_school = all_validated_schools.filter(name__iexact=school_name_clean)
+            if len(validated_school) == 0:
+                    school_name_error = True
+                    school_name_error_message = "User cannot create students at this school"
             else:
                 school_name_error = False
             
