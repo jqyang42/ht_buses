@@ -47,16 +47,12 @@ def bulk_import_validate(request):
                         email_error = True
                         email_error_message = "Parent does not exist in system"
                     else:
-                        print(user)
                         user_email_serializer = UserSerializer(user, many=True)
-                        print(user_email_serializer.data)
-                        print(user_email_serializer.data[0]["location"])
                         location = Location.objects.get(pk=user_email_serializer.data[0]["location"])
                         location_serializer = LocationSerializer(location, many=False)
-                        print(location_serializer.data)
                         if location_serializer.data["address"] == None or location_serializer.data["address"] == "":
                             email_error = True
-                            email_error_message = "User has an invalid addresss"
+                            email_error_message = "User has an invalid address"
                         else:
                             email_error = False
                 else:
