@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router";
 import { Link, Navigate, useParams} from "react-router-dom";
-import { ImportUsersTable } from '../tables/import-users-table';
+import { ImportUsersTable } from "../tables/import-users-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
