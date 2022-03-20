@@ -10,7 +10,7 @@ FILENAME = 'bulk_import_students_temp.json'
 # Bulk Import GET API: Retrieving Students JSON
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin, IsSchoolStaff]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def bulk_import(request):
     data = bulk_import_file_read(FILENAME)
     return Response(data)

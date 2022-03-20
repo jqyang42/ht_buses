@@ -2,7 +2,7 @@ from ....models import School, User, Student
 from ....serializers import StudentSerializer, SchoolSerializer, UserSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from ....role_permissions import IsAdmin
+from ....role_permissions import IsAdmin, IsSchoolStaff
 from rest_framework.response import Response
 import re
 import json
@@ -13,7 +13,7 @@ from django.db.models.functions import Concat
 # Bulk Import POST Validate API: Checking for Students
 @csrf_exempt
 @api_view(["POST"])
-@permission_classes([IsAdmin]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def bulk_import_validate(request):
     data = {}
     errors_msg = []
