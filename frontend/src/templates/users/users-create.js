@@ -69,6 +69,7 @@ class UsersCreate extends Component {
         if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
             this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
         }
+        this.addedStudentSchoolStaff()        
     }
 
     // api calls
