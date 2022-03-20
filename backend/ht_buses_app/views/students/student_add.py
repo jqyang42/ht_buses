@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .student_create import create_student
 from ...models import User
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user, reassign_after_creation
+from ..general.general_tools import get_object_for_user, reassign_after_creation, update_schools_staff_rights
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
 
@@ -24,9 +24,10 @@ def add_new_students(request):
     try:
         for student in reqBody["students"]:
             create_student(student, user_id)
-        reassign_after_creation(user)
+        update_schools_staff_rights()
         data["message"] = "students created successfully"
         data["success"] = True
         return Response(data)
     except:
         return response_messages.UnsuccessfulAction(data, "adding student(s)")
+        

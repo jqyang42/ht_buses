@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import get_object_for_user, update_schools_staff_rights
 from ..general import response_messages
   
 @csrf_exempt
@@ -24,6 +24,7 @@ def user_delete(request):
     try:
         user_object.location.delete()
         user_object.delete()
+        update_schools_staff_rights()
         data["message"] = "user successfully deleted"
         data["success"] = True
         return Response(data)

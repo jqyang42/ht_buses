@@ -11,7 +11,7 @@ import re
 from ..resources import capitalize_reg
 from ..accounts import account_tools
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import assign_school_staff_perms, reassign_after_creation
+from ..general.general_tools import assign_school_staff_perms, reassign_after_creation, update_schools_staff_rights
 from guardian.shortcuts import assign_perm
 from ..general import response_messages
 
@@ -64,7 +64,7 @@ def user_create(request):
         user.delete()
         return response_messages.DoesNotExist(data, "school")
     user.save()
-    reassign_after_creation(user)
+    update_schools_staff_rights()
     data["message"] = "user created successfully"
     if email_sent:
         data["message"] = data["message"] +  " and activation email sent to user"

@@ -67,14 +67,18 @@ def new_perms_to_many_objects(user, access_level, object_list):
     return 
 
 def assign_school_staff_perms(user, schools):
+    print("new_schools")
+    print(schools)
     user.user_permissions.clear()
     user.groups.clear()
+    remove_object_level_perms(user)
     user.save()
     user = User.objects.get(pk = user.pk)
     assign_school_perms(user, schools)
     for school in schools:
         students = Student.objects.filter(school_id = school)
         assign_user_perms(user, students)
+    assign_perm("view_user", user, user)
     user.save()
     return 
 
@@ -90,6 +94,7 @@ def assign_student_perms(user, students):
 
 def assign_user_perms(user, students):
     for perm in get_all_user_perms():
+        print(user.first_name, students)
         new_perms_to_many_objects(user, perm, filtered_users_helper(students))
     return 
     
@@ -97,13 +102,22 @@ def reassign_after_creation(new_user):
     if user_is_parent(new_user.pk):
         students = Student.objects.filter(user_id = new_user)
         schools = filtered_schools_helper(students)
-        for school in schools:
-            users_with_access = User.objects.filter(pk__in=[obj.pk for obj in User.objects.all() if obj.has_perm('change_school', school)])
-            for user in users_with_access: 
-                for perm in get_all_user_perms():
-                    assign_perm(perm, user, new_user)
-        return True
+        return assign_right_to_users(schools, new_user)
     return False
+
+def assign_right_to_users(schools, new_user):
+    for school in schools:
+        users_with_access = User.objects.filter(pk__in=[obj.pk for obj in User.objects.all() if obj.has_perm('change_school', school)])
+        for user in users_with_access: 
+            for perm in get_all_user_perms():
+                assign_perm(perm, user, new_user)
+    return True
+
+def update_schools_staff_rights():
+    school_staffs = User.objects.filter(role = User.SCHOOL_STAFF)
+    for school_staff in school_staffs:
+        assign_school_staff_perms(school_staff, get_objects_for_user(school_staff,"change_school", School.objects.all()))
+    return True
 
 def remove_perms_to_many_objects(user, access_level, object_list): 
     if object_list is not None:
@@ -113,7 +127,6 @@ def remove_perms_to_many_objects(user, access_level, object_list):
 
 def remove_object_level_perms(user):
     #print(user.has_perm("view_school", School.objects.get(pk = 1) ))
-
     view_schools = get_objects_for_user(user,"view_school", School.objects.all())
     remove_perms_to_many_objects(user, "view_school", view_schools)
 
@@ -135,7 +148,7 @@ def reassign_perms(edited_user, schools=[]):
     remove_object_level_perms(edited_user)
     if edited_user.role == User.SCHOOL_STAFF:
         try:
-            school_ids = [sublists.get('id') for sublists in schools]
+            school_ids = schools
             managed_schools = School.objects.filter(pk__in=school_ids)
             assign_school_staff_perms(edited_user, managed_schools) 
         except:

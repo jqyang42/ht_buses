@@ -60,6 +60,7 @@ def user_edit(request):
         if user_object.role == User.SCHOOL_STAFF:
             try:
                 schools = reqBody["user"]["managed_schools"]
+                schools = [sublists.get('id') for sublists in schools]
             except:
                 return response_messages.UnsuccessfulAction(data, "user edit")
         else:

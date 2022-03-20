@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from ...serializers import StudentSerializer
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import get_object_for_user, update_schools_staff_rights
 from ..general import response_messages
 
 
@@ -32,6 +32,7 @@ def student_delete(request):
         #if(Student.objects.filter(user_id = parent).count() == 1): #parent.is_parent = False
         student_object.delete()
         parent.save()
+        update_schools_staff_rights()
         if route_id != None:
             route = Route.objects.get(pk=route_id)
             is_complete = route_check_is_complete.route_is_complete(route_id)
