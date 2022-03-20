@@ -1,5 +1,5 @@
-from ....models import School, User, Student
-from ....serializers import StudentSerializer, SchoolSerializer, UserSerializer
+from ....models import School, User, Student, Location
+from ....serializers import LocationSerializer, StudentSerializer, SchoolSerializer, UserSerializer
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from ....role_permissions import IsAdmin, IsSchoolStaff
@@ -50,7 +50,11 @@ def bulk_import_validate(request):
                         print(user)
                         user_email_serializer = UserSerializer(user, many=True)
                         print(user_email_serializer.data)
-                        if user_email_serializer.data[0]["location"] == None or user_email_serializer.data[0]["location"] == "":
+                        print(user_email_serializer.data[0]["location"])
+                        location = Location.objects.get(pk=user_email_serializer.data[0]["location"])
+                        location_serializer = LocationSerializer(location, many=False)
+                        print(location_serializer.data)
+                        if location_serializer.data["address"] == None or location_serializer.data["address"] == "":
                             email_error = True
                             email_error_message = "User has an invalid addresss"
                         else:
