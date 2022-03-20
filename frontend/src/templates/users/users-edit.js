@@ -125,6 +125,11 @@ class UsersEdit extends Component {
 
     handlePhoneChange = (event) => {
         const phone_number = event.target.value
+        let user = this.state.edited_user
+        user.phone_number = phone_number
+        this.setState({ new_user: user });
+        this.setState({ edited_user: user  });
+        /*
         if(!phoneValidation({ phone_number: phone_number })) {
             this.setState({ valid_phone: -1 });
         }
@@ -135,6 +140,7 @@ class UsersEdit extends Component {
             this.setState({ valid_phone: 1 });
             this.setState({ edited_user: user  });
         }
+        */
     }
 
     handleRoleChange = (event) => {
@@ -213,8 +219,8 @@ class UsersEdit extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
-        const valid_phone = phoneValidation({ phone_number: this.state.edited_user.phone_number})
-        if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address || !valid_phone) {
+        //const valid_phone = phoneValidation({ phone_number: this.state.edited_user.phone_number})
+        if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
             this.setState({ edit_success: -1 })
             return 
         }
@@ -310,12 +316,13 @@ class UsersEdit extends Component {
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
                                                 placeholder="Enter phone number" required defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
-                                            
+                                                {/*
                                                  {(!phoneValidation({ phone_number: this.state.edited_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid North American phone number.
                                                     </div>) : ""
                                                 }
+                                                */}
                                             </div> }
                                                 
                                             <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
