@@ -31,7 +31,10 @@ class Users extends Component {
         },
         searchValue: '',
         import_redirect: false,
-        fileUploaded: null
+        fileUploaded: null,
+        loading: false,
+        import_file_error: false,
+        import_headers_error: false
     }
     
     componentDidMount() {
@@ -66,6 +69,8 @@ class Users extends Component {
     // Programatically click the hidden file input element
     // when the Button component is clicked
     importUsers = () => {
+        this.setState({ import_file_error: false })
+        this.setState({ import_headers_error: false })
         this.hiddenFileInput.current.click()
     };
 
@@ -73,15 +78,44 @@ class Users extends Component {
     // to handle the user-selected file 
     fileUploaded = null
 
+    getExtension = (filename) => {
+        var parts = filename.name.split('.');
+        return parts[parts.length - 1];
+    }
+
     getFile = (event) => {
         this.fileUploaded = event.target.files[0]
-        // this.setState({fileUploaded: this.fileUploaded })
         console.log(this.fileUploaded)
-        // TODO: handleFile(fileUploaded);
-        // const navigate = useNavigate();
-        // navigate(USERS_IMPORT_URL, { state: { file: this.fileUploaded } });
-        this.setState({ import_redirect: true })
+        var ext = this.getExtension(this.fileUploaded)
+        if (ext.toLowerCase() === "csv") {
+            this.submitFile(this.fileUploaded)
+        } 
+        else {
+            this.setState({ import_file_error: true })
+        }
     };
+
+    submitFile = (fileUploaded) => {
+        const formData = new FormData()
+        formData.append("bulk_users", fileUploaded)
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }
+        
+        this.setState({ loading: true })
+        api.post(`bulk-import/users-upload`, formData, config)
+        .then(res => {
+            console.log("posted successfully")
+            console.log(res)
+            this.setState({ import_redirect: true })
+        })
+        .catch(err => {
+            this.setState({ import_headers_error: true })
+            console.log(err)
+        })
+    }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
@@ -103,6 +137,21 @@ class Users extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div>
+                                    {this.state.import_file_error ? 
+                                        <div class="alert alert-danger mt-2 mb-3" role="alert">
+                                            Your import file type is not supported. Please provide csv files only.
+                                        </div> : ""
+                                    }
+                                    {this.state.import_headers_error ? 
+                                        <div class="alert alert-danger mt-2 mb-3" role="alert">
+                                            Your import file does not have the correct format. Please ensure that it contains the headers: email, name, address, and phone number, in the respective order.
+                                        </div> : ""
+                                    }
+                                    {this.state.loading ? 
+                                        <div class="alert alert-primary mt-2 mb-4" role="alert">
+                                            Please wait patiently while we load and verify your file import.
+                                        </div> : ""
+                                    }
                                     <div className="row d-inline-flex float-end">
                                         {
                                               localStorage.getItem('role') === 'Administrator' ?
@@ -129,6 +178,7 @@ class Users extends Component {
                                                 <input
                                                     type="file"
                                                     ref={this.hiddenFileInput}
+                                                    accept={".csv"}
                                                     onChange={this.getFile}
                                                     style={{ display: 'none' }} />
                                             </> : ""

@@ -17,6 +17,11 @@
     color: #495057;
 }
 
+.btn-primary:disabled {
+    background-color: #FFE69C;
+    color: #6C757D;
+}
+
 .btn-primary:hover {
     background-color: #FFC107;
     border: #FFC107;
@@ -227,6 +232,26 @@ li.page-item a[disabled]:hover {
 }
 
 .unassigned {
+    color: #dc3545;
+}
+
+.extra-margin {
+    margin-top: 50px;
+}
+
+.error {
+    border: 1px solid #dc3545;
+    background-color: #f8d7da;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.input-icon {
+    /* padding-left: 150px;
+    margin-top: 7px;
+    margin-right: 4px; */
     color: #dc3545;
 }
 

@@ -1,5 +1,8 @@
 from django.urls import path
 from django.db import models
+
+
+from . views.bulk_import.upload import bulk_import_view_students, bulk_import_view_users
 from . import models 
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
@@ -15,7 +18,13 @@ from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
 from . views.users.detail import user_school
+from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
+from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
+from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
+from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
+from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
+
 from . views.parents.detail import parent_student_stop
 from . models import User
 
@@ -41,7 +50,6 @@ urlpatterns = [
     path('api/routes/delete', route_delete.route_delete, name="route_delete"),
     path('api/users', users_view.user_view, name="users"),
     path('api/users/detail', user_detail.users_detail, name="users_detail"),
-    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
     path('api/users/create', user_create.user_create, name="users_create"),
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
@@ -75,7 +83,18 @@ urlpatterns = [
     path('api/students/school', student_view_school.students_school, name="student_view_school"),
     path('api/students/user', student_view_user.students_user, name="student_view_user"),
     path('api/routes/school', route_view_school.routes_school, name='route_view_school'),
-    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop')
+    path('api/bulk-import/users-upload', bulk_import_view_users.bulk_import, name='bulk-import-users-upload'),
+    path('api/bulk-import/students-upload', bulk_import_view_students.bulk_import, name='bulk-import-students-upload'),
+    path('api/bulk-import/users', bulk_import_json_users.bulk_import, name='bulk-import-users'),
+    path('api/bulk-import/students', bulk_import_json_students.bulk_import, name='bulk-import-students'),
+    path('api/bulk-import/users/validate', bulk_import_validate_users.bulk_import_validate, name='bulk-import-users-validate'),
+    path('api/bulk-import/students/validate', bulk_import_validate_students.bulk_import_validate, name='bulk-import-students-validate'),
+    path('api/bulk-import/users/create', bulk_import_users_create.users_create, name='bulk-import-users-create'),
+    path('api/bulk-import/students/create', bulk_import_students_create.students_create, name='bulk-import-students-create'),
+    path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
+    path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete'),
+    path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
+    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info")
 
 ]
 

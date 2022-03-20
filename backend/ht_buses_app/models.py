@@ -7,7 +7,7 @@ from . groups import get_admin_group, get_driver_group
 from guardian.shortcuts import assign_perm
 
 class Location(models.Model):
-    address = models.CharField(max_length=100)
+    address = models.CharField(max_length=150)
     lat = models.FloatField(default=0)
     lng = models.FloatField(default=0)
     objects = models.Manager()
@@ -142,8 +142,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(verbose_name='email',unique=True,max_length=128)
-    phone_number = models.CharField(max_length=16, default=None, blank=True, null=True)
+    email = models.EmailField(verbose_name='email',unique=True,max_length=254)
+    phone_number = models.CharField(max_length=18, default=None, blank=True, null=True)
     is_parent = models.BooleanField(default=False)
     role = models.PositiveSmallIntegerField(choices=role_choices, default=GENERAL)
     location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
