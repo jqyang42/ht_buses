@@ -38,7 +38,6 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
                 id: 'name',
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
-            
             {
                 Header: 'School',
                 accessor: 'school_name',
@@ -72,6 +71,13 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
                 id: 'parent',
                 disableFilter: true,
                 sortDirection: sort.accessor === 'parent' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Parent Phone',
+                accessor: 'parent.phone_number',
+                id: 'phone',
+                disableSort: true,
+                disableFilter: true
             },
         ],
         [sort]
