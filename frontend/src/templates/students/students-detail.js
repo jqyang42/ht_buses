@@ -191,7 +191,7 @@ class StudentsDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <h7>
+                                    <h7 className="mb-3">
                                         PARENT CONTACT INFO
                                     </h7>
                                     <div className="col-auto me-2">
@@ -202,10 +202,10 @@ class StudentsDetail extends Component {
                                             Email
                                         </p>
                                         <p className="gray-600">
-                                            Address
+                                            Phone
                                         </p>
                                         <p className="gray-600">
-                                            Phone
+                                            Address
                                         </p>
                                     </div>
                                     <div className="col-5 me-6">
@@ -216,10 +216,10 @@ class StudentsDetail extends Component {
                                             {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.user.address}
+                                            {this.state.user.phone_number}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number}
+                                            {this.state.user.address}
                                         </p>
                                     </div>
                                 </div>
