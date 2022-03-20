@@ -104,13 +104,17 @@ def bulk_import_validate(request):
                 school_name_clean = school_name_clean.lower()
                 # need to be filtered by managed schools
                 #school_obj = get_objects_for_user(request.user,"view_school", School.objects.all())
-                schools = School.objects.filter(name__iexact=school_name_clean)
-                if len(schools) == 0:
+                school_exists =  School.objects.filter(name__iexact=school_name_clean)
+                if len(school_exists) == 0:
                         school_name_error = True
                         school_name_error_message = "School does not exist"
+                all_validated_schools = get_objects_for_user(request.user, "change_school", School.objects.all())
+                validated_school = all_validated_schools.filter(name__iexact=school_name_clean)
+                if len(validated_school) == 0:
+                    school_name_error = True
+                    school_name_error_message = "User cannot create students at this school"
                 else:
                     school_name_error = False
-                
             if name_error or email_error or student_id_error or school_name_error:
                 error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": "", "school_name": school_name_error_message}
                 error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students}
