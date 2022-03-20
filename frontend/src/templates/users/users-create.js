@@ -55,7 +55,7 @@ class UsersCreate extends Component {
         redirect_detail: false,
         detail_url: '',
         error404: false,
-        // selectedOptions: []
+        added_student_school_staff: true
     }
 
     // initialize
@@ -69,6 +69,7 @@ class UsersCreate extends Component {
         if (localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') {
             this.setState({ new_user: { ...this.state.new_user, role_id: 4} })
         }
+        this.addedStudentSchoolStaff()        
     }
 
     // api calls
@@ -348,7 +349,8 @@ class UsersCreate extends Component {
         //const valid_phone = phoneValidation({ phone_number: this.state.new_user.phone_number})
         const valid_id = this.validatedStudentIDS()
         const not_general = this.state.new_user.role_id !== 0
-        if (!(valid_email && valid_address && valid_id && not_general)) {
+        const added_student_school_staff = this.state.added_student_school_staff
+        if (!(valid_email && valid_address && valid_id && not_general && added_student_school_staff)) {
             this.setState({ create_success: -1 })
             return 
           }
