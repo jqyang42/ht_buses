@@ -260,7 +260,7 @@ class UsersImport extends Component {
                                     </div> */}
                                     {/* Submit button */}
                                     {/* @jessica add  */}
-                                    <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button>
+                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
 
                                     {/* Submit confirmation modal */}
                                     <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
