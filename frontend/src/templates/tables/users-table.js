@@ -36,7 +36,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
                 Header: 'User Type',
                 accessor: d => { return d.role },
                 disableFilter: true,
-                sortDirection: sort.accessor === 'is_staff' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
+                sortDirection: sort.accessor === 'role' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
             },            
             {
                 Header: 'Address',
