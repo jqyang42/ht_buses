@@ -102,7 +102,7 @@ class Students extends Component {
                                 <div>
                                     <div className="row d-inline-flex float-end">
                                         {
-                                            localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                              (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                             <>
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={() => this.importUsers()}>
                                                     <i className="bi bi-upload me-2"></i>

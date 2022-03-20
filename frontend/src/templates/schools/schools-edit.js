@@ -196,7 +196,7 @@ class SchoolsEdit extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            { localStorage.getItem('is_staff') && localStorage.getItem('role') === 'Administrator' ?
+                                            {   localStorage.getItem('role') === 'Administrator' ?
                                                 <>
                                                     <div className="form-group required pb-3 w-75">
                                                         <label for="exampleInputName1" className="control-label pb-2">Name</label>

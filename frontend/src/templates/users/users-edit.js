@@ -8,9 +8,10 @@ import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import ErrorPage from "../error-page";
 import api from "../components/api";
-import { emailValidation } from "../components/validation";
+import { emailValidation, phoneValidation } from "../components/validation";
 import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
-import { makeSchoolsDropdown } from "../components/dropdown";
+import { makeSchoolsMultiSelect } from "../components/dropdown";
+import MultiSelectDropdown from "../components/multi-select";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
@@ -21,10 +22,12 @@ class UsersEdit extends Component {
     state = {
         user: {},
         edited_user: {},
-        schools_dropdown: [],
+        schools_multiselect: [],
+        managed_schools: [],
         redirect: false,
         valid_address: true,
         valid_email: true,
+        valid_phone: 0,
         edit_success: 0,
         error_status: false,
         error_code: 200,
@@ -32,9 +35,10 @@ class UsersEdit extends Component {
 
     // initialize page
     componentDidMount() {
-        this.getUserDetails()
-        makeSchoolsDropdown().then(ret => {
-            this.setState({ schools_dropdown: ret })
+        makeSchoolsMultiSelect().then(ret => {
+            // console.log(ret)
+            this.setState({ schools_multiselect: ret })
+            this.getUserDetails()
         })
     }
 
@@ -43,9 +47,16 @@ class UsersEdit extends Component {
         api.get(`users/detail?id=${this.props.params.id}`)
         .then(res => {
             const user = res.data.user;
+            const managed_schools = user.managed_schools.map(school => {
+                return {
+                    value: school.id,
+                    label: school.name
+                }
+            })
             this.setState({ 
                 user: user,
-                edited_user: user
+                edited_user: user,
+                managed_schools: managed_schools
             });
             console.log(user)
         })
@@ -116,12 +127,27 @@ class UsersEdit extends Component {
         const phone_number = event.target.value
         let user = this.state.edited_user
         user.phone_number = phone_number
+        this.setState({ new_user: user });
         this.setState({ edited_user: user  });
+        /*
+        if(!phoneValidation({ phone_number: phone_number })) {
+            this.setState({ valid_phone: -1 });
+        }
+        else {
+            let user = this.state.edited_user
+            user.phone_number = phone_number.replace(/\D/g, '');
+            this.setState({ new_user: user });
+            this.setState({ valid_phone: 1 });
+            this.setState({ edited_user: user  });
+        }
+        */
     }
 
     handleRoleChange = (event) => {
         const role_value = event.target.value
         let user = this.state.edited_user
+        console.log(role_value)
+        user.role = this.role_conversion(role_value)
         user.role_id = parseInt(role_value)
         this.setState({ edited_user: user });
     }
@@ -147,17 +173,31 @@ class UsersEdit extends Component {
         }
     }
 
+    role_conversion(role_id) {
+        if (role_id == 1) {
+            return 'Administrator'
+        }
+        else if (role_id == 2) {
+            return 'School Staff'
+        }
+        else if (role_id == 3) {
+            return 'Driver'
+        }
+        else {
+            return 'General'
+        }
+    }
+
     // @jessica check with backend
     handleManagedSchoolsChange = (selected) => {
-        const selected_schools = selected.map(id => {
-            return { 'id': id }
+        const selected_schools = selected.map(school => {
+            return { 'id': school.value, 'name': school.label }
         })
-        // console.log(selected)
-        // console.log(selected_schools)
         let user = {...this.state.edited_user}
-        // console.log(user)
+        console.log(user)
         user.managed_schools = selected_schools
         this.setState({ edited_user: user })
+        this.setState({ managed_schools: selected })
     }
 
     checkNonParentAddress = () => {
@@ -179,8 +219,9 @@ class UsersEdit extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         const valid_address = this.checkNonParentAddress()
-        
+        //const valid_phone = phoneValidation({ phone_number: this.state.edited_user.phone_number})
         if (!emailValidation({ email: this.state.edited_user?.email }) || !valid_address ) {
+            this.setState({ edit_success: -1 })
             return 
         }
         else {
@@ -196,7 +237,6 @@ class UsersEdit extends Component {
                         user: this.state.edited_user
                     }
                     this.editUser(user)
-                    console.log(user)
                 }
             })
         }
@@ -272,19 +312,18 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className="form-group required pb-3 form-col">
-                                                <label for="phone_number" className="control-label pb-2">Phone</label>
-                                                <input type="tel" className="form-control pb-2" defaultValue={this.state.user.phone_number} id="examplePhone"
-                                                    placeholder="Enter a phone number" required onChange={this.handlePhoneChange}></input>
-                                                
-                                                {/* TODO: add phoneValidation() method to check if phone number is valid @fern */}
-
-                                                {/* {(!phoneValidation({ phone: this.state.new_user.phone }) && this.state.new_user.phone !== "") ? 
+                                            { <div className="form-group required pb-3 w-75">
+                                                <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
+                                                <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
+                                                placeholder="Enter phone number" required defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
+                                                {/*
+                                                 {(!phoneValidation({ phone_number: this.state.edited_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Please enter a valid phone number.
+                                                        Please enter a valid North American phone number.
                                                     </div>) : ""
-                                                } */}
-                                            </div>
+                                                }
+                                                */}
+                                            </div> }
                                                 
                                             <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
                                                 <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
@@ -345,10 +384,15 @@ class UsersEdit extends Component {
                                             { this.state.edited_user.role_id === 2 ?
                                                 <div className="form-group required pb-3 form-col">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
-                                                    <DropdownMultiselect
-                                                        options={this.state.schools_dropdown}
-                                                        optionKey="value"
-                                                        optionLabel="display"
+                                                    <MultiSelectDropdown
+                                                        selectedOptions={this.state.managed_schools}
+                                                        options={this.state.schools_multiselect}
+                                                        isMulti={true}
+                                                        handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
+                                                    {/* TODO: @jessica link up schools in the options field */}
+                                                    {/* <DropdownMultiselect
+                                                        // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
+                                                        options={this.state.schools_multiselect}
                                                         id="managedSchools"
                                                         placeholder="Select Schools to Manage"
                                                         buttonClass="form-select border"
