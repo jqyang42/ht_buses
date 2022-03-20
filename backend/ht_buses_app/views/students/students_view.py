@@ -8,7 +8,7 @@ from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from .student_pagination import student_pagination
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from guardian.shortcuts import get_objects_for_user
+from ..general.general_tools import get_students_for_user
 
 # Students GET API: All Students for Admin
 @csrf_exempt
@@ -19,11 +19,7 @@ def students(request):
     order_by = request.query_params["order_by"]
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     search = request.query_params["q"]
-    if request.user.role == User.ADMIN or request.user.role == User.SCHOOL_STAFF:
-        schools = get_objects_for_user(request.user, "change_school", School.objects.all())
-    else:
-        schools = get_objects_for_user(request.user, "view_school", School.objects.all())
-    student_list = Student.objects.filter(school_id__in = schools)
+    student_list = get_students_for_user(request.user)
     data = get_student_view(page_number, order_by, sort_by, search, student_list)
     return Response(data)
 
