@@ -145,7 +145,6 @@ def update_schools_staff_rights():
     school_staffs = User.objects.filter(role = User.SCHOOL_STAFF)
     for school_staff in school_staffs:
         schools = get_objects_for_user(school_staff,"change_school", School.objects.all())
-        print(schools)
         assign_school_staff_perms(school_staff, schools)
     return True
 
