@@ -22,7 +22,7 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             },
             {
                 Header: 'ID',
-                accessor: 'student_id',
+                accessor: d => Array(`${d.student_id}`, d.error.student_id,`${d.error.error_message.student_id}`),
                 id: 'student_id',
                 disableFilter: true,
                 disableSort: true
