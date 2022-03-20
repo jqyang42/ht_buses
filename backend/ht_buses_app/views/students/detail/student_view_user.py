@@ -35,6 +35,8 @@ def student_search_and_sort(order_by, sort_by, search, user_id, user_requesting)
     
     # search only
     students = get_students_for_user(user_requesting)
+    if len(students) == 0 and int(user_requesting.pk) == int(user_id):
+        students = Student.objects.filter(user_id = user_id)
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         students = students.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).filter(user_id=user_id).order_by("id")
