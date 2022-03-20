@@ -58,7 +58,8 @@ class UsersCreate extends Component {
         is_school_staff: false,
         is_parent_email: false,
         appendToParent: false,
-        existing_user_id: null
+        existing_user_id: null,
+        email_api_checked: false
         // selectedOptions: []
     }
 
@@ -383,14 +384,15 @@ class UsersCreate extends Component {
                 this.setState({ 
                     appendToParent: email_exists && is_parent_email,
                     valid_email: !email_exists,
-                    existing_user_id: existing_user_id
+                    existing_user_id: existing_user_id,
+                    email_api_checked: true
                 })
                 // @kyra: needs a modal that will popup (if this.state.is_school_staff and this.state.appendToParent are true) with 2 buttons: to append to existing parent or to escape to allow the email address to be edited
             })
           }
     }
         
-    // @kyra call this method to add students to existing
+    // @kyra call this method to add students to existing - wait this.state.email_api_checked -> once true, show modal
     addStudentsToExisting = () => {
         const students = {
             students: this.state.students
