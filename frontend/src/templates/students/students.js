@@ -63,7 +63,7 @@ class Students extends Component {
 
     // Programatically click the hidden file input element
     // when the Button component is clicked
-    importUsers = () => {
+    importStudents = () => {
         this.hiddenFileInput.current.click()
     };
 
@@ -124,7 +124,7 @@ class Students extends Component {
                                         {
                                             localStorage.getItem('is_staff') && (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                             <>
-                                                <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={() => this.importUsers()}>
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={() => this.importStudents()}>
                                                     <i className="bi bi-upload me-2"></i>
                                                     Import
                                                 </button>
