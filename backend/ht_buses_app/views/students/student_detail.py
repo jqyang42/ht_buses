@@ -40,7 +40,7 @@ def students_detail(request):
         user_serializer = UserSerializer(user,many=False)
         location = Location.objects.get(pk=user_serializer.data["location"])
         location_serializer = LocationSerializer(location, many=False)
-        user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "address": location_serializer.data["address"], "phone_number": user_serializer.data["phone_number"]}
+        user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "address": location_serializer.data["address"], "phone_number": user_serializer.data["phone_number"], "email": user_serializer.data["email"]}
         student_arr = {"student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "in_range": in_range}
         data["student"] = student_arr
         data["user"] = user_arr
