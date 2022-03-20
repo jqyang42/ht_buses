@@ -384,15 +384,14 @@ class UsersCreate extends Component {
                     this.sendCreateRequest()
                 }
 
-                if (email_exists && is_parent_email && this.state.is_school_staff) {
-                    this.openAddStudentsModal()
-                }
-
                 this.setState({ 
-                    appendToParent: email_exists && is_parent_email,
                     valid_email: !email_exists,
                     existing_user_id: existing_user_id,
                     email_api_checked: true
+                }, () => {
+                    if (email_exists && is_parent_email && this.state.is_school_staff) {
+                        this.openAddStudentsModal()
+                    }
                 })
                 
                 // @kyra: needs a modal that will popup (if this.state.is_school_staff and this.state.appendToParent are true) with 2 buttons: to append to existing parent or to escape to allow the email address to be edited
@@ -406,14 +405,14 @@ class UsersCreate extends Component {
             students: this.state.students
         }
 
-        api.post(`users/add-students?id=${this.props.params.id}`, students)
+        api.post(`users/add-students?id=${this.state.existing_user_id}`, students)
         .then(res => {
             const success = res.data.success
             if (success) {
                 this.setState({ 
                     create_success: 1,
                     redirect_detail: true,
-                    detail_url: USERS_URL + "/" + res.data.user.id
+                    detail_url: USERS_URL + "/" + this.state.existing_user_id
                 });
             } else {
                 this.setState({ create_success: -1 })
