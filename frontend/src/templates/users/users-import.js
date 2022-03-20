@@ -5,6 +5,7 @@ import { ImportUsersTable } from "../tables/import-users-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
+import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL, USERS_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
@@ -27,6 +28,8 @@ class UsersImport extends Component {
         // },
         // searchValue: '',
         users_redirect: false,
+        successVerifyModalIsOpen: false,
+        errorVerifyModalIsOpen: false,
         loading: true
     }
 
@@ -60,6 +63,11 @@ class UsersImport extends Component {
     //         this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
     //     })
     // }
+
+    openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
+    closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
+    openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
+    closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
 
     getUploadedUsers = () => {
         api.get(`bulk-import/users`)
@@ -113,7 +121,14 @@ class UsersImport extends Component {
                 errors: data.errors,
                 users: data.users,
                 loading: false
+            }, () => {
+                if (data.errors.length === 0) {
+                    this.openSuccessVerifyModal()
+                } else {
+                    this.openErrorVerifyModal()
+                }
             })
+            
         })
         .catch(err => {
             console.log('VALIDATE API FAILED')
@@ -191,10 +206,38 @@ class UsersImport extends Component {
                                     </div>
                                     
                                     {/* Verify button */}
-                                    <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#verifyModal" onClick={this.verifyImport}>Verify</button>
+                                    <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.verifyImport}>Verify</button>
 
-                                    {/* Verify confirmation modal */}
-                                    <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    {/* Success verify confirmation modal */}
+                                    <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
+                                        <form onSubmit={this.handleSubmitImport}>
+                                        <Modal.Header closeButton>
+                                        <Modal.Title>Verify Users</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            All users have been verified and no errors exist. Your import is ready to be submitted!
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <button type="button" className="btn btn-secondary" onClick={this.closeSuccessVerifyModal}>Continue Editing</button>
+                                            <button type="submit" className="btn btn-primary">Save and Import</button>
+                                        </Modal.Footer>
+                                        </form>
+                                    </Modal>
+
+                                    {/* Error verify confirmation modal */}
+                                    <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
+                                        <Modal.Header closeButton>
+                                        <Modal.Title>Verify Users</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            Errors still exist in the file import. Please correct them before submitting.
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <button type="button" className="btn btn-primary" onClick={this.closeErrorVerifyModal}>Continue Editing</button>
+                                        </Modal.Footer>
+                                    </Modal>
+
+                                    {/* <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                         <div className="modal-dialog modal-dialog-centered">
                                             <div className="modal-content">
                                                 <form onSubmit={this.state.verifyCheck ? this.handleSubmitImport : ''}>
@@ -214,7 +257,7 @@ class UsersImport extends Component {
                                                 </form>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     {/* Submit button */}
                                     {/* @jessica add  */}
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button>
