@@ -71,9 +71,6 @@ def assign_school_staff_perms(user, schools):
     user.save()
     user = User.objects.get(pk = user.pk)
     assign_school_perms(user, schools)
-    for school in schools:
-        students = Student.objects.filter(school_id = school)
-        assign_user_perms(user, students)
     user.save()
     return 
 
@@ -122,12 +119,14 @@ def reassign_perms(edited_user, schools=[]):
     edited_user = User.objects.get(pk = edited_user.pk)
     remove_object_level_perms(edited_user)
     if edited_user.role == User.SCHOOL_STAFF:
-        try:
-            school_ids = schools
-            managed_schools = School.objects.filter(pk__in=school_ids)
-            assign_school_staff_perms(edited_user, managed_schools) 
+        #try:
+        school_ids = schools
+        managed_schools = School.objects.filter(pk__in=school_ids)
+        assign_school_staff_perms(edited_user, managed_schools) 
+        """
         except:
             return False
+        """
     reassign_groups(edited_user)
     assign_perm("view_user", edited_user, edited_user)
     edited_user.save()
@@ -165,29 +164,27 @@ def get_users_for_user(user):
 def has_access_to_object(user, model_object):
     if user.role == User.ADMIN or user.role == User.DRIVER:
         return model_object
+    schools = get_objects_for_user(user,"change_school", School.objects.all())
     if user.role == User.SCHOOL_STAFF:
         schools = get_objects_for_user(user,"change_school", School.objects.all())
         try:
             if type(model_object) is Student:
-                print("Student")
-                schools.get(pk = model_object.school_id)
+                schools.filter(pk = model_object.school_id.pk)
                 return model_object
             if type(model_object) is Route:
-                print("Route")
-                schools.get(pk = model_object.school_id)
+                schools.get(pk = model_object.school_id.pk)
                 return model_object
             if type(model_object) is User:
-                print("user")
-                students = Students.objects.get(user_id__in = model_object.pk)
+                students = Student.objects.filter(user_id = model_object.pk)
+                print(students)
                 for student in students:
                     try:
-                        schools.get(pk = student.school_id)
+                        schools.get(pk = student.school_id.pk)
                         return model_object
                     except:
                         continue 
                 raise PermissionDenied
             if type(model_object) is School:
-                print("School")
                 schools.get(pk = model_object.pk)
                 return model_object
         except:

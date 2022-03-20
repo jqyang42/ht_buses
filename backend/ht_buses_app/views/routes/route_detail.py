@@ -20,7 +20,7 @@ def routes_detail(request):
     except:
         return response_messages.DoesNotExist(data, "route")  
     try:
-        accessible_school = has_access_to_object(reques.user, route.school_id)
+        accessible_school = has_access_to_object(request.user, route.school_id)
     except:
         return response_messages.PermissionDenied(data, "route's school")
     try:

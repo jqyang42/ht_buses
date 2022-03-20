@@ -24,6 +24,7 @@ from ...groups import get_admin_group, get_driver_group
 def user_edit(request):
     data = {}
     reqBody = json.loads(request.body)
+    user_object = has_access_to_object(request.user, User.objects.get(pk=request.query_params["id"]))
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)

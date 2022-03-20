@@ -1,4 +1,4 @@
-from ...models import School, Location
+from ...models import School, Location, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAdminUser, AllowAny

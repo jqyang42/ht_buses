@@ -20,10 +20,13 @@ def users_detail(request):
         uv_user = User.objects.get(pk=id)
     except: 
         return response_messages.DoesNotExist(data, "user")
-    try:
-        user = has_access_to_object(request.user, uv_user)
-    except:
-        return response_messages.PermissionDenied(data, "user")
+    if request.user.id != int(id):
+        try:
+            user = has_access_to_object(request.user, uv_user)
+        except:
+            return response_messages.PermissionDenied(data, "user")
+    else:
+        user = User.objects.get(pk = request.user.pk)
     try:
         user_serializer = UserSerializer(user, many=False)
         location_serializer = LocationSerializer(user.location, many=False)
@@ -52,10 +55,16 @@ def user_account(request):
         uv_user = User.objects.get(pk=id)
     except:
         return response_messages.DoesNotExist(data, "user")
-    try:
-        user = has_access_to_object(request.user, uv_user)
-    except:
-        return response_messages.PermissionDenied(data, "user")
+    print(id)
+    print(request.user.id)
+    if request.user.id != int(id):
+        try:
+            user = has_access_to_object(request.user, uv_user)
+        except:
+            return response_messages.PermissionDenied(data, "user")
+    else:
+        print("")
+        user = User.objects.get(pk = request.user.pk)
     try:
         user_serializer = UserSerializer(user, many=False)
         location_arr = {"address": user.location.address}

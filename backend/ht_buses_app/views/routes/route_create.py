@@ -24,8 +24,9 @@ def route_create(request):
         school = School.objects.get(pk=reqBody["route"]["school_id"])
     except:
         return response_messages.DoesNotExist(data, "school")
+    accessible_school = has_access_to_object(request.user, school)
     try:
-        accessible_school = has_access_to_object(request.user, model_object)
+        accessible_school = has_access_to_object(request.user, school)
     except:
         return response_messages.PermissionDenied(data, "route's school")
     try:
