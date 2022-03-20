@@ -65,7 +65,7 @@ def bulk_import(request):
                         print(user_email_serializer.data)
                         if user_email_serializer.data[0]["location"] == None or user_email_serializer.data[0]["location"] == "":
                             email_error = True
-                            email_error_message = "User has an invalid addresss"
+                            email_error_message = "User has an invalid address"
                         else:
                             email_error = False
                 else:
