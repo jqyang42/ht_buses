@@ -42,6 +42,13 @@ def bulk_import(request):
         data["success"] = False
         return Response(data, status=404)
     reader = csv.DictReader(csv_file, headers, delimiter=',')
+    
+    # need to do header check
+    if reader[0]["email"] != "email" and reader[0]["name"] != "name" and row[0]["address"] != "address" and row["phone_number"] != "phone_number":
+        data["users"] = {}
+        data["success"] = False
+        return Response(data, status=404)
+        
     # skip the header
     next(reader, None)
     for row in reader:
