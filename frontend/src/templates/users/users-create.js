@@ -608,7 +608,7 @@ class UsersCreate extends Component {
 
                                             {/* if user role is school staff */}
                                             { this.state.new_user.role_id == 2 ?
-                                                <div className="form-group required pb-3 w-75">
+                                                <div className="form-group pb-3 w-75">
                                                     <label for="managedSchools" className="control-label pb-2">Managed Schools</label>
                                                     <MultiSelectDropdown
                                                         selectedOptions={[]}
