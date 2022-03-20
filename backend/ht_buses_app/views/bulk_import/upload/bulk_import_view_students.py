@@ -65,7 +65,7 @@ def bulk_import(request):
                         location_serializer = LocationSerializer(location, many=False)
                         if location_serializer.data["address"] == None or location_serializer.data["address"] == "":
                             email_error = True
-                            email_error_message = "User has an invalid address"
+                            email_error_message = "Parent has an invalid address"
                         else:
                             email_error = False
                 else:
