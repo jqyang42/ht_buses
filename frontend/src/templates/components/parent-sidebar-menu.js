@@ -54,7 +54,7 @@ class ParentSidebarMenu extends Component {
                         <img src={HT_LOGO} className="img-logo img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
                     </a>
 
-                    <ul className="nav nav-pills flex-column mb-sm-auto mb-0 w-100" id="menu">
+                    <ul className="nav nav-pills flex-column mb-md-auto mb-4 mb-0 w-100" id="menu">
                         <li className={"nav-item " + activeTab}>
                             <a href={PARENT_DASHBOARD_URL} className="nav-link align-middle mx-4 px-4">
                                 <i className="bi bi-house me-2"></i>
