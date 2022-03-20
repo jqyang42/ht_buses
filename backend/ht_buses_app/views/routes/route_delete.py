@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 # Routes DELETE API
@@ -18,7 +18,7 @@ def route_delete(request):
     except:
         return response_messages.DoesNotExist(data, "route")
     try:
-        accessible_school = get_object_for_user(request.user, route_object.school_id, "change_school")
+        accessible_school = has_access_to_object(request.user, route_object.school_id)
     except:
         response_messages.PermissionDenied(data, "route's school")
     try:

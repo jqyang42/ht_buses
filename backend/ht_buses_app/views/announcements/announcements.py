@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from . import announcement_tools
 from django.conf import settings
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 @csrf_exempt
@@ -36,7 +36,7 @@ def announcement_school(request):
     except:
         return response_messages.DoesNotExist(data, "school")
     try:
-        school_id = get_object_for_user(request.user, uv_school_id, "change_school")
+        school_id = has_access_to_object(request.user, uv_school_id)
     except:
         return response_messages.PermissionDenied(data, "school")
     try:
@@ -59,7 +59,7 @@ def announcement_route(request):
     except:
         return response_messages.DoesNotExist(data, "route")
     try:
-        route_id = get_object_for_user(request.user, uv_route_id, "change_route")
+        route_id = has_access_to_object(user, uv_route_id)
     except:
         return response_messages.PermissionDenied(data, "route")
     try:

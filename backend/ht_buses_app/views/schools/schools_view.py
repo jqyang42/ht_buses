@@ -17,7 +17,10 @@ def schools(request):
     order_by = request.query_params["order_by"] # TODO: Recheck when testing,previously broken
     sort_by = request.query_params["sort_by"]
     search = request.query_params["q"]
-    school_list = get_objects_for_user(request.user,"view_school", School.objects.all())
+    if request.user.role == User.SCHOOL_STAFF or request.user.role == User.ADMIN:
+        school_list = get_objects_for_user(request.user,"change_school", School.objects.all())
+    else:
+        school_list = get_objects_for_user(request.user,"view_school", School.objects.all())
     data = get_schools_view(order_by, sort_by, page_number, search, school_list)
     return Response(data)
 

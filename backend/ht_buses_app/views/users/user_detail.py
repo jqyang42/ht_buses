@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from ...serializers import LocationSerializer, UserSerializer, ManageSchoolsSerializer
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from ..general.general_tools import get_object_for_user, get_role_string, user_is_parent
+from ..general.general_tools import has_access_to_object, get_role_string, user_is_parent
 from ..general import response_messages
 from guardian.shortcuts import get_objects_for_user
 from rest_framework.authtoken.models import Token
@@ -21,7 +21,7 @@ def users_detail(request):
     except: 
         return response_messages.DoesNotExist(data, "user")
     try:
-        user = get_object_for_user(request.user, uv_user, "view_user")
+        user = has_access_to_object(request.user, uv_user)
     except:
         return response_messages.PermissionDenied(data, "user")
     try:
@@ -53,7 +53,7 @@ def user_account(request):
     except:
         return response_messages.DoesNotExist(data, "user")
     try:
-        user = get_object_for_user(request.user, uv_user, "view_user")
+        user = has_access_to_object(request.user, uv_user)
     except:
         return response_messages.PermissionDenied(data, "user")
     try:

@@ -9,7 +9,7 @@ import re
 from ..resources import capitalize_reg
 from datetime import datetime
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 
 @csrf_exempt
@@ -25,7 +25,7 @@ def route_create(request):
     except:
         return response_messages.DoesNotExist(data, "school")
     try:
-        accessible_school = get_object_for_user(request.user, school, "change_school")
+        accessible_school = has_access_to_object(request.user, model_object)
     except:
         return response_messages.PermissionDenied(data, "route's school")
     try:

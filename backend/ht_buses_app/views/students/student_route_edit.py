@@ -8,7 +8,7 @@ from ...serializers import StudentSerializer
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 # Student Route PUT API
 @csrf_exempt
@@ -28,7 +28,7 @@ def student_route_edit(request):
             except:
                 return response_messages.DoesNotExist(data, "student")
             try:
-                school = get_object_for_user(request.user, student_obj.school_id, "change_school")
+                school = has_access_to_object(request.user, student_object.school_id)
             except:
                 return response_messages.PermissionDenied(data, "student's school")
             if route_id == 0:

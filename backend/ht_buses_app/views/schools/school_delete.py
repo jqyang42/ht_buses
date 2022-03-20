@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin
-from ..general.general_tools import get_object_for_user
+from ..general.general_tools import has_access_to_object
 from ..general.response_messages import UnsuccessfulAction
 
 # Schools DELETE API
@@ -16,7 +16,7 @@ def school_delete(request):
     id = request.query_params["id"]
     try:
         uv_school_object = School.objects.get(pk=id)
-        school_object = get_object_for_user(request.user, uv_school_object, "delete_school")
+        school_object = has_access_to_object(request.user, uv_school_object)
         school_object.location_id.delete()
         school_object.delete()
         data["message"] = "school successfully deleted"
