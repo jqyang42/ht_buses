@@ -7,6 +7,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import Geocode from "react-geocode";
 import api from "../components/api";
+import { Modal } from "react-bootstrap";
 import { emailValidation, passwordValidation, validNumber, phoneValidation } from "../components/validation";
 // import DropdownMultiselect from "react-multiselect-dropdown-bootstrap";
 import MultiSelectDropdown from "../components/multi-select";
@@ -59,7 +60,8 @@ class UsersCreate extends Component {
         is_parent_email: false,
         appendToParent: false,
         existing_user_id: null,
-        email_api_checked: false
+        email_api_checked: false,
+        addStudentsModalIsOpen: false
         // selectedOptions: []
     }
 
@@ -381,12 +383,18 @@ class UsersCreate extends Component {
                 if (!email_exists) {
                     this.sendCreateRequest()
                 }
+
+                if (email_exists && is_parent_email && this.state.is_school_staff) {
+                    this.openAddStudentsModal()
+                }
+
                 this.setState({ 
                     appendToParent: email_exists && is_parent_email,
                     valid_email: !email_exists,
                     existing_user_id: existing_user_id,
                     email_api_checked: true
                 })
+                
                 // @kyra: needs a modal that will popup (if this.state.is_school_staff and this.state.appendToParent are true) with 2 buttons: to append to existing parent or to escape to allow the email address to be edited
             })
           }
@@ -448,6 +456,9 @@ class UsersCreate extends Component {
     //     console.log(this.state.selectedOptions)
     //     console.log(this.state.options)
     // };
+
+    openAddStudentsModal = () => this.setState({ addStudentsModalIsOpen: true });
+    closeAddStudentsModal = () => this.setState({ addStudentsModalIsOpen: false });
 
     render() {
         // const { selectedOptions } = this.state;
@@ -756,6 +767,19 @@ class UsersCreate extends Component {
                                 </form>
                             </div>
                         </div>
+
+                        <Modal show={this.state.addStudentsModalIsOpen} onHide={this.closeAddStudentsModal}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Add Student to User</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Oops! This user already exists as a parent in our database. You may choose to either add these students to the existing parent or you may modify the parent email to create a new user.
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button type="button" className="btn btn-secondary" onClick={this.closeAddStudentsModal}>Continue Editing</button>
+                                <button type="submit" className="btn btn-primary" onClick={this.addStudentsToExisting}>Add to Existing Parent</button>
+                            </Modal.Footer>
+                        </Modal>
                     </div>
                 </div> 
             </div>
