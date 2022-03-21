@@ -178,7 +178,13 @@ def bulk_import(request):
 
     for i in range(0, len(users)):
         for j in range(i + 1, len(users)):
-            if users[i]["name"] == users[j]["name"] and users[i]["email"] == users[j]["email"]:
+            user_i_name = ' '.join(users[i]["name"].strip().split()).casefold()
+            user_j_name = ' '.join(users[j]["name"].strip().split()).casefold()
+
+            user_i_email = users[i]["email"].strip().casefold()
+            user_j_email = users[j]["email"].strip().casefold()
+
+            if user_i_name == user_j_name and user_i_email == user_j_email:
                 users[i]["error"]["duplicate_name"] = True
                 users[j]["error"]["duplicate_name"] = True
                 users[i]["error"]["duplicate_email"] = True
@@ -212,7 +218,7 @@ def bulk_import(request):
                         errors.append(new_error)
 
 
-            elif users[i]["name"] == users[j]["name"]:
+            elif user_i_name == user_j_name:
                 users[i]["error"]["duplicate_name"] = True
                 users[j]["error"]["duplicate_name"] = True
                 users[i]["exclude"] = True
@@ -240,7 +246,7 @@ def bulk_import(request):
                         new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
                         errors.append(new_errors)
             
-            elif users[i]["email"] == users[j]["email"]:
+            elif user_i_email == user_j_email:
                 users[i]["error"]["duplicate_email"] = True
                 users[j]["error"]["duplicate_email"] = True
                 users[i]["exclude"] = True

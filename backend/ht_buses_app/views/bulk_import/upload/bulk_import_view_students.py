@@ -1,4 +1,3 @@
-from multiprocessing.reduction import duplicate
 from ....models import School, User, Student, Location
 from ....serializers import StudentSerializer, SchoolSerializer, UserSerializer, LocationSerializer
 from rest_framework.decorators import api_view, permission_classes
@@ -137,7 +136,7 @@ def bulk_import(request):
             school_name_error_message = "School name field cannot be empty"
         else:
             # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
-            school_name_clean = ' '.join(row["school_name"].split())
+            school_name_clean = ' '.join(row["school_name"].strip().split()).casefold()
             school_name_clean = school_name_clean.lower()
             school_exists =  School.objects.filter(name__iexact=school_name_clean)
             if len(school_exists) == 0:
@@ -171,7 +170,13 @@ def bulk_import(request):
     # duplicate checking
     for i in range(0, len(students)):
         for j in range(i + 1, len(students)):
-            if students[i]["name"] == students[j]["name"] and students[i]["parent_email"] == students[j]["parent_email"]:
+            student_i_name = ' '.join(students[i]["name"].strip().split()).casefold()
+            student_j_name = ' '.join(students[j]["name"].strip().split()).casefold()
+
+            student_i_email = students[i]["parent_email"].strip().casefold()
+            student_j_email = students[j]["parent_email"].strip().casefold()
+
+            if student_i_name == student_j_name and student_i_email == student_j_email:
                 students[i]["error"]["duplicate_name"] = True
                 students[j]["error"]["duplicate_name"] = True
                 students[i]["error"]["duplicate_parent_email"] = True
@@ -205,7 +210,7 @@ def bulk_import(request):
                         errors.append(new_errors)
 
 
-            elif students[i]["name"] == students[j]["name"]:
+            elif student_i_name == student_j_name:
                 students[i]["error"]["duplicate_name"] = True
                 students[j]["error"]["duplicate_name"] = True
                 students[i]["exclude"] = True
