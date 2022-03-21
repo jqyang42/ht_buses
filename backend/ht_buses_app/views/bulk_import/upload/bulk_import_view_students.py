@@ -30,6 +30,7 @@ def bulk_import(request):
     school_name_error_message = ""
     email_error_message = ""
     name_error_message = ""
+    student_id_error_message = ""
     existing_students = []
     headers = ["name", "parent_email", "student_id", "school_name"]
     csv_file = StringIO(req_file.read().decode('utf-8-sig'))
@@ -53,7 +54,7 @@ def bulk_import(request):
         data["success"] = False
         return Response(data, status=404)
     # skip the header
-    
+
     for row in reader:
         # name, parent_email, student_id, school_name
         if row["parent_email"] is None or row["parent_email"] == "":
@@ -118,8 +119,15 @@ def bulk_import(request):
         if row["student_id"] is None or row["student_id"] == "":
             student_id = 0
         else:
-            student_id = row["student_id"]
-        student_id_error = False
+            # check if student_id is an integer
+            try:
+                valid_student_id = int(row["student_id"])
+                student_id = row["student_id"]
+                student_id_error = False
+            except:
+                student_id_error = True
+                student_id = row["student_id"]
+                student_id_error_message = "Student id must be an integer value"
         
         if row["school_name"] is None or row["school_name"] == "":
             school_name_error = True
@@ -141,12 +149,12 @@ def bulk_import(request):
                 school_name_error = False
             
         if name_error or email_error or student_id_error or school_name_error:
-            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": "", "school_name": school_name_error_message}
+            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": student_id_error_message, "school_name": school_name_error_message}
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students}
             errors.append(error_obj)
             errors_msg.append(error_message)
         else:
-            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": "", "school_name": school_name_error_message}
+            error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": student_id_error_message, "school_name": school_name_error_message}
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students}
         row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": student_id, "school_name": row["school_name"], "error": error_obj, "exclude": False}
         students.append(row_obj)
