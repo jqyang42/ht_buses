@@ -77,16 +77,19 @@ class StudentsImport extends Component {
             const error_message = error.error_message
             let error_num = 0
             
-            for (const [err_type, err_value] of Object.entries(error)) {
-                const is_svr_duplicate = err_type === 'name' && err_value && error_message.name === "Name may already exist in the system"
-                const is_csv_duplicate = err_type === 'duplicate_name' && err_value
-                const is_parent_email_duplicate = err_type === 'duplicate_parent_email' && err_value
+            if (!error.exclude) {
+                for (const [err_type, err_value] of Object.entries(error)) {
+                    const is_svr_duplicate = err_type === 'name' && err_value && error_message.name === "Name may already exist in the system"
+                    const is_csv_duplicate = err_type === 'duplicate_name' && err_value
+                    const is_parent_email_duplicate = err_type === 'duplicate_parent_email' && err_value
 
-                if (!(is_svr_duplicate || is_csv_duplicate || is_parent_email_duplicate || err_type === 'row_num' || err_type === 'error_message' || err_type === 'existing_students') && err_value) {
-                    error_num += 1
+                    if (!(is_svr_duplicate || is_csv_duplicate || is_parent_email_duplicate || err_type === 'row_num' 
+                    || err_type === 'error_message' || err_type === 'existing_students' || err_type === 'exclude') && err_value) {
+                        error_num += 1
+                    }
                 }
             }
-
+            
             return error_num
         })
 
