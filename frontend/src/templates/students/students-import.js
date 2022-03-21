@@ -20,7 +20,9 @@ class StudentsImport extends Component {
         students_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
-        loading: true
+        createConfirmationModalIsOpen: false,
+        loading: true,
+        createStudentCount: 0
     }
 
     componentDidMount() {
@@ -31,6 +33,8 @@ class StudentsImport extends Component {
     closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
     closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
+    closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedStudents = () => {
         api.get(`bulk-import/students`)
@@ -139,10 +143,12 @@ class StudentsImport extends Component {
         api.post(`bulk-import/students/create`, data)
         .then(res => {
             console.log(res)
+            this.setState({ createStudentCount: res.data.student_count })
             api.delete(`bulk-import/students/delete-temp-file`)
             .then(res => {
                 console.log(res)
-                this.setState({ students_redirect: true })
+                this.closeSuccessVerifyModal()
+                this.openCreateConfirmationModal()
             })
             .catch(err => {
                 console.log(err)
@@ -152,6 +158,10 @@ class StudentsImport extends Component {
         .catch(err => {
             this.setState({ loading: false })
         })
+    }
+
+    handleStudentsRedirect = () => {
+        this.setState({ students_redirect: true })
     }
 
     render() {
@@ -207,7 +217,7 @@ class StudentsImport extends Component {
                                     <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
                                         <Modal.Header closeButton>
-                                        <Modal.Title>Verify Students</Modal.Title>
+                                        <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             All students have been verified and no errors exist. Your import is ready to be submitted!
@@ -222,7 +232,7 @@ class StudentsImport extends Component {
                                     {/* Error verify confirmation modal */}
                                     <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
                                         <Modal.Header closeButton>
-                                        <Modal.Title>Verify Users</Modal.Title>
+                                        <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             Errors still exist in the file import. Please correct them before submitting.
@@ -230,6 +240,21 @@ class StudentsImport extends Component {
                                         <Modal.Footer>
                                             <button type="button" className="btn btn-primary" onClick={this.closeErrorVerifyModal}>Continue Editing</button>
                                         </Modal.Footer>
+                                    </Modal>
+
+                                    {/* Create confirmation modal */}
+                                    <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
+                                        <form onSubmit={this.handleStudentsRedirect}>
+                                        <Modal.Header closeButton>
+                                        <Modal.Title><h5>Import Students</h5></Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            {this.state.createStudentCount} student{this.state.createStudentCount === 1 ? "": "s"} {this.state.createStudentCount === 1 ? "has": "have"} been successfully imported.
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <button type="submit" className="btn btn-primary">OK</button>
+                                        </Modal.Footer>
+                                        </form>
                                     </Modal>
 
                                     {/* Verify confirmation modal */}
