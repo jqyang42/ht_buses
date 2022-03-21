@@ -36,7 +36,7 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        // this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
     
     // pagination

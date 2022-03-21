@@ -38,7 +38,7 @@ class Users extends Component {
     }
     
     componentDidMount() {
-        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        // this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination

@@ -54,13 +54,15 @@ class StudentsEdit extends Component {
             const student = res.data.student
             const school = res.data.school
             const route = res.data.route
+            const user = res.data.user
+            student.user_id = user.id
             let edited_student = {
                 first_name: student.first_name,
                 last_name: student.last_name,
                 student_school_id: student.student_school_id,
                 school_id: school.id,
                 route_id: route.id,
-                user_id: student.user_id,
+                user_id: user.id,
                 in_range: false // TODO USE CLACLUATED VALUE
             }
             this.setState({ 
@@ -69,6 +71,8 @@ class StudentsEdit extends Component {
                 route: route,
                 edited_student: edited_student
             })
+
+            console.log(this.state.edited_student)
 
             makeRoutesDropdown({ school_id: school.id }).then(ret => {
                 this.setState({ routes_dropdown: ret })
@@ -257,7 +261,7 @@ class StudentsEdit extends Component {
                                                 onChange={this.handleParentIDChange}>
                                                     <option>Select a Parent</option>
                                                     {this.state.parents_dropdown.map(parent => {
-                                                        if (this.state.student.user_id == parent.user_id) {
+                                                        if (parseInt(this.state.edited_student.user_id) == parent.user_id) {
                                                             return <option selected value={parent.user_id}>{parent.name}</option>
                                                         } else {
                                                             return <option value={parent.user_id}>{parent.name}</option>
