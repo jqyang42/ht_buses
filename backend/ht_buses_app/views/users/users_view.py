@@ -26,9 +26,7 @@ def user_view(request):
 def get_user_view(order_by, sort_by, page_number, search, user_list):
     data = {}
     users = user_search_and_sort(sort_by, order_by, search, user_list)
-    print(users)
     data = user_pagination(users, page_number)
-    print(data)
     return data
 
 def user_search_and_sort(sort_by, order_by, search, user_list):
