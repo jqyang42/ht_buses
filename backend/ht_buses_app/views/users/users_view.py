@@ -8,7 +8,7 @@ from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from .user_pagination import user_pagination
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
-from ..general.general_tools import get_users_for_user
+from ..general.general_tools import get_users_for_user, get_role_string
 
 # Basically we can use this api just for search by sending order_by/sort_by to be none
 @csrf_exempt
@@ -52,6 +52,8 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         if search == 1 or search == 2 or search == 3 or search == 4:
             users = user_list.filter(role=search).order_by("id")
+        elif sort_by == "role":
+            users = sorted_by_role_type(user_list)
         else:
             users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
     .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search)).order_by("id")
@@ -60,23 +62,36 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
         if order_by == "asc":
             if search != None and search != "":
                 if search == 1 or search == 2 or search == 3 or search == 4:
-                    users = user_list.filter(role=search).order_by(sort_by)
+                    if sort_by == "role":
+                        users = sorted_by_role_type(user_list)
+                    else:
+                        users = user_list.filter(role=search).order_by(sort_by)
+                elif sort_by == "role":
+                    users = sorted_by_role_type(user_list)
                 else:
                     users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by(sort_by)
-            # elif sort_by == "role":
-            #     print("sort by role") #TODO: FIX sorting with role
+            elif sort_by == "role":
+                users = sorted_by_role_type(user_list)
             else:
                 users = user_list.order_by(sort_by)
         else:
             if search != None and search != "":
                 if search == 1 or search == 2 or search == 3 or search == 4:
-                    users = user_list.filter(role=search).order_by("-" + sort_by)
+                    if sort_by == "role":
+                        users = sorted_by_role_type(user_list, True)
+                    else:
+                        users = user_list.filter(role=search).order_by("-" + sort_by)
+                elif sort_by == "role":
+                    users = sorted_by_role_type(user_list, True)
                 else:
                     users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-" + sort_by)
-            # elif sort_by == "role":
-            #     print("sort by role")
+            if sort_by == "role":
+                users = sorted_by_role_type(user_list, True)
             else:
                 users = user_list.order_by("-" + sort_by)
     return users
+
+def sorted_by_role_type(user_list, desc= False):
+    return sorted(user_list, key=lambda user: get_role_string(user.role), reverse=desc)
