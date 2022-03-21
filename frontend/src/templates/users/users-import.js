@@ -17,16 +17,6 @@ class UsersImport extends Component {
         errors: [],
         edited_users: [],
         verifyCheck: false,
-        // show_all: false,
-        // pageIndex: 1,
-        // canPreviousPage: null,
-        // canNextPage: null,
-        // totalPages: null,
-        // sortOptions: {
-        //     accessor: '',
-        //     sortDirection: 'none'
-        // },
-        // searchValue: '',
         users_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
@@ -34,35 +24,8 @@ class UsersImport extends Component {
     }
 
     componentDidMount() {
-        // this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
-        // console.log(this.props.location.state)
         this.getUploadedUsers()
     }
-
-    // pagination
-    // getUsersPage = (page, sortOptions, search) => {
-    //     getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
-    //     .then(res => {
-    //         this.setState({
-    //             users: res.data.users,
-    //             pageIndex: res.pageIndex,
-    //             canPreviousPage: res.canPreviousPage,
-    //             canNextPage: res.canNextPage,
-    //             totalPages: res.totalPages,
-    //             sortOptions: sortOptions,
-    //             searchValue: search
-    //         })
-    //     })
-    // }
-    
-    // render handlers
-    // handleShowAll = () => {
-    //     this.setState(prev => ({
-    //         show_all: !prev.show_all
-    //     }), () => {
-    //         this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
-    //     })
-    // }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
     closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
@@ -73,7 +36,6 @@ class UsersImport extends Component {
         api.get(`bulk-import/users`)
         .then(res => {
             console.log(res)
-            // const temp = res.data.users
             this.setState({ 
                 users: res.data.users,
                 errors: res.data.errors,
@@ -95,13 +57,18 @@ class UsersImport extends Component {
     handleCancelImport = (event) => {
         // redirect to USERS_URL (ignoring all changes from import)
         event.preventDefault()
+        this.setState({ loading: true })
         api.delete(`bulk-import/users/delete-temp-file`)
         .then(res => {
             console.log(res)
-            this.setState({ users_redirect: true })
+            this.setState({ 
+                users_redirect: true,
+                loading: false
+            })
         })
         .catch(err => {
             console.log(err)
+            this.setState({ loading: false })
         })
     }
 
@@ -128,10 +95,10 @@ class UsersImport extends Component {
                     this.openErrorVerifyModal()
                 }
             })
-            
         })
         .catch(err => {
-            console.log('VALIDATE API FAILED')
+            console.log(err)
+            this.setState({ loading: false })
         })
     }
 
@@ -155,7 +122,11 @@ class UsersImport extends Component {
             })
             .catch(err => {
                 console.log(err)
+                this.setState({ loading: false })
             })
+        })
+        .catch(err => {
+            this.setState({ loading: false })
         })
     }
 

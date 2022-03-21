@@ -109,7 +109,10 @@ class Users extends Component {
         .then(res => {
             console.log("posted successfully")
             console.log(res)
-            this.setState({ import_redirect: true })
+            this.setState({ 
+                import_redirect: true,
+                loading: false
+            })
         })
         .catch(err => {
             this.setState({ 
