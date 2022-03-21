@@ -86,7 +86,7 @@ def bulk_import(request):
 
         if row["name"] is None or row["name"] == "":
             name_error = True
-            name_error_message = "Name field cannot be empty."
+            name_error_message = "Name field cannot be empty"
         else:
             if len(row["name"]) > 150:
                 name_error = True
