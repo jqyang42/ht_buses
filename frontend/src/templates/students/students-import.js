@@ -16,7 +16,7 @@ class StudentsImport extends Component {
         students: [],
         errors: [],
         edited_students: [],
-        verifyCheck: false,
+        // verifyCheck: false,
         students_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
@@ -47,7 +47,7 @@ class StudentsImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_students: new_data,
-            verifyCheck: false
+            // verifyCheck: false
         }, () => {
             console.log(this.state.edited_students)
         })
@@ -72,6 +72,28 @@ class StudentsImport extends Component {
         })
     }
 
+    isVerified = (err_arr) => {
+        const errors_per_row = err_arr.filter(error => {
+            const error_message = error.error_message
+            let error_num = 0
+            
+            for (const [err_type, err_value] of Object.entries(error)) {
+                const is_svr_duplicate = err_type === 'name' && err_value && error_message.name === "Name may already exist in the system"
+                const is_csv_duplicate = err_type === 'duplicate_name' && err_value
+                const is_parent_email_duplicate = err_type === 'duplicate_parent_email' && err_value
+
+                if (!(is_svr_duplicate || is_csv_duplicate || is_parent_email_duplicate || err_type === 'row_num' || err_type === 'error_message' || err_type === 'existing_students') && err_value) {
+                    error_num += 1
+                }
+            }
+
+            return error_num
+        })
+
+        const total_errors = errors_per_row.reduce((a, b) => a + b, 0)
+        return total_errors === 0
+    }
+
     verifyImport = (event) => {
         event.preventDefault()
         const data = {
@@ -84,12 +106,12 @@ class StudentsImport extends Component {
             console.log(res)
             const data = res.data
             this.setState({
-                verifyCheck: data.errors.length === 0,
+                // verifyCheck: data.errors.length === 0,
                 errors: data.errors,
                 students: data.students,
                 loading: false
             }, () => {
-                if (data.errors.length === 0) {
+                if (this.isVerified(data.errors)) {
                     this.openSuccessVerifyModal()
                 } else {
                     this.openErrorVerifyModal()
