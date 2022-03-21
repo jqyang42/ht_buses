@@ -70,6 +70,7 @@ def bulk_import_validate(request):
                             phone_number = user_serializer.data[0]["phone_number"]
                             email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + " address " + address_str + " and phone number " + phone_number
                             email_error = True
+                            exclude = True
                     else:
                         email_error = True
                         email_error_message = "User email is not a valid email"
