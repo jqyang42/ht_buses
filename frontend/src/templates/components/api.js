@@ -1,14 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: `http://localhost:8000/api/`,
+    baseURL: `https://vcm-25151.vm.duke.edu/`,
     headers: {
         Authorization: localStorage.getItem('token') ? `Token ${localStorage.getItem('token')}` : ``
       }
 });
 
 const interceptor_api = axios.create({
-    baseURL: `http://localhost:8000/api/`,
+    baseURL: `https://vcm-25151.vm.duke.edu/`,
     headers: {
         Authorization: localStorage.getItem('token') ? `Token ${localStorage.getItem('token')}` : ``
       }
