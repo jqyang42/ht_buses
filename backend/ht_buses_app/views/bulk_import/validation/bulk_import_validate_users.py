@@ -87,7 +87,7 @@ def bulk_import_validate(request):
             .filter(Q(full_name__iexact=row["name"]) | Q(first_name__iexact=row["name"]) | Q(last_name__iexact=row["name"]))
                     if len(users_names) == 0:
                         missing_last_name = row["name"].split(" ", 1)
-                        if missing_last_name[1] == None:
+                        if len(missing_last_name)< 2:
                             name_error = True
                             name_error_message = "Name is missing last name field"
                         else:
