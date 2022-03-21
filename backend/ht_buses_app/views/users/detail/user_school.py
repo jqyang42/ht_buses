@@ -9,6 +9,7 @@ from django.db.models.functions import Concat
 from ..user_pagination import user_pagination
 from ....role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from ...general.general_tools import get_users_for_user, get_students_for_user
+from ..users_view import sorted_by_role_type
 
 # This only gets users for 1 school, need this somehow to get multiple
 @csrf_exempt
@@ -49,14 +50,24 @@ def user_search_and_sort(sort_by, order_by, search, id, user_requesting):
     else:
         if order_by == "asc":
             if search != None:
-                users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                if sort_by == "role":
+                    users = sorted_by_role_type(users)
+                else:
+                    users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(pk__in=user_id), (Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search))).order_by(sort_by)
+            elif sort_by == "role":
+                    users = sorted_by_role_type(users)
             else:
                 users = users.filter(pk__in=user_id).order_by(sort_by)
         else:
             if search != None:
-                users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+                if sort_by == "role":
+                    users = sorted_by_role_type(users, True)
+                else:
+                    users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(pk__in=user_id), (Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search))).order_by("-" + sort_by)
+            elif sort_by == "role":
+                users = sorted_by_role_type(users, True)
             else:
                 users = users.filter(pk__in=user_id).order_by("-" + sort_by)
     return users
