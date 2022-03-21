@@ -255,9 +255,14 @@ const EditableCell = ({
         setComplete(updated_complete)
     }
 
-    const onSelectChange = e => {
-        setSelectValue(e.formatted_address)
-    }
+    // // for autocomplete selection
+    // const onSelectAutocompleteChange = e => {
+    //     setSelectValue(e.formatted_address)
+    // }
+
+    // const onCheckboxChange = e => {
+    //     setSelectValue(e.target.value === 'on')
+    // }
 
     useEffect(() => {
         setValue(selectValue)
@@ -298,14 +303,14 @@ const EditableCell = ({
                         placeholder="Enter home address" className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
                         onChange={onChange}
                         defaultValue={value}
-                        onPlaceSelected={onSelectChange}
+                        onPlaceSelected={(event) => {setSelectValue(event.formatted_address)}}
                         onBlur={onBlur} />
                     </div>
                 : ( id === 'exclude' ?
                     <div>
                         <div className="mt-2 d-flex align-items-center justify-content-center">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" defaultChecked={value} onChange={onChange}  onBlur={onBlur}/>
+                                <input class="form-check-input" type="checkbox" defaultChecked={value} onChange={(event) => {setSelectValue(event.target.value === 'on')}} onBlur={onBlur}/>
                             </div>
                         </div>
                     </div>
