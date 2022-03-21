@@ -98,7 +98,12 @@ def bulk_import(request):
                 exist_students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=row["name"]) | Q(first_name__icontains=row["name"]) | Q(last_name__icontains=row["name"]))
                 if len(exist_students) == 0:
-                    name_error = False
+                    missing_last_name = row["name"].split(" ", 1)
+                    if missing_last_name[1] == None:
+                        name_error = True
+                        name_error_message = "Name is missing last name field"
+                    else:
+                        name_error = False
                 else:
                     name_error = True
                     name_error_message = "Name may already exist in the system"
