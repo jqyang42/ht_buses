@@ -135,7 +135,7 @@ def bulk_import_validate(request):
             students.append(row_obj)
             row_num += 1
         else:
-            row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": student_id, "school_name": row["school_name"], "error": row["error"], "exclude": row["exclude"]}
+            row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": row["student_id"], "school_name": row["school_name"], "error": row["error"], "exclude": row["exclude"]}
             students.append(row_obj)
             row_num += 1
             
