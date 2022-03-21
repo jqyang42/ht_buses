@@ -79,13 +79,16 @@ def user_search_and_sort(sort_by, order_by, search, id, user_requesting):
                 users = users.filter(pk__in=user_id).order_by(sort_by)
         else:
             if search != None and search != "":
-                if sort_by == "role":
-                    users = sorted_by_role_type(users, True)
+                if search == 1 or search == 2 or search == 3 or search == 4:
+                    if sort_by == "role":
+                        users = sorted_by_role_type(users.filter(role=search), True)
+                    else:
+                        users = users.filter(role=search).order_by("-" + sort_by)
                 else:
                     users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(pk__in=user_id), (Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)))
                     if sort_by == "role":
-                        users = 
+                        users = sorted_by_role_type(users, True)
                     else:
                         users = users.order_by("-" + sort_by)
             elif sort_by == "role":
