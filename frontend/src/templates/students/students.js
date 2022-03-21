@@ -69,6 +69,7 @@ class Students extends Component {
     importStudents = () => {
         this.setState({ import_file_error: false })
         this.setState({ import_headers_error: false })
+        this.fileUploaded = null
         this.hiddenFileInput.current.click()
     };
 
@@ -90,6 +91,7 @@ class Students extends Component {
         } 
         else {
             this.setState({ import_file_error: true })
+            this.fileUploaded = null
         }
     };
 
@@ -110,6 +112,7 @@ class Students extends Component {
         })
         .catch(err => {
             this.setState({ import_headers_error: true })
+            this.fileUploaded = null
             console.log(err)
         })
     }
@@ -141,7 +144,7 @@ class Students extends Component {
                                     }
                                     {this.state.import_headers_error ? 
                                         <div class="alert alert-danger mt-2 mb-3" role="alert">
-                                            Your import file does not have the correct format. Please ensure that it contains the headers: name, parent email, student id, and school name, in the respective order.
+                                            Your import file does not have the correct format. Please ensure that it contains the headers: name, parent_email, student_id, and school_name, in the respective order.
                                         </div> : ""
                                     }
                                     {this.state.loading ? 
@@ -162,6 +165,9 @@ class Students extends Component {
                                                     ref={this.hiddenFileInput}
                                                     accept={".csv"}
                                                     onChange={this.getFile}
+                                                    onClick={(event) => {
+                                                        event.target.value = ''
+                                                    }}
                                                     style={{ display: 'none' }} />
                                             </> : ""
                                         }
