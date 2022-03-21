@@ -301,9 +301,17 @@ const EditableCell = ({
                         onPlaceSelected={onSelectChange}
                         onBlur={onBlur} />
                     </div>
-                : 
+                : ( id === 'exclude' ?
+                    <div>
+                        <div className="mt-2 d-flex align-items-center justify-content-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" defaultChecked={value} onChange={onChange}  onBlur={onBlur}/>
+                            </div>
+                        </div>
+                    </div>
+                 :
                     <input className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
-                }
+                )}
             </div>
 }
 
