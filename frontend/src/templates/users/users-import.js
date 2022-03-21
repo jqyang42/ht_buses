@@ -248,7 +248,7 @@ class UsersImport extends Component {
                                         <Modal.Title><h5>Import Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
-                                            {this.state.createUserCount} student{this.state.createUserCount === 1 ? "": "s"} {this.state.createUserCount === 1 ? "has": "have"} been successfully imported.
+                                            {this.state.createUserCount} user{this.state.createUserCount === 1 ? "": "s"} {this.state.createUserCount === 1 ? "has": "have"} been successfully imported.
                                         </Modal.Body>
                                         <Modal.Footer>
                                             <button type="submit" className="btn btn-primary">OK</button>
