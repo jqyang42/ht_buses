@@ -8,8 +8,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, 
-  hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
+export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
   totalPages, columnHeaderClick, sortOptions, searchValue }) {
 
     const navigate = useNavigate();
@@ -102,6 +101,19 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
             // <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> 
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
             : "" }
+            { filterOn ?
+            <>
+              <div className='row flex-nowrap align-items-center'>
+                <p className='w-auto'>Filter: </p>
+                <select className="form-select w-auto ms-2 mb-3" placeholder="Filter: Role" aria-label="Select a Role"  id="roleType" required onChange={(e) => this.handleRoleChange(e)}>
+                  <option value={0} selected>Select a Role</option>
+                  <option value={4} id="4">General</option>
+                  <option value={1} id="1">Administrator</option>
+                  <option value={2} id="2">School Staff</option>
+                  <option value={3} id="3">Driver</option>
+                </select>
+              </div></>
+            : "" }            
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
