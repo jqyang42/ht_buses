@@ -56,7 +56,7 @@ def bulk_import(request):
         return Response(data, status=404)
 
     # skip the header
-    next(reader, None)
+    #next(reader, None)
     for row in reader:
         existing_users = []
         # email, name, address, phone_number
@@ -132,7 +132,7 @@ def bulk_import(request):
             address_error_message = "Address cannot be empty"
         else:    
             location_arr = geocode_address(row["address"])
-            if location_arr[0]["lat"] is None or location_arr[0]["lng"] is None:
+            if location_arr is None:
                 address_error = True
                 address_error_message = "Address is not valid"
             else:

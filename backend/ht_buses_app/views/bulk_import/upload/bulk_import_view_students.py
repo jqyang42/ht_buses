@@ -42,7 +42,7 @@ def bulk_import(request):
         return Response(data, status=404)
     reader = csv.DictReader(csv_file, delimiter=',')
     header_csv = reader.fieldnames
-    print(header_csv)
+
     if len(header_csv) == len(headers):
         if header_csv[0] != headers[0] or header_csv[1] != headers[1] or header_csv[2] != headers[2] or header_csv[3] != headers[3]:
             data["students"] = {}
@@ -53,7 +53,7 @@ def bulk_import(request):
         data["success"] = False
         return Response(data, status=404)
     # skip the header
-    next(reader, None)
+    
     for row in reader:
         # name, parent_email, student_id, school_name
         if row["parent_email"] is None or row["parent_email"] == "":
