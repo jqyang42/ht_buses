@@ -232,7 +232,7 @@ def bulk_import_validate(request):
                             errors[k]["duplicate_name"] = True
                             user_i_found = True
                     if user_i_found == False:
-                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": []}
+                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": []}
                         errors.append(new_errors)
                     user_j_found = False
                     for k in range(0, len(errors)):
@@ -240,7 +240,7 @@ def bulk_import_validate(request):
                             errors[k]["duplicate_name"] = True
                             user_j_found = True
                     if user_j_found == False:
-                        new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": []}
+                        new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": []}
                         errors.append(new_errors)
 
     data["users"] = users
