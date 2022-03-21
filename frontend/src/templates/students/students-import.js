@@ -271,6 +271,7 @@ class StudentsImport extends Component {
                                         <div class="alert alert-danger mt-2 mb-2" role="alert">
                                             <p className="mb-1">Row {error.row_num} contains the errors:</p>
                                             <ul className="mb-0">
+                                                {error.student_id ? <li>{error.error_message.student_id}</li> : ""}
                                                 {error.name ? <li>{error.error_message.name}</li> : ""}
                                                 {error.existing_students.length !== 0 ?
                                                 <ul className="mb-0">
