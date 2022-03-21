@@ -24,8 +24,8 @@ class Students extends Component {
         canNextPage: null,
         totalPages: null,
         sortOptions: {
-            accessor: '',
-            sortDirection: 'none'
+            accessor: 'name',
+            sortDirection: 'asc'
         },
         searchValue: '',
         import_redirect: false,
@@ -36,7 +36,7 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        // this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
     
     // pagination

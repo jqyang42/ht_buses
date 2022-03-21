@@ -26,8 +26,8 @@ class Users extends Component {
         canNextPage: null,
         totalPages: null,
         sortOptions: {
-            accessor: '',
-            sortDirection: 'none'
+            accessor: 'name',
+            sortDirection: 'ASC'
         },
         searchValue: '',
         import_redirect: false,
@@ -38,7 +38,7 @@ class Users extends Component {
     }
     
     componentDidMount() {
-        // this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination

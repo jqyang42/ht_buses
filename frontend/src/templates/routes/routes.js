@@ -17,14 +17,14 @@ class BusRoutes extends Component {
         canNextPage: null,
         totalPages: null,
         sortOptions: {
-            accessor: '',
-            sortDirection: 'none'
+            accessor: 'name',
+            sortDirection: 'asc'
         },
         searchValue: ''
     }
 
     componentDidMount() {
-        // this.getRoutesPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        this.getRoutesPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination
