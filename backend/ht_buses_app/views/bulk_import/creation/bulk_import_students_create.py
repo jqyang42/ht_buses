@@ -13,10 +13,12 @@ from guardian.shortcuts import get_objects_for_user
 @permission_classes([IsAdmin|IsSchoolStaff]) 
 def students_create(request):
     data = {}
+    student_count = 0
     reqBody = json.loads(request.body)
     for student in reqBody["students"]:
         # name, parent_email, student_id, school_name
         if student["exclude"] == False:
+            student_count += 1
             name = student["name"].split(" ", 1)
             first_name = name[0]
             last_name = name[1]
@@ -38,7 +40,7 @@ def students_create(request):
                     user_id = parent
                 )
     data["success"] = True
-    data["student_count"] = len(reqBody["students"])
+    data["student_count"] = student_count
     return Response(data)
 
 
