@@ -24,7 +24,7 @@ class BusRoutes extends Component {
     }
 
     componentDidMount() {
-        this.getRoutesPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        // this.getRoutesPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
 
     // pagination
