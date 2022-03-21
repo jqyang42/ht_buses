@@ -23,7 +23,7 @@ FILENAME = 'bulk_import_users_temp.json'
 @permission_classes([IsAdmin|IsSchoolStaff]) 
 def bulk_import(request):
     req_file = request.FILES["bulk_users"]
-    csv_file = StringIO(req_file.read().decode('latin-1'))
+    csv_file = StringIO(req_file.read().decode('utf-8-sig'))
     data = {}
     users = []
     errors = []
@@ -41,10 +41,16 @@ def bulk_import(request):
         data["users"] = {}
         data["success"] = False
         return Response(data, status=404)
-    reader = csv.DictReader(csv_file, headers, delimiter=',')
+    reader = csv.DictReader(csv_file, delimiter=',')
     header_csv = reader.fieldnames
-    if header_csv != headers:
-        data["students"] = {}
+    
+    if len(header_csv) == len(headers):
+        if header_csv[0] != headers[0] or header_csv[1] != headers[1] or header_csv[2] != headers[2] or header_csv[3] != headers[3]:
+            data["users"] = {}
+            data["success"] = False
+            return Response(data, status=404)
+    else:
+        data["users"] = {}
         data["success"] = False
         return Response(data, status=404)
 
