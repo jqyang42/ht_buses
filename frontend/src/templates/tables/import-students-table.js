@@ -54,7 +54,7 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             },       
             {
                 Header: 'Exclude?',
-                accessor: 'exclude',
+                accessor: d => Array(d.exclude),
                 disableFilter: true,
                 id: 'exclude',
                 disableSort: true
