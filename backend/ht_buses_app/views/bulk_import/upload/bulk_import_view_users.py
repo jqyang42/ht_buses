@@ -58,6 +58,7 @@ def bulk_import(request):
     # skip the header
     #next(reader, None)
     for row in reader:
+        exclude = False
         existing_users = []
         # email, name, address, phone_number
         if row["email"] is None or row["email"] == "":
@@ -135,6 +136,7 @@ def bulk_import(request):
                     existing_users = user_name_arr
                     name_error = True
                     name_error_message= "Name may already exist in the system"
+                    exclude = True
 
         if row["address"] is None or row["address"] == "":
             address_error = True
@@ -164,7 +166,6 @@ def bulk_import(request):
                 phone_number_error = False
         if address_error or phone_number_error or name_error or email_error:
             error_message = {"row_num": row_num, "name": name_error_message, "email": email_error_message, "address": address_error_message, "phone_number": phone_number_error_message}
-            error_obj = {"row_num" : row_num, "name": name_error, "email": email_error, "address": address_error, "phone_number": phone_number_error, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users, "exclude": False}
             errors.append(error_obj)
             errors_msg.append(error_message)
         else:
@@ -172,6 +173,10 @@ def bulk_import(request):
             error_obj = {"row_num" : row_num, "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users, "exclude": False}
         row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": error_obj, "exclude": False}
         users.append(row_obj)
+        print(exclude)
+        print(row_num)
+        users[row_num-1]["exclude"] = exclude
+
         row_num += 1
 
 
