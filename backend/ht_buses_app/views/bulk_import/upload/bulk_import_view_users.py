@@ -114,7 +114,7 @@ def bulk_import(request):
                 if len(users_names) == 0:
                     # do check if name is missing last name
                     missing_last_name = row["name"].split(" ", 1)
-                    if missing_last_name[1] == None:
+                    if len(missing_last_name) < 2:
                         name_error = True
                         name_error_message = "Name is missing last name field"
                     else:

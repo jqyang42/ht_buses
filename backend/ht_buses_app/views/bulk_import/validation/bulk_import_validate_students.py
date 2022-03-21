@@ -73,7 +73,12 @@ def bulk_import_validate(request):
                     exist_students = Student.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
             .filter(Q(full_name__icontains=row["name"]) | Q(first_name__icontains=row["name"]) | Q(last_name__icontains=row["name"]))
                     if len(exist_students) == 0:
-                        name_error = False
+                        missing_last_name = row["name"].split(" ", 1)
+                        if len(missing_last_name) < 2:
+                            name_error = True
+                            name_error_message = "Name is missing last name field"
+                        else:
+                            name_error = False
                     else:
                         name_error = True
                         name_error_message = "Name may already exist in the system"
@@ -116,14 +121,13 @@ def bulk_import_validate(request):
                 if len(school_exists) == 0:
                         school_name_error = True
                         school_name_error_message = "School does not exist"
+                all_validated_schools = get_objects_for_user(request.user, "change_school", School.objects.all())
+                validated_school = all_validated_schools.filter(name__iexact=school_name_clean)
+                if len(validated_school) == 0:
+                    school_name_error = True
+                    school_name_error_message = "User cannot create students at this school"
                 else:
-                    all_validated_schools = get_objects_for_user(request.user, "change_school", School.objects.all())
-                    validated_school = all_validated_schools.filter(name__iexact=school_name_clean)
-                    if len(validated_school) == 0:
-                        school_name_error = True
-                        school_name_error_message = "User cannot create students at this school"
-                    else:
-                        school_name_error = False
+                    school_name_error = False
             if name_error or email_error or student_id_error or school_name_error:
                 error_message = {"row_num": row_num, "name": name_error_message, "parent_email": email_error_message, "student_id": student_id_error_message, "school_name": school_name_error_message, "exclude": row["exclude"]}
                 error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students}
