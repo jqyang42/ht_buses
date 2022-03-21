@@ -87,7 +87,7 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
                 else:
                     users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search)).order_by("-" + sort_by)
-            if sort_by == "role":
+            elif sort_by == "role":
                 users = sorted_by_role_type(user_list, True)
             else:
                 users = user_list.order_by("-" + sort_by)
