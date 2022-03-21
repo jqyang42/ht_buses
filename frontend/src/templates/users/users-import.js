@@ -263,6 +263,7 @@ class UsersImport extends Component {
                                 }
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
+                                        error.exclude ? "" :
                                         <div class="alert alert-danger mt-2 mb-2" role="alert">
                                             <p className="mb-1">Row {error.row_num} contains the errors:</p>
                                             <ul className="mb-0">
