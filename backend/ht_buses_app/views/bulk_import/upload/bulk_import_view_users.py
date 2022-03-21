@@ -112,7 +112,13 @@ def bulk_import(request):
         .filter(Q(full_name__iexact=row["name"]) | Q(first_name__iexact=row["name"]) | Q(last_name__iexact=row["name"]))
                 print(users_names)
                 if len(users_names) == 0:
-                    name_error = False
+                    # do check if name is missing last name
+                    missing_last_name = row["name"].split(" ", 1)
+                    if missing_last_name[1] == None:
+                        name_error = True
+                        name_error_message = "Name is missing last name field"
+                    else:
+                        name_error = False
                 else:
                     user_name_serializer = BulkImportUserSerializer(users_names, many=True)
                     user_name_arr = []

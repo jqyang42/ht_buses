@@ -86,7 +86,12 @@ def bulk_import_validate(request):
                     users_names = User.objects.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
             .filter(Q(full_name__iexact=row["name"]) | Q(first_name__iexact=row["name"]) | Q(last_name__iexact=row["name"]))
                     if len(users_names) == 0:
-                        name_error = False
+                        missing_last_name = row["name"].split(" ", 1)
+                        if missing_last_name[1] == None:
+                            name_error = True
+                            name_error_message = "Name is missing last name field"
+                        else:
+                            name_error = False
                     else:
                         user_name_serializer = BulkImportUserSerializer(users_names, many=True)
                         user_name_arr = []
