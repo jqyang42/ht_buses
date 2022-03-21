@@ -94,6 +94,9 @@ def bulk_import(request):
                         phone_number = user_serializer.data[0]["phone_number"]
                         email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + " address " + address_str + " and phone number " + phone_number
                         email_error = True
+                else:
+                    email_error = True
+                    email_error_message = "User email is not a valid email"
         if row["name"] is None or row["name"] == "":
             name_error = True
             name_error_message = "Name field cannot be empty"
