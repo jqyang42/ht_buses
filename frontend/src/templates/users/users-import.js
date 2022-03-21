@@ -16,7 +16,7 @@ class UsersImport extends Component {
         users: [],
         errors: [],
         edited_users: [],
-        verifyCheck: false,
+        // verifyCheck: false,
         users_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
@@ -47,7 +47,7 @@ class UsersImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_users: new_data,
-            verifyCheck: false
+            // verifyCheck: false
         }, () => {
             console.log(this.state.edited_users)
         })
@@ -72,6 +72,17 @@ class UsersImport extends Component {
         })
     }
 
+    isVerified = (err_arr) => {
+        const non_duplicate_err = err_arr.filter(error => {
+            const err_msg = error.error_message
+            const is_duplicate = err_msg.name === "Name may already exist in the system"
+            if (!is_duplicate) {
+                return error
+            }
+        })
+        return non_duplicate_err.length === 0
+    }
+
     verifyImport = (event) => {
         event.preventDefault()
         const data = {
@@ -84,12 +95,12 @@ class UsersImport extends Component {
             console.log(res)
             const data = res.data
             this.setState({
-                verifyCheck: data.errors.length === 0,
+                // verifyCheck: this.isVerified(data.errors),
                 errors: data.errors,
                 users: data.users,
                 loading: false
             }, () => {
-                if (data.errors.length === 0) {
+                if (this.isVerified(data.errors)) {
                     this.openSuccessVerifyModal()
                 } else {
                     this.openErrorVerifyModal()

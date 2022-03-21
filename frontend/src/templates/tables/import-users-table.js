@@ -67,7 +67,7 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             },
             {
                 Header: 'Exclude?',
-                accessor: 'exclude',
+                accessor: d => Array(d.exclude),
                 disableFilter: true,
                 id: 'exclude',
                 disableSort: true
