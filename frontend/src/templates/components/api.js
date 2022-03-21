@@ -29,7 +29,7 @@ api.interceptors.request.use( config => {
             localStorage.setItem('token', res.data.token)
         }
         else {
-            localStorage.setItem('logged_in', false)
+            localStorage.clear()
         }
     }).catch (error => {
         if (error.response.status !== 200) {
