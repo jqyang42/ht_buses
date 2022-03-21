@@ -35,7 +35,8 @@ def user_edit(request):
             user_object = has_access_to_object(request.user, uv_user_object)
         except:
             return response_messages.PermissionDenied(data, "user")
-        user_object.email = reqBody["user"]["email"]
+        user_email = reqBody["user"]["email"].lower()
+        user_object.email = user_email
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])
         user_object.location.address = reqBody["user"]["location"]["address"]
