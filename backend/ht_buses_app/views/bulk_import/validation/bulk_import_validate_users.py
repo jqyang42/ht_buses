@@ -34,6 +34,7 @@ def bulk_import_validate(request):
    
     for row in reqBody["users"]:
         existing_users = []
+        exclude = False
         # email, name, address, phone_number
         if row["exclude"] == False:
             if row["email"] is None or row["email"] == "":
@@ -108,6 +109,7 @@ def bulk_import_validate(request):
                         existing_users = user_name_arr
                         name_error = True
                         name_error_message= "Name may already exist in the system"
+                        exclude = True
 
             if row["address"] is None or row["address"] == "":
                 address_error = True
@@ -145,6 +147,7 @@ def bulk_import_validate(request):
                 error_obj = {"row_num" : row_num, "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": False, "error_message": error_message, "existing_users": existing_users, "exclude": row["exclude"]}
             row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": error_obj, "exclude": row["exclude"]}
             users.append(row_obj)
+            users[row_num-1]["exclude"] = exclude
             row_num += 1
         else:
             row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": row["error"], "exclude": row["exclude"]}

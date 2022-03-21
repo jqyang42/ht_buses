@@ -57,6 +57,7 @@ def bulk_import(request):
 
     for row in reader:
         # name, parent_email, student_id, school_name
+        exclude = False
         if row["parent_email"] is None or row["parent_email"] == "":
             email_error = True
             email_error_message = "Parent email field cannot be empty"
@@ -107,6 +108,7 @@ def bulk_import(request):
                 else:
                     name_error = True
                     name_error_message = "Name may already exist in the system"
+                    exclude = True
                     ex_students = []
                     exist_student_serializer = StudentSerializer(exist_students, many=True)
                     for i in range(0, len(exist_student_serializer.data)):
@@ -165,6 +167,7 @@ def bulk_import(request):
             error_obj = {"row_num" : row_num, "name": name_error, "parent_email": email_error, "student_id": student_id_error, "school_name": school_name_error, "duplicate_name": False, "duplicate_parent_email": False, "error_message": error_message, "existing_students": existing_students, "exclude": False}
         row_obj = {"row_num" : row_num, "name": row["name"], "parent_email": row["parent_email"], "student_id": student_id, "school_name": row["school_name"], "error": error_obj, "exclude": False}
         students.append(row_obj)
+        students[row_num-1]["exclude"] = exclude
         row_num += 1
     # empty file check
     if len(students) == 0:
