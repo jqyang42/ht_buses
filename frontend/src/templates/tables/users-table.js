@@ -32,6 +32,12 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
                 sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
             {
+                Header: 'Phone Number',
+                accessor: 'phone_number',
+                id: 'phone_number',
+                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
+            },
+            {
                 id:'role',
                 Header: 'User Type',
                 accessor: d => { return d.role },
@@ -79,7 +85,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by name or email..."
+            searchLabel="Search by name, email or role..."
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/users/"}
