@@ -94,6 +94,9 @@ def bulk_import(request):
                         phone_number = user_serializer.data[0]["phone_number"]
                         email_error_message = "Email already exists in the system as " + first_name + " " + last_name + " with " + no_address  + " address " + address_str + " and phone number " + phone_number
                         email_error = True
+                else:
+                    email_error = True
+                    email_error_message = "User email is not a valid email"
         if row["name"] is None or row["name"] == "":
             name_error = True
             name_error_message = "Name field cannot be empty"
@@ -254,7 +257,7 @@ def bulk_import(request):
                             errors[k]["duplicate_name"] = True
                             user_i_found = True
                     if user_i_found == False:
-                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": []}
+                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": []}
                         errors.append(new_errors)
                     user_j_found = False
                     for k in range(0, len(errors)):
@@ -262,7 +265,7 @@ def bulk_import(request):
                             errors[k]["duplicate_name"] = True
                             user_j_found = True
                     if user_j_found == False:
-                        new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": []}
+                        new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": []}
                         errors.append(new_errors)
 
     data["users"] = users
