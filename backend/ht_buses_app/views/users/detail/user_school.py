@@ -62,12 +62,12 @@ def user_search_and_sort(sort_by, order_by, search, id, user_requesting):
         else:
             if search != None:
                 if sort_by == "role":
-                    users = sorted_by_role_type(users)
+                    users = sorted_by_role_type(users, True)
                 else:
                     users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(pk__in=user_id), (Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search))).order_by("-" + sort_by)
             elif sort_by == "role":
-                users = sorted_by_role_type(users)
+                users = sorted_by_role_type(users, True)
             else:
                 users = users.filter(pk__in=user_id).order_by("-" + sort_by)
     return users
