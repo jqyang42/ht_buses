@@ -139,7 +139,7 @@ def bulk_import_validate(request):
             users.append(row_obj)
             row_num += 1
         else:
-            row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": row["errors"], "exclude": True}
+            row_obj = {"row_num" : row_num, "name": row["name"], "email": row["email"], "address": row["address"], "phone_number": row["phone_number"], "error": row["error"], "exclude": True}
             users.append(row_obj)
             row_num += 1
 
