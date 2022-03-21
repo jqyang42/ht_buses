@@ -85,7 +85,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by name or email..."
+            searchLabel="Search by name, email or role..."
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/users/"}
