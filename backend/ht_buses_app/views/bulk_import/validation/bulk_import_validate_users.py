@@ -154,94 +154,100 @@ def bulk_import_validate(request):
     for i in range(0, len(users)):
         for j in range(i + 1, len(users)):
             if users[i]["name"] == users[j]["name"] and users[i]["email"] == users[j]["email"]:
-                users[i]["error"]["duplicate_name"] = True
-                users[j]["error"]["duplicate_name"] = True
-                users[i]["error"]["duplicate_email"] = True
-                users[j]["error"]["duplicate_email"] = True
-                users[i]["exclude"] = True
-                users[j]["exclude"] = True
-                if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                else:
-                    user_i_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == users[i]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            errors[k]["duplicate_email"] = True
-                            user_i_found = True
-                    if user_i_found == False:
-                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
-                        errors.append(new_errors)
-
-                    user_j_found = False  
-                    for k in range(0, len(errors)):    
-                        if errors[k]["row_num"] == users[j]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            errors[k]["duplicate_email"] = True
-                            user_j_found = True
-                    if user_j_found == False:
+                no_duplicate_check = users[i]["exclude"] or users[j]["exclude"]
+                if no_duplicate_check == False:
+                    users[i]["error"]["duplicate_name"] = True
+                    users[j]["error"]["duplicate_name"] = True
+                    users[i]["error"]["duplicate_email"] = True
+                    users[j]["error"]["duplicate_email"] = True
+                    users[i]["exclude"] = True
+                    users[j]["exclude"] = True
+                    if len(errors) == 0:
                         new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
+                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
                         errors.append(new_error)
+                        errors.append(new_errors)
+                    else:
+                        user_i_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == users[i]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_email"] = True
+                                user_i_found = True
+                        if user_i_found == False:
+                            new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
+                            errors.append(new_errors)
+
+                        user_j_found = False  
+                        for k in range(0, len(errors)):    
+                            if errors[k]["row_num"] == users[j]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_email"] = True
+                                user_j_found = True
+                        if user_j_found == False:
+                            new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": True, "error_message": [], "existing_users": existing_users, "exclude": False}
+                            errors.append(new_error)
 
 
             elif users[i]["name"] == users[j]["name"]:
-                users[i]["error"]["duplicate_name"] = True
-                users[j]["error"]["duplicate_name"] = True
-                users[i]["exclude"] = True
-                users[j]["exclude"] = True
-                if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                else:
-                    user_i_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == users[i]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            user_i_found = True
-                    if user_i_found == False:
+                no_duplicate_check = users[i]["exclude"] or users[j]["exclude"]
+                if no_duplicate_check == False:
+                    users[i]["error"]["duplicate_name"] = True
+                    users[j]["error"]["duplicate_name"] = True
+                    users[i]["exclude"] = True
+                    users[j]["exclude"] = True
+                    if len(errors) == 0:
+                        new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
                         new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
+                        errors.append(new_error)
                         errors.append(new_errors)
+                    else:
+                        user_i_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == users[i]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                user_i_found = True
+                        if user_i_found == False:
+                            new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
+                            errors.append(new_errors)
 
-                    user_j_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == users[j]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                    if user_j_found == False:
-                        new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
-                        errors.append(new_errors)
+                        user_j_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == users[j]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                        if user_j_found == False:
+                            new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": False, "duplicate_name": True, "error_message": [], "existing_users": [], "exclude": False}
+                            errors.append(new_errors)
             
             elif users[i]["email"] == users[j]["email"]:
-                users[i]["error"]["duplicate_email"] = True
-                users[j]["error"]["duplicate_email"] = True
-                users[i]["exclude"] = True
-                users[j]["exclude"] = True
-                if len(errors) == 0:
-                    new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": False}
-                    new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": False}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                else: 
-                    user_i_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == users[i]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            user_i_found = True
-                    if user_i_found == False:
-                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": users[i]["exclude"]}
+                no_duplicate_check = users[i]["exclude"] or users[j]["exclude"]
+                if no_duplicate_check == False:
+                    users[i]["error"]["duplicate_email"] = True
+                    users[j]["error"]["duplicate_email"] = True
+                    users[i]["exclude"] = True
+                    users[j]["exclude"] = True
+                    if len(errors) == 0:
+                        new_error = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": False}
+                        new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": False}
+                        errors.append(new_error)
                         errors.append(new_errors)
-                    user_j_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == users[j]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            user_j_found = True
-                    if user_j_found == False:
-                        new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": users[j]["exclude"]}
-                        errors.append(new_errors)
+                    else: 
+                        user_i_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == users[i]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                user_i_found = True
+                        if user_i_found == False:
+                            new_errors = {"row_num" : users[i]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": users[i]["exclude"]}
+                            errors.append(new_errors)
+                        user_j_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == users[j]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                user_j_found = True
+                        if user_j_found == False:
+                            new_errors = {"row_num" : users[j]["row_num"], "name": False, "email": False, "address": False, "phone_number": False, "duplicate_email": True, "duplicate_name": False, "error_message": [], "existing_users": [], "exclude": users[j]["exclude"]}
+                            errors.append(new_errors)
 
     data["users"] = users
     data["errors"] = errors
