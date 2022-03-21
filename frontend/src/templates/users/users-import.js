@@ -73,14 +73,24 @@ class UsersImport extends Component {
     }
 
     isVerified = (err_arr) => {
-        const non_duplicate_err = err_arr.filter(error => {
-            const err_msg = error.error_message
-            const is_duplicate = err_msg.name === "Name may already exist in the system"
-            if (!is_duplicate) {
-                return error
+        const errors_per_row = err_arr.filter(error => {
+            const error_message = error.error_message
+            let error_num = 0
+            
+            for (const [err_type, err_value] of Object.entries(error)) {
+                const is_svr_duplicate = err_type === 'name' && err_value && error_message.name === "Name may already exist in the system"
+                const is_csv_duplicate = err_type === 'duplicate_name' && err_value
+
+                if (!(is_svr_duplicate || is_csv_duplicate || err_type === 'row_num' || err_type === 'error_message' || err_type === 'existing_users') && err_value) {
+                    error_num += 1
+                }
             }
+
+            return error_num
         })
-        return non_duplicate_err.length === 0
+
+        const total_errors = errors_per_row.reduce((a, b) => a + b, 0)
+        return total_errors === 0
     }
 
     verifyImport = (event) => {
