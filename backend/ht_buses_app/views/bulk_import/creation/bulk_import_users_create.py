@@ -1,3 +1,4 @@
+from platformdirs import user_config_dir
 from ....models import User, Location
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
@@ -14,10 +15,12 @@ from ...accounts import activate_account
 @permission_classes([IsAdmin|IsSchoolStaff]) 
 def users_create(request):
     data = {}
+    user_count = 0
     reqBody = json.loads(request.body)
     for user in reqBody["users"]:
         # email, name, address, phone_number
         if user["exclude"] == False:
+            user_count += 1
             try:
                 name = user["name"].split(" ", 1)
                 first_name = name[0]
@@ -43,8 +46,11 @@ def users_create(request):
                     data["message"] = "User was created but email could not be sent"
             except:
                 data["message"] = "user could not be created"
+                data["success"] = True
+                data["user_count"] = user_count
+                return Response(data, status=404)
     data["success"] = True
-    data["user_count"] = len(reqBody["users"])
+    data["user_count"] = user_count
     return Response(data)
 
 

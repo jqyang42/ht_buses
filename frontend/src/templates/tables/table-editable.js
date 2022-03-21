@@ -244,8 +244,8 @@ const EditableCell = ({
     const [value, setValue] = React.useState(initialValue[0])
     const [selectValue, setSelectValue] = React.useState(initialValue[0])
     const [completeValue, setComplete] = React.useState(initialValue)
-    // console.log(completeValue)
-  
+    // console.log(`${id==='exclude'?id:''}: ${id==='exclude'?initialValue[0]:''} --> ${id==='exclude'?completeValue:''} --> ${id==='exclude'?value:''}`)
+    
     const onChange = e => {
         const val = e.target.value
         setValue(val)
@@ -255,16 +255,22 @@ const EditableCell = ({
         setComplete(updated_complete)
     }
 
-    const onSelectChange = e => {
-        setSelectValue(e.formatted_address)
-    }
+    // // for autocomplete selection
+    // const onSelectAutocompleteChange = e => {
+    //     setSelectValue(e.formatted_address)
+    // }
+
+    // const onCheckboxChange = e => {
+    //     console.log(e.target.checked)
+    //     setSelectValue(e.target.checked)
+    // }
 
     useEffect(() => {
         setValue(selectValue)
         updateMyData(index, id, selectValue)
     }, [selectValue])
   
-    // We'll only update the external data when the input is blurred
+    // We'll only update the external data when the input is blurre
     const onBlur = () => {
       updateMyData(index, id, value)
       console.log(index, id, value)
@@ -272,6 +278,8 @@ const EditableCell = ({
   
     // If the initialValue is changed external, sync it up with our state
     useEffect(() => {
+        setValue(initialValue[0])
+        setSelectValue(initialValue[0])
         setComplete(initialValue)
     }, [initialValue])
 
@@ -298,12 +306,20 @@ const EditableCell = ({
                         placeholder="Enter home address" className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} id="exampleInputAddress1"
                         onChange={onChange}
                         defaultValue={value}
-                        onPlaceSelected={onSelectChange}
+                        onPlaceSelected={(event) => {setSelectValue(event.formatted_address)}}
                         onBlur={onBlur} />
                     </div>
-                : 
+                : ( id === 'exclude' ?
+                    <div>
+                        <div className="mt-2 d-flex align-items-center justify-content-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked={value} onChange={event => {setSelectValue(event.target.checked)}} onBlur={onBlur}/>
+                            </div>
+                        </div>
+                    </div>
+                 :
                     <input className={Array.isArray(completeValue) && (completeValue[1] || completeValue[3]) ? "form-control pb-2 w-90 error" : "form-control pb-2 w-90"} value={value} onChange={onChange} onBlur={onBlur}></input>
-                }
+                )}
             </div>
 }
 

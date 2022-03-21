@@ -67,19 +67,10 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             },
             {
                 Header: 'Exclude?',
-                accessor: 'exclude',
+                accessor: d => Array(d.exclude),
                 disableFilter: true,
                 id: 'exclude',
-                disableSort: true,
-                // sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
-                Cell: ({ cell: { value } }) => (
-                    <div className="mt-2 d-flex align-items-center justify-content-center">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" defaultChecked={value} id="flexCheckDefault" />
-                        </div>
-                    </div>
-                    
-                )
+                disableSort: true
             },
         ],
         // [sort]

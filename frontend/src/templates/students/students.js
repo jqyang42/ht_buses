@@ -24,8 +24,8 @@ class Students extends Component {
         canNextPage: null,
         totalPages: null,
         sortOptions: {
-            accessor: '',
-            sortDirection: 'none'
+            accessor: 'name',
+            sortDirection: 'asc'
         },
         searchValue: '',
         import_redirect: false,
@@ -36,7 +36,7 @@ class Students extends Component {
     }
     
     componentDidMount() {
-        // this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        this.getStudentsPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
     }
     
     // pagination
@@ -108,10 +108,16 @@ class Students extends Component {
         .then(res => {
             console.log("posted successfully")
             console.log(res)
-            this.setState({ import_redirect: true })
+            this.setState({ 
+                import_redirect: true,
+                loading: false
+            })
         })
         .catch(err => {
-            this.setState({ import_headers_error: true })
+            this.setState({ 
+                import_headers_error: true,
+                loading: false
+            })
             this.fileUploaded = null
             console.log(err)
         })

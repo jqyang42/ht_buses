@@ -16,64 +16,30 @@ class StudentsImport extends Component {
         students: [],
         errors: [],
         edited_students: [],
-        verifyCheck: false,
-        // show_all: false,
-        // pageIndex: 1,
-        // canPreviousPage: null,
-        // canNextPage: null,
-        // totalPages: null,
-        // sortOptions: {
-        //     accessor: '',
-        //     sortDirection: 'none'
-        // },
-        // searchValue: '',
+        // verifyCheck: false,
         students_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
-        loading: true
+        createConfirmationModalIsOpen: false,
+        loading: true,
+        createStudentCount: 0
     }
 
     componentDidMount() {
-        // this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
-        // console.log(this.props.location.state)
         this.getUploadedStudents()
     }
-
-    // pagination
-    // getUsersPage = (page, sortOptions, search) => {
-    //     getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
-    //     .then(res => {
-    //         this.setState({
-    //             users: res.data.users,
-    //             pageIndex: res.pageIndex,
-    //             canPreviousPage: res.canPreviousPage,
-    //             canNextPage: res.canNextPage,
-    //             totalPages: res.totalPages,
-    //             sortOptions: sortOptions,
-    //             searchValue: search
-    //         })
-    //     })
-    // }
-    
-    // render handlers
-    // handleShowAll = () => {
-    //     this.setState(prev => ({
-    //         show_all: !prev.show_all
-    //     }), () => {
-    //         this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
-    //     })
-    // }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
     closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
     closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
+    closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedStudents = () => {
         api.get(`bulk-import/students`)
         .then(res => {
             console.log(res)
-            // const temp = res.data.users
             this.setState({ 
                 students: res.data.students,
                 errors: res.data.errors,
@@ -85,7 +51,7 @@ class StudentsImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_students: new_data,
-            verifyCheck: false
+            // verifyCheck: false
         }, () => {
             console.log(this.state.edited_students)
         })
@@ -95,14 +61,44 @@ class StudentsImport extends Component {
     handleCancelImport = (event) => {
         // redirect to USERS_URL (ignoring all changes from import)
         event.preventDefault()
+        this.setState({ loading: true })
         api.delete(`bulk-import/students/delete-temp-file`)
         .then(res => {
             console.log(res)
-            this.setState({ students_redirect: true })
+            this.setState({ 
+                students_redirect: true,
+                loading: false
+            })
         })
         .catch(err => {
             console.log(err)
+            this.setState({ loading: false })
         })
+    }
+
+    isVerified = (err_arr) => {
+        const errors_per_row = err_arr.filter(error => {
+            const error_message = error.error_message
+            let error_num = 0
+            
+            if (!error.exclude) {
+                for (const [err_type, err_value] of Object.entries(error)) {
+                    const is_svr_duplicate = err_type === 'name' && err_value && error_message.name === "Name may already exist in the system"
+                    const is_csv_duplicate = err_type === 'duplicate_name' && err_value
+                    const is_parent_email_duplicate = err_type === 'duplicate_parent_email' && err_value
+
+                    if (!(is_svr_duplicate || is_csv_duplicate || is_parent_email_duplicate || err_type === 'row_num' 
+                    || err_type === 'error_message' || err_type === 'existing_students' || err_type === 'exclude') && err_value) {
+                        error_num += 1
+                    }
+                }
+            }
+            
+            return error_num
+        })
+
+        const total_errors = errors_per_row.reduce((a, b) => a + b, 0)
+        return total_errors === 0
     }
 
     verifyImport = (event) => {
@@ -117,17 +113,20 @@ class StudentsImport extends Component {
             console.log(res)
             const data = res.data
             this.setState({
-                verifyCheck: data.errors.length === 0,
+                // verifyCheck: data.errors.length === 0,
                 errors: data.errors,
                 students: data.students,
                 loading: false
             }, () => {
-                if (data.errors.length === 0) {
+                if (this.isVerified(data.errors)) {
                     this.openSuccessVerifyModal()
                 } else {
                     this.openErrorVerifyModal()
                 }
             })
+        })
+        .catch(err => {
+            this.setState({ loading: false })
         })
     }
 
@@ -144,15 +143,25 @@ class StudentsImport extends Component {
         api.post(`bulk-import/students/create`, data)
         .then(res => {
             console.log(res)
+            this.setState({ createStudentCount: res.data.student_count })
             api.delete(`bulk-import/students/delete-temp-file`)
             .then(res => {
                 console.log(res)
-                this.setState({ students_redirect: true })
+                this.closeSuccessVerifyModal()
+                this.openCreateConfirmationModal()
             })
             .catch(err => {
                 console.log(err)
+                this.setState({ loading: false })
             })
         })
+        .catch(err => {
+            this.setState({ loading: false })
+        })
+    }
+
+    handleStudentsRedirect = () => {
+        this.setState({ students_redirect: true })
     }
 
     render() {
@@ -208,7 +217,7 @@ class StudentsImport extends Component {
                                     <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
                                         <Modal.Header closeButton>
-                                        <Modal.Title>Verify Students</Modal.Title>
+                                        <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             All students have been verified and no errors exist. Your import is ready to be submitted!
@@ -223,7 +232,7 @@ class StudentsImport extends Component {
                                     {/* Error verify confirmation modal */}
                                     <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
                                         <Modal.Header closeButton>
-                                        <Modal.Title>Verify Users</Modal.Title>
+                                        <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             Errors still exist in the file import. Please correct them before submitting.
@@ -231,6 +240,21 @@ class StudentsImport extends Component {
                                         <Modal.Footer>
                                             <button type="button" className="btn btn-primary" onClick={this.closeErrorVerifyModal}>Continue Editing</button>
                                         </Modal.Footer>
+                                    </Modal>
+
+                                    {/* Create confirmation modal */}
+                                    <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
+                                        <form onSubmit={this.handleStudentsRedirect}>
+                                        <Modal.Header closeButton>
+                                        <Modal.Title><h5>Import Students</h5></Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            {this.state.createStudentCount} student{this.state.createStudentCount === 1 ? "": "s"} {this.state.createStudentCount === 1 ? "has": "have"} been successfully imported.
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <button type="submit" className="btn btn-primary">OK</button>
+                                        </Modal.Footer>
+                                        </form>
                                     </Modal>
 
                                     {/* Verify confirmation modal */}
@@ -294,9 +318,11 @@ class StudentsImport extends Component {
                                 </div>
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
+                                        error.exclude ? "" :
                                         <div class="alert alert-danger mt-2 mb-2" role="alert">
                                             <p className="mb-1">Row {error.row_num} contains the errors:</p>
                                             <ul className="mb-0">
+                                                {error.student_id ? <li>{error.error_message.student_id}</li> : ""}
                                                 {error.name ? <li>{error.error_message.name}</li> : ""}
                                                 {error.existing_students.length !== 0 ?
                                                 <ul className="mb-0">
