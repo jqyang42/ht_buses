@@ -109,7 +109,7 @@ def bulk_import_validate(request):
                 address_error_message = "Address cannot be empty"
             else:    
                 location_arr = geocode_address(row["address"])
-                if location_arr[0]["lat"] is None or location_arr[0]["lng"] is None:
+                if location_arr is None or len(location_arr) == 0:
                     address_error = True
                     address_error_message = "Address is not valid"
                 else:
