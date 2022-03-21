@@ -38,6 +38,7 @@ def bulk_import(request):
     file_regex = r'.*\.csv$'
     # check file type: send error
     if re.fullmatch(file_regex, req_file.name) is None:
+        print("is not a csv")
         data["users"] = {}
         data["success"] = False
         return Response(data, status=404)
@@ -166,6 +167,7 @@ def bulk_import(request):
 
 
     if len(users) == 0:
+        print("nothing was processed aka empty file")
         data["users"] = {}
         data["success"] = False
         return Response(data, status=404)
