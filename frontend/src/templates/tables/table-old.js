@@ -21,7 +21,7 @@ export function TableOld({ columns, data, searchOn, searchLabel, ourGlobalFilter
 
     useEffect(() => {
         setRecords(data)
-        console.log(data)
+        // console.log(data)
     }, [data])
 
     const getRowId = React.useCallback(row => {

@@ -23,11 +23,11 @@ class Account extends Component {
 
     // api calls
     getUserDetails() {
-        console.log(localStorage.getItem('user_id'))
+        // console.log(localStorage.getItem('user_id'))
         api.get(`account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             const user = res.data.user;
-            console.log(user)
+            // console.log(user)
             this.setState({ 
                 user: user,
                 location: user.location

@@ -15,7 +15,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget.value);
+        // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
         updatePageCount(pageIndex, sortOptions, searchValue)
         // TODO: Call backend API for search here, pass in value as query @jessica
@@ -26,7 +26,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
 
     useEffect(() => {
         setRecords(data)
-        console.log(data)
+        // console.log(data)
     }, [data])
 
     const getRowId = React.useCallback(row => {

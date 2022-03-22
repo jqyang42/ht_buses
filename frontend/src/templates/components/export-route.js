@@ -2,8 +2,8 @@ import { jsPDF } from "jspdf";
 import 'jspdf-autotable';
 
 export default function pdfRender (route, users) {
-    console.log(route)
-    console.log(users)
+    // console.log(route)
+    // console.log(users)
 
     var line = 18 // Line height to start text at
     var lineHeight = 5
@@ -16,7 +16,7 @@ export default function pdfRender (route, users) {
 
     for (var i = 0; i < users.length; i++) {
         var dict = users[i]
-        console.log(dict["students"])
+        // console.log(dict["students"])
         for (var j = 0; j < dict["students"].length; j++) {
             studentsObj.push({ 
                 "name": dict["students"][j]["first_name"].toString() + " " + dict["students"][j]["last_name"].toString(),

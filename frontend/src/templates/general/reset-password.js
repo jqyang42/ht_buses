@@ -30,7 +30,7 @@ class ResetPassword extends Component {
     }
   
     checkURL = () => {
-        console.log("there")
+        // console.log("there")
       api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`) 
         .then(res => {
             const valid_url = res.data.success

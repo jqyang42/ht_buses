@@ -61,7 +61,7 @@ class Schools extends Component {
         else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        console.log(localStorage.getItem('role'))
+        // console.log(localStorage.getItem('role'))
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">

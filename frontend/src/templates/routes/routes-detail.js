@@ -109,7 +109,7 @@ class BusRoutesDetail extends Component {
             const users = data.users;
             const students = this.getStudentsFromUser(users)
 
-            console.log(students)
+            // console.log(students)
             
             this.setState({ 
                 students: students,
@@ -120,7 +120,7 @@ class BusRoutesDetail extends Component {
                     lat: school.location.lat, 
                     lng: school.location.lng 
                 }, 
-            }, console.log(this.state.center));
+            });
             
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
@@ -194,8 +194,8 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            console.log(data.stops)
-            console.log(this.state.center)
+            // console.log(data.stops)
+            // console.log(this.state.center)
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
         })
@@ -213,12 +213,12 @@ class BusRoutesDetail extends Component {
         this.setState({map_redirect_pickup: []})
         let arrivingLinks = []
         for (let i=0; i < stops.length; i+=10 ) {
-            console.log(i)
+            // console.log(i)
             let map_redirect_pickup = GOOGLE_MAP_URL
             map_redirect_pickup += '&waypoints='
             let j;
             for (j = i; j < i + 9 && j < stops.length; j+=1) {
-                console.log(stops[j])
+                // console.log(stops[j])
                 map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
             }
             if (j == stops.length) {
@@ -226,10 +226,10 @@ class BusRoutesDetail extends Component {
             } else {
                 map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
             }
-            console.log(map_redirect_pickup)
+            // console.log(map_redirect_pickup)
             arrivingLinks.push(map_redirect_pickup)
         }
-        console.log(arrivingLinks)
+        // console.log(arrivingLinks)
         this.setState({
             map_redirect_pickup: arrivingLinks
         })
@@ -247,14 +247,14 @@ class BusRoutesDetail extends Component {
         } else {
             for (i = 0; i < reversed_stops.length-1; i+=10 ) {
                 let map_redirect_dropoff = GOOGLE_MAP_URL 
-                console.log(i)
+                // console.log(i)
                 if (i == 0) {
                     map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
                 }
                 map_redirect_dropoff +=  '&waypoints=';
                 let j;
                 for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
-                    console.log(reversed_stops)
+                    // console.log(reversed_stops)
                     map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
                 }
                 //Think about cases where this could be in its own link
@@ -262,7 +262,7 @@ class BusRoutesDetail extends Component {
                 departingLinks.push(map_redirect_dropoff)
             }
         }
-        console.log(departingLinks)
+        // console.log(departingLinks)
         this.setState({map_redirect_dropoff: departingLinks})
     }
 
@@ -315,7 +315,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.students)
+        // console.log(this.state.students)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
