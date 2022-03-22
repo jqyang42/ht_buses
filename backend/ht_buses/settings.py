@@ -80,14 +80,20 @@ CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 AUTH_USER_MODEL = "ht_buses_app.User"
 AUTHENTICATION_BACKENDS = [
         "django.contrib.auth.backends.ModelBackend",
-        "ht_buses_app.authenticate.AuthenticationBackend"
+        "ht_buses_app.authenticate.AuthenticationBackend",
+        "guardian.backends.ObjectPermissionBackend",
+       
+
     ]
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'guardian',
+    'permission',
     'django.contrib.auth',
+    'ht_buses_app',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -96,9 +102,11 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',
     'corsheaders',
     'rest_framework',
-    'ht_buses_app',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    
 ]
+
+ANONYMOUS_USER_ID = -1
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -163,3 +171,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+
+
+PASSWORD_RESET_TIMEOUT_DAY=365

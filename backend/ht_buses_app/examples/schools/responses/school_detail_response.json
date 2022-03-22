@@ -2,8 +2,13 @@
     "success": true,
     "school": {
         "name": "School 1",
+        "arrival": "09:00 am",
+        "departure": "3:00 pm",
         "location": {
-            "address": "School 1 Address"
+            "id": 1,
+            "address": "School 1 Address",
+            "lat": 0.0,
+            "lng": 0.0
         }
     },
     "students": [
@@ -19,7 +24,8 @@
         {
             "id": 1,
             "name": "Route 1",
-            "student_count": 1
+            "student_count": 1,
+            "is_complete": false
         }
     ]
 }

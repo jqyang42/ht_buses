@@ -4,10 +4,12 @@
     "school": {
         "id": 1,
         "name": "School 1",
+        "arrival": "09:00 am",
+        "departure": "3:00 pm",
         "location": {
             "address": "Somewhere in the world",
             "lat": 0.0,
-            "long": 0.0
+            "lng": 0.0
         }
     }
 }

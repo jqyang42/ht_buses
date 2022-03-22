@@ -1,18 +1,15 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Table } from "./table";
+import { useState } from "react";
     
-export function UsersTable({ data, showAll }) {
+export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+    updatePageCount, pageSize, totalPages, searchValue }) {
 
-    // Filter by multiple columns
-    const ourGlobalFilterFunction = useCallback(
-        (rows, ids, query) => {
-            return rows.filter((row) => 
-                row.values["name"].toLowerCase().includes(query.toLowerCase()) ||
-                row.values["email"].toLowerCase().includes(query.toLowerCase())
-            );
-        },
-        [],
-    );
+    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, sort, searchValue)
+    }, [sort])
 
     const columns = React.useMemo(
         () => [
@@ -25,28 +22,87 @@ export function UsersTable({ data, showAll }) {
             {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
-                id: 'name'
+                id: 'name',
+                sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Email',
                 accessor: 'email',
+                id: 'email',
+                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
             },
             {
-                id:'is_staff',
+                Header: 'Phone Number',
+                accessor: 'phone_number',
+                id: 'phone_number',
+                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
+            },
+            {
+                id:'role',
                 Header: 'User Type',
-                accessor: d => { return d.is_staff ? 'Admin' : 'General' },
-                disableFilter: true
+                accessor: d => { return d.role },
+                disableFilter: true,
+                sortDirection: sort.accessor === 'role' ? sort.sortDirection : 'none' //@Kyra not sure if should be fixed
             },            
             {
                 Header: 'Address',
-                accessor: 'address',
-                disableFilter: true
+                accessor: 'location.address',
+                disableFilter: true,
+                id: 'address',
+                sortDirection: sort.accessor === 'address' ? sort.sortDirection : 'none'
             },
         ],
-        []
+        [sort]
     )
 
+    const columnHeaderClick = async (column) => {
+        switch (column.sortDirection) {
+          case 'none':
+            // console.log(column.sortDirection)
+            // console.log(column.id)
+            setSort({ sortDirection: 'ASC', accessor: column.id });
+            // const desc = await getClients( 'ASC', column.id );
+            // setData(desc);
+            // console.log(sort)
+            break;
+          case 'ASC':
+            setSort({ sortDirection: 'DESC', accessor: column.id });
+            // const asc = await getClients('DESC', column.id);
+            // console.log(sort)
+            // setData(asc);
+            break;
+          case 'DESC':
+            setSort({ sortDirection: 'none', accessor: column.id });
+            // const newData = await getClients('none', column.id);
+            // setData(newData);
+            // console.log(sort)
+            break;
+        }
+    };
+
     return (
-        <Table columns={columns} data={data} searchOn={true} searchLabel="Search by name or email..." ourGlobalFilterFunction={ourGlobalFilterFunction} showAll={showAll} navUrl={"/users/"}/>
+        <Table
+            columns={columns}
+            data={data}
+            searchOn={true}
+            searchLabel="Search by name, email or role..."
+            // ourGlobalFilterFunction={ourGlobalFilterFunction}
+            showAll={showAll}
+            navUrl={"/users/"}
+            rowProps={row => ({
+                style: {
+                    cursor: "pointer"
+                }
+            })}
+            pageIndex={pageIndex}
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            updatePageCount={updatePageCount}
+            pageSize={pageSize}
+            totalPages={totalPages}
+            columnHeaderClick={columnHeaderClick}
+            sortOptions={sort}
+            searchValue={searchValue}
+        />
     )
 }

@@ -12,105 +12,156 @@ import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
+import { validTime } from "../components/time";
 
 class SchoolsEdit extends Component {
     state = {
-        school_name: '',
-        school_address: '',
-        school: [],
+        edited_school: {
+            name: '',
+            location: {
+                address: '',
+                lat: 0.0,
+                lng: 0.0
+            },
+            arrival: '',
+            departure: '',
+        },
+        school: {},
         redirect: false,
-        lat: 0,
-        lng: 0,
         valid_address: true,
         edit_success: 0,
         error_status: false,
-        error_code: 200
+        error_code: 200,
+        valid_time: 0
     }
 
-    handleSchoolNameChange = event => {
-        this.setState({ school_name: event.target.value });
+    // initialize
+    componentDidMount() {
+        this.getSchoolDetails()
     }
 
-    handleSchoolAddressChange = event => {
-        this.setState({ school_address: event.target.value });
+    // api calls
+    getSchoolDetails = () => {
+        api.get(`schools/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const school = res.data.school
+            const edited_school = {
+                name: school.name,
+                location: {
+                    address: school.location.address,
+                    lat: school.location.lat,
+                    lng: school.location.lng
+                },
+                arrival: school.arrival,
+                departure: school.departure
+            }
+            this.setState({ 
+                school: school,
+                edited_school: edited_school
+            });
+        }).catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        })
     }
 
-        handleAddressValidation = event => {
-        if (this.state.school_address != '') {
-            // console.log(this.state.school_address)
-            Geocode.fromAddress(this.state.school_address).then(
+    editSchool = (request) => {
+        api.put(`schools/edit?id=${this.props.params.id}`, request)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    edit_success: 1,
+                    redirect: true
+                })
+            } else {
+                this.setState({ edit_success: -1 })
+            }
+        })
+    }
+    
+    // render handlers
+    handleSchoolNameChange = (event) => {
+        const new_name = event.target.value
+        let school = this.state.edited_school
+        school.name = new_name
+        this.setState({ edited_school: school });
+    }
+
+    handleSchoolAddressChange = (input) => {
+        const address = input.target?.value || input.formatted_address  // accept address from onChange and from autocomplete        let school = this.state.new_school
+        let school = this.state.edited_school
+        school.location.address = address
+        this.setState({ edited_school: school })
+       
+    }
+
+    handleAddressValidation = () => {
+        const address = this.state.edited_school.location.address
+        if (address !== '') {
+            Geocode.fromAddress(address).then(
                 (response) => {
-                    // console.log(response)
+                    let school = this.state.edited_school
+                    school.location.lat = parseFloat(response.results[0].geometry.location.lat)
+                    school.location.lng = parseFloat(response.results[0].geometry.location.lng)
                     this.setState({
-                        lat : parseFloat(response.results[0].geometry.location.lat),
-                        lng : parseFloat(response.results[0].geometry.location.lng),
-                        valid_address : true,
+                        edited_school: school,
+                        valid_address: true
                     })
                 },
                 (error) => {
-                    // console.log(error)
+                    // todo error logging for google
                     this.setState({ valid_address: false})
                 }
             )
         }
+        else {
+            this.setState({ valid_address: false})
+        }
     }
 
-    handleSubmit = event => {
-        event.preventDefault();
+    handleArrivalChange = (event) => {
+        const arrival = event.target.value
+        let school = this.state.edited_school
+        school.arrival = arrival
+        this.setState({ edited_school: school })
+        const valid_time = validTime(this.state.edited_school.departure, this.state.edited_school.arrival ) 
+        this.setState({ valid_time: valid_time}) 
+    }
 
-        if ( !this.state.valid_address ) {
+    handleDepartureChange = (event) => {
+        const departure = event.target.value
+        let school = this.state.edited_school
+        school.departure = departure
+        this.setState({ edited_school: school })
+        const valid_time = validTime(this.state.edited_school.departure, this.state.edited_school.arrival ) 
+        this.setState({ valid_time: valid_time}) 
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        
+        if ( !this.state.valid_address || this.state.valid_time === -1) {
             this.setState({ edit_success: -1 })
             return 
         }
 
         const school = {
-            school: {
-                name: this.state.school_name,
-                location: {
-                    address: this.state.school_address,
-                    lat: this.state.lat,
-                    long: this.state.lng,
-                }
-            }
+            school: this.state.edited_school
         }
 
-        api.put(`schools/edit?id=${this.props.params.id}`, school)
-            .then(res => {
-                const msg = res.data.message
-                if (msg == 'school information updated successfully') {
-                    this.setState({ edit_success: 1 })
-                } else {
-                    this.setState({ edit_success: -1 })
-                }
-            })
-        this.setState({ redirect: true });
+        this.editSchool(school)
     }
-
-    componentDidMount() {
-        var self = this
-
-        api.get(`schools/detail?id=${this.props.params.id}`)
-        .then(res => {
-            const data = res.data
-            const school = data.school;
-            this.setState({ school: school, school_name: school.name, school_address: school.location.address });
-            this.setState({ edit_success: 0 })
-        }).catch (function(error) {
-            // console.log(error.response)
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                self.setState({ error_status: true });
-                self.setState({ error_code: error.response.status });
-            }
-        } 
-        )
-    }
-    
+   
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
@@ -123,7 +174,7 @@ class SchoolsEdit extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -145,35 +196,49 @@ class SchoolsEdit extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div className="form-group required pb-3 w-75">
-                                                <label for="exampleInputName1" className="control-label pb-2">Name</label>
-                                                <input type="name" className="form-control pb-2" id="exampleInputName1"
-                                                    defaultValue={this.state.school.name} placeholder="Enter school name" required
-                                                    onChange={this.handleSchoolNameChange}></input>
+                                            {   localStorage.getItem('role') === 'Administrator' ?
+                                                <>
+                                                    <div className="form-group required pb-3 form-col">
+                                                        <label for="exampleInputName1" className="control-label pb-2">Name</label>
+                                                        <input type="name" className="form-control pb-2" id="exampleInputName1"
+                                                            defaultValue={this.state.school.name} placeholder="Enter school name" required
+                                                            onChange={this.handleSchoolNameChange}></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3 form-col">
+                                                        <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                        {/* Uses autocomplete API, only uncomment when needed to */}
+                                                        <Autocomplete
+                                                            apiKey={GOOGLE_API_KEY}
+                                                            onPlaceSelected={this.handleSchoolAddressChange}
+                                                            options={{
+                                                                types: ['address']
+                                                            }}
+                                                            placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
+                                                            defaultValue={this.state.edited_school.location.address}
+                                                            onChange={this.handleSchoolAddressChange}
+                                                            onBlur={event => { setTimeout(this.handleAddressValidation, 500); } }
+                                                            required={true} />
+                                                    </div>
+                                                </> : ""
+                                            }
+                                            <div className="form-group required pb-3 form-col">
+                                                <label for="default-picker" className="control-label pb-2">Arrival Time</label>
+                                                <input type="time" id="default-picker" className="form-control pb-2"
+                                                    placeholder="Select arrival time" defaultValue={this.state.edited_school.arrival} required
+                                                    onChange={this.handleArrivalChange}></input>
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
-                                                <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                {/* Uses autocomplete API, only uncomment when needed to */}
-                                                <Autocomplete
-                                                    apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={(place) => {
-                                                        this.setState({
-                                                            school_address: place.formatted_address
-                                                        })
-                                                    }}
-                                                    options={{
-                                                        types: ['address']
-                                                    }}
-                                                    placeholder="Enter school address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    value={this.state.school_address} 
-                                                    onChange={this.handleSchoolAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)} }/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                defaultValue={this.state.school.address} placeholder="Enter school address"
-                                                onChange={this.handleSchoolAddressChange}></input> */}
+                                            <div className="form-group required pb-3 form-col">
+                                                <label for="default-picker-2" className="control-label pb-2">Departure Time</label>
+                                                <input type="time" id="default-picker-2" className="form-control pb-2"
+                                                    placeholder="Select departure time" defaultValue={this.state.edited_school.departure} required
+                                                    onChange={this.handleDepartureChange}></input>
+                                                {this.state.valid_time === -1 ?
+                                                ( <div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                    Please enter valid times. Departure time must be at least one hour after arrival time.
+                                                </div>) : ""
+                                                }
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
-                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 <Link to={"/schools/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
@@ -182,7 +247,7 @@ class SchoolsEdit extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2"></div>
+                                        <div className="col mt-2 extra-col"></div>
                                     </div>
                                 </form>
                             </div>

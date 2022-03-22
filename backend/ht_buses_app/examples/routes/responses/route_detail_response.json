@@ -1,31 +1,37 @@
 {
     "success": true,
     "route": {
-        "id": 1,
         "school": {
             "id": 1,
             "name": "School 1",
             "location": {
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             }
         },
-        "description": "Route 1 description"
+        "description": "Route 1 description",
+        "arrival": "11:00:00",
+        "departure": "03:00:00"
     },
     "users": [
         {
             "id": 1,
+            "first_name": "Tom",
+            "last_name": "Smith",
+            "email": "tom.smith@example.com",
+            "phone_number": "000000",
             "location": {
                 "address": "Duke St. Durham NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             },
             "students": [
                 {
                     "id": 1,
                     "student_school_id": 123,
                     "first_name": "Mary",
-                    "last_name": "Jane"
+                    "last_name": "Jane",
+                    "in_range": false
                 }
             ]
         }

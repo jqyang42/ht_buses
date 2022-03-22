@@ -1,0 +1,5 @@
+Hi {{first_name}} {{last_name}},
+
+Your Hypothetical Transportation password can be reset by clicking the link below. If you did not request a new password, please ignore this email.
+
+{{url}}

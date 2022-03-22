@@ -1,8 +1,10 @@
 import axios from 'axios'
 import React, { Component } from "react";
-import { Link , Navigate} from "react-router-dom";
-import { HT_LOGO, PARENT_DASHBOARD_URL } from "../constants";
+import { Navigate} from "react-router-dom";
+import { PARENT_DASHBOARD_URL } from "../constants";
 import PropTypes from 'prop-types';
+import UnauthenticatedHeaderMenu from './components/unauthenticated-header-menu';
+import UnauthenticatedSidebarMenu from "./components/unauthenticated-sidebar-menu";
 
 import { STUDENTS_URL } from "../constants";
 import { API_DOMAIN } from "../constants";
@@ -32,62 +34,51 @@ class Login extends Component {
             email: this.emailField.value,
             password: this.passwordField.value
         }
-          
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
+            // console.log(data)
             this.setState({message: data.message, valid_login: data.valid_login})
-            sessionStorage.setItem('token', data.token)
+            localStorage.setItem('token', data.token)
             if (data.valid_login) {
+                // console.log(data.info)
                 this.emailField.value = ''
                 this.passwordField.value =''
-                sessionStorage.setItem('user_id', data.info.user_id)
-                sessionStorage.setItem('first_name', data.info.first_name)
-                sessionStorage.setItem('last_name', data.info.last_name)
-                sessionStorage.setItem('is_staff', data.info.is_staff)
-                const role = data.info.is_staff ? "Administrator" : "Parent"
-                sessionStorage.setItem('role', role)
-                sessionStorage.setItem('logged_in', data.valid_login)
-                res.headers['Authorization'] = `Token ${sessionStorage.getItem('token')}`;
+                localStorage.setItem('user_id', data.info.user_id)
+                localStorage.setItem('first_name', data.info.first_name)
+                localStorage.setItem('last_name', data.info.last_name)
+                localStorage.setItem('is_staff', data.info.role_id !== 4)
+                localStorage.setItem('is_parent', data.info.is_parent)
+                localStorage.setItem('role',  data.info.role_value)
+                localStorage.setItem('logged_in', data.valid_login)
+                res.headers['Authorization'] = `Token ${localStorage.getItem('token')}`;
                 window.location.reload()
             } 
             else {
                 this.passwordField.value = '';
                 this.setState({password: ''})
             }
-            // console.log(sessionStorage.getItem('token'))
+            // console.log(localStorage.getItem('token'))
         })
-    }    
-
+    }   
+    
     render() {
-        if (JSON.parse(sessionStorage.getItem('logged_in')) && JSON.parse(sessionStorage.getItem('is_staff'))) {
+        if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
-        else if (JSON.parse(sessionStorage.getItem('logged_in')) && !JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('logged_in')) && !JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         return (
             <body className="overflow-hidden">
                 <div className="container-fluid mx-0 px-0">
-                    <div className="row flex-nowrap">
-
-                        <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
-                            <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">
-                                <a href="/" className="d-flex align-items-center my-0 mx-2 px-4 pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                                    <img src={HT_LOGO} className="img-fluid float-start pt-4 pb-4 px-1" alt="Hypothetical Transportation"></img>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="col mx-0 px-0 bg-gray w-100">
-                            <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-2 bg-white mw-100 w-100 shadow-sm">
-                                <div className="mx-2 py-2">
-                                    <h5>Hypothetical Transportation Bus Management System</h5>
-                                </div>
-                            </div>
-                            <div className="container mt-4 mx-2">
+                    <div className="row flex-wrap">
+                        <UnauthenticatedSidebarMenu />
+                        <div className="col mx-0 px-0 bg-gray w-100 min-vh-100">
+                            <UnauthenticatedHeaderMenu />
+                            <div className="container mt-4 mx-4 mx-md-2">
                                 <div className="row">
-                                    <div className="col-6">
+                                    <div className="col-md-6 col-10">
                                         <h2 className="pb-3">Log In</h2>
                                         {(!this.state.valid_login && this.state.message !== "") ? 
                                             (<div>
@@ -107,7 +98,7 @@ class Login extends Component {
                                                 <label for="exampleInputPassword1" className="pb-2">Password</label>
                                                 <input type="password" className="form-control pb-2 mb-2" name="password" id="exampleInputPassword1" 
                                                 placeholder="Password" ref={el => this.passwordField = el} onChange={this.handlePasswordChange}></input>
-                                                <a className="mt-0">Forgot your password?</a>
+                                                <a href="/email-reset" className="mt-0">Forgot your password?</a>
                                             </div>
                                             <button type="submit" className="btn btn-primary">Log In</button>
                                         </form>

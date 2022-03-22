@@ -1,47 +1,60 @@
-from ...models import School, Route, Student, User
+from ...models import Student, School, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from django.db.models import Q
+from django.db.models import Value as V
+from django.db.models.functions import Concat 
+from .student_pagination import student_pagination
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from ..general.general_tools import get_students_for_user
 
 # Students GET API: All Students for Admin
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def students(request):
-    data = {}
-    # COMMENTED OUT CODE FOR PAGINATION
-    #page_number = request.query_params["page"]
-    # For now I will retrieve 10 records for each page request, can be changed
-    # if int(page_number) == 1:
-    #     students = Student.studentsTable.all()[:10*int(page_number)]
-    # else:
-    #     students = Student.studentsTable.all()[1+10*(int(page_number)-1):10*int(page_number)]
-    students = Student.studentsTable.all()
-    student_serializer = StudentSerializer(students, many=True)
-    student_list = []
-    for student in student_serializer.data:
-        id = student["id"]
-        student_school_id = student["student_school_id"]
-        first_name = student["first_name"]
-        last_name = student["last_name"]
-        parent = User.objects.get(pk=student["user_id"])
-        parent_serializer = UserSerializer(parent, many=False)
-        parent_first = parent_serializer.data["first_name"]
-        parent_last = parent_serializer.data["last_name"]
-        parent_name = {'id': parent_serializer.data["id"], 'first_name' : parent_first, 'last_name' : parent_last}
-        school = School.schoolsTable.get(pk=student["school_id"])
-        school_serializer = SchoolSerializer(school, many=False)
-        school_name = school_serializer.data["name"]
-        if student["route_id"] == None:
-            route = 0
-            route_name = "Unassigned"
-        else:
-            route = Route.routeTables.get(pk=student["route_id"])
-            route_serializer = RouteSerializer(route, many=False)
-            route_name = route_serializer.data["name"]
-        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route_name' : route_name, 'parent' : parent_name})
-    data["students"] = student_list
-    data["success"] = True
+    page_number = request.query_params["page"]
+    order_by = request.query_params["order_by"]
+    sort_by = request.query_params["sort_by"] # will look for asc or desc
+    search = request.query_params["q"]
+    student_list = get_students_for_user(request.user)
+    data = get_student_view(page_number, order_by, sort_by, search, student_list)
     return Response(data)
+
+def get_student_view(page_number, order_by, sort_by, search, student_list):
+    students = student_search_and_sort(order_by, sort_by, search, student_list)
+    data = student_pagination(students, page_number)
+    return data
+
+def student_search_and_sort(order_by, sort_by, search, student_list):
+    if sort_by == "name":
+        sort_by = "first_name"
+    if sort_by == "route":
+        sort_by = "route_id__name"
+    if sort_by == "parent":
+        sort_by = "user_id__first_name"
+    if sort_by == "school_name":
+        sort_by = "school_id__name"
+    if sort_by == "phone":
+        sort_by = "user_id__phone_number"
+    
+    # search only
+    if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
+        students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("id")
+    else:
+        if order_by == "asc":
+            if search != None:
+                students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+            .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by(sort_by)
+            else:
+                students = student_list.order_by(sort_by)
+        else:
+            if search != None:
+                students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-" + sort_by)
+            else:
+                students = student_list.order_by("-" + sort_by)
+    return students

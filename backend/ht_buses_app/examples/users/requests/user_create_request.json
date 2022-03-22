@@ -4,12 +4,12 @@
         "password": "something",
         "first_name": "Example",
         "last_name": "IsCool",
-        "is_staff": true,
+        "role": "Administrator",
         "is_parent": false,
         "location": {
             "address": "Address here",
             "lat": 0.0,
-            "long": 0.0
+            "lng": 0.0
         }
     }
 }

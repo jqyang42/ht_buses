@@ -1,13 +1,10 @@
 import React from 'react';
 
 export default function Login() { 
-    if (JSON.parse(sessionStorage.getItem('logged_in'))) {
-        return <Navigate to={PARENT_DASHBOARD_URL} />
-    }
     return(
         <body className="overflow-hidden">
             <div className="container-fluid mx-0 px-0">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
 
                     <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">
                         <div className="d-flex flex-column align-items-center align-items-sm-start mx-0 px-0 pt-2 text-white min-vh-100">

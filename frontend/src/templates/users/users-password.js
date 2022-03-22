@@ -97,10 +97,10 @@ class UsersPassword extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
@@ -113,7 +113,7 @@ class UsersPassword extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="users" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -144,7 +144,7 @@ class UsersPassword extends Component {
                                                 <label for="exampleInputPassword1" className="control-label pb-2">Old Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword1" placeholder="Enter old password" required></input>
                                             </div> */}
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
                                                 placeholder="Enter new password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
@@ -154,7 +154,7 @@ class UsersPassword extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputPassword3" className="control-label pb-2">Confirm New Password</label>
                                                 <input type="password" className="form-control pb-2" id="exampleInputPassword3" 
                                                 placeholder="Re-enter password" required ref={el => this.password2Field = el} onChange={this.handleConfirmPasswordChange}></input>
@@ -168,7 +168,7 @@ class UsersPassword extends Component {
                                                 ) : ""
                                                 }
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
@@ -178,7 +178,7 @@ class UsersPassword extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2">
+                                        <div className="col mt-2 extra-col">
                                         </div>
                                     </div>
                                 </form>

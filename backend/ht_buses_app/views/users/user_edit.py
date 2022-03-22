@@ -1,40 +1,84 @@
-from ...serializers import UserSerializer
-from ...models import User
+from ...serializers import LocationSerializer
+from ...models import User, School
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.parsers import json
 from rest_framework.response import Response
 import re
 from ..resources import capitalize_reg
+from .user_address_update import update_student_stop
+import traceback
+from ...role_permissions import IsAdmin, IsSchoolStaff
+from ..general.general_tools import get_users_for_user
+from ..general.general_tools import has_access_to_object
+from ..general.general_tools import assign_school_staff_perms, reassign_perms, reassign_groups
+from ..general import response_messages
+from guardian.shortcuts import assign_perm
+from ...groups import get_admin_group, get_driver_group
+
 
 @csrf_exempt
 @api_view(["PUT"])
-@permission_classes([IsAdminUser]) 
+@permission_classes([IsAdmin|IsSchoolStaff]) 
 def user_edit(request):
     data = {}
+    reqBody = json.loads(request.body)
     try:
         id = request.query_params["id"]
         reqBody = json.loads(request.body)
-        user_object = User.objects.get(pk=id)
-        user_object.email = reqBody["user"]["email"]
+        try:
+            uv_user_object = User.objects.get(pk=id)
+        except:
+            return response_messages.DoesNotExist(data, "user")
+        try:
+            user_object = has_access_to_object(request.user, uv_user_object)
+        except:
+            return response_messages.PermissionDenied(data, "user")
+        user_email = reqBody["user"]["email"].lower()
+        user_object.email = user_email
         user_object.first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["first_name"])
         user_object.last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, reqBody["user"]["last_name"])
-        user_object.address = reqBody["user"]["location"]["address"]
-        user_object.lat = reqBody["user"]["location"]["lat"]
-        user_object.long = reqBody["user"]["location"]["long"]
+        user_object.location.address = reqBody["user"]["location"]["address"]
+        user_object.location.lat = reqBody["user"]["location"]["lat"]
+        user_object.location.lng = reqBody["user"]["location"]["lng"]
+        user_object.phone_number = reqBody["user"]["phone_number"]
+        user_object.location.save()
         user_object.is_parent = reqBody["user"]["is_parent"]
-        user_object.is_staff = reqBody["user"]["is_staff"]
+        """
+        if User.role_choices[0][1] == reqBody["user"]["role"]:
+            user_object.role = User.ADMIN
+        if User.role_choices[1][1] == reqBody["user"]["role"]:
+            user_object.role = User.DRIVER
+        if User.role_choices[2][1] == reqBody["user"]["role"]:
+            user_object.role = User.SCHOOL_STAFF
+        """
         user_object.save()
-        user_serializer = UserSerializer(user_object, many=False)
+        if reqBody["user"]["role_id"] == None or reqBody["user"]["role_id"] > 4 or reqBody["user"]["role_id"] < 0:
+            user_object.role = User.GENERAL
+        else:
+            user_object.role = reqBody["user"]["role_id"]
+        if user_object.role == User.SCHOOL_STAFF:
+            try:
+                schools = reqBody["user"]["managed_schools"]
+                schools = [sublists.get('id') for sublists in schools]
+            except:
+                return response_messages.UnsuccessfulAction(data, "user edit")
+        else:
+            schools = []
+        reassign_success = reassign_perms(edited_user=user_object, schools = schools)
+        if not reassign_success:
+            return response_messages.UnsuccessfulAction(data, "user edit")
+        user_object.save()
+        user_object = User.objects.get(pk = user_object.pk)
+        update_student_stop(id)
         data["message"] = "user information was successfully updated"
         data["success"] = True
-        data["user"] = user_serializer.data
+        location_serializer = LocationSerializer(user_object.location, many=False)
+        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role_id' : reqBody["user"]["role_id"], 'is_parent' : reqBody["user"]["is_parent"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
         return Response(data)
     except:
-        data["message"] = "user information could not be updated"
-        data["success"] = False
-        return Response(data, status = 404)
+        return response_messages.UnsuccessfulAction(data, "user edit")
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -45,7 +89,7 @@ def valid_email_edit(request):
     reqBody = json.loads(request.body)
     email = reqBody["user"]['email']
     try: 
-        user = User.objects.get(email = email)
+        user = User.objects.get(email = email.lower())
         if int(user.id) != int(id):
             data["message"] = "Please enter a different email. A user with this email already exists"
             data["success"] = False
@@ -58,3 +102,4 @@ def valid_email_edit(request):
         data["message"] = "The email entered is valid"
         data["success"] = True
         return Response(data)
+

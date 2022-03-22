@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import json
 from rest_framework.response import Response
+from ..general.general_tools import has_access_to_object
+from ..general import response_messages
 
 @csrf_exempt
 @api_view(["PUT"])
@@ -13,13 +15,16 @@ def user_password_edit(request):
     id = request.query_params["id"]
     reqBody = json.loads(request.body)
     try:
-        user_object = User.objects.get(pk = id)
-        user_object.set_password(reqBody['user']['password'])
-        user_object.save()
+        user = User.objects.get(pk = id)
+    except:
+        return response_messages.DoesNotExist(data, "user")
+    if request.user != user:
+        return response_messages.PermissionDenied(data, "user")
+    try:
+        user.set_password(reqBody['user']['password'])
+        user.save()
         data["message"] = "user password updated successfully"
         data["success"] = True
         return Response(data) 
     except:
-        data["message"] = "user's password could not be updated"
-        data["success"] = False
-        return Response(data, status = 400)   
+        return response_messages.UnsuccessfulChange(data, "user password")

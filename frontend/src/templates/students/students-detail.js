@@ -12,62 +12,80 @@ import ErrorPage from '../error-page';
 
 class StudentsDetail extends Component {
     state = {
-        student: [],
-        route: [],
-        school: [],
+        student: {},
+        user: {},
+        route: {},
+        school: {},
         redirect: false,
         delete_success: 0,
         error_status: false,
         error_code: 200
     }
     
+    // initialize
     componentDidMount() {
-        var self = this
+        this.getStudentDetails()
+        this.updateIsParent()
 
-        api.get(`students/detail?id=${this.props.params.id}`)
-            .then(res => {
-                const data = res.data
-                const student = data.student;
-                const route = data.route;
-                const school = data.school;
-                this.setState({ 
-                    student: student, 
-                    route: route, 
-                    school: school 
-                });
-                this.setState({ delete_success: 0 })
-                })
-            .catch (function(error) {
-                // console.log(error.response)
-                if (error.response.status !== 200) {
-                    // console.log(error.response.data)
-                    self.setState({ error_status: true });
-                    self.setState({ error_code: error.response.status });
-                }
-            } 
-        )
     }
 
-    handleDeleteSubmit = event => {
-        event.preventDefault()
+    // api calls
+    getStudentDetails = () => {
+        api.get(`students/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const data = res.data
+            // console.log(data)
+            this.setState({ 
+                student: data.student, 
+                route: data.route, 
+                school: data.school,
+                user: data.user
+            });
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ 
+                    error_status: true,
+                    error_code: error.response.status 
+                });
+            }
+        } 
+    )}
 
+    deleteStudent = () => {
         api.delete(`students/delete?id=${this.props.params.id}`)
-            .then(res => {
-                const msg = res.data.message
-                if (msg == 'student successfully deleted') {
-                    this.setState({ delete_success: 1 })
-                    this.setState({ redirect: true });
-                } else {
-                    this.setState({ delete_success: -1 });
-                }
-            })
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true 
+                });
+            } else {
+                this.setState({ delete_success: -1 });
+            }
+        })
+    }
+
+
+    updateIsParent = () => {
+       
+    }
+
+
+    // render handlers
+    handleDeleteSubmit = (event) => {
+        event.preventDefault()
+        this.deleteStudent()
+        this.updateIsParent()
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        this.updateIsParent()
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
@@ -79,7 +97,7 @@ class StudentsDetail extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="students" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -94,21 +112,25 @@ class StudentsDetail extends Component {
                                             <h7>
                                                 ID #{this.state.student.student_school_id}
                                             </h7>
-                                        
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span className="btn-text">
-                                                    <i className="bi bi-pencil-square me-2"></i>
-                                                    Edit
-                                                </span>
-                                            </Link>
-                                            <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                                <i className="bi bi-trash me-2"></i>
-                                                Delete
-                                            </button>
-
+                                            {
+                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                <>
+                                                    <Link to={"/students/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                        <span className="btn-text">
+                                                            <i className="bi bi-pencil-square me-2"></i>
+                                                            Edit
+                                                        </span>
+                                                    </Link>
+                                                    <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                        <i className="bi bi-trash me-2"></i>
+                                                        Delete
+                                                    </button>
+                                                </>
+                                                : ""
+                                            }
                                             <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                                 <div className="modal-dialog modal-dialog-centered">
                                                     <div className="modal-content">
@@ -132,12 +154,15 @@ class StudentsDetail extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-1">
+                                    <div className="col-auto me-2">
                                         <p className="gray-600">
                                             School
                                         </p>
                                         <p className="gray-600">
                                             Route
+                                        </p>
+                                        <p className="gray-600">
+                                            Bus Stops
                                         </p>
                                     </div>
                                     <div className="col-5 me-6">
@@ -146,16 +171,56 @@ class StudentsDetail extends Component {
                                                 {this.state.school.name}
                                             </p>
                                         </a>
-                                        {(this.state.route.name === "Unassigned") ?
-                                            <p>
-                                                {this.state.route.name}
-                                            </p> :
+                                        {(this.state.route.name === "Unassigned" || this.state.route.name === "" ) ?
+                                        
+                                            <p className="unassigned"> {"Unassigned"}</p> :
                                             <a href={"/routes/" + this.state.route.id}>
                                                 <p>
                                                     {this.state.route.name}
                                                 </p>
-                                            </a>
+                                            </a> 
                                         }
+                                        {
+                                            (this.state.student.in_range ?
+                                                <p>
+                                                    In Range
+                                                </p> :
+                                                <p className="unassigned"> {"Out of Range"}</p> 
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                                <div className="row mt-4">
+                                    <h7 className="mb-3">
+                                        PARENT CONTACT INFO
+                                    </h7>
+                                    <div className="col-auto me-2">
+                                        <p className="gray-600">
+                                            Name
+                                        </p>
+                                        <p className="gray-600">
+                                            Email
+                                        </p>
+                                        <p className="gray-600">
+                                            Phone
+                                        </p>
+                                        <p className="gray-600">
+                                            Address
+                                        </p>
+                                    </div>
+                                    <div className="col-5 me-6">
+                                        <p>
+                                            {this.state.user.first_name} {this.state.user.last_name}
+                                        </p>
+                                        <p>
+                                            {this.state.user.email}
+                                        </p>
+                                        <p>
+                                            {this.state.user.phone_number}
+                                        </p>
+                                        <p>
+                                            {this.state.user.address}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

@@ -5,11 +5,11 @@
         "first_name": "Example",
         "last_name": "IsCool",
         "email": "example@example.com",
-        "is_staff": true,
+        "role": "Driver",
         "is_parent": false,
         "address": "Address here",
         "lat": 0.0,
-        "long": 0.0
+        "lng": 0.0
     },
     "success": true
 }

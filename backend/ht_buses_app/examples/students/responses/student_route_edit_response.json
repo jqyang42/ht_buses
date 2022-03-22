@@ -1,0 +1,16 @@
+{
+    "message": "student's route information was successfully updated",
+    "student": [
+        {
+            "id": 6,
+            "first_name": "Student 6",
+            "last_name": "Tester 6",
+            "school_id": 5,
+            "student_school_id": 123,
+            "route_id": 1,
+            "user_id": 8,
+            "in_range": false
+        }
+    ],
+    "success": true
+}

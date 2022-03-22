@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { Component } from "react";
 
 class ErrorPage extends Component {
@@ -8,13 +7,15 @@ class ErrorPage extends Component {
         var label = (code === 404) ? ("Page Not Found") : (
                   (code === 400) ? ("Bad Request") : (
                   (code === 401) ? ("Unauthorized") : (
+                  (code === 403) ? ("Forbidden") : (
                   (code === 500) ? ("Internal Server Error") : ""
-                  )))
-        var msg = (code === 404) ? ("The page you were looking for does not exist.") : (
+                  ))))
+        var msg = (code === 404) ? ("Oops! The page you were looking for does not exist.") : (
                   (code === 400) ? ("Your browser has sent a request that this server could not understand.") : (
-                  (code === 401) ? ("You do not have permission to view this page due to invalid credentials.") : (
+                  (code === 401) ? ("Unfortunately, you do not have permission to view this page due to invalid credentials.") : (
+                  (code === 403) ? ("Unfortunately, you do not have permission to access this page.") : (
                   (code === 500) ? ("The server encountered an internal error or misconfiguration and was unable to complete your request.") : ""
-                  )))
+                  ))))
 
 
         return (

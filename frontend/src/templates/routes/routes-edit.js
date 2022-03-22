@@ -77,10 +77,10 @@ class BusRoutesEdit extends Component {
     }
 
     render() {
-        if (!JSON.parse(sessionStorage.getItem('logged_in'))) {
+        if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(sessionStorage.getItem('is_staff'))) {
+        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         const { redirect } = this.state;
@@ -94,7 +94,7 @@ class BusRoutesEdit extends Component {
         
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <SidebarMenu activeTab="routes" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -106,16 +106,14 @@ class BusRoutesEdit extends Component {
                                         <h5>Edit Route</h5>
                                     </div>
                                     <div className="col">
-                                        <div className="row d-inline-flex float-end">
-
-                                            {/* TODO: change this.props.params.id to SCHOOL id, not ROUTE id */}
+                                        {/* <div className="row d-inline-flex float-end">
                                             <Link to={"/schools/" + this.state.school_id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
                                                     Route Planner
                                                 </span>
                                             </Link>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                                 <div className="w-50 pe-2 me-2">
@@ -128,7 +126,7 @@ class BusRoutesEdit extends Component {
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="row">
                                         <div className="col mt-2">
-                                            <div className="form-group required pb-3 w-75">
+                                            <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputName1" className="control-label pb-2">Name</label>
                                                 <input type="name" className="form-control pb-2" id="exampleInputName1"
                                                     defaultValue={this.state.route.name} placeholder="Enter route name" required
@@ -144,14 +142,14 @@ class BusRoutesEdit extends Component {
                                                     <option value="3">Three</option>
                                                 </select>
                                             </div>  */}
-                                            <div className="form-group pb-3 w-75">
+                                            <div className="form-group pb-3 form-col">
                                                 <label for="exampleInputDescription1" className="control-label pb-2">Description</label>
                                                 <textarea type="description" className="form-control textarea-autosize pb-2" 
                                                 id="exampleInputDescription1" defaultValue={this.state.route.description}
                                                 placeholder="Enter route description" 
                                                 onChange={this.handleDescriptionChange}></textarea>
                                             </div>
-                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                            <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                 {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/routes/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
@@ -161,7 +159,7 @@ class BusRoutesEdit extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>
-                                        <div className="col mt-2"></div>
+                                        <div className="col extra-col mt-2"></div>
                                     </div>
                                 </form>
                             </div>

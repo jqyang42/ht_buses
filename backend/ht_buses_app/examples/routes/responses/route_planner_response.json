@@ -5,17 +5,23 @@
         "location": {
             "address": "87 Sixty St",
             "lat": 0.0,
-            "long": 0.0
+            "lng": 0.0
         }
     },
     "routes": [
         {
             "id": 2,
-            "name": "Route 89"
+            "name": "Route 89",
+            "arrival": "10:00 am",
+            "departure": "12:00 pm",
+            "is_complete": true
         },
         {
             "id": 13,
-            "name": "New route lowercase"
+            "name": "New route lowercase",
+            "arrival": "10:00 am",
+            "departure": "12:00 pm",
+            "is_complete": true
         }
     ],
     "parents": [
@@ -24,7 +30,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             },
             "student": [
                 {
@@ -40,7 +46,7 @@
             "location": {
                 "address": "90 Oregon Ave. Durham, NC",
                 "lat": 0.0,
-                "long": 0.0
+                "lng": 0.0
             },
             "student": [
                 {
@@ -56,7 +62,7 @@
             "location": {
                 "address": "a cool place",
                 "lat": 178.2,
-                "long": 152.1
+                "lng": 152.1
             },
             "student": [
                 {

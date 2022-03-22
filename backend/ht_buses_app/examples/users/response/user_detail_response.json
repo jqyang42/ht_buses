@@ -1,29 +1,32 @@
 {
     "user": {
-        "first_name": "Abc",
-        "last_name": "Efg",
-        "email": "abc@gmail.com",
-        "is_staff": false,
+        "first_name": "Example2",
+        "last_name": "IsCool2",
+        "email": "testing@example.com",
+        "role": "General",
         "is_parent": true,
         "location": {
-            "address": "Duke University",
+            "id": 13,
+            "address": "Address here",
             "lat": 0.0,
-            "long": 0.0
+            "lng": 0.0
         },
         "students": [
             {
-                "id": 1,
-                "student_school_id": 1,
-                "first_name": "Evelyn",
-                "last_name": "Cupil Garcia",
-                "route_name": "Cool route"
-            },
-            {
-                "id": 12,
-                "student_school_id": 1,
-                "first_name": "Tester",
-                "last_name": "Cool",
-                "route_name": "Unassigned"
+                "id": 207,
+                "student_school_id": 123,
+                "first_name": "Testing",
+                "last_name": "Dev",
+                "route": {
+                    "id": 1,
+                    "name": "Route 1",
+                    "color_id": 0,
+                    "in_range": true
+                },
+                "school": {
+                    "id": 5,
+                    "name": "West Duke School"
+                }
             }
         ]
     },

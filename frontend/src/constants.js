@@ -3,6 +3,7 @@ import sort_asc from './static/img/sort_asc.png';
 import sort_desc from './static/img/sort_desc.png';
 import sort from './static/img/sort.png';
 import {colors} from './static/colors';
+import { stop_marker_icons } from './static/stop-marker-index';
 import { marker_icons } from './static/marker-index';
 
 export const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
@@ -13,6 +14,7 @@ export const SORT = sort;
 
 export const MARKER_COLORS = colors;
 export const MARKER_ICONS = marker_icons;
+export const STOP_MARKER_ICONS = stop_marker_icons;
 
 export const SITE_NAME = "Hypothetical Transportation Bus Management System";
 export const API_DOMAIN = "http://localhost:8000/api/"
@@ -26,6 +28,9 @@ export const SCHOOLS_URL = "/schools";
 export const STUDENTS_URL = "/students";
 export const USERS_URL = "/users";
 export const ROUTES_URL = "/routes";
+
+export const USERS_IMPORT_URL = "/users/import";
+export const STUDENTS_IMPORT_URL = "/students/import";
 
 export const SCHOOLS_DETAIL_URL = "/schools/:id";
 export const STUDENTS_DETAIL_URL = "/students/:id";
@@ -48,4 +53,11 @@ export const USERS_EMAIL_URL = "/users/email";
 
 export const PARENT_DASHBOARD_URL = "/dashboard";
 export const PARENT_DETAIL_URL = "/dashboard/:id";
-export const PARENT_PASSWORD_URL = "/change-password";
+
+export const PASSWORD_URL = "/change-password";
+export const EMAIL_RESET_URL = "/email-reset";
+export const RESET_PASSWORD_URL = "/reset-password/:uuid&:token";
+export const ACCOUNT_URL = "/account";
+export const ACCOUNT_ACTIVATION_URL = "/account-activation/:uuid&:token";
+
+export const GOOGLE_MAP_URL = "https://www.google.com/maps/dir/?api=1&"

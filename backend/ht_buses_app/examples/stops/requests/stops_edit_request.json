@@ -1,0 +1,17 @@
+{
+    "stops": [
+        {
+            "id": 1,
+            "route_id": 1,
+            "name": "Cool Stop 1",
+            "arrival": "12:00",
+            "departure": "13:00",
+            "location": {
+                "address": "Address here",
+                "lat": 3.0,
+                "lng": 2.0
+
+            }
+        }
+    ]
+}

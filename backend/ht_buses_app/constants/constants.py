@@ -1,0 +1,16 @@
+DEFAULT_NO_REPLY_EMAIL='noreplybeesquared.ht@gmail.com'
+BASE_DOMAIN_URL='http://localhost:3000' #change to productions url
+HOME_URL= BASE_DOMAIN_URL+"/login"
+PASSWORD_RESET_URL_FRONTEND=BASE_DOMAIN_URL+'/reset-password/'
+ACCOUNT_ACTIVATION_URL_FRONTEND=BASE_DOMAIN_URL+'/account-activation/'
+FROM_DISPLAY='Hypothetical Transportation'
+DEFAULT_TO_EMAIL=''
+ROUTE_ANNOUNCEMENT_TEMPLATE=''
+ACCOUNT_ACTIVATE_TEMPLATE=''
+GENERAL_ANNOUNCEMENT_TEMPLATE=''
+PASSWORD_RESET_TEMPLATE='email-reset.html'
+PASSWORD_RESET_TEXT='email-reset.txt'
+ACCOUNT_ACTIVATE_TEMPLATE='account-activate.html'
+ACCOUNT_ACTIVATE_TEXT='account-activate.txt'
+PASSWORD_RESET_SUBJECT='Password Reset Request for Hypothetical Transportation'
+ACCOUNT_ACTIVATION_SUBJECT='Account Activation for Hypothetical Transportation'

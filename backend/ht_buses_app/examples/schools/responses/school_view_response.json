@@ -1,0 +1,26 @@
+{
+    "school": {
+        "name": "West Duke School",
+        "arrival": "07:50",
+        "departure": "15:00",
+        "location": {
+            "id": 10,
+            "address": "Duke St",
+            "lat": 5.0,
+            "lng": 0.0
+        }
+    },
+    "students": [
+        {
+            "id": 1,
+            "student_school_id": 1,
+            "first_name": "Tester",
+            "last_name": "Cool",
+            "route": {
+                "id": 1,
+                "name": "Route 1",
+                "color_id": 0
+            }
+        }
+    ]
+}
