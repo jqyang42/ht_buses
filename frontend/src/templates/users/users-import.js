@@ -11,8 +11,6 @@ import { LOGIN_URL, USERS_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 import api from "../components/api";
 
-// @kyra: localStorage.getItem('users_import_file_token') --> if this is null, show message
-
 class UsersImport extends Component {
     state = {
         users: [],
@@ -200,6 +198,8 @@ class UsersImport extends Component {
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root={"Import Users"} isRoot={true} />
+
+                        { localStorage.getItem('users_import_file_token') ?
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div className="row d-inline-flex float-end mb-4">
@@ -378,6 +378,15 @@ class UsersImport extends Component {
                                 </div>
                             </div>
                         </div>
+                        : 
+                        <div className="container my-4 mx-0 w-100 mw-100">
+                            <div className="alert alert-danger mt-2 me-3" role="alert">
+                                <p className="mb-1">
+                                    No file was found. Please upload a csv file through the Users page before attempting to import.
+                                </p>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>
