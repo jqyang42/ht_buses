@@ -27,8 +27,8 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
             {
                 Header: 'School',
                 accessor: 'school_name',
-                id: 'school',
-                sortDirection: sort.accessor === 'school' ? sort.sortDirection : 'none'
+                id: 'school_name',
+                sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Bus Route',
