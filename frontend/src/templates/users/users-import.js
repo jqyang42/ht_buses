@@ -62,7 +62,7 @@ class UsersImport extends Component {
         // redirect to USERS_URL (ignoring all changes from import)
         event.preventDefault()
         this.setState({ loading: true })
-        api.delete(`bulk-import/users/delete-temp-file`)
+        api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
             console.log(res)
             // @thomas i remove the token from localstorage after deleting the temp-file
@@ -146,7 +146,7 @@ class UsersImport extends Component {
         .then(res => {
             console.log(res)
             this.setState({ createUserCount: res.data.user_count })
-            api.delete(`bulk-import/users/delete-temp-file`)
+            api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
             .then(res => {
                 console.log(res)
                 // @thomas i delete the token from local storage upon deletion
