@@ -26,14 +26,14 @@ def bulk_import_validate(request):
     errors = []
     errors_msg = []
     row_num = 1
-    email_error_message = ""
-    phone_number_error_message = ""
-    name_error_message = ""
-    address_error_message = ""
     reqBody = json.loads(request.body)
    
     for row in reqBody["users"]:
         existing_users = []
+        email_error_message = ""
+        phone_number_error_message = ""
+        name_error_message = ""
+        address_error_message = ""
         exclude = False
         # email, name, address, phone_number
         if row["exclude"] == False:
@@ -74,6 +74,7 @@ def bulk_import_validate(request):
                     else:
                         email_error = True
                         email_error_message = "User email is not a valid email"
+            
             if row["name"] is None or row["name"] == "":
                 name_error = True
                 name_error_message = "Name field cannot be empty"
