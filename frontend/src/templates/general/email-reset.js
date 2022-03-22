@@ -69,7 +69,7 @@ class EmailReset extends Component {
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <UnauthenticatedSidebarMenu />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -80,7 +80,7 @@ class EmailReset extends Component {
                                 <EmailConfirmation /> :
                                 <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                     <div className="row">
-                                        <div className="col w-50">
+                                        <div className="col">
                                             <h5>Reset Password</h5>
                                         </div>
                                     </div>
@@ -89,11 +89,11 @@ class EmailReset extends Component {
                                             <div className="col">
                                                 <p className="w-75 mb-4">Enter the email associated with your account and we'll send you a link to reset your password.</p>
                                                 {(this.state.valid_email === -1) ? 
-                                                    (<div class="alert alert-danger mt-2 mb-3 w-75" role="alert">
+                                                    (<div class="alert alert-danger mt-2 mb-3 form-col" role="alert">
                                                         We could not find an account associated with this email. Please input a different email.
                                                     </div>) : ""
                                                 }
-                                                <div className="form-group required pb-3 w-75">
+                                                <div className="form-group required pb-3 form-col">
                                                     <label for="email" className="control-label pb-2">Email</label>
                                                     <input type="email" className="form-control pb-2" id="email" 
                                                     placeholder="Enter email" required onChange={this.handleEmailChange}></input>
@@ -103,7 +103,7 @@ class EmailReset extends Component {
                                                         </div>) : ""
                                                     } */}
                                                 </div>
-                                                <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 w-75">
+                                                <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                     <Link to={"/login"} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                         <span className="btn-text">
                                                             Cancel
@@ -112,7 +112,7 @@ class EmailReset extends Component {
                                                     <button type="submit" className="btn btn-primary w-auto justify-content-end">Send Instructions</button>
                                                 </div>
                                             </div>
-                                            <div className="col mt-2">
+                                            <div className="col mt-2 extra-col">
                                             </div>
                                         </div>
                                     </form>

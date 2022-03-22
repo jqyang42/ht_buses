@@ -198,13 +198,13 @@ class SchoolsEdit extends Component {
                                         <div className="col mt-2">
                                             {   localStorage.getItem('role') === 'Administrator' ?
                                                 <>
-                                                    <div className="form-group required pb-3 w-75">
+                                                    <div className="form-group required pb-3 form-col">
                                                         <label for="exampleInputName1" className="control-label pb-2">Name</label>
                                                         <input type="name" className="form-control pb-2" id="exampleInputName1"
                                                             defaultValue={this.state.school.name} placeholder="Enter school name" required
                                                             onChange={this.handleSchoolNameChange}></input>
                                                     </div>
-                                                    <div className="form-group required pb-3 w-75">
+                                                    <div className="form-group required pb-3 form-col">
                                                         <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
                                                         {/* Uses autocomplete API, only uncomment when needed to */}
                                                         <Autocomplete
@@ -247,7 +247,7 @@ class SchoolsEdit extends Component {
                                                 <button type="submit" className="btn btn-primary w-auto me-0 justify-content-end">Update</button>
                                             </div>
                                         </div>
-                                        <div className="col extra-col mt-2"></div>
+                                        <div className="col mt-2 extra-col"></div>
                                     </div>
                                 </form>
                             </div>

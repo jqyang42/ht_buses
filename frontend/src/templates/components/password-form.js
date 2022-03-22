@@ -67,7 +67,7 @@ class PasswordForm extends Component {
         return (
              <div className="container my-4 mx-0 w-100 mw-100">
             {this.state.edit_success === 1 && this.props.source !== "ChangePassword" ? 
-                                <PasswordResetConfirmation type={this.props.type}/> : 
+            <PasswordResetConfirmation type={this.props.type}/> : 
             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                 <div className="row">
                     <div className="col">
@@ -76,12 +76,12 @@ class PasswordForm extends Component {
                 </div>
                 <div className="w-50 pe-2 me-2">
                     {(this.state.edit_success === -1) ? 
-                        (<div class="alert alert-danger mt-2 mb-2 w-75" role="alert">
+                        (<div class="alert alert-danger mt-2 mb-2 form-col" role="alert">
                             Unable to change password. Please correct all errors before submitting.
                         </div>) : ""
                     }
                     {(this.state.edit_success === 1) ? 
-                        (<div class="alert alert-success mt-2 mb-2 w-75" role="alert">
+                        (<div class="alert alert-success mt-2 mb-2 form-col" role="alert">
                             Password successfully changed.
                         </div>) : ""
                     }
@@ -132,8 +132,7 @@ class PasswordForm extends Component {
                                 <button type="submit" className="btn btn-primary w-auto justify-content-end">Update</button>
                             </div>
                         </div>
-                        <div className="col mt-2 extra-col">
-                        </div>
+                        <div className="col mt-2 extra-col"></div>
                     </div>
                 </form>
                 </div>
