@@ -64,7 +64,6 @@ def user_create(request):
         user.delete()
         return response_messages.DoesNotExist(data, "school")
     user.save()
-    update_schools_staff_rights()
     data["message"] = "user created successfully"
     if email_sent:
         data["message"] = data["message"] +  " and activation email sent to user"

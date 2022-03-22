@@ -280,7 +280,7 @@ class SchoolsDetail extends Component {
                                         totalPages={this.state.students_table.totalPages}
                                         searchValue={''}    
                                         />
-                                        <button className="btn btn-secondary align-self-center" onClick={this.handleStudentsShowAll}>
+                                        <button className="btn btn-secondary align-self-center show-all" onClick={this.handleStudentsShowAll}>
                                             { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"
                                             }
@@ -299,7 +299,7 @@ class SchoolsDetail extends Component {
                                         totalPages={this.state.routes_table.totalPages}
                                         searchValue={''} 
                                         />
-                                        <button className="btn btn-secondary align-self-center" onClick={this.handleRoutesShowAll}>
+                                        <button className="btn btn-secondary align-self-center show-all" onClick={this.handleRoutesShowAll}>
                                             { !this.state.routes_show_all ?
                                                 "Show All" : "Show Pages"
                                             }

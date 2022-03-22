@@ -78,7 +78,7 @@ class Login extends Component {
                             <UnauthenticatedHeaderMenu />
                             <div className="container mt-4 mx-4 mx-md-2">
                                 <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-md-6 col-10">
                                         <h2 className="pb-3">Log In</h2>
                                         {(!this.state.valid_login && this.state.message !== "") ? 
                                             (<div>
