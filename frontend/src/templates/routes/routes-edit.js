@@ -106,16 +106,14 @@ class BusRoutesEdit extends Component {
                                         <h5>Edit Route</h5>
                                     </div>
                                     <div className="col">
-                                        <div className="row d-inline-flex float-end">
-
-                                            {/* TODO: change this.props.params.id to SCHOOL id, not ROUTE id */}
+                                        {/* <div className="row d-inline-flex float-end">
                                             <Link to={"/schools/" + this.state.school_id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     <i className="bi bi-geo-alt-fill me-2"></i>
                                                     Route Planner
                                                 </span>
                                             </Link>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                                 <div className="w-50 pe-2 me-2">
