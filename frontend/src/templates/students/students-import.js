@@ -100,7 +100,15 @@ class StudentsImport extends Component {
         sorted_errors.sort((a, b) => {
             return a.row_num - b.row_num
         })
-        return sorted_errors
+
+        const no_duplicates = sorted_errors.reduce((unique, a) => {
+            if (!unique.some(err => err.row_num === a.row_num)) {
+                unique.push(a)
+            }
+            return unique
+        }, [])
+        
+        return no_duplicates
     }
 
     isVerified = (err_arr) => {

@@ -100,6 +100,14 @@ class UsersImport extends Component {
         sorted_errors.sort((a, b) => {
             return a.row_num - b.row_num
         })
+
+        const no_duplicates = sorted_errors.reduce((unique, a) => {
+            if (!unique.some(err => err.row_num === a.row_num)) {
+                unique.push(a)
+            }
+            return unique
+        }, [])
+        
         return sorted_errors
     }
 
