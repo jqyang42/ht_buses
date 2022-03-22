@@ -147,6 +147,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
+            <div className='table-responsive mb-4 w-100'>
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
                 {// Loop over the header rows
@@ -209,6 +210,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
                 }
                 </tbody>
             </table>
+            </div>
             </DndProvider>
 
             {/* {

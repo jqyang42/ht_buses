@@ -520,7 +520,11 @@ class BusRoutesPlanner extends Component {
         )}
 
         // console.log(edit_body)
-        await api.put(`stops/edit`, edit_body)
+        api.put(`stops/edit`, edit_body)
+        .then(res => {
+            // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        })
         // .then(res => {
         //     const success = res.data.success
         //     const new_stops = res.data.stops
@@ -752,14 +756,14 @@ class BusRoutesPlanner extends Component {
                                         { this.state.map_redirect_dropoff.length !== 0 ?
                                             <div className="mt-3"> 
                                             <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
-                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Pickup"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
                                                                     <span>
                                                                         Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
@@ -768,14 +772,14 @@ class BusRoutesPlanner extends Component {
                                                             </div>
                                                         </div>
                                             })}
-                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Dropoff"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
                                                                     <span>
                                                                         Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
