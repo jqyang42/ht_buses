@@ -37,7 +37,8 @@ class StudentsImport extends Component {
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedStudents = () => {
-        api.get(`bulk-import/students`)
+        // @thomas i send you the file token here
+        api.get(`bulk-import/students?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
             console.log(res)
             this.setState({ 
@@ -65,6 +66,8 @@ class StudentsImport extends Component {
         api.delete(`bulk-import/students/delete-temp-file`)
         .then(res => {
             console.log(res)
+            // @thomas i remove the file token here
+            // localStorage.removeItem('students_import_file_token')
             this.setState({ 
                 students_redirect: true,
                 loading: false
@@ -144,6 +147,8 @@ class StudentsImport extends Component {
         .then(res => {
             console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
+            // @thomas i delete the token here
+            // localStorage.removeItem('students_import_file_token')
             api.delete(`bulk-import/students/delete-temp-file`)
             .then(res => {
                 console.log(res)

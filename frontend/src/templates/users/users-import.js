@@ -36,7 +36,8 @@ class UsersImport extends Component {
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedUsers = () => {
-        api.get(`bulk-import/users`)
+        // @thomas i send you the file token here
+        api.get(`bulk-import/users?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
             console.log(res)
             this.setState({ 
@@ -64,6 +65,8 @@ class UsersImport extends Component {
         api.delete(`bulk-import/users/delete-temp-file`)
         .then(res => {
             console.log(res)
+            // @thomas i remove the token from localstorage after deleting the temp-file
+            // localStorage.removeItem('users_import_file_token')
             this.setState({ 
                 users_redirect: true,
                 loading: false
@@ -146,6 +149,8 @@ class UsersImport extends Component {
             api.delete(`bulk-import/users/delete-temp-file`)
             .then(res => {
                 console.log(res)
+                // @thomas i delete the token from local storage upon deletion
+                // localStorage.removeItem('users_import_file_token')
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
