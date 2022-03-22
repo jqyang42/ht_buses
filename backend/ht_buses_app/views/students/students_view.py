@@ -37,6 +37,8 @@ def student_search_and_sort(order_by, sort_by, search, student_list):
         sort_by = "user_id__first_name"
     if sort_by == "school_name":
         sort_by = "school_id__name"
+    if sort_by == "phone":
+        sort_by = "user_id__phone_number"
     
     # search only
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
