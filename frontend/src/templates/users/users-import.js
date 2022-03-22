@@ -180,8 +180,6 @@ class UsersImport extends Component {
             api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
             .then(res => {
                 console.log(res)
-                // @thomas i delete the token from local storage upon deletion
-                localStorage.removeItem('users_import_file_token')
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
@@ -197,6 +195,7 @@ class UsersImport extends Component {
 
     handleUsersRedirect = () => {
         this.setState({ users_redirect: true })
+        localStorage.removeItem('users_import_file_token')
     }
 
     render() {
