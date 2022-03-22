@@ -16,10 +16,13 @@ class UsersImport extends Component {
         users: [],
         errors: [],
         edited_users: [],
-        // verifyCheck: false,
+        to_verify_users: [],
+        verified_errors: [],
+        verified_users: [],
         users_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
+        createConfirmationModalIsOpen: false,
         loading: true,
         createUserCount: 0
     }
@@ -29,9 +32,23 @@ class UsersImport extends Component {
     }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
-    closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
+    closeSuccessVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            users: this.state.verified_users,
+            successVerifyModalIsOpen: false,
+        });
+    }
+
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
-    closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    closeErrorVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            users: this.state.verified_users,
+            errorVerifyModalIsOpen: false 
+        });
+    }
+
     openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
@@ -51,7 +68,6 @@ class UsersImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_users: new_data,
-            // verifyCheck: false
         }, () => {
             console.log(this.state.edited_users)
         })
@@ -108,15 +124,18 @@ class UsersImport extends Component {
             users: this.state.edited_users
         }
         
-        this.setState({ loading: true })
+        this.setState({ 
+            loading: true,
+            to_verify_users: data
+        })
+
         api.post(`bulk-import/users/validate`, data)
         .then(res => {
             console.log(res)
             const data = res.data
             this.setState({
-                // verifyCheck: this.isVerified(data.errors),
-                errors: data.errors,
-                users: data.users,
+                verified_errors: data.errors,
+                verified_users: data.users,
                 loading: false
             }, () => {
                 if (this.isVerified(data.errors)) {
@@ -127,7 +146,6 @@ class UsersImport extends Component {
             })
         })
         .catch(err => {
-            console.log(err)
             this.setState({ loading: false })
         })
     }
@@ -136,13 +154,8 @@ class UsersImport extends Component {
     handleSubmitImport = (event) => {
         event.preventDefault()
 
-        // save table changes
-        const data = {
-            users: this.state.edited_users
-        }
-
         this.setState({ loading: true })
-        api.post(`bulk-import/users/create`, data)
+        api.post(`bulk-import/users/create`, this.state.to_verify_users)
         .then(res => {
             console.log(res)
             this.setState({ createUserCount: res.data.user_count })

@@ -48,7 +48,7 @@ class StudentsImport extends Component {
             errorVerifyModalIsOpen: false 
         });
     }
-    
+
     openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
@@ -68,7 +68,6 @@ class StudentsImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_students: new_data,
-            // verifyCheck: false
         }, () => {
             console.log(this.state.edited_students)
         })
@@ -128,7 +127,7 @@ class StudentsImport extends Component {
         
         this.setState({ 
             loading: true,
-            verify_students: data
+            to_verify_students: data
         })
 
         api.post(`bulk-import/students/validate`, data)
@@ -156,13 +155,8 @@ class StudentsImport extends Component {
     handleSubmitImport = (event) => {
         event.preventDefault()
 
-        // // save table changes
-        // const data = {
-        //     students: this.state.edited_students
-        // }
-
         this.setState({ loading: true })
-        api.post(`bulk-import/students/create`, this.state.verify_students)
+        api.post(`bulk-import/students/create`, this.state.to_verify_students)
         .then(res => {
             console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
