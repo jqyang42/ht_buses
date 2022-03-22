@@ -57,9 +57,10 @@ class UsersImport extends Component {
         api.get(`bulk-import/users?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
             console.log(res)
+            const sorted_errors = this.sortErrors(res.data.errors)
             this.setState({ 
                 users: res.data.users,
-                errors: res.data.errors,
+                errors: sorted_errors,
                 loading: false
             })
         })
@@ -92,6 +93,14 @@ class UsersImport extends Component {
             console.log(err)
             this.setState({ loading: false })
         })
+    }
+
+    sortErrors = (errors) => {
+        const sorted_errors = errors
+        sorted_errors.sort((a, b) => {
+            return a.row_num - b.row_num
+        })
+        return sorted_errors
     }
 
     isVerified = (err_arr) => {
@@ -133,8 +142,9 @@ class UsersImport extends Component {
         .then(res => {
             console.log(res)
             const data = res.data
+            const sorted_errors = this.sortErrors(data.errors)
             this.setState({
-                verified_errors: data.errors,
+                verified_errors: sorted_errors,
                 verified_users: data.users,
                 loading: false
             }, () => {
