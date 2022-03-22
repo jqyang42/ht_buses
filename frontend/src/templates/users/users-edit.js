@@ -36,7 +36,6 @@ class UsersEdit extends Component {
     // initialize page
     componentDidMount() {
         makeSchoolsMultiSelect().then(ret => {
-            // console.log(ret)
             this.setState({ schools_multiselect: ret })
             this.getUserDetails()
         })
@@ -339,30 +338,7 @@ class UsersEdit extends Component {
                                                     onChange={this.handleAddressChange}
                                                     onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
                                                     required={this.state.edited_user.is_parent}/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
                                             </div>
-                                            
-                                            {/* <div onChange={this.handleRoleChange.bind(this)} className="form-group required pb-3 w-75">
-                                                <div>
-                                                    <label for="adminType" className="control-label pb-2">User Type</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="administrator" checked={this.state.edited_user.role_id === 1} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={1}></input>
-                                                    <label className="form-check-label" for="administrator">Administrator</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="school_staff" checked={this.state.edited_user.role_id === 2} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={2} ></input>
-                                                    <label className="form-check-label" for="achool_staff">School Staff</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="bus_driver" checked={this.state.edited_user.role_id === 3} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={3} ></input>
-                                                    <label className="form-check-label" for="bus_driver">Bus Driver</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="general" checked={this.state.edited_user.role_id === 4} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={4} ></input>
-                                                    <label className="form-check-label" for="general">General</label>
-                                                </div>
-                                            </div> */}
                 
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">User Type</label>
@@ -389,29 +365,6 @@ class UsersEdit extends Component {
                                                         options={this.state.schools_multiselect}
                                                         isMulti={true}
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
-                                                    {/* TODO: @jessica link up schools in the options field */}
-                                                    {/* <DropdownMultiselect
-                                                        // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
-                                                        options={this.state.schools_multiselect}
-                                                        id="managedSchools"
-                                                        placeholder="Select Schools to Manage"
-                                                        buttonClass="form-select border"
-                                                        actionBtnStyle="ms-1 mt-1 bg-primary w-75"
-                                                        selectDeselectLabel="Select / Deselect All"
-                                                        // selected={[]}   // array of ids of schools
-                                                        // handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
-                                                    />
-                                                    {/* @jessica for your reference */}
-                                                    {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
-                                                    onChange={(e) => this.handleManagedSchoolChange(e)} multiple="multiple" required>
-                                                        <option value="" disabled selected>Select a School</option>
-                                                        <option value="1">School 1</option>
-                                                        <option value="2">School 2</option>
-                                                        <option value="3">School 3</option>
-                                                        {this.state.schools_dropdown.map(school => 
-                                                            <option value={school.value} id={school.display}>{school.display}</option>
-                                                        )}
-                                                    </select> */}
                                                 </div>
                                                  : ""                                            
                                             }
@@ -420,7 +373,6 @@ class UsersEdit extends Component {
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
-                                        {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                         <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                             <span className="btn-text">
                                                 Cancel

@@ -9,7 +9,6 @@ import PasswordForm from "../components/password-form";
 import { LOGIN_URL } from "../../constants";
 
 class ResetPassword extends Component {
-
     
     state = {
         valid_url: 0,

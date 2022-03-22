@@ -39,11 +39,6 @@ class BusRoutesDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {
-            //     accessor: '',
-            //     sortDirection: 'none'
-            // },
-            // searchValue: ''
         },
         stops_page:[],
         stops_table: {
@@ -72,8 +67,6 @@ class BusRoutesDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 students_page: res.data.students,
@@ -90,8 +83,6 @@ class BusRoutesDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 stops_page: res.data.stops,
@@ -108,8 +99,6 @@ class BusRoutesDetail extends Component {
             const school = route.school;
             const users = data.users;
             const students = this.getStudentsFromUser(users)
-
-            console.log(students)
             
             this.setState({ 
                 students: students,
@@ -127,9 +116,7 @@ class BusRoutesDetail extends Component {
             this.setMarkers(users)            
         })
         .catch(error => {
-            // console.log(error.response)
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
                 this.setState({ 
                     error_status: true,
                     error_code: error.response.status 
@@ -173,18 +160,6 @@ class BusRoutesDetail extends Component {
                 studentNames: studentNames,
                 routeID: this.props.params.id   //TODO: change markers to create per student
             })
-            // this.setState(prevState => ({
-            //     markers: [...prevState.markers, {
-            //         position: {
-            //             lat: user.location.lat,
-            //             lng: user.location.lng
-            //         },
-            //         id: user.id,
-            //         studentIDs: studentIDs,
-            //         studentNames: studentNames,
-            //         routeID: this.props.params.id 
-            //     }]
-            // }));
         });
         this.setState({ markers: markers })
     }
@@ -280,7 +255,6 @@ class BusRoutesDetail extends Component {
                         delete_success: 1,
                         redirect: true
                     })
-                    // console.log(this.state.redirect)
                 } else {
                     this.setState({ delete_success: -1})
                 }
@@ -333,7 +307,6 @@ class BusRoutesDetail extends Component {
                                             }
                                         </h5>
                                         <p className="mb-2"><a href={"/schools/" + this.state.school.id}>{this.state.school.name}</a></p>
-                                        {/* <span className="badge bg-red mt-0">Incomplete</span> */}
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">

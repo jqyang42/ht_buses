@@ -164,9 +164,6 @@ class RouteMap extends Component {
     console.log(editedStop)
     const editedStopNames = this.state.editedStops;
     editedStopNames.push(editedStop)
-    // this.setState(prevState => ({
-    //   editedStops: [...prevState.editedStops, editedStop]
-    // }), console.log(this.state.editedStops))
     this.setState({
       editedStops: editedStopNames,
       existingStops: updatedStopNames

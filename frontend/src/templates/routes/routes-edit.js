@@ -41,7 +41,7 @@ class BusRoutesEdit extends Component {
             }
         }
         
-        api.put(`routes/edit?id=${this.props.params.id}`, route)  // TODO: use onclick id value
+        api.put(`routes/edit?id=${this.props.params.id}`, route)
             .then(res => {
                 const success = res.data.success
                 this.setState({ edit_success: success})
@@ -55,7 +55,7 @@ class BusRoutesEdit extends Component {
     componentDidMount() {
         var self = this
         
-        api.get(`routes/detail?id=${this.props.params.id}`)  // TODO: use onclick id values
+        api.get(`routes/detail?id=${this.props.params.id}`)
         .then(res => {
             const route = res.data.route;
             this.setState({ 
@@ -66,9 +66,7 @@ class BusRoutesEdit extends Component {
                 edit_success: 0
             });
         }).catch (function(error) {
-            // console.log(error.response)
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
                 self.setState({ error_status: true });
                 self.setState({ error_code: error.response.status });
             }
@@ -106,14 +104,6 @@ class BusRoutesEdit extends Component {
                                         <h5>Edit Route</h5>
                                     </div>
                                     <div className="col">
-                                        {/* <div className="row d-inline-flex float-end">
-                                            <Link to={"/schools/" + this.state.school_id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span className="btn-text">
-                                                    <i className="bi bi-geo-alt-fill me-2"></i>
-                                                    Route Planner
-                                                </span>
-                                            </Link>
-                                        </div> */}
                                     </div>
                                 </div>
                                 <div className="w-50 pe-2 me-2">
@@ -150,7 +140,6 @@ class BusRoutesEdit extends Component {
                                                 onChange={this.handleDescriptionChange}></textarea>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
-                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/routes/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel

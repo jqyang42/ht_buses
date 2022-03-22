@@ -109,9 +109,8 @@ class Users extends Component {
         this.setState({ loading: true })
         api.post(`bulk-import/users-upload`, formData, config)
         .then(res => {
-            console.log("posted successfully")
-            console.log(res)
-            // @thomas i set the token from users-upload here
+            // console.log("posted successfully")
+            // console.log(res)
             localStorage.setItem('users_import_file_token', res.data.users_token)
             this.setState({ 
                 import_redirect: true,

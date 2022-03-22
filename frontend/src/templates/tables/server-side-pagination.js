@@ -2,9 +2,7 @@ import api from "../components/api";
 
 // additionalParams --> holds &id=x
 export async function getPage({ url, pageIndex, sortOptions, searchValue, additionalParams, only_pagination }) {
-    // const show_all = pageIndex === 0
     const has_sort = sortOptions === null ? false : sortOptions.sortDirection!== 'none' 
-    // const has_search = searchValue !== ''
     
     const order_by = has_sort ? sortOptions.sortDirection.toLowerCase() : ''
     const sort_by = has_sort ? sortOptions.accessor : ''

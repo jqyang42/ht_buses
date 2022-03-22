@@ -97,11 +97,6 @@ class EmailReset extends Component {
                                                     <label for="email" className="control-label pb-2">Email</label>
                                                     <input type="email" className="form-control pb-2" id="email" 
                                                     placeholder="Enter email" required onChange={this.handleEmailChange}></input>
-                                                    {/* {(!this.passwordValidation() && this.state.password !== "") ? 
-                                                        (<div class="alert alert-danger mt-3 mb-0" role="alert">
-                                                            Invalid email.
-                                                        </div>) : ""
-                                                    } */}
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                     <Link to={"/login"} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

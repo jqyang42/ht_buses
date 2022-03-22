@@ -293,56 +293,7 @@ class StudentsImport extends Component {
                                         </Modal.Footer>
                                         </form>
                                     </Modal>
-
-                                    {/* Verify confirmation modal */}
-                                    {/* <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Verify Students</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        { this.state.verifyCheck ? "All students have been verified and no errors exist. Your import is ready to be submitted!" :
-                                                        "Errors still exist in the file import. Please correct them before submitting."
-                                                        }
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div> */}
-                                    {/* Submit button */}
-                                    {/* @jessica add  */}
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button> */}
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
-
-                                    {/* Submit confirmation modal */}
-                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form onSubmit={this.handleSubmitImport}>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Import Students</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        Are you sure you want to save and import all students?
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
- 
-                                
 
                                 <div className="extra-margin">
                                 {this.state.loading ? 
@@ -381,21 +332,8 @@ class StudentsImport extends Component {
                                 <div>
                                     <ImportStudentsTable 
                                     data={this.state.students} 
-                                    // showAll={this.state.show_all}
-                                    // pageIndex={this.state.pageIndex}
-                                    // canPreviousPage={this.state.canPreviousPage}
-                                    // canNextPage={this.state.canNextPage}
-                                    // updatePageCount={this.getUsersPage}
-                                    // pageSize={10}
-                                    // totalPages={this.state.totalPages}
-                                    // searchValue={this.state.searchValue}
                                     updateImportData={this.handleGetTableEdits}
                                     />
-                                    {/* <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
-                                        { !this.state.show_all ?
-                                            "Show All" : "Show Pages"
-                                        }
-                                    </button> */}
                                 </div>
                                 : ""
                                 }
