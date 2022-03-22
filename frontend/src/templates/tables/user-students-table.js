@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "./table";
 import { colors } from "../../static/colors";
     
@@ -6,6 +6,10 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
     updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, sort, searchValue)
+    }, [sort])
 
     const columns = React.useMemo(
         () => [
