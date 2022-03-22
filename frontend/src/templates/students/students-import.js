@@ -16,6 +16,7 @@ class StudentsImport extends Component {
         students: [],
         errors: [],
         edited_students: [],
+        verify_students: [],
         // verifyCheck: false,
         students_redirect: false,
         successVerifyModalIsOpen: false,
@@ -110,7 +111,11 @@ class StudentsImport extends Component {
             students: this.state.edited_students
         }
         
-        this.setState({ loading: true })
+        this.setState({ 
+            loading: true,
+            verify_students: data
+        })
+
         api.post(`bulk-import/students/validate`, data)
         .then(res => {
             console.log(res)
@@ -137,13 +142,13 @@ class StudentsImport extends Component {
     handleSubmitImport = (event) => {
         event.preventDefault()
 
-        // save table changes
-        const data = {
-            students: this.state.edited_students
-        }
+        // // save table changes
+        // const data = {
+        //     students: this.state.edited_students
+        // }
 
         this.setState({ loading: true })
-        api.post(`bulk-import/students/create`, data)
+        api.post(`bulk-import/students/create`, this.state.verify_students)
         .then(res => {
             console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
