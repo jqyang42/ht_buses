@@ -520,7 +520,11 @@ class BusRoutesPlanner extends Component {
         )}
 
         // console.log(edit_body)
-        await api.put(`stops/edit`, edit_body)
+        api.put(`stops/edit`, edit_body)
+        .then(res => {
+            // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        })
         // .then(res => {
         //     const success = res.data.success
         //     const new_stops = res.data.stops
