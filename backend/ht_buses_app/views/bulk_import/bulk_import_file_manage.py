@@ -1,5 +1,7 @@
 import json
 import os
+import random
+import string
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -16,3 +18,7 @@ def bulk_import_file_read(filename):
 
 def bulk_import_file_delete(filename):
     os.remove(os.path.join(__location__, filename))
+
+def generate_unique_token():
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(10))

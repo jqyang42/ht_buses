@@ -109,7 +109,7 @@ class Students extends Component {
             console.log("posted successfully")
             console.log(res)
             // @thomas i set the token from students-upload here
-            // localStorage.setItem('students_import_file_token', res.data.students_token)
+            localStorage.setItem('students_import_file_token', res.data.students_token)
             this.setState({ 
                 import_redirect: true,
                 loading: false

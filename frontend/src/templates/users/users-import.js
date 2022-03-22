@@ -66,7 +66,7 @@ class UsersImport extends Component {
         .then(res => {
             console.log(res)
             // @thomas i remove the token from localstorage after deleting the temp-file
-            // localStorage.removeItem('users_import_file_token')
+            localStorage.removeItem('users_import_file_token')
             this.setState({ 
                 users_redirect: true,
                 loading: false
@@ -150,7 +150,7 @@ class UsersImport extends Component {
             .then(res => {
                 console.log(res)
                 // @thomas i delete the token from local storage upon deletion
-                // localStorage.removeItem('users_import_file_token')
+                localStorage.removeItem('users_import_file_token')
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
