@@ -55,7 +55,7 @@ class Email extends Component {
             },
             include_route_info: this.state.include_route_info
         }
-        console.log(data)
+        // console.log(data)
         const id_param_string = this.props.source.toLowerCase() === 'users' ? '' : (`?id=` + this.props.params.id)
 
         api.post(API_DOMAIN + 'announcement/' + this.props.source.toLowerCase() + id_param_string, data)

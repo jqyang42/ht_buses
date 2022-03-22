@@ -86,7 +86,7 @@ class Users extends Component {
 
     getFile = (event) => {
         this.fileUploaded = event.target.files[0]
-        console.log(this.fileUploaded)
+        // console.log(this.fileUploaded)
         var ext = this.getExtension(this.fileUploaded)
         if (ext.toLowerCase() === "csv") {
             this.submitFile(this.fileUploaded)
@@ -111,6 +111,7 @@ class Users extends Component {
         .then(res => {
             // console.log("posted successfully")
             // console.log(res)
+            // @thomas i set the token from users-upload here
             localStorage.setItem('users_import_file_token', res.data.users_token)
             this.setState({ 
                 import_redirect: true,
@@ -123,7 +124,7 @@ class Users extends Component {
                 loading: false
             })
             this.fileUploaded = null
-            console.log(err)
+            // console.log(err)
         })
     }
 

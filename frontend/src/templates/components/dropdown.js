@@ -16,7 +16,7 @@ export async function makeParentsDropdown() {
 
 export async function makeSchoolsDropdown() {
     const res = await api.get(`schools?page=0&sort_by=&order_by=&q=`)
-    console.log(res.data.schools)
+    // console.log(res.data.schools)
     const dropdown = res.data.schools.map(school => {
         return {
             value: school.id,
@@ -26,7 +26,7 @@ export async function makeSchoolsDropdown() {
 
     dropdown.sort((a, b) => { return ('' + a.display).localeCompare(b.display) })
 
-    console.log(dropdown)
+    // console.log(dropdown)
     return dropdown
 }
 
@@ -39,7 +39,7 @@ export async function makeSchoolsMultiSelect() {
         }
     })
 
-    console.log(multiselect_schools)
+    // console.log(multiselect_schools)
     return multiselect_schools
 }
 

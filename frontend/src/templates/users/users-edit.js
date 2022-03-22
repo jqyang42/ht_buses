@@ -57,7 +57,7 @@ class UsersEdit extends Component {
                 edited_user: user,
                 managed_schools: managed_schools
             });
-            console.log(user)
+            // console.log(user)
         })
         .catch(err => {
             if (err.response.status !== 200) {
@@ -80,7 +80,7 @@ class UsersEdit extends Component {
         api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
             const success = res.data.success
-            console.log(success)
+            // console.log(success)
             this.setState({ edit_success: success ? 1 : -1 })
             if (success) {
                 this.setState({
@@ -145,7 +145,7 @@ class UsersEdit extends Component {
     handleRoleChange = (event) => {
         const role_value = event.target.value
         let user = this.state.edited_user
-        console.log(role_value)
+        // console.log(role_value)
         user.role = this.role_conversion(role_value)
         user.role_id = parseInt(role_value)
         this.setState({ edited_user: user });
@@ -193,7 +193,7 @@ class UsersEdit extends Component {
             return { 'id': school.value, 'name': school.label }
         })
         let user = {...this.state.edited_user}
-        console.log(user)
+        // console.log(user)
         user.managed_schools = selected_schools
         this.setState({ edited_user: user })
         this.setState({ managed_schools: selected })

@@ -130,7 +130,7 @@ class BusRoutesPlanner extends Component {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
-                console.log(stops)
+                // console.log(stops)
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
@@ -147,7 +147,7 @@ class BusRoutesPlanner extends Component {
             }
         })
         .catch (error => {
-            console.log(error)
+            // console.log(error)
             if (error.response.status !== 200) {
                 this.setState({ error_status: true,
                     error_code: error.response.status 
@@ -155,7 +155,7 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
-        console.log(this.state.stops)
+        // console.log(this.state.stops)
     }
 
     handleStudentsShowAll = () => {
@@ -175,7 +175,7 @@ class BusRoutesPlanner extends Component {
     }
 
     handleReorder = (new_order) => {
-        console.log(new_order)
+        // console.log(new_order)
         this.setState({ stops_order: new_order })
     }
 
@@ -193,7 +193,7 @@ class BusRoutesPlanner extends Component {
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const data = res.data
-                console.log(data)
+                // console.log(data)
                 this.setState({ 
                     school: data.school,
                     students: data.students,
@@ -214,7 +214,7 @@ class BusRoutesPlanner extends Component {
     handleLocationsGet = () => {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 const school_location = res.data.school.location;
                 this.setState({ 
                     center: { 
@@ -245,7 +245,7 @@ class BusRoutesPlanner extends Component {
                     }));
                 });
             }).catch (error => {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status === 404) {
                     this.setState({ error_status: true });
                 }
@@ -260,7 +260,7 @@ class BusRoutesPlanner extends Component {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
-                console.log(stops)
+                // console.log(stops)
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
@@ -288,7 +288,7 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
-        console.log(this.state.stops)
+        // console.log(this.state.stops)
     }
 
     handleAssignMode = event => {
@@ -371,7 +371,7 @@ class BusRoutesPlanner extends Component {
             map_redirect_pickup += '&waypoints='
             let j;
             for (j = i; j < i + 9 && j < stops.length; j+=1) {
-                console.log(stops[j])
+                // console.log(stops[j])
                 map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
             }
             if (j == stops.length) {
@@ -379,7 +379,7 @@ class BusRoutesPlanner extends Component {
             } else {
                 map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
             }
-            console.log(map_redirect_pickup)
+            // console.log(map_redirect_pickup)
             arrivingLinks.push(map_redirect_pickup)
         }
         this.setState({
@@ -405,7 +405,7 @@ class BusRoutesPlanner extends Component {
                 map_redirect_dropoff +=  '&waypoints=';
                 let j;
                 for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
-                    console.log(reversed_stops)
+                    // console.log(reversed_stops)
                     map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
                 }
                 //Think about cases where this could be in its own link
@@ -413,7 +413,7 @@ class BusRoutesPlanner extends Component {
                 departingLinks.push(map_redirect_dropoff)
             }
         }
-        console.log(departingLinks)
+        // console.log(departingLinks)
         this.setState({map_redirect_dropoff: departingLinks})
     }
 
@@ -426,14 +426,14 @@ class BusRoutesPlanner extends Component {
 
     handleNewStopsChange = (stops) => {
         this.newStops["stops"] = stops;
-        console.log("new stops")
-        console.log(this.newStops)
+        // console.log("new stops")
+        // console.log(this.newStops)
     }
 
     handleRouteStopModification = (stops) => {
         this.editedStops["stops"] = stops;
-        console.log("edited stops")
-        console.log(this.editedStops)
+        // console.log("edited stops")
+        // console.log(this.editedStops)
     }
 
     delete_orig_stop_ids = {'stops': []}
@@ -441,13 +441,13 @@ class BusRoutesPlanner extends Component {
         const deletion_ids = stop_ids.map(id => {
             return { 'id': id }
         })
-        console.log(deletion_ids)
+        // console.log(deletion_ids)
         this.delete_orig_stop_ids["stops"] = deletion_ids;
     }
 
     handleAssignModeSave = event => {
         event.preventDefault();
-        console.log("saved!")
+        // console.log("saved!")
         this.setState({
             assign_mode: false,
         })
@@ -459,7 +459,7 @@ class BusRoutesPlanner extends Component {
             this.setState({markers: []})            
             api.put('stops/edit-name', this.editedStops)
             .then(res => {  
-                console.log(this.editedStops)
+                // console.log(this.editedStops)
                 this.editedStops = {"stops":[]};
                 api.post('stops/create', this.newStops)
                 .then(res => {
@@ -471,7 +471,7 @@ class BusRoutesPlanner extends Component {
                         this.handleLocationsGet()
                         this.handleStopsGet()
                     }).catch(error => {
-                        console.log(error)
+                        // console.log(error)
                     })
                 })
             })
@@ -488,7 +488,7 @@ class BusRoutesPlanner extends Component {
         })
         this.handleStopTimeCalc(ordered_stops)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.editStops(res)
             .then(res => {
                 this.switchStopsEditMode()
@@ -539,7 +539,7 @@ class BusRoutesPlanner extends Component {
         //         location: { lat: stop.location.lat, lng: stop.location.lng }
         //     }
         // })
-        console.log(stops)
+        // console.log(stops)
         const stop_info = await getStopInfo({
             // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.lng },
             school: {location : { lat: school.location.lat, lng: school.location.lng }},
@@ -548,16 +548,16 @@ class BusRoutesPlanner extends Component {
             departure_time: school.departure
         })
         
-        console.log(stop_info)
+        // console.log(stop_info)
         const updated_stops = this.updateStopInfo(stop_info, stops)
-        console.log(updated_stops)
+        // console.log(updated_stops)
         return updated_stops
     }
 
     updateStopInfo = (stop_info, orig_stops) => {
         const stop_times = stop_info.stop_times
         const stop_addresses = stop_info.stop_addresses
-        console.log(stop_times[orig_stops])
+        // console.log(stop_times[orig_stops])
         return orig_stops.map(stop => {
                 return {
                 ...stop,

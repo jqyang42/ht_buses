@@ -18,15 +18,15 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget.value);
+        // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
         updatePageCount(pageIndex, sortOptions, searchValue)
     };
 
     const [data, setData] = useState(origData)
     const [skipPageReset, setSkipPageReset] = React.useState(false)
-    console.log(origData)
-    console.log(data)
+    // console.log(origData)
+    // console.log(data)
 
     // We need to keep the table from resetting the pageIndex when we
     // Update data. So we can keep track of that flag with a ref.
@@ -175,7 +175,7 @@ const EditableCell = ({
     // We'll only update the external data when the input is blurre
     const onBlur = () => {
       updateMyData(index, id, value)
-      console.log(index, id, value)
+      // console.log(index, id, value)
     }
   
     // If the initialValue is changed external, sync it up with our state

@@ -84,7 +84,7 @@ class Students extends Component {
 
     getFile = (event) => {
         this.fileUploaded = event.target.files[0]
-        console.log(this.fileUploaded)
+        // console.log(this.fileUploaded)
         var ext = this.getExtension(this.fileUploaded)
         if (ext.toLowerCase() === "csv") {
             this.submitFile(this.fileUploaded)
@@ -106,8 +106,8 @@ class Students extends Component {
         this.setState({ loading: true })
         api.post(`bulk-import/students-upload`, formData, config)
         .then(res => {
-            console.log("posted successfully")
-            console.log(res)
+            // console.log("posted successfully")
+            // console.log(res)
             // @thomas i set the token from students-upload here
             localStorage.setItem('students_import_file_token', res.data.students_token)
             this.setState({ 
@@ -121,7 +121,7 @@ class Students extends Component {
                 loading: false
             })
             this.fileUploaded = null
-            console.log(err)
+            // console.log(err)
         })
     }
 

@@ -111,7 +111,7 @@ class RouteMap extends Component {
           lat: coords.lat,
           lng: coords.lng
         }
-      }), console.log(this.state.newStops))
+      }))
     }
     this.handleUpdateNewStops()
     this.setState({ showModal: true })
@@ -120,7 +120,7 @@ class RouteMap extends Component {
 
   handleUpdateNewStops = () => {
     if (this.props.handleUpdateNewStops) {
-      console.log(this.state.newStops)
+      // console.log(this.state.newStops)
       this.props.handleUpdateNewStops(this.state.newStops)
     }
   }
@@ -132,7 +132,7 @@ class RouteMap extends Component {
     newStop.lat = location.lat;
     newStop.lng = location.lng;
     newStopNames[index] = newStop;
-    console.log(newStopNames)
+    // console.log(newStopNames)
     return newStopNames
   }
 
@@ -140,13 +140,13 @@ class RouteMap extends Component {
     const newStopNames = this.handleStopNameChange(this.state.newStops, name, index, location)
     this.setState({
       newStops: newStopNames
-    }, console.log(this.state.newStops)) 
+    }) 
     this.handleUpdateNewStops()
   }
   
   handleStopModify = () => {
     if (this.props.handleStopModification) {
-      console.log(this.state.editedStops)
+      // console.log(this.state.editedStops)
       this.props.handleStopModification(this.state.editedStops)
     }
   }
@@ -161,15 +161,15 @@ class RouteMap extends Component {
         "lng": location.lng,
       }
     }
-    console.log(editedStop)
+    // console.log(editedStop)
     const editedStopNames = this.state.editedStops;
     editedStopNames.push(editedStop)
     this.setState({
       editedStops: editedStopNames,
       existingStops: updatedStopNames
     })
-    console.log(this.state.editedStops)
-    console.log(this.state.existingStops)
+    // console.log(this.state.editedStops)
+    // console.log(this.state.existingStops)
     this.handleStopModify()
   }
 
@@ -194,7 +194,7 @@ class RouteMap extends Component {
 
   render() {
     const center = this.props.center
-    console.log(this.state.existingStops)
+    // console.log(this.state.existingStops)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }

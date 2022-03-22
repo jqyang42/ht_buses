@@ -75,8 +75,8 @@ function calculateTime({ leg_durations, arrival_time, departure_time }) {
         }
         stop_times.push(time)
     }
-    console.log(pickup_times)
-    console.log(dropoff_times)
-    console.log(stop_times)
+    // console.log(pickup_times)
+    // console.log(dropoff_times)
+    // console.log(stop_times)
     return stop_times
 }

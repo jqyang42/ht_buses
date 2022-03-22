@@ -368,7 +368,7 @@ class UsersCreate extends Component {
     
             api.post(`email_exists`, request)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 const email_exists = res.data.user_email_exists
                 const is_parent_email = res.data.is_parent_email
                 const existing_user_id = res.data?.user_id

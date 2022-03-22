@@ -15,7 +15,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget.value);
+        // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
         updatePageCount(pageIndex, sortOptions, searchValue)
     };
@@ -24,7 +24,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
 
     useEffect(() => {
         setRecords(data)
-        console.log(data)
+        // console.log(data)
     }, [data])
 
     const getRowId = React.useCallback(row => {

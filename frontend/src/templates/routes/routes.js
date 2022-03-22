@@ -31,8 +31,8 @@ class BusRoutes extends Component {
     getRoutesPage = (page, sortOptions, search) => {
         getPage({ url: 'routes', pageIndex: page, sortOptions: sortOptions, searchValue: search })
         .then(res => {
-            console.log(res)
-            console.log(res.data.routes)
+            // console.log(res)
+            // console.log(res.data.routes)
             this.setState({
                 routes: res.data.routes,
                 pageIndex: res.pageIndex,
