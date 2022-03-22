@@ -326,7 +326,7 @@ class BusRoutesDetail extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h5 className="align-top">{this.state.route.name}
                                             { this.state.route.is_complete ? "" :
                                                 <span className="badge bg-red ms-2">Incomplete</span>
@@ -357,6 +357,12 @@ class BusRoutesDetail extends Component {
                                                     <span className="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>
                                                         Edit
+                                                    </span>
+                                                </Link>
+                                                <Link to={"/schools/" + this.state.school.id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-geo-alt-fill me-2"></i>
+                                                        Route Planner
                                                     </span>
                                                 </Link>
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -423,7 +429,7 @@ class BusRoutesDetail extends Component {
                                                             <div className="col-auto align-items-center">
                                                                 <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
@@ -439,7 +445,7 @@ class BusRoutesDetail extends Component {
                                                             <div className="col-auto align-items-center">
                                                                 <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
