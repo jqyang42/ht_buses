@@ -11,6 +11,8 @@ import { LOGIN_URL, USERS_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
 import api from "../components/api";
 
+// @kyra: localStorage.getItem('users_import_file_token') --> if this is null, show message
+
 class UsersImport extends Component {
     state = {
         users: [],
