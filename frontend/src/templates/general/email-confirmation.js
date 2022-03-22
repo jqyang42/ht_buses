@@ -24,7 +24,7 @@ class EmailConfirmation extends Component {
                                 Return to Login
                             </span>
                         </Link>
-                        <p className="w-75 mt-2 mb-0 gray-600">
+                        <p className="form-col mt-2 mb-0 gray-600">
                             Did not receive an email? Check your spam folder or <a href="/email-reset">try another email address</a>
                         </p>
                     </div>
