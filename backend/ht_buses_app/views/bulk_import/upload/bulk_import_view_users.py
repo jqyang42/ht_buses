@@ -30,10 +30,6 @@ def bulk_import(request):
     errors = []
     errors_msg = []
     row_num = 1
-    email_error_message = ""
-    phone_number_error_message = ""
-    name_error_message = ""
-    address_error_message = ""
     users_token = generate_unique_token()
     headers = ["email", "name", "address", "phone_number"]
     # regex
@@ -62,6 +58,10 @@ def bulk_import(request):
     for row in reader:
         exclude = False
         existing_users = []
+        email_error_message = ""
+        phone_number_error_message = ""
+        name_error_message = ""
+        address_error_message = ""
         # email, name, address, phone_number
         if row["email"] is None or row["email"] == "":
             email_error = True
