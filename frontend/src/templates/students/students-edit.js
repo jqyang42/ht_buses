@@ -72,7 +72,7 @@ class StudentsEdit extends Component {
                 edited_student: edited_student
             })
 
-            console.log(this.state.edited_student)
+            // console.log(this.state.edited_student)
 
             makeRoutesDropdown({ school_id: school.id }).then(ret => {
                 this.setState({ routes_dropdown: ret })

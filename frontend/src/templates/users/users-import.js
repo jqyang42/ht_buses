@@ -56,7 +56,7 @@ class UsersImport extends Component {
         // @thomas i send you the file token here
         api.get(`bulk-import/users?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const sorted_errors = this.sortErrors(res.data.errors)
             this.setState({ 
                 users: res.data.users,
@@ -70,7 +70,7 @@ class UsersImport extends Component {
         this.setState({ 
             edited_users: new_data,
         }, () => {
-            console.log(this.state.edited_users)
+            // console.log(this.state.edited_users)
         })
     }
 
@@ -81,7 +81,7 @@ class UsersImport extends Component {
         this.setState({ loading: true })
         api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             // @thomas i remove the token from localstorage after deleting the temp-file
             localStorage.removeItem('users_import_file_token')
             this.setState({ 
@@ -90,7 +90,7 @@ class UsersImport extends Component {
             })
         })
         .catch(err => {
-            console.log(err)
+            // console.log(err)
             this.setState({ loading: false })
         })
     }
@@ -148,7 +148,7 @@ class UsersImport extends Component {
 
         api.post(`bulk-import/users/validate`, data)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const data = res.data
             const sorted_errors = this.sortErrors(data.errors)
             this.setState({
@@ -175,16 +175,16 @@ class UsersImport extends Component {
         this.setState({ loading: true })
         api.post(`bulk-import/users/create`, this.state.to_verify_users)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ createUserCount: res.data.user_count })
             api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
             .catch(err => {
-                console.log(err)
+                // console.log(err)
                 this.setState({ loading: false })
             })
         })
