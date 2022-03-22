@@ -178,13 +178,11 @@ class StudentsImport extends Component {
         .then(res => {
             console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
-            // @thomas i delete the token here
             api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
             .then(res => {
                 console.log(res)
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
-                localStorage.removeItem('students_import_file_token')
             })
             .catch(err => {
                 console.log(err)
@@ -198,6 +196,7 @@ class StudentsImport extends Component {
 
     handleStudentsRedirect = () => {
         this.setState({ students_redirect: true })
+        localStorage.removeItem('students_import_file_token')
     }
 
     render() {
