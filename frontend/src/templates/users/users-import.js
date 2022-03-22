@@ -231,7 +231,7 @@ class UsersImport extends Component {
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.verifyImport}>Verify</button>
 
                                     {/* Success verify confirmation modal */}
-                                    <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
+                                    <Modal backdrop="static" show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
                                         <Modal.Header>
                                         <Modal.Title><h5>Verify Users</h5></Modal.Title>
@@ -247,7 +247,7 @@ class UsersImport extends Component {
                                     </Modal>
 
                                     {/* Error verify confirmation modal */}
-                                    <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
+                                    <Modal backdrop="static" show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
                                         <Modal.Header>
                                         <Modal.Title><h5>Verify Users</h5></Modal.Title>
                                         </Modal.Header>
@@ -260,7 +260,7 @@ class UsersImport extends Component {
                                     </Modal>
 
                                     {/* Create confirmation modal */}
-                                    <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
+                                    <Modal backdrop="static" show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
                                         <form onSubmit={this.handleUsersRedirect}>
                                         <Modal.Header>
                                         <Modal.Title><h5>Import Users</h5></Modal.Title>
