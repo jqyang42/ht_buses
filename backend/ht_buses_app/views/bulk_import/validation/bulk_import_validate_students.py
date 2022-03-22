@@ -21,15 +21,15 @@ def bulk_import_validate(request):
     students = []
     errors = []
     row_num = 1
-    school_name_error_message = ""
-    email_error_message = ""
-    name_error_message = ""
-    student_id_error_message = ""
     existing_students = []
     reqBody = json.loads(request.body)
     k_exclude = False
    
     for row in reqBody["students"]:
+        school_name_error_message = ""
+        email_error_message = ""
+        name_error_message = ""
+        student_id_error_message = ""
         exclude = False
         # name, parent_email, student_id, school_name
         if row["exclude"] == False:
@@ -61,7 +61,8 @@ def bulk_import_validate(request):
                                 email_error = False
                     else:
                         email_error = False
-
+            print(row["name"])
+            print(row["row_number"])
             if row["name"] is None or row["name"] == "":
                 name_error = True
                 name_error_message = "Name field cannot be empty"
@@ -195,7 +196,7 @@ def bulk_import_validate(request):
                                     student_j_found = True
                             if student_j_found == False:
                                 new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "error_message": [], "existing_students": [], "exclude": False}
-                                errors.append(new_errors)
+                                errors.append(new_error)
 
 
                 elif student_i_name == student_j_name:
