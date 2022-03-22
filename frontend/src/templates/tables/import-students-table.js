@@ -86,11 +86,11 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             // showAll={showAll}
             navUrl={"/students/"}
-            rowProps={row => ({
-                style: {
-                    cursor: "pointer"
-                }
-            })}
+            // rowProps={row => ({
+            //     style: {
+            //         cursor: "pointer"
+            //     }
+            // })}
             // pageIndex={pageIndex}
             // canPreviousPage={canPreviousPage}
             // canNextPage={canNextPage}
