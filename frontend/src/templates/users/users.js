@@ -111,6 +111,8 @@ class Users extends Component {
         .then(res => {
             console.log("posted successfully")
             console.log(res)
+            // @thomas i set the token from users-upload here
+            localStorage.setItem('users_import_file_token', res.data.users_token)
             this.setState({ 
                 import_redirect: true,
                 loading: false

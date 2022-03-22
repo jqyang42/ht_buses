@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from ..bulk_import_file_manage import bulk_import_file_delete
 
 # Bulk import temporary file name
-FILENAME = 'bulk_import_users_temp.json'
+FILENAME = 'bulk_import_users_temp_'
+JSON_EXTENSION = '.json'
 
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
@@ -14,7 +15,8 @@ FILENAME = 'bulk_import_users_temp.json'
 def bulk_import_temp(request):
     data = {}
     try:
-        bulk_import_file_delete(FILENAME)
+        full_file = FILENAME + request.query_params["token"] + JSON_EXTENSION
+        bulk_import_file_delete(full_file)
         data["success"] = True
     except:
         data["success"] = False
