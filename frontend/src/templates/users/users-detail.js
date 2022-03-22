@@ -131,7 +131,7 @@ class UsersDetail extends Component {
     }
 
     addStudent = (student) => {
-        console.log(student)
+        // console.log(student)
         api.post(`users/add-students?id=${this.props.params.id}`, student)
         .then(res => {
             const success = res.data.success
@@ -254,7 +254,7 @@ class UsersDetail extends Component {
             return <ErrorPage code={this.state.error_code} />
         }
 
-        console.log(this.state.user.managed_schools)
+        // console.log(this.state.user.managed_schools)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">

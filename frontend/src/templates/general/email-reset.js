@@ -32,7 +32,7 @@ class EmailReset extends Component {
         const res = await api.post(`email_exists`, data)
         const valid_email = res.data.user_email_exists ? 1 : -1
         this.setState({ valid_email: valid_email })
-        console.log(valid_email)
+        // console.log(valid_email)
         return res.data.user_email_exists
     }
 

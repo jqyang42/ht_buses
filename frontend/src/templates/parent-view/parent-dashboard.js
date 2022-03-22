@@ -60,7 +60,7 @@ class ParentDashboard extends Component {
     } 
 
     render() {
-        console.log(this.state.totalPages)
+        // console.log(this.state.totalPages)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }

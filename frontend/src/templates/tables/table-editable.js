@@ -18,7 +18,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget.value);
+        // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
         updatePageCount(pageIndex, sortOptions, searchValue)
     };
@@ -27,8 +27,8 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
     const [data, setData] = useState(origData)
     // const [originalData] = useState(data)
     const [skipPageReset, setSkipPageReset] = React.useState(false)
-    console.log(origData)
-    console.log(data)
+    // console.log(origData)
+    // console.log(data)
 
     // useEffect(() => {
     //     setRecords(data)
@@ -275,7 +275,7 @@ const EditableCell = ({
     // We'll only update the external data when the input is blurre
     const onBlur = () => {
       updateMyData(index, id, value)
-      console.log(index, id, value)
+      // console.log(index, id, value)
     }
   
     // If the initialValue is changed external, sync it up with our state

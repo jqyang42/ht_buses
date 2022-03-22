@@ -56,7 +56,7 @@ class StudentsImport extends Component {
         // @thomas i send you the file token here
         api.get(`bulk-import/students?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const sorted_errors = this.sortErrors(res.data.errors)
             this.setState({ 
                 students: res.data.students,
@@ -70,7 +70,7 @@ class StudentsImport extends Component {
         this.setState({ 
             edited_students: new_data,
         }, () => {
-            console.log(this.state.edited_students)
+            // console.log(this.state.edited_students)
         })
     }
 
@@ -81,7 +81,7 @@ class StudentsImport extends Component {
         this.setState({ loading: true })
         api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             // @thomas i remove the file token here
             localStorage.removeItem('students_import_file_token')
             this.setState({ 
@@ -90,7 +90,7 @@ class StudentsImport extends Component {
             })
         })
         .catch(err => {
-            console.log(err)
+            // console.log(err)
             this.setState({ loading: false })
         })
     }
@@ -149,11 +149,11 @@ class StudentsImport extends Component {
 
         api.post(`bulk-import/students/validate`, data)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const data = res.data
             const sorted_errors = this.sortErrors(data.errors)
             this.setState({
-                verified_errors: data.errors,
+                verified_errors: sorted_errors,
                 verified_students: data.students,
                 loading: false
             }, () => {
@@ -176,16 +176,16 @@ class StudentsImport extends Component {
         this.setState({ loading: true })
         api.post(`bulk-import/students/create`, this.state.to_verify_students)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
             api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
             .catch(err => {
-                console.log(err)
+                // console.log(err)
                 this.setState({ loading: false })
             })
         })

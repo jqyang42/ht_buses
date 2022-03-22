@@ -14,13 +14,13 @@ class MultiSelectDropdown extends Component {
   handleChange = (selectedOptions) => {
     this.props.handleOnChange(selectedOptions)
     this.setState({ selectedOptions: selectedOptions })
-    console.log(this.state.selectedOptions)
-    console.log(this.state.options)
+    // console.log(this.state.selectedOptions)
+    // console.log(this.state.options)
   };
 
   render() {
-    console.log(this.state.options)
-    console.log(this.state.isMulti)
+    // console.log(this.state.options)
+    // console.log(this.state.isMulti)
     return (
       <Select
         multi={true}

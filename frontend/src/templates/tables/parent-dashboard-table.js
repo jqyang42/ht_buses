@@ -67,19 +67,19 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
             setSort({ sortDirection: 'ASC', accessor: column.id });
             // const desc = await getClients( 'ASC', column.id );
             // setData(desc);
-            console.log(sort)
+            // console.log(sort)
             break;
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
             // const asc = await getClients('DESC', column.id);
-            console.log(sort)
+            // console.log(sort)
             // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
             // const newData = await getClients('none', column.id);
             // setData(newData);
-            console.log(sort)
+            // console.log(sort)
             break;
         }
     };
