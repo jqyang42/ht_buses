@@ -215,7 +215,7 @@ class UsersImport extends Component {
                                     {/* Success verify confirmation modal */}
                                     <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -230,7 +230,7 @@ class UsersImport extends Component {
 
                                     {/* Error verify confirmation modal */}
                                     <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -244,7 +244,7 @@ class UsersImport extends Component {
                                     {/* Create confirmation modal */}
                                     <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
                                         <form onSubmit={this.handleUsersRedirect}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Import Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>

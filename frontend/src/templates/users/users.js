@@ -161,7 +161,7 @@ class Users extends Component {
                                             Please wait patiently while we load and verify your file import.
                                         </div> : ""
                                     }
-                                    <div className="row d-inline-flex float-end">
+                                    <div className="row d-inline-flex float-end ms-1 row-buttons">
                                         {
                                               localStorage.getItem('role') === 'Administrator' ?
                                             <Link to={"/users/email"} className="btn btn-primary float-end w-auto me-3" role="button">
@@ -207,7 +207,7 @@ class Users extends Component {
                                     totalPages={this.state.totalPages}
                                     searchValue={this.state.searchValue}
                                     />
-                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                    <button className="btn btn-secondary align-self-center show-all" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"
                                         }

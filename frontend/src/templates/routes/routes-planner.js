@@ -636,7 +636,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-md-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
+                                                <select className="w-md-50 form-select float-end mb-2 mb-md-0" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
                                                     <option selected value={0}>Select a route to assign</option>
                                                     {/* <option value={0}>No Route</option> */}
                                                     {this.state.route_dropdown.map(route => 
@@ -759,9 +759,9 @@ class BusRoutesPlanner extends Component {
                                                                 <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
@@ -775,9 +775,9 @@ class BusRoutesPlanner extends Component {
                                                                 <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
