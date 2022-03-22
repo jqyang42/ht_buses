@@ -16,8 +16,9 @@ class StudentsImport extends Component {
         students: [],
         errors: [],
         edited_students: [],
-        verify_students: [],
-        // verifyCheck: false,
+        to_verify_students: [],
+        verified_errors: [],
+        verified_students: [],
         students_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
@@ -31,9 +32,23 @@ class StudentsImport extends Component {
     }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
-    closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
+    closeSuccessVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            students: this.state.verified_students,
+            successVerifyModalIsOpen: false
+        });
+    }
+
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
-    closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    closeErrorVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            students: this.state.verified_students,
+            errorVerifyModalIsOpen: false 
+        });
+    }
+    
     openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
@@ -121,9 +136,8 @@ class StudentsImport extends Component {
             console.log(res)
             const data = res.data
             this.setState({
-                // verifyCheck: data.errors.length === 0,
-                errors: data.errors,
-                students: data.students,
+                verified_errors: data.errors,
+                verified_students: data.students,
                 loading: false
             }, () => {
                 if (this.isVerified(data.errors)) {
