@@ -14,7 +14,7 @@ from django.db.models.functions import Concat
 from guardian.shortcuts import get_objects_for_user
 
 # Bulk import temporary file name
-FILENAME = 'bulk_import_users_temp_'
+FILENAME = 'bulk_import_student_temp_'
 JSON_EXTENSION = '.json'
 
 # Bulk Import POST API: Checking for Students
@@ -251,7 +251,7 @@ def bulk_import(request):
     data["students"] = students
     data["errors"] = errors
     data["success"] = True
-    data["users_token"] = students_token
+    data["students_token"] = students_token
     bulk_import_file_save(FILENAME + students_token + JSON_EXTENSION, data)
     return Response(data)
 

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from ..bulk_import_file_manage import bulk_import_file_read
 
 # Bulk import temporary file name
-FILENAME = 'bulk_import_users_temp_'
+FILENAME = 'bulk_import_student_temp_'
 JSON_EXTENSION = '.json'
 
 # Bulk Import GET API: Retrieving Students JSON
