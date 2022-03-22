@@ -11,7 +11,7 @@ import re
 from ..resources import capitalize_reg
 from ..accounts import account_tools
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import assign_school_staff_perms, update_schools_staff_rights
+from ..general.general_tools import assign_school_staff_perms
 from guardian.shortcuts import assign_perm
 from ..general import response_messages
 
