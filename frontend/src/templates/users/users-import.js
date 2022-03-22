@@ -107,8 +107,8 @@ class UsersImport extends Component {
             }
             return unique
         }, [])
-        
-        return sorted_errors
+
+        return no_duplicates
     }
 
     isVerified = (err_arr) => {
