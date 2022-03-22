@@ -153,7 +153,7 @@ class StudentsImport extends Component {
             const data = res.data
             const sorted_errors = this.sortErrors(data.errors)
             this.setState({
-                verified_errors: data.errors,
+                verified_errors: sorted_errors,
                 verified_students: data.students,
                 loading: false
             }, () => {

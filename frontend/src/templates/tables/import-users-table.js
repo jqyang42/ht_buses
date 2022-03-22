@@ -65,11 +65,20 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             origData={data}
             searchOn={false}
             navUrl={"/users/"}
-            rowProps={row => ({
-                style: {
-                    cursor: "pointer"
-                }
-            })}
+            // rowProps={row => ({
+            //     style: {
+            //         cursor: "pointer"
+            //     }
+            // })}
+            // pageIndex={pageIndex}
+            // canPreviousPage={canPreviousPage}
+            // canNextPage={canNextPage}
+            // updatePageCount={updatePageCount}
+            // pageSize={pageSize}
+            // totalPages={totalPages}
+            // columnHeaderClick={columnHeaderClick}
+            // sortOptions={sort}
+            // searchValue={searchValue}
             updateData={updateImportData}
         />
     )

@@ -68,11 +68,20 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             origData={data}
             searchOn={false}
             navUrl={"/students/"}
-            rowProps={row => ({
-                style: {
-                    cursor: "pointer"
-                }
-            })}
+            // rowProps={row => ({
+            //     style: {
+            //         cursor: "pointer"
+            //     }
+            // })}
+            // pageIndex={pageIndex}
+            // canPreviousPage={canPreviousPage}
+            // canNextPage={canNextPage}
+            // updatePageCount={updatePageCount}
+            // pageSize={pageSize}
+            // totalPages={totalPages}
+            // columnHeaderClick={columnHeaderClick}
+            // sortOptions={sort}
+            // searchValue={searchValue}
             updateData={updateImportData}
         />
     )

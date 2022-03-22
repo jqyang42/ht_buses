@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table } from "./table";
 import { colors } from "../../static/colors";
     
@@ -6,6 +6,10 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
     updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+
+    useEffect(() => {
+        updatePageCount(pageIndex, sort, searchValue)
+    }, [sort])
 
     const columns = React.useMemo(
         () => [
@@ -18,12 +22,14 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
-                sortDirection: sort.accessor === 'student_school_id' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
-            // {
-            //     Header: 'School',
-            //     accessor: 'school'
-            // },
+            {
+                Header: 'School',
+                accessor: 'school_name',
+                id: 'school_name',
+                sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
+            },
             {
                 Header: 'Bus Route',
                 accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
@@ -35,7 +41,7 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
             },     
             {
                 Header: 'Bus Stops',
-                accessor: 'route.in_range',
+                accessor: 'in_range',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
                     value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>

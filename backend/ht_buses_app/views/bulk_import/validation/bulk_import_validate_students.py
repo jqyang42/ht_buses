@@ -61,8 +61,6 @@ def bulk_import_validate(request):
                                 email_error = False
                     else:
                         email_error = False
-            print(row["name"])
-            print(row["row_number"])
             if row["name"] is None or row["name"] == "":
                 name_error = True
                 name_error_message = "Name field cannot be empty"
