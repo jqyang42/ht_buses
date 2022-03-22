@@ -105,6 +105,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
+            <div className='table-responsive mb-4 w-100'>
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
                 {// Loop over the header rows
@@ -190,6 +191,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 }
                 </tbody>
             </table>
+            </div>
             </DndProvider>
 
             {
@@ -209,6 +211,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     // page={page}
                 />
             }
+            
         </>
     )
 }

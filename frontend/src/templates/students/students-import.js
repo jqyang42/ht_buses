@@ -16,7 +16,9 @@ class StudentsImport extends Component {
         students: [],
         errors: [],
         edited_students: [],
-        // verifyCheck: false,
+        to_verify_students: [],
+        verified_errors: [],
+        verified_students: [],
         students_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
@@ -30,19 +32,35 @@ class StudentsImport extends Component {
     }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
-    closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
+    closeSuccessVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            students: this.state.verified_students,
+            successVerifyModalIsOpen: false
+        });
+    }
+
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
-    closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    closeErrorVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            students: this.state.verified_students,
+            errorVerifyModalIsOpen: false 
+        });
+    }
+
     openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedStudents = () => {
-        api.get(`bulk-import/students`)
+        // @thomas i send you the file token here
+        api.get(`bulk-import/students?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
             console.log(res)
+            const sorted_errors = this.sortErrors(res.data.errors)
             this.setState({ 
                 students: res.data.students,
-                errors: res.data.errors,
+                errors: sorted_errors,
                 loading: false
             })
         })
@@ -51,7 +69,6 @@ class StudentsImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_students: new_data,
-            // verifyCheck: false
         }, () => {
             console.log(this.state.edited_students)
         })
@@ -62,9 +79,11 @@ class StudentsImport extends Component {
         // redirect to USERS_URL (ignoring all changes from import)
         event.preventDefault()
         this.setState({ loading: true })
-        api.delete(`bulk-import/students/delete-temp-file`)
+        api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
             console.log(res)
+            // @thomas i remove the file token here
+            localStorage.removeItem('students_import_file_token')
             this.setState({ 
                 students_redirect: true,
                 loading: false
@@ -74,6 +93,22 @@ class StudentsImport extends Component {
             console.log(err)
             this.setState({ loading: false })
         })
+    }
+
+    sortErrors = (errors) => {
+        const sorted_errors = errors
+        sorted_errors.sort((a, b) => {
+            return a.row_num - b.row_num
+        })
+
+        const no_duplicates = sorted_errors.reduce((unique, a) => {
+            if (!unique.some(err => err.row_num === a.row_num)) {
+                unique.push(a)
+            }
+            return unique
+        }, [])
+        
+        return no_duplicates
     }
 
     isVerified = (err_arr) => {
@@ -107,15 +142,19 @@ class StudentsImport extends Component {
             students: this.state.edited_students
         }
         
-        this.setState({ loading: true })
+        this.setState({ 
+            loading: true,
+            to_verify_students: data
+        })
+
         api.post(`bulk-import/students/validate`, data)
         .then(res => {
             console.log(res)
             const data = res.data
+            const sorted_errors = this.sortErrors(data.errors)
             this.setState({
-                // verifyCheck: data.errors.length === 0,
-                errors: data.errors,
-                students: data.students,
+                verified_errors: data.errors,
+                verified_students: data.students,
                 loading: false
             }, () => {
                 if (this.isVerified(data.errors)) {
@@ -134,21 +173,18 @@ class StudentsImport extends Component {
     handleSubmitImport = (event) => {
         event.preventDefault()
 
-        // save table changes
-        const data = {
-            students: this.state.edited_students
-        }
-
         this.setState({ loading: true })
-        api.post(`bulk-import/students/create`, data)
+        api.post(`bulk-import/students/create`, this.state.to_verify_students)
         .then(res => {
             console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
-            api.delete(`bulk-import/students/delete-temp-file`)
+            // @thomas i delete the token here
+            api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
             .then(res => {
                 console.log(res)
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
+                localStorage.removeItem('students_import_file_token')
             })
             .catch(err => {
                 console.log(err)
@@ -181,6 +217,8 @@ class StudentsImport extends Component {
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root={"Import Students"} isRoot={true} />
+
+                        { localStorage.getItem('students_import_file_token') ?
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div className="row d-inline-flex float-end mb-4">
@@ -214,9 +252,9 @@ class StudentsImport extends Component {
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.verifyImport}>Verify</button>
 
                                     {/* Success verify confirmation modal */}
-                                    <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
+                                    <Modal backdrop="static" show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -230,8 +268,8 @@ class StudentsImport extends Component {
                                     </Modal>
 
                                     {/* Error verify confirmation modal */}
-                                    <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
-                                        <Modal.Header closeButton>
+                                    <Modal backdrop="static" show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -243,9 +281,9 @@ class StudentsImport extends Component {
                                     </Modal>
 
                                     {/* Create confirmation modal */}
-                                    <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
+                                    <Modal backdrop="static" show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
                                         <form onSubmit={this.handleStudentsRedirect}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Import Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -365,6 +403,15 @@ class StudentsImport extends Component {
                                 </div>
                             </div>
                         </div>
+                        : 
+                        <div className="container my-4 mx-0 w-100 mw-100">
+                            <div className="alert alert-danger mt-2 me-3" role="alert">
+                                <p className="mb-1">
+                                    No file was found. Please upload a csv file through the Students page before attempting to import.
+                                </p>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>
