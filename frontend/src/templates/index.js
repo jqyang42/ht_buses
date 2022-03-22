@@ -58,7 +58,6 @@ class Login extends Component {
                 this.passwordField.value = '';
                 this.setState({password: ''})
             }
-            // console.log(localStorage.getItem('token'))
         })
     }   
     

@@ -16,59 +16,54 @@ class HeaderMenu extends Component {
                        (this.props.root === "My Dashboard") ? "/dashboard" : (
                        (this.props.root === "My Account") ? "/account" : "/" + this.props.root.toLowerCase() )))
 
-        console.log(this.props.name)
-
         return (
             <div className="container mx-0 mt-0 mb-0 px-4 pt-3 pb-0 bg-white mw-100 w-100 shadow-sm">
                 <div className="row align-self-center d-flex justify-content-between">
-                    {/* <div className="col-md-auto mx-2 py-2 px-2 ps-3"> */}
-                    {/* <div className="col-md-auto mx-2 py-2"> */}
-                        { this.props.isRoot ? 
-                            <div className="col-md-auto mx-2 py-2 px-2 ps-3">
-                                <h5>{this.props.root}</h5>
-                            </div>
-                            : ( this.props.isSecond ?
-                                <>
-                                    <div className="col-md-auto mx-2 py-2">
-                                        <div className="row d-flex align-middle">
-                                            <div className="w-auto px-2 ps-3">
-                                                <a href={root_url}><h5>{this.props.root}</h5></a>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <i className="bi bi-chevron-right"></i>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <h5>{this.props.name}</h5>
-                                            </div>
+                    { this.props.isRoot ? 
+                        <div className="col-md-auto mx-2 py-2 px-2 ps-3">
+                            <h5>{this.props.root}</h5>
+                        </div>
+                        : ( this.props.isSecond ?
+                            <>
+                                <div className="col-md-auto mx-2 py-2">
+                                    <div className="row d-flex align-middle">
+                                        <div className="w-auto px-2 ps-3">
+                                            <a href={root_url}><h5>{this.props.root}</h5></a>
+                                        </div>
+                                        <div className="w-auto px-2">
+                                            <i className="bi bi-chevron-right"></i>
+                                        </div>
+                                        <div className="w-auto px-2">
+                                            <h5>{this.props.name}</h5>
                                         </div>
                                     </div>
-                                </> :
-                                <>
-                                    <div className="col-md-auto mx-2 py-2">
-                                        <div className="row d-flex align-middle">
-                                            <div className="w-auto px-2 ps-3">
-                                                <a href={root_url}><h5>{this.props.root}</h5></a>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <i className="bi bi-chevron-right"></i>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <a href={root_url + "/" + this.props.id}><h5>{this.props.name}</h5></a>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <i className="bi bi-chevron-right"></i>
-                                            </div>
-                                            <div className="w-auto px-2">
-                                                <h5>{this.props.page}</h5>
-                                            </div>
+                                </div>
+                            </> :
+                            <>
+                                <div className="col-md-auto mx-2 py-2">
+                                    <div className="row d-flex align-middle">
+                                        <div className="w-auto px-2 ps-3">
+                                            <a href={root_url}><h5>{this.props.root}</h5></a>
+                                        </div>
+                                        <div className="w-auto px-2">
+                                            <i className="bi bi-chevron-right"></i>
+                                        </div>
+                                        <div className="w-auto px-2">
+                                            <a href={root_url + "/" + this.props.id}><h5>{this.props.name}</h5></a>
+                                        </div>
+                                        <div className="w-auto px-2">
+                                            <i className="bi bi-chevron-right"></i>
+                                        </div>
+                                        <div className="w-auto px-2">
+                                            <h5>{this.props.page}</h5>
                                         </div>
                                     </div>
-                                    
-                                </>
-                            )
-                        }
-                        <UserAccount />
-                    {/* </div> */}
+                                </div>
+                                
+                            </>
+                        )
+                    }
+                    <UserAccount />
                 </div>
             </div>
         )

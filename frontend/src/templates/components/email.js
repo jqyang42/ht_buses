@@ -48,7 +48,6 @@ class Email extends Component {
             this.setState({ message_sent: -1 })
             return
         }
-        // var self = this
         const data = {
             email: {
                 subject: this.state.subject,

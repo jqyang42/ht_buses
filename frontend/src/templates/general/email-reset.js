@@ -14,7 +14,6 @@ class EmailReset extends Component {
         valid_email: 0,
         email: "",
         message_sent: 0
-
     }
 
     componentDidMount() {

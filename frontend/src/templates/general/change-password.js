@@ -21,10 +21,6 @@ class ChangePassword extends Component {
         const password_changed = res.data.success
         return password_changed
     }
-   
-    componentDidMount() {
-    
-    }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
