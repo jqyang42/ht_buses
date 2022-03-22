@@ -99,11 +99,11 @@ export function ImportUsersTable({ data, showAll, pageIndex, canPreviousPage, ca
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             // showAll={showAll}
             navUrl={"/users/"}
-            rowProps={row => ({
-                style: {
-                    cursor: "pointer"
-                }
-            })}
+            // rowProps={row => ({
+            //     style: {
+            //         cursor: "pointer"
+            //     }
+            // })}
             // pageIndex={pageIndex}
             // canPreviousPage={canPreviousPage}
             // canNextPage={canNextPage}
