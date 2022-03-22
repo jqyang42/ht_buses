@@ -22,7 +22,7 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
-                sortDirection: sort.accessor === 'student_school_id' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'School',
