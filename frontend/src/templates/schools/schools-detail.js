@@ -31,8 +31,6 @@ class SchoolsDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {},
-            // searchValue: ''
         },
         routes_page: [],
         routes_table: {
@@ -40,8 +38,6 @@ class SchoolsDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {},
-            // searchValue: ''
         },
     }
 
@@ -61,8 +57,6 @@ class SchoolsDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 students_page: res.data.students,
@@ -79,8 +73,6 @@ class SchoolsDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 routes_page: res.data.routes,

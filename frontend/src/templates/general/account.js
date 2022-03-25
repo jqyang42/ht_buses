@@ -46,11 +46,6 @@ class Account extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        // const { redirect } = this.state;
-        // const redirect_url = USERS_URL + '/' + this.props.params.id;
-        // if (redirect) {
-        //     return <Navigate to={ PARENT_DASHBOARD_URL }/>;
-        // }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -78,9 +73,6 @@ class Account extends Component {
                                                     Change Password
                                                 </span>
                                             </Link>
-                                            {/* <button className="btn btn-primary float-end w-auto me-3" role="button" onClick={this.handleLogout}>
-                                                Log Out
-                                            </button> */}
                                         </div>
                                     </div>
                                 </div>

@@ -68,13 +68,11 @@ export default function pdfRender (route, users) {
             textColor: '#ffffff', 
             fontSize: 10, 
             cellWidth: 'wrap'},
-        // bodyStyles: {cellWidth: 'wrap', overflow: 'linebreak', halign: 'left', valign: 'middle'},
         styles: { 
             "overflow": "linebreak", 
             "cellWidth": "wrap", 
             "rowPageBreak": "auto", 
             "halign": "left" },
     })
-
     doc.save("route.pdf");
 }

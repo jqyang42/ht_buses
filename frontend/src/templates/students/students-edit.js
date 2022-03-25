@@ -270,7 +270,6 @@ class StudentsEdit extends Component {
                                                 </select>
                                             </div>
                                             <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
-                                                {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                                 <Link to={"/students/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                                     <span className="btn-text">
                                                         Cancel
