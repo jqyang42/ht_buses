@@ -255,6 +255,7 @@ class UsersDetail extends Component {
         }
 
         // console.log(this.state.user.managed_schools)
+        console.log(this.state.user)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -268,8 +269,9 @@ class UsersDetail extends Component {
                                     <div className="col">
                                         <h5>
                                             {this.state.user.first_name} {this.state.user.last_name}
-                                            { localStorage.getItem('role') === 'School Staff' ? 
-                                                <span className="badge bg-yellow ms-2">In Transit</span> : ""
+                                            {/* TODO: Add check for if driver is in transit, not just if role is Driver */}
+                                            { this.state.user.role === 'Driver' ? 
+                                                <span className="badge bg-blue ms-2">In Transit</span> : ""
                                             }
                                         </h5>
                                         <h7>
@@ -433,7 +435,7 @@ class UsersDetail extends Component {
                                 } */}
 
                                 <div className="row mt-4 flex-wrap">
-                                    {this.state.user.managed_schools?.length !== 0 ? 
+                                    {this.state.user.role === "School Staff" && this.state.user.managed_schools?.length !== 0 ? 
                                         <div className="col me-4">      
                                             <h7 className="mb-4">MANAGED SCHOOLS</h7>
                                             {/* <ManagedSchoolsTable 
