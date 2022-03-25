@@ -268,6 +268,9 @@ class UsersDetail extends Component {
                                     <div className="col">
                                         <h5>
                                             {this.state.user.first_name} {this.state.user.last_name}
+                                            { localStorage.getItem('role') === 'School Staff' ? 
+                                                <span className="badge bg-yellow ms-2">In Transit</span> : ""
+                                            }
                                         </h5>
                                         <h7>
                                             {this.state.user.role ? this.state.user.role.toUpperCase() : ""}
