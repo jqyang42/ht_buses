@@ -32,6 +32,7 @@ import BusRoutes from "./templates/routes/routes";
 import BusRoutesDetail from "./templates/routes/routes-detail";
 import BusRoutesPlanner from "./templates/routes/routes-planner";
 import BusRoutesEdit from "./templates/routes/routes-edit";
+import BusRoutesTransitLog from "./templates/routes/routes-transit-log";
 
 import Email from './templates/components/email';
 import EmailReset from './templates/general/email-reset';
@@ -58,6 +59,7 @@ import { SCHOOLS_EDIT_URL } from "./constants";
 import { STUDENTS_EDIT_URL } from "./constants";
 import { USERS_EDIT_URL } from "./constants";
 import { ROUTES_EDIT_URL } from "./constants";
+import { ROUTES_TRANSIT_LOG_URL } from "./constants";
 import { SCHOOLS_EMAIL_URL } from './constants';
 import { ROUTES_EMAIL_URL } from './constants';
 import { PARENT_DASHBOARD_URL } from './constants';
@@ -102,6 +104,7 @@ class App extends Component {
           <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
           <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
           <Route path={ROUTES_EMAIL_URL} element={<Email source="Routes" />} />
+          <Route path={ROUTES_TRANSIT_LOG_URL} element={<BusRoutesTransitLog />} />
 
           <Route path={ACCOUNT_URL} element={<Account />} />
           <Route path={EMAIL_RESET_URL} element={<EmailReset />} />

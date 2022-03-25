@@ -319,9 +319,18 @@ class BusRoutesDetail extends Component {
                                                     </span>
                                                 </Link> : ""
                                             }
+                                            {
+                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff' || localStorage.getItem('role') === 'Driver') ?
+                                                <Link to={"/routes/" + this.props.params.id + "/transit-log"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-clock-history me-2"></i>
+                                                        Transit Log
+                                                    </span>
+                                                </Link> : ""
+                                            }
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
-                                                Export
+                                                Export Roster
                                             </button>
                                             {
                                                   (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
