@@ -27,7 +27,6 @@ import UsersImport from './templates/users/users-import';
 import UsersDetail from "./templates/users/users-detail";
 import UsersCreate from "./templates/users/users-create";
 import UsersEdit from "./templates/users/users-edit";
-// import UsersPassword from './templates/users/users-password';
 
 import BusRoutes from "./templates/routes/routes";
 import BusRoutesDetail from "./templates/routes/routes-detail";
@@ -58,7 +57,6 @@ import { ROUTES_PLANNER_URL } from "./constants";
 import { SCHOOLS_EDIT_URL } from "./constants";
 import { STUDENTS_EDIT_URL } from "./constants";
 import { USERS_EDIT_URL } from "./constants";
-// import { USERS_PASSWORD_URL } from './constants';
 import { ROUTES_EDIT_URL } from "./constants";
 import { SCHOOLS_EMAIL_URL } from './constants';
 import { ROUTES_EMAIL_URL } from './constants';

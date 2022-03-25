@@ -47,8 +47,6 @@ class ParentDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 stops_page: res.data.stops,
@@ -94,7 +92,6 @@ class ParentDetail extends Component {
             return <Navigate to={LOGIN_URL} />
         }
         if (this.state.error_status) {
-            // console.log("reached")
             return <ErrorPage code={this.state.error_code} />
         }
         if (Object.keys(this.state.student).length) {

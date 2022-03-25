@@ -24,7 +24,7 @@ class UsersDetail extends Component {
             school_id: '',
             route_id: null,
             student_school_id: '',
-            in_range: false // TODO USE REAL VALUE
+            in_range: false
         },
         schools_dropdown: [],
         routes_dropdown: [],
@@ -275,12 +275,6 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            {/* <Link to={"/users/" + this.props.params.id + "/change-password"} className="btn btn-primary float-end w-auto me-3" role="button">
-                                                <span className="btn-text">
-                                                    <i className="bi bi-key me-2"></i>
-                                                    Change Password
-                                                </span>
-                                            </Link> */}
                                             {(localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.user.location?.address ? "#addModal" : ""} onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>

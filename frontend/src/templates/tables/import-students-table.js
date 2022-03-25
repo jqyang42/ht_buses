@@ -60,31 +60,13 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 disableSort: true
             },
         ],
-        // [sort]
     )
-
-    // const columnHeaderClick = async (column) => {
-    //     switch (column.sortDirection) {
-    //       case 'none':
-    //         setSort({ sortDirection: 'ASC', accessor: column.id });
-    //         break;
-    //       case 'ASC':
-    //         setSort({ sortDirection: 'DESC', accessor: column.id });
-    //         break;
-    //       case 'DESC':
-    //         setSort({ sortDirection: 'none', accessor: column.id });
-    //         break;
-    //     }
-    // };
 
     return (
         <TableEditable
             columns={columns}
             origData={data}
             searchOn={false}
-            // searchLabel="Search by name or email..."
-            // ourGlobalFilterFunction={ourGlobalFilterFunction}
-            // showAll={showAll}
             navUrl={"/students/"}
             // rowProps={row => ({
             //     style: {

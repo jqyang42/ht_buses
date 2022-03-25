@@ -49,8 +49,6 @@ class BusRoutesPlanner extends Component {
                 canPreviousPage: null,
                 canNextPage: null,
                 totalPages: null,
-                // sortOptions: {},
-                // searchValue: ''
             },
             stops_page: [],
             stops_table: {
@@ -495,8 +493,6 @@ class BusRoutesPlanner extends Component {
             .then(res => {
                 this.switchStopsEditMode()
             })
-            // this.setState({ stops: res })
-            
         })
         
     }
@@ -674,13 +670,6 @@ class BusRoutesPlanner extends Component {
                                             <div className="col-auto align-self-center">
                                                 
                                                 <div className="row d-flex float-end me-0">
-                                                    {/* <select className="w-50 form-select float-end me-3" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                        <option selected value={0}>Select a Route</option>
-                                                        <option selected value={0}>Unassign Student</option>
-                                                        {this.state.route_dropdown.map(route => 
-                                                            <option value={route.value} id={route.display}>{route.display}</option>
-                                                        )}
-                                                    </select> */}
                                                     {/* TODO: Change onClick handler to dismiss */}
                                                     <button type="button" className="btn btn-secondary w-auto me-3" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
@@ -689,18 +678,6 @@ class BusRoutesPlanner extends Component {
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            {/* Cancel and Save buttons */}
-                                            {/* <div className="col-auto">
-                                                <div className="row d-inline-flex"> */}
-                                                    {/* TODO: Change onClick handler to dismiss */}
-                                                    {/* <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button> */}
-                                                    {/* TODO: Change onClick handler to save changes */}
-                                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}> */}
-                                                        {/* Save
-                                                    </button>
-                                                </div>
-                                            </div> */}
                                         </div>
                                         }
 
@@ -867,17 +844,9 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-// function RouteSelectDropdown() { 
-//     let routes = this.state.routes(route => {
-//         return {value: route.id, display: route.name}
-//     })
-//     this.setState({ route_dropdown: routes })
-// }
-
 export default (props) => (
     <BusRoutesPlanner
         {...props}
         params={useParams()}
     />
 );
-// export default BusRoutesPlanner;
