@@ -394,7 +394,14 @@ class UsersDetail extends Component {
                                         Unable to add student. Please correct all errors before adding.
                                     </div>) : ""
                                 }
+                                {/* TODO: Add check for if driver is in transit, add bus # and route name (with link) */}
+                                {(this.state.user.role === "School Staff") ? 
+                                        (<div class="alert alert-primary mt-4 mb-4" role="alert">
+                                            Currently in transit: Bus # on route [Route Name]
+                                        </div>) : ""
+                                    }
                                 <div className="row mt-4">
+                                    
                                     <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Email
