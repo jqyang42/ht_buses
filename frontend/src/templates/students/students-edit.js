@@ -11,6 +11,7 @@ import { LOGIN_URL, STUDENTS_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
 import { makeParentsDropdown, makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
 import { validNumber } from "../components/validation";
+import { emailValidation, phoneValidation } from "../components/validation";
 
 class StudentsEdit extends Component {
     state = {
@@ -20,6 +21,7 @@ class StudentsEdit extends Component {
         edited_student: {
             first_name: '',
             last_name: '',
+            email: '',
             student_school_id: null,
             school_id: null,
             route_id: null,
@@ -152,7 +154,7 @@ class StudentsEdit extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        if(!validNumber({ value_to_check: this.state.edited_student.student_school_id })) {
+        if(!emailValidation({ email: this.state.edited_user?.email }) || !validNumber({ value_to_check: this.state.edited_student.student_school_id })) {
             this.setState({ edit_success: -1 })
             return
         }
@@ -224,6 +226,22 @@ class StudentsEdit extends Component {
                                                       (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                            The Student ID value is invalid. Please edit and try again.
                                                       </div>) : ""
+                                                }
+                                            </div>
+                                            <div className="form-group pb-3 form-col">
+                                                <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
+                                                <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
+                                                defaultValue={this.state.student.email} placeholder="Enter student email" required
+                                                onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
+                                                    {(!emailValidation({ email: this.state.edited_student?.email})) ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Please enter a valid email
+                                                    </div>) : ""
+                                                }
+                                                 {(!this.state.valid_email) ? 
+                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                        Update unsuccessful. Please enter a different email, a student with this email already exists
+                                                    </div>) : ""
                                                 }
                                             </div>
                         

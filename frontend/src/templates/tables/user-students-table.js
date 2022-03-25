@@ -25,6 +25,12 @@ export function UserStudentsTable({ data, showAll, pageIndex, canPreviousPage, c
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
+            },
+            {
                 Header: 'School',
                 accessor: 'school_name',
                 id: 'school_name',
