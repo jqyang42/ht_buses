@@ -395,7 +395,7 @@ class UsersDetail extends Component {
                                     </div>) : ""
                                 }
                                 {/* TODO: Add check for if driver is in transit, add bus # and route name (with link) */}
-                                {(this.state.user.role === "School Staff") ? 
+                                {(this.state.user.role === "Driver") ? 
                                         (<div class="alert alert-primary mt-4 mb-4" role="alert">
                                             Currently in transit: Bus # on route [Route Name]
                                         </div>) : ""
