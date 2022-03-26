@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { RouteStudentsTable } from "../tables/route-students-table";
-import { StopsTable } from "../tables/stops-table";
 import RouteMap from '../routes/route-map';
+import { TransitStatusTable } from "../tables/transit-status-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
@@ -14,7 +12,6 @@ import { getPage } from "../tables/server-side-pagination";
 import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
-import { TransitStatusTable } from "../tables/transit-status-table";
 
 class SchoolsTransitStatus extends Component {
     state = {
