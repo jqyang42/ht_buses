@@ -131,8 +131,13 @@ def bulk_import(request):
             # check if student_id is an integer
             try:
                 valid_student_id = int(row["student_id"])
-                student_id = row["student_id"]
-                student_id_error = False
+                if valid_student_id < 0:
+                    student_id_error = True
+                    student_id = row["student_id"]
+                    student_id_error_message = "Student id must be a positive integer value"
+                else:
+                    student_id = row["student_id"]
+                    student_id_error = False
             except:
                 student_id_error = True
                 student_id = row["student_id"]
@@ -143,7 +148,7 @@ def bulk_import(request):
             school_name_error_message = "School name field cannot be empty"
         else:
             # Need a better check with schools --> School 1 is in system, if they type in School it will be like School 1 and we don't want that
-            school_name_clean = ' '.join(row["school_name"].strip().split()).casefold()
+            school_name_clean = ' '.join(row["school_name"].strip().split())
             school_name_clean = school_name_clean.lower()
             school_exists =  School.objects.filter(name__iexact=school_name_clean)
             if len(school_exists) == 0:

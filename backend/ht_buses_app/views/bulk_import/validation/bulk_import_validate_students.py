@@ -103,8 +103,13 @@ def bulk_import_validate(request):
             else:
                 try:
                     valid_student_id = int(row["student_id"])
-                    student_id = row["student_id"]
-                    student_id_error = False
+                    if valid_student_id < 0:
+                        student_id_error = True
+                        student_id = row["student_id"]
+                        student_id_error_message = "Student id must be a positive integer value"
+                    else:
+                        student_id = row["student_id"]
+                        student_id_error = False
                 except:
                     student_id_error = True
                     student_id = row["student_id"]

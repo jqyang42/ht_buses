@@ -24,7 +24,9 @@ def students_create(request):
             last_name = name[1]
             student_school_id = student["student_id"]
             all_validated_schools = get_objects_for_user(request.user, "change_school", School.objects.all())
-            school = all_validated_schools.filter(name=student["school_name"])
+            school_name_clean = ' '.join(student["school_name"].strip().split())
+            school_name_clean = school_name_clean.lower()
+            school = all_validated_schools.filter(name__iexact=school_name_clean)
             if len(school) != 0: 
                 school_serializer = SchoolSerializer(school[0], many=False)
                 student_school = School.objects.get(pk=school_serializer.data["id"])
