@@ -14,7 +14,6 @@ def encode_user(user):
 def decode_user(uuid):
     return force_str(urlsafe_base64_decode(uuid))
 
-
 def account_activation_url(user):
     uuid = encode_user(user)
     account_activation_token = activation_token_generator.make_token(user)
@@ -29,7 +28,6 @@ def password_reset_url(user):
 
 def generate_random_password():
     return User.objects.make_random_password(length=18) 
-
 
 def activation_params_valid(uuid, token):
     try:

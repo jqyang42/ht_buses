@@ -6,9 +6,11 @@ import re
 from ..resources import capitalize_reg
 from ..stops import check_in_range
 from ..routes import route_check_is_complete
+from ..accounts import account_tools, activate_account
+from guardian.shortcuts import assign_perm
 
 
-def create_student(student_info, id=None):
+def create_student(student_info, location, id=None):
     data = {}
     first_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info["first_name"])
     last_name = re.sub("(^|\s)(\S)", capitalize_reg.convert_to_cap, student_info["last_name"])
@@ -19,7 +21,7 @@ def create_student(student_info, id=None):
     except :
         data["message"] = "invalid options were chosen, student information update was unsuccessful"
         data["success"] = False
-        return Response(data)
+        return data
     try:
         route_id = Route.objects.get(pk = student_info['route_id'])
         student = Student.objects.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id=route_id)
@@ -38,7 +40,22 @@ def create_student(student_info, id=None):
         student = Student.objects.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id = route_id)
         student.in_range = False
         student.save()
-    user.is_parent = True
+    '''
+    try:
+        student_email = student_info["email"]
+        password = "asdfASDF5678" #account_tools.generate_random_password()
+        phone_number = student_info["phone_number"]
+        student_user = User.objects.create_user(email=student_email, first_name=first_name, last_name=last_name, address= location.address, password=password, lat=location.lat, lng=location.lng, role=User.STUDENT, phone_number = phone_number)
+        email_data = activate_account.send_account_activation_email(student_user)
+        email_sent = email_data["success"]
+        assign_perm("view_student, student_user, student_user)
+        #assign_perm("change_student, student_user, student_user) #may or may not need to add when changing change_password api 
+    except:
+        data["message"] = "student user account not created"
+        data["success"] = False
+        data["student"] = {"first_name": first_name, "last_name": last_name, "student_school_id": student_school_id, "route_id": str(student.route_id), "user_id": user.id}
+        return data 
+    '''
     user.save()
     data["message"] = "student created successfully"
     data["success"] = True

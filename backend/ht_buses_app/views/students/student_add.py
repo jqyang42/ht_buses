@@ -23,7 +23,7 @@ def add_new_students(request):
         return response_messages.DoesNotExist(data, "student's parent")
     try:
         for student in reqBody["students"]:
-            create_student(student, user_id)
+            create_student(student, user.location, user_id)
         data["message"] = "students created successfully"
         data["success"] = True
         return Response(data)

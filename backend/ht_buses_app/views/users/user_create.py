@@ -47,7 +47,7 @@ def user_create(request):
     try:
         if is_parent:
             for student in reqBody["user"]["students"]:
-                student_create.create_student(student, user.id)
+                student_create.create_student(student, user.location, user.id)
             data["message"] = "user and students created successfully"
     except:
         user.location.delete()
