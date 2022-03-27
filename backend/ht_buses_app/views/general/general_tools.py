@@ -7,9 +7,6 @@ from guardian.shortcuts import assign_perm, remove_perm
 from guardian.shortcuts import get_objects_for_user
 from ...groups import get_driver_group, get_admin_group
 
-def get_all_school_perms():
-    school_content_type = ContentType.objects.get_for_model(School)
-    return Permission.objects.filter(content_type=school_content_type)
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
@@ -26,7 +23,6 @@ def user_is_parent(user_id):
     except:
         return False
     return False
-
 
 def get_role_string(role_id):
     return User.role_choices[int(role_id)-1][1]
@@ -51,6 +47,10 @@ def get_object_for_user(user, model_object, access_level):
     else:
         raise PermissionDenied
 """
+
+def get_all_school_perms():
+    school_content_type = ContentType.objects.get_for_model(School)
+    return Permission.objects.filter(content_type=school_content_type)
 
 def permission_setup():
     admin_perms = [*get_all_school_perms()]
@@ -78,24 +78,6 @@ def assign_school_perms(user, schools):
     for perm in get_all_school_perms():
         new_perms_to_many_objects(user, perm, schools)
     return 
-
-def assign_user_perms(user, students):
-    for perm in get_all_user_perms():
-        new_perms_to_many_objects(user, perm, filtered_users_helper(students))
-    return 
-    
-#todo: get rid
-def reassign_after_creation(new_user):
-    if user_is_parent(new_user.pk):
-        students = Student.objects.filter(user_id = new_user)
-        schools = filtered_schools_helper(students)
-        for school in schools:
-            users_with_access = User.objects.filter(pk__in=[obj.pk for obj in User.objects.all() if obj.has_perm('change_school', school)])
-            for user in users_with_access: 
-                for perm in get_all_user_perms():
-                    assign_perm(perm, user, new_user)
-        return True
-    return False
 
 def remove_perms_to_many_objects(user, access_level, object_list): 
     if object_list is not None:
@@ -138,14 +120,6 @@ def reassign_groups(edited_user):
     elif edited_user.role == User.DRIVER:
         edited_user.groups.add(get_driver_group())
     edited_user.save()
-    return True
-
-
-def update_schools_staff_rights():
-    school_staffs = User.objects.filter(role = User.SCHOOL_STAFF)
-    for school_staff in school_staffs:
-        schools = get_objects_for_user(school_staff,"change_school", School.objects.all())
-        assign_school_staff_perms(school_staff, schools)
     return True
 
 def get_users_for_user(user):
