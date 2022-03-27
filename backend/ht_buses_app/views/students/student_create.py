@@ -40,6 +40,8 @@ def create_student(student_info, location, id=None):
         student = Student.objects.create(first_name=first_name, last_name=last_name, school_id=school_id, user_id=user, student_school_id=student_school_id, route_id = route_id)
         student.in_range = False
         student.save()
+    #create_student_account = student_info['create_student_account']
+    #if create_student_account: 
     '''
     try:
         student_email = student_info["email"]
