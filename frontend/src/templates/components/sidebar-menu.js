@@ -72,7 +72,7 @@ class SidebarMenu extends Component {
                                 <span className="ms-1 d-inline">Manage Users</span>
                             </a>
                         </li>
-                        {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
+                        {/* {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                             <>
                                 <li className='hbar my-4'></li>
                                 <li className={"nav-item " + dashboardTab}>
@@ -82,8 +82,7 @@ class SidebarMenu extends Component {
                                     </a>
                                 </li>
                             </> : ""
-                        }
-                        
+                        } */}
                     </ul>
                     <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
                         <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
