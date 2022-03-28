@@ -45,9 +45,12 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
             },     
             {
                 Header: 'Direction',
-                accessor: 'direction',
+                accessor: 'pickup',
                 disableFilter: true,
                 id: 'direction',
+                Cell: ({ cell: { value } }) => (
+                    value ? <div>{"To school"}</div> : <div>{"From school"}</div>
+                ),
                 sortDirection: sort.accessor === 'direction' ? sort.sortDirection : 'none'
             },     
             {
