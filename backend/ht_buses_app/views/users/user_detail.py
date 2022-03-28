@@ -95,7 +95,7 @@ def update_stored_user_info(request):
         data["user_id"] = user.id
         data["role_id"] = user.role
         data["role_value"] = get_role_string(user.role)
-        data["is_parent"] = user_is_parent(user.id)
+        # data["is_parent"] = user_is_parent(user.id)
         data["email"] = user.email
         data["first_name"] = user.first_name
         data["last_name"] = user.last_name
