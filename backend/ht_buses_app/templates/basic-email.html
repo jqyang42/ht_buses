@@ -11,7 +11,7 @@
         <div style="text-align: left; margin-top: 0px; width: 100%;">
             <h3 style="font-family: Helvetica Neue; margin-top: 0px; color: #343A40; font-size: 1.6em;">Hi {{first_name}} {{last_name}},</h3>
             <p></p>
-            <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Message from administrator: {{body}}</p>
+            <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Message from {{sender_role}}: {{body}}</p>
             <p></p>
             {% if include_parent_info %}
             <p style="font-family: Helvetica Neue; color: #6C757D; font-size: 1.2em;">Here are your students' information:</p>
