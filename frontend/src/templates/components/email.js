@@ -127,6 +127,11 @@ class Email extends Component {
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div  onChange={this.handleAnnouncementTypeChange.bind(this)} className="form-group required pb-3 form-col">
+                                                {(this.props.source === "Users") ? 
+                                                    (<div class="alert alert-primary mt-0 mb-3" role="alert">
+                                                        Emails can only be sent to parent users.
+                                                    </div>) : ""
+                                                }
                                                 <div>
                                                     <label for="announcementType" className="control-label pb-2">Announcement Type</label>
                                                 </div>

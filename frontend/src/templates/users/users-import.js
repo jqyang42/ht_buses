@@ -295,11 +295,15 @@ class UsersImport extends Component {
                                 </div>
 
                                 <div className="extra-margin">
+                                <div class="alert alert-primary mt-2 mb-2" role="alert">
+                                    Please note that you can only import parent users.
+                                </div>
                                 {this.state.loading ? 
-                                    <div class="alert alert-primary mt-2 mb-3" role="alert">
+                                    <div class="alert alert-primary mt-2 mb-2" role="alert">
                                         Please wait patiently while we load and verify your file import.
                                     </div> : ""
                                 }
+                                
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
                                         error.exclude ? "" :
