@@ -26,6 +26,13 @@ class School(models.Model):
                         ("add", "can create school"),
                       )
 
+class Bus(models.Model):
+    bus_number = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
+    is_running = models.BooleanField(default=False)
+
+
 class Route(models.Model):
     name = models.CharField(max_length=50)
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
@@ -43,6 +50,15 @@ class Route(models.Model):
                        ("delete", "can delete route"),
                         ("add", "can create route"),
                       )
+
+class Log(models.Model):
+    route_id = models.ForeignKey('Route', default=None, on_delete=models.CASCADE)
+    bus_number = models.IntegerField(default=0)
+    user_id = models.ForeignKey('User', default=None, on_delete=models.SET(None), blank=True, null=True)
+    date = models.DateField(default=datetime.date.today, blank=True)
+    start_time = models.TimeField(default=datetime.time(00,00), blank=True)
+    duration = models.DurationField(default=datetime.timedelta(hours=0))
+    pickup = models.BooleanField(default=False)
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
@@ -134,21 +150,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     SCHOOL_STAFF = 2
     DRIVER = 3
     GENERAL = 4
+    STUDENT = 5
     role_choices = (
         (ADMIN, "Administrator"),
         (SCHOOL_STAFF, "School Staff"),
         (DRIVER, "Driver"),
-        (GENERAL, "General")
+        (GENERAL, "General"),
+        (STUDENT, "Student")
     )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email',unique=True,max_length=254)
     phone_number = models.CharField(max_length=18, default=None, blank=True, null=True)
-    is_parent = models.BooleanField(default=False)
     role = models.PositiveSmallIntegerField(choices=role_choices, default=GENERAL)
     location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent', 'phone_number']
     objects = UserManager()
     class Meta:
         permissions = (
