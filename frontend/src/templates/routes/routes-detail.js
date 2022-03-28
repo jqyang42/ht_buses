@@ -329,13 +329,20 @@ class BusRoutesDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                (localStorage.getItem('role') === 'Driver') ?
-                                                <Link to={"/routes/" + this.props.params.id + "/run/start"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                (localStorage.getItem('role') === 'School Staff') ? 
+                                                (!this.state.in_transit ?
+                                                <Link to={"/routes/" + this.props.params.id + "/start-run"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
-                                                        <i className="bi bi-clock-history me-2"></i>
+                                                        <i className="bi bi-play-circle me-2"></i>
                                                         Start Run
                                                     </span>
-                                                </Link> : ""
+                                                </Link> :
+                                                <Link to={"/routes/" + this.props.params.id + "/stop-run"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-stop-circle me-2"></i>
+                                                        Stop Run
+                                                    </span>
+                                                </Link>) : ""
                                             }
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
