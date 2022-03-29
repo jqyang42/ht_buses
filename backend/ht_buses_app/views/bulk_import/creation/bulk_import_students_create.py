@@ -41,6 +41,8 @@ def students_create(request):
                     route_id = None,
                     user_id = parent
                 )
+            if student["student_email"] != "" or student["student_email"] is not None:
+                print("create student user here")
     data["success"] = True
     data["student_count"] = student_count
     return Response(data)
