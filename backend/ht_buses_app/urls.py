@@ -23,7 +23,7 @@ from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_js
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
-
+from . views.logs import log_create
 from . views.parents.detail import parent_student_stop
 from . models import User
 
@@ -92,7 +92,8 @@ urlpatterns = [
     path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
     path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete'),
     path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
-    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info")
+    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
+    path('api/logs/create', log_create.create_log, name='log-create')
 
 ]
 
