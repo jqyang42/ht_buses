@@ -612,7 +612,8 @@ class UsersCreate extends Component {
                                                                                 <label for={"exampleInputStudentEmail" + count} className="control-label pb-2">Student Email</label>
                                                                                 <input type="email" className="form-control pb-2" id={"exampleInputStudentEmail" + count} 
                                                                                 defaultValue={this.state.students[this.accordionIndex(count)].email} placeholder="Enter student email" required
-                                                                                onChange={(e) => this.handleSchoolChange(e, count)} ></input>
+                                                                                onChange={(e) => this.handlStudentEmailChange(e, count)} ></input>
+                                                                                    <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email with create a user account for this student</small>
                                                                                     {(!emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                                         Please enter a valid email
