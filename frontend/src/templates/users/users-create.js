@@ -362,10 +362,11 @@ class UsersCreate extends Component {
         event.preventDefault();
         const valid_email = emailValidation({ email: this.state.new_user.email })
         const valid_address = this.checkNonParentAddress()
-        const valid_id = this.validatedStudentIDS()
+        const valid_student_emails= this.validatedStudentEmails()
+        const valid_student_ids = this.validatedStudentIDS()
         const not_general = this.state.new_user.role_id !== 0
         const added_student_school_staff = this.state.added_student_school_staff
-        if (!(valid_email && valid_address && valid_id && not_general && added_student_school_staff)) {
+        if (!(valid_email && valid_address && valid_student_ids && not_general && added_student_school_staff && valid_student_emails)) {
             this.setState({ create_success: -1 })
             return 
           }
@@ -440,6 +441,17 @@ class UsersCreate extends Component {
         for(var i = 0; i< this.state.students.length; i++) {
             const id = this.state.students[i].student_school_id
             if (!validNumber({ value_to_check: id })) {
+                return false
+            }
+        }
+        return true 
+    }
+
+
+    validatedStudentEmails = () => {
+        for(var i = 0; i< this.state.students.length; i++) {
+            const email = this.state.students[i].email
+            if (!emailValidation({ email: this.state.students[i].email}) &&  this.state.students[i].email != "") {
                 return false
             }
         }
@@ -613,7 +625,7 @@ class UsersCreate extends Component {
                                                                                 <input type="email" className="form-control pb-2" id={"exampleInputStudentEmail" + count} 
                                                                                 defaultValue={this.state.students[this.accordionIndex(count)].email} placeholder="Enter student email" required
                                                                                 onChange={(e) => this.handlStudentEmailChange(e, count)} ></input>
-                                                                                    <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email with create a user account for this student</small>
+                                                                                    <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student</small>
                                                                                     {(!emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                                         Please enter a valid email
