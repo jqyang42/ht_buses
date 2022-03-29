@@ -1,11 +1,10 @@
-from time import time
 from ...serializers import LogSerializer
 from ...models import User, Route, Log
 from rest_framework.response import Response
 import json
 from datetime import datetime
 from datetime import date
-from ...role_permissions import IsAdmin,IsSchoolStaff, IsDriver
+from ...role_permissions import IsAdmin, IsDriver
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 
