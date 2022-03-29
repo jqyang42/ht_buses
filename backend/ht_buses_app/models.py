@@ -31,6 +31,7 @@ class Bus(models.Model):
     last_updated = models.DateTimeField(default=datetime.datetime.now, blank=True)
     location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
     is_running = models.BooleanField(default=False)
+    objects = models.Manager()
 
 
 class Route(models.Model):
@@ -59,6 +60,12 @@ class Log(models.Model):
     start_time = models.TimeField(default=datetime.time(00,00), blank=True)
     duration = models.DurationField(default=datetime.timedelta(hours=0))
     pickup = models.BooleanField(default=False)
+    objects = models.Manager()
+    class Meta:
+        indexes = [
+            models.Index(fields=['route_id']),
+            models.Index(fields=['user_id']),
+        ]
 
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
