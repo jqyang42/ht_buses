@@ -45,7 +45,7 @@ def log_pagination(logs, page_number):
         start_time = log["start_time"]
         duration = log["duration"]
         pickup = log["pickup"]
-        log_arr.append({"id": log["id"], "route_name": route_name, "school_name": school_name, "bus_number": bus_number, "user": user_obj, "date": date, "start_time": start_time[:-9], "duration": duration[:-3], "pickup": pickup})
+        log_arr.append({"id": log["id"], "route_name": route_name, "school_name": school_name, "bus_number": bus_number, "user": user_obj, "date": date, "start_time": start_time[:-10], "duration": duration[:-3], "pickup": pickup})
 
     data["logs"] = log_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
