@@ -73,7 +73,8 @@ class Student(models.Model):
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=None, on_delete=models.SET(None), blank=True, null=True)
-    user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE) 
+    user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE, related_name='user_id') 
+    account = models.ForeignKey('User', default=None, blank=True, null=True, on_delete=models.SET(None), related_name='account_id')
     in_range = models.BooleanField(default=False)
     objects = models.Manager()
     class Meta:
