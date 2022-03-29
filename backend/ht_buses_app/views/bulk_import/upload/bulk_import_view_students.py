@@ -54,7 +54,7 @@ def bulk_import(request):
     # skip the header
 
     for row in reader:
-        # name, parent_email, student_id, school_name
+        # name, parent_email, student_id, school_name, student_email, phone_number
         school_name_error_message = ""
         email_error_message = ""
         name_error_message = ""

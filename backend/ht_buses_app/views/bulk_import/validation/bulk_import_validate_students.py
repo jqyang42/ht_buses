@@ -33,7 +33,7 @@ def bulk_import_validate(request):
         student_email_error_message = ""
         phone_number_error_message = ""
         exclude = False
-        # name, parent_email, student_id, school_name
+        # name, parent_email, student_id, school_name, student_email, phone_number
         if row["exclude"] == False:
             if row["parent_email"] is None or row["parent_email"] == "":
                 email_error = True
