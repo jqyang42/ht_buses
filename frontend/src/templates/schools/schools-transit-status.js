@@ -48,21 +48,26 @@ class SchoolsTransitStatus extends Component {
         map_redirect_dropoff: [],
     }
 
+    interval_id = null
+
     componentDidMount() {
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
-        // this.periodicCall()
+        this.periodicCall()
+    }
 
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
     }
 
     periodicCall = () => {
-        const interval = setInterval(() => {
-            console.log(`hello`)
-            // const result = await api.get(`students`)
+        this.interval_id = setInterval(async () => {
+            // @jessica update with correct api 
+            const result = await api.get(`students/detail?id=4`)
+            console.log(result.data)
         }, 1000)
-        return () => clearInterval(interval)
     }
 
     // pagination
