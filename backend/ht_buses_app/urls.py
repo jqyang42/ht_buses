@@ -17,7 +17,6 @@ from . views.stops import stops_create, stops_view_pag, stops_edit, stops_delete
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
-from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
 from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
@@ -54,7 +53,6 @@ urlpatterns = [
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
     path('api/users/edit/validate-email', user_edit.valid_email_edit, name="validate_email_edit"),
-    path('api/users/school', user_school.user_school_view, name="user_school"),
     path('api/email_exists', general_apis.email_exists, name="email_exists"),
     path('api/users/delete', user_delete.user_delete, name = "delete_user"),
     path('api/routeplanner', route_planner.routeplanner, name="routeplanner"),
