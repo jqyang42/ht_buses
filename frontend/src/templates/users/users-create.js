@@ -598,6 +598,22 @@ class UsersCreate extends Component {
                                                                                 <input type="id" className="form-control pb-2" id={"exampleInputID" + count} 
                                                                                 value={this.state.students[this.accordionIndex(count)].student_school_id} placeholder="Enter student ID" required onChange={(e) => this.handleStudentIDChange(e, count)}></input>
                                                                             </div>
+                                                                            <div className="form-group pb-3">
+                                                                                <label for={"exampleInputStudentEmail" + count} className="control-label pb-2">Student Email</label>
+                                                                                <input type="email" className="form-control pb-2" id={"exampleInputStudentEmail" + count} 
+                                                                                defaultValue={this.state.students[this.accordionIndex(count)].email} placeholder="Enter student email" required
+                                                                                onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
+                                                                                    {(!emailValidation({ email: this.state.edited_student?.email})) ? 
+                                                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                                        Please enter a valid email
+                                                                                    </div>) : ""
+                                                                                }
+                                                                                {(!this.state.valid_email) ? 
+                                                                                    (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                                        Update unsuccessful. Please enter a different email, a student with this email already exists
+                                                                                    </div>) : ""
+                                                                                }
+                                                                            </div>
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
                                                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School" value={this.state.students[this.accordionIndex(count)].school_id} 

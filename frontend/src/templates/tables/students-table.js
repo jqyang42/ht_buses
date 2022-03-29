@@ -27,6 +27,12 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
+            },
+            {
                 Header: 'School',
                 accessor: 'school_name',
                 id: 'school_name',
@@ -90,7 +96,7 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by id or name..."
+            searchLabel="Search by id, name or email..."
             showAll={showAll}
             navUrl={"/students/"}
             rowProps={row => ({

@@ -28,6 +28,13 @@ export function RouteStudentsTable({ data, showAll, pageIndex, canPreviousPage, 
                 disableSortBy: true
             },
             {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none',
+                disableSortBy: true
+            },
+            {
                 Header: 'Bus Stops',
                 accessor: 'in_range',
                 disableFilter: true,

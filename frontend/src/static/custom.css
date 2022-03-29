@@ -288,6 +288,16 @@ li.page-item a[disabled]:hover {
     color: #ffffff;
 }
 
+.bg-yellow {
+    background-color: #FFC107;
+    color: #ffffff;
+}
+
+.bg-blue {
+    background-color: #0a58ca;
+    color: #ffffff;
+}
+
 .badge {
     font-size: 0.6em;
     font-weight: 500;

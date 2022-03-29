@@ -321,7 +321,7 @@ class BusRoutesDetail extends Component {
                                             }
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
-                                                Export
+                                                Export Roster
                                             </button>
                                             {
                                                   (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
