@@ -8,6 +8,7 @@ from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import has_access_to_object
 from ..general import response_messages
+from . student_account import get_students_user
 
 
 # Student DELETE API
@@ -37,6 +38,9 @@ def student_delete(request):
             is_complete = route_check_is_complete.route_is_complete(route_id)
             route.is_complete = is_complete
             route.save()
+        if get_students_user(student_object) is not None:
+            student_user = get_students_user(student_object)
+            student_user.delete()
         data["message"] = "student successfully deleted"
         data["success"] = True
         return Response(data)

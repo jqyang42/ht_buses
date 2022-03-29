@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from ....serializers import SchoolSerializer, UserSerializer
 import json
 from guardian.shortcuts import get_objects_for_user
+from ...students.student_account import create_student_account
 
 # Bulk Import POST API: Create Students :)
 @csrf_exempt
@@ -41,8 +42,9 @@ def students_create(request):
                     route_id = None,
                     user_id = parent
                 )
+            print(student["student_email"])
             if student["student_email"] != "" or student["student_email"] is not None:
-                print("create student user here")
+                create_student_account(student,student["student_email"]) 
     data["success"] = True
     data["student_count"] = student_count
     return Response(data)
