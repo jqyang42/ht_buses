@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import RouteMap from '../routes/route-map';
@@ -15,7 +15,7 @@ import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 
 class SchoolsTransitStatus extends Component {
     state = {
-        route : [],
+        route: [],
         students : [],
         users: [],
         school : [],
@@ -53,6 +53,16 @@ class SchoolsTransitStatus extends Component {
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
+        // this.periodicCall()
+
+    }
+
+    periodicCall = () => {
+        const interval = setInterval(() => {
+            console.log(`hello`)
+            // const result = await api.get(`students`)
+        }, 1000)
+        return () => clearInterval(interval)
     }
 
     // pagination
