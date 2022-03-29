@@ -23,7 +23,7 @@ def user_delete(request):
         return response_messages.PermissionDenied(data, "user")
     try:
         user_object.location.delete()
-        user_object.delete()
+        user_object.delete() #need to delete student account for associated students + delete student object if user deleted is student 
         data["message"] = "user successfully deleted"
         data["success"] = True
         return Response(data)

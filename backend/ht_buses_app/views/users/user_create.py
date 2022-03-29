@@ -43,6 +43,7 @@ def user_create(request):
     user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
+    is_parent = ["user"]['is_parent']
     try:
         if is_parent:
             for student in reqBody["user"]["students"]:
