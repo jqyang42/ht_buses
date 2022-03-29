@@ -34,7 +34,7 @@ class StudentsDetail extends Component {
         api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
             const data = res.data
-            // console.log(data)
+            console.log(data)
             this.setState({ 
                 student: data.student, 
                 route: data.route, 
