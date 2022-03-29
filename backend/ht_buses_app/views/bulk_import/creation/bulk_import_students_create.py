@@ -42,7 +42,7 @@ def students_create(request):
                     route_id = None,
                     user_id = parent
                 )
-            if student["student_email"] != "" or student["student_email"] is not None:
+            if student["student_email"] != "" and student["student_email"] is not None:
                 create_student_account(student_object,student["student_email"]) 
     data["success"] = True
     data["student_count"] = student_count
