@@ -167,7 +167,7 @@ def bulk_import_validate(request):
                 else:
                     school_name_error = False
 
-            if row["phone_number"] is None or row["phone_number"] == "":
+            if (row["phone_number"] is None or row["phone_number"] == "") and (row["student_email"] is not None or row["student_email"] != ""):
                 phone_number_error = True
                 phone_number_error_message = "Phone number cannot be empty"
             else:
