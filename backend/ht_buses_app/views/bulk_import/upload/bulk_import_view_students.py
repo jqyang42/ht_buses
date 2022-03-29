@@ -60,6 +60,7 @@ def bulk_import(request):
         name_error_message = ""
         student_id_error_message = ""
         student_email_error_message = ""
+        phone_number_error_message = ""
         exclude = False
         if row["parent_email"] is None or row["parent_email"] == "":
             email_error = True
