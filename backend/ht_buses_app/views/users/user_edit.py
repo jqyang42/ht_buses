@@ -44,14 +44,6 @@ def user_edit(request):
         user_object.location.lng = reqBody["user"]["location"]["lng"]
         user_object.phone_number = reqBody["user"]["phone_number"]
         user_object.location.save()
-        """
-        if User.role_choices[0][1] == reqBody["user"]["role"]:
-            user_object.role = User.ADMIN
-        if User.role_choices[1][1] == reqBody["user"]["role"]:
-            user_object.role = User.DRIVER
-        if User.role_choices[2][1] == reqBody["user"]["role"]:
-            user_object.role = User.SCHOOL_STAFF
-        """
         user_object.save()
         if reqBody["user"]["role_id"] == None or reqBody["user"]["role_id"] > 4 or reqBody["user"]["role_id"] < 0:
             user_object.role = User.GENERAL

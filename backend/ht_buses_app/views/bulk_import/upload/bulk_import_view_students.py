@@ -42,14 +42,11 @@ def bulk_import(request):
     reader = csv.DictReader(csv_file, delimiter=',')
     header_csv = reader.fieldnames
     if len(header_csv) == len(headers):
-        print("failed 1")
         if header_csv[0] != headers[0] or header_csv[1] != headers[1] or header_csv[2] != headers[2] or header_csv[3] != headers[3]:
-            print("failed")
             data["students"] = {}
             data["success"] = False
             return Response(data, status=404)
     else:
-        print("failed 2")
         data["students"] = {}
         data["success"] = False
         return Response(data, status=404)
