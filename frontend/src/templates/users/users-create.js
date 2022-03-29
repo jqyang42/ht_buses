@@ -232,6 +232,15 @@ class UsersCreate extends Component {
         this.setState({ students: students })
     }
 
+    handlStudentEmailChange = (event, student_num) => {
+        const index = this.state.added_students_list.indexOf(student_num)
+        let students = [...this.state.students]
+        let student = {...students[index]}
+        student.email = event.target.value
+        students[index] = student
+        this.setState({ students: students })
+    }
+
     handleStudentIDChange = (event, student_num) => {
         const index = this.state.added_students_list.indexOf(student_num)
         let students = [...this.state.students]
@@ -286,6 +295,7 @@ class UsersCreate extends Component {
             school_id: '',
             route_id: null,   //TODO: replicate?
             student_school_id: '',
+            email: '',
             in_range: false // TODO USE REAL VALUE
         }
 
@@ -602,8 +612,8 @@ class UsersCreate extends Component {
                                                                                 <label for={"exampleInputStudentEmail" + count} className="control-label pb-2">Student Email</label>
                                                                                 <input type="email" className="form-control pb-2" id={"exampleInputStudentEmail" + count} 
                                                                                 defaultValue={this.state.students[this.accordionIndex(count)].email} placeholder="Enter student email" required
-                                                                                onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
-                                                                                    {(!emailValidation({ email: this.state.edited_student?.email})) ? 
+                                                                                onChange={(e) => this.handleSchoolChange(e, count)} ></input>
+                                                                                    {(!emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                                         Please enter a valid email
                                                                                     </div>) : ""

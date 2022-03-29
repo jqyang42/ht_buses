@@ -17,6 +17,8 @@ def create_student_account(student_object, student_email):
         email_sent = email_data["success"]
         #assign_perm("view_user", student_object, student_user) will need to add parameter to student object 
         assign_perm("view_student", student_user, student_object)
+        student_object.account = student_user
+        student_object.save()
         data["message"] = "student account was created"
         data["success"] = True
         data["student_user"] = {"first_name": student_user.first_name, "last_name": student_user.last_name, "email": student_user.email}
@@ -27,19 +29,15 @@ def create_student_account(student_object, student_email):
         data["student_user"] = {"first_name": "None", "last_name": "None", "email": "None"}
         return data 
 
-def get_students_user(student_object):
-    #find another way to do this 
-    return User.objects.none()
-
 def get_students_email(student_object):
-    student_user = get_students_user(student_object)
+    student_user = student_object.account
     try:
         email = student_user.email 
     except:
         return ""
 
 def update_students_user(student_object, student_email):
-    student_user = get_students_user(student_object)
+    student_user = student_object.account
     if student_user is not None:
         student_user.first_name = student_object.first_name
         student_user.last_name = student_object.last_name

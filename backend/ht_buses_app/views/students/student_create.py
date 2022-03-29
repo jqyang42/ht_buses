@@ -43,7 +43,7 @@ def create_student(student_info, id=None):
         student.save()
     data["message"] = "student created successfully"
     try:
-        student_email = student_info["student_email"]
+        student_email = student_info["email"]
     except:
         student_email = ""
     if student_email != "":
