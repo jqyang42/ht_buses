@@ -46,6 +46,7 @@ class SchoolsTransitStatus extends Component {
         },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
+        test: 0
     }
 
     interval_id = null
@@ -63,10 +64,18 @@ class SchoolsTransitStatus extends Component {
     }
 
     periodicCall = () => {
-        this.interval_id = setInterval(async () => {
-            // @jessica update with correct api 
-            const result = await api.get(`students/detail?id=4`)
-            console.log(result.data)
+        // this.interval_id = setInterval(async () => {
+        //     // @jessica update with correct api 
+        //     const result = await api.get(`students/detail?id=4`)
+        //     console.log(result.data)
+        // }, 1000)
+
+        this.interval_id = setInterval(() => {
+            this.setState(prevState => ({
+                test: prevState.test + 1
+            }))
+
+            console.log(this.state.test)
         }, 1000)
     }
 
