@@ -1,4 +1,4 @@
-from ...models import User
+from ...models import User, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -23,7 +23,12 @@ def user_delete(request):
         return response_messages.PermissionDenied(data, "user")
     try:
         user_object.location.delete()
-        user_object.delete() #need to delete student account for associated students + delete student object if user deleted is student 
+        students = Student.objects.filter(user_id = user_object)
+        for student in students:
+            if student.account is not None:  #TODO: make sure works
+                student_user = student.account
+                student_user.delete()
+        user_object.delete()
         data["message"] = "user successfully deleted"
         data["success"] = True
         return Response(data)
