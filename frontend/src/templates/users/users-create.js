@@ -78,7 +78,7 @@ class UsersCreate extends Component {
     }
 
     // api calls
-    // validateNewEmail = async (request) => {
+    //validateNewEmail = async (request) => {
     //     const res = await api.post(`email_exists`, request)
     //     const email_exists = res.data.user_email_exists
     //     const is_parent_email = res.data.is_parent_email
@@ -306,6 +306,7 @@ class UsersCreate extends Component {
             student_school_id: '',
             email: '',
             phone_number: '',
+            valid_email: 0,
             in_range: false // TODO USE REAL VALUE
         }
 
@@ -372,44 +373,44 @@ class UsersCreate extends Component {
         event.preventDefault();
         const valid_email = emailValidation({ email: this.state.new_user.email })
         const valid_address = this.checkNonParentAddress()
-        const valid_student_emails= this.validatedStudentEmails()
         const valid_student_ids = this.validatedStudentIDS()
         const not_general = this.state.new_user.role_id !== 0
         const added_student_school_staff = this.state.added_student_school_staff
-        if (!(valid_email && valid_address && valid_student_ids && not_general && added_student_school_staff && valid_student_emails)) {
-            this.setState({ create_success: -1 })
-            return 
-          }
-        else {
-            const request = {
-                user: {
-                    email: this.state.new_user.email
-                }            
-            }
+        this.validatedStudentEmails().then(valid_student_emails => {
+            if (!(valid_email && valid_address && valid_student_ids && not_general && added_student_school_staff && valid_student_emails)) {
+                this.setState({ create_success: -1 })
+                return 
+              }
+            else {
+                const request = {
+                    user: {
+                        email: this.state.new_user.email
+                    }            
+                } 
+                api.post(`email_exists`, request)
+                .then(res => {
+                    const email_exists = res.data.user_email_exists
+                    const is_parent_email = res.data.is_parent_email
+                    const existing_user_id = res.data?.user_id
     
-            api.post(`email_exists`, request)
-            .then(res => {
-                // console.log(res)
-                const email_exists = res.data.user_email_exists
-                const is_parent_email = res.data.is_parent_email
-                const existing_user_id = res.data?.user_id
-
-                if (!email_exists) {
-                    this.sendCreateRequest()
-                }
-
-                this.setState({ 
-                    valid_email: !email_exists,
-                    existing_user_id: existing_user_id,
-                    email_api_checked: true
-                }, () => {
-                    if (email_exists && is_parent_email && this.state.is_school_staff) {
-                        this.openAddStudentsModal()
+                    if (!email_exists) {
+                        this.sendCreateRequest()
                     }
+    
+                    this.setState({ 
+                        valid_email: !email_exists,
+                        existing_user_id: existing_user_id,
+                        email_api_checked: true
+                    }, () => {
+                        if (email_exists && is_parent_email && this.state.is_school_staff) {
+                            this.openAddStudentsModal()
+                        }
+                    })
                 })
-            })
-          }
-    }
+            }
+        })
+        
+    }    
         
     addStudentsToExisting = () => {
         const students = {
@@ -458,14 +459,46 @@ class UsersCreate extends Component {
     }
 
 
-    validatedStudentEmails = () => {
+    validatedStudentEmails = async (request) => {
+        if (this.state.students.length === 0) {
+            return true 
+        }
+        let valid_student_emails = true
         for(var i = 0; i< this.state.students.length; i++) {
             const email = this.state.students[i].email
-            if (!emailValidation({ email: this.state.students[i].email}) &&  this.state.students[i].email != "") {
+            if (!emailValidation({ email: this.state.students[i].email}) && this.state.students[i].email != "") {
                 return false
             }
+            if (email !== "") {
+            const info = {
+                user: { email: email }            
+            }
+            const res = await api.post(`email_exists`, info)
+            const email_exists = res.data.user_email_exists
+            if (email_exists === true) {
+                valid_student_emails = false
+                let students = [...this.state.students]
+                let student = {...students[i]}
+                student.valid_email = -1
+                students[i] = student
+                this.setState({ 
+                students: students
+                })
+            }
+            else {
+                let students = [...this.state.students]
+                let student = {...students[i]}
+                student.valid_email = 1
+                students[i] = student
+                this.setState({ 
+                students: students
+                })
+            }
+            }
+            if(i === (this.state.students.length -1)) {
+                return valid_student_emails 
+            }
         }
-        return true 
     }
 
     accordionIndex = (count) => {
@@ -641,9 +674,9 @@ class UsersCreate extends Component {
                                                                                         Please enter a valid email
                                                                                     </div>) : ""
                                                                                 }
-                                                                                {(!this.state.valid_email) ?  {/* @Fern add check for existingstudent email */}
+                                                                                {(this.state.students[this.accordionIndex(count)].valid_email === -1 ) ?  
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                                                        Update unsuccessful. Please enter a different email, a student with this email already exists
+                                                                                        Creation unsuccessful. Please enter a different email, a student with this email already exists
                                                                                     </div>) : ""
                                                                                 }
                                                                             </div>
