@@ -44,10 +44,8 @@ def user_create(request):
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
     is_parent = reqBody["user"]["is_parent"]
-    print(is_parent)
     try:
         if is_parent:
-            print(reqBody["user"]["students"])
             for student in reqBody["user"]["students"]:
                 student_create.create_student(student, user.id)
             data["message"] = "user and students created successfully"

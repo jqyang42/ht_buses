@@ -46,8 +46,12 @@ def create_student(student_info, id=None):
         student_email = student_info["email"]
     except:
         student_email = ""
+    try:
+        student_phone = student_info["phone_number"]
+    except:
+        student_phone = ""
     if student_email != "":
-        student_account_data = create_student_account(student, student_email)
+        student_account_data = create_student_account(student, student_email, student_phone)
         if not student_account_data["success"]:
             data["message"] = "student created successfully but account was not created"
     user.save()

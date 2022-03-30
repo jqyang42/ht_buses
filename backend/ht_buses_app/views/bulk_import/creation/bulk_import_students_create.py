@@ -43,7 +43,11 @@ def students_create(request):
                     user_id = parent
                 )
             if student["student_email"] != "" and student["student_email"] is not None:
-                create_student_account(student_object,student["student_email"]) 
+                try:
+                    student_phone = student["phone_number"]
+                except:
+                    student_phone = ""
+                create_student_account(student_object,student["student_email"], student_phone) 
     data["success"] = True
     data["student_count"] = student_count
     return Response(data)

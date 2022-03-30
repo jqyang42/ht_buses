@@ -54,8 +54,8 @@ def student_edit(request):
         student_object.route_id = None
         student_object.in_range = False
     student_object.save()
-    if reqBody["student"]["student_email"] != "":
-        update_students_user(student_object, reqBody["student"]["student_email"])
+    if reqBody["student"]["email"] != "":
+        update_students_user(student_object, reqBody["student"]["email"])
     else: 
         if student_object.account is not None:
             student_user = student_object.account

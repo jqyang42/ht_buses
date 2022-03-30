@@ -406,9 +406,11 @@ class UsersDetail extends Component {
                                         <p className="gray-600">
                                             Email
                                         </p>
+                                        {this.state.user.phone_number !== "" ?
                                         <p className="gray-600">
                                             Phone
-                                        </p>
+                                        </p> : ""
+                                        }
                                         <p className="gray-600">
                                             Address
                                         </p>
@@ -418,7 +420,7 @@ class UsersDetail extends Component {
                                             {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number}
+                                            {this.state.user.phone_number }
                                         </p>
                                         <p>
                                             {this.state.user.location?.address}

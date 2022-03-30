@@ -251,6 +251,15 @@ class UsersCreate extends Component {
         this.setState({  student_ids_changed : true })
     }
 
+    handleStudentPhoneChange = (event, student_num) => {
+        const index = this.state.added_students_list.indexOf(student_num)
+        let students = [...this.state.students]
+        let student = {...students[index]}
+        student.phone_number = event.target.value
+        students[index] = student
+        this.setState({ students: students })
+    }
+
     handleSchoolChange = (event, student_num) => {
         const school_id = event.target.value       
         const index = this.state.added_students_list.indexOf(student_num)        
@@ -296,6 +305,7 @@ class UsersCreate extends Component {
             route_id: null,   //TODO: replicate?
             student_school_id: '',
             email: '',
+            phone_number: '',
             in_range: false // TODO USE REAL VALUE
         }
 
@@ -631,12 +641,19 @@ class UsersCreate extends Component {
                                                                                         Please enter a valid email
                                                                                     </div>) : ""
                                                                                 }
-                                                                                {(!this.state.valid_email) ? 
+                                                                                {(!this.state.valid_email) ?  {/* @Fern add check for existingstudent email */}
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                                                         Update unsuccessful. Please enter a different email, a student with this email already exists
                                                                                     </div>) : ""
                                                                                 }
                                                                             </div>
+                                                                            {(emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
+                                                                                    (<div className="form-group pb-3">
+                                                                                    <label for={"examplePhoneNumber" + count} className="control-label pb-2">Student Phone Number <i>(optional)</i></label>
+                                                                                    <input type="name" className="form-control pb-2" id={"examplePhoneNumber" + count}
+                                                                                    value={this.state.students[this.accordionIndex(count)].phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e, count)}></input>
+                                                                                </div>) : ""
+                                                                            }
                                                                             <div className="form-group required pb-3">
                                                                                 <label for={"exampleInputSchool" + count} className="control-label pb-2">School</label>
                                                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School" value={this.state.students[this.accordionIndex(count)].school_id} 
