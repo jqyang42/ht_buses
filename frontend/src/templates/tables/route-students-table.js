@@ -14,7 +14,7 @@ export function RouteStudentsTable({ data, showAll, pageIndex, canPreviousPage, 
     const columns = React.useMemo(
         () => [
             {
-                Header: 'Student ID',
+                Header: 'ID',
                 accessor: 'student_school_id', // accessor is the "key" in the data
                 id: 'student_school_id',
                 // sortDirection: sort.accessor === 'student_school_id' ? sort.sortDirection : 'none',
@@ -25,6 +25,13 @@ export function RouteStudentsTable({ data, showAll, pageIndex, canPreviousPage, 
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
                 // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none',
+                disableSortBy: true
+            },
+            {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                // sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none',
                 disableSortBy: true
             },
             {

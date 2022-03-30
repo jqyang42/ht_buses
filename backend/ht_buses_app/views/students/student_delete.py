@@ -37,6 +37,9 @@ def student_delete(request):
             is_complete = route_check_is_complete.route_is_complete(route_id)
             route.is_complete = is_complete
             route.save()
+        if student_object.account is not None:
+            student_user = student_object.account
+            student_user.delete()
         data["message"] = "student successfully deleted"
         data["success"] = True
         return Response(data)

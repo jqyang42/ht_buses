@@ -255,6 +255,7 @@ class UsersDetail extends Component {
         }
 
         // console.log(this.state.user.managed_schools)
+        console.log(this.state.user)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -268,6 +269,10 @@ class UsersDetail extends Component {
                                     <div className="col">
                                         <h5>
                                             {this.state.user.first_name} {this.state.user.last_name}
+                                            {/* TODO: Add check for if driver is in transit, not just if role is Driver */}
+                                            { this.state.user.role === 'Driver' ? 
+                                                <span className="badge bg-blue ms-2">In Transit</span> : ""
+                                            }
                                         </h5>
                                         <h7>
                                             {this.state.user.role ? this.state.user.role.toUpperCase() : ""}
@@ -389,14 +394,23 @@ class UsersDetail extends Component {
                                         Unable to add student. Please correct all errors before adding.
                                     </div>) : ""
                                 }
+                                {/* TODO: Add check for if driver is in transit, add bus # and route name (with link) */}
+                                {(this.state.user.role === "Driver") ? 
+                                        (<div class="alert alert-primary mt-4 mb-4" role="alert">
+                                            Currently in transit: Bus # on route [Route Name]
+                                        </div>) : ""
+                                    }
                                 <div className="row mt-4">
+                                    
                                     <div className="col-auto me-2">
                                         <p className="gray-600">
                                             Email
                                         </p>
+                                        {this.state.user.phone_number !== "" ?
                                         <p className="gray-600">
                                             Phone
-                                        </p>
+                                        </p> : ""
+                                        }
                                         <p className="gray-600">
                                             Address
                                         </p>
@@ -406,7 +420,7 @@ class UsersDetail extends Component {
                                             {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number}
+                                            {this.state.user.phone_number }
                                         </p>
                                         <p>
                                             {this.state.user.location?.address}
@@ -430,7 +444,7 @@ class UsersDetail extends Component {
                                 } */}
 
                                 <div className="row mt-4 flex-wrap">
-                                    {this.state.user.managed_schools?.length !== 0 ? 
+                                    {this.state.user.role === "School Staff" && this.state.user.managed_schools?.length !== 0 ? 
                                         <div className="col me-4">      
                                             <h7 className="mb-4">MANAGED SCHOOLS</h7>
                                             {/* <ManagedSchoolsTable 

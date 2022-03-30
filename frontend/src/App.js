@@ -11,6 +11,7 @@ import ParentDashboard from './templates/parent-view/parent-dashboard';
 import ParentDetail from './templates/parent-view/parent-detail';
 import ChangePassword from './templates/general/change-password';
 import Account from './templates/general/account';
+import StudentInfo from './templates/student-view/student-info';
 
 import Students from "./templates/students/students";
 import StudentsDetail from "./templates/students/students-detail";
@@ -67,6 +68,7 @@ import { USERS_EMAIL_URL } from './constants';
 import { EMAIL_RESET_URL } from './constants';
 import { RESET_PASSWORD_URL } from './constants';
 import { ACCOUNT_ACTIVATION_URL } from './constants';
+import { STUDENT_INFO_URL } from './constants'; 
 
 class App extends Component {
   render() {
@@ -78,6 +80,7 @@ class App extends Component {
           <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
           <Route path={PARENT_DETAIL_URL} element={<ParentDetail />} />
           <Route path={PASSWORD_URL} element={<ChangePassword />} />
+          <Route path={STUDENT_INFO_URL} element={<StudentInfo />} />
 
           <Route path={STUDENTS_URL} element={<Students />} />
           <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />

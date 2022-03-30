@@ -23,6 +23,12 @@ export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 disableSortBy: true
             },
             {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                disableSortBy: true
+            },
+            {
                 Header: 'Bus Route',
                 accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
                 disableSortBy: true,

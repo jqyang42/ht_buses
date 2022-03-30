@@ -10,6 +10,7 @@ from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import has_access_to_object
 from ..general import response_messages
+from . student_account import create_student_account, update_students_user
 
 # Students PUT API
 @csrf_exempt
@@ -53,6 +54,12 @@ def student_edit(request):
         student_object.route_id = None
         student_object.in_range = False
     student_object.save()
+    if reqBody["student"]["email"] != "":
+        update_students_user(student_object, reqBody["student"]["email"])
+    else: 
+        if student_object.account is not None:
+            student_user = student_object.account
+            student_user.delete()
     try:
         if student_object.route_id != None:
             student_route = Route.objects.get(pk=reqBody["student"]["route_id"])

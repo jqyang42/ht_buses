@@ -34,7 +34,7 @@ class StudentsDetail extends Component {
         api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
             const data = res.data
-            // console.log(data)
+            console.log(data)
             this.setState({ 
                 student: data.student, 
                 route: data.route, 
@@ -156,6 +156,9 @@ class StudentsDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col-auto me-2">
                                         <p className="gray-600">
+                                            Email
+                                        </p>
+                                        <p className="gray-600">
                                             School
                                         </p>
                                         <p className="gray-600">
@@ -166,6 +169,9 @@ class StudentsDetail extends Component {
                                         </p>
                                     </div>
                                     <div className="col-5 me-6">
+                                        <p>
+                                            {this.state.student.email ? this.state.student.email : "–"}
+                                        </p>
                                         <a href={"/schools/" + this.state.school.id}>
                                             <p>
                                                 {this.state.school.name}

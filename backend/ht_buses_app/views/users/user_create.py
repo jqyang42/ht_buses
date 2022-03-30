@@ -32,18 +32,18 @@ def user_create(request):
         role = reqBody["user"]['role_id']
     else:
         role = User.GENERAL
-    is_parent = reqBody["user"]['is_parent']
     lat = reqBody["user"]["location"]['lat']
     lng = reqBody["user"]["location"]['lng']
     phone_number = reqBody["user"]["phone_number"]
     password = "asdfASDF5678" #account_tools.generate_random_password()
     if role == User.ADMIN: 
-        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
+        user = User.objects.create_superuser(email=email, first_name=first_name, last_name=last_name, password=password, address=address, lat=lat, lng=lng, phone_number = phone_number)
     else:
-        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, is_parent= is_parent, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
+        user = User.objects.create_user(email=email, first_name=first_name, last_name=last_name, address= address, password=password, lat=lat, lng=lng, role=role, phone_number = phone_number)
     user.save()
     email_data = activate_account.send_account_activation_email(user)
     email_sent = email_data["success"]
+    is_parent = reqBody["user"]["is_parent"]
     try:
         if is_parent:
             for student in reqBody["user"]["students"]:

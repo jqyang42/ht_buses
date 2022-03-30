@@ -36,7 +36,6 @@ def users_create(request):
                     last_name = last_name,
                     email = user["email"],
                     phone_number = user["phone_number"],
-                    is_parent = True,
                     role = 4,
                     location = location
                 )
