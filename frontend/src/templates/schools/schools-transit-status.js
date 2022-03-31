@@ -30,20 +30,20 @@ class SchoolsTransitStatus extends Component {
         stops_show_all: false,
         error_status: false,
         error_code: 200,
-        students_page: [],
-        students_table: {
-            pageIndex: 1,
-            canPreviousPage: null,
-            canNextPage: null,
-            totalPages: null,
-        },
-        stops_page:[],
-        stops_table: {
-            pageIndex: 1,
-            canPreviousPage: null,
-            canNextPage: null,
-            totalPages: null,
-        },
+        // students_page: [],
+        // students_table: {
+        //     pageIndex: 1,
+        //     canPreviousPage: null,
+        //     canNextPage: null,
+        //     totalPages: null,
+        // },
+        // stops_page:[],
+        // stops_table: {
+        //     pageIndex: 1,
+        //     canPreviousPage: null,
+        //     canNextPage: null,
+        //     totalPages: null,
+        // },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         test: 0
@@ -52,8 +52,8 @@ class SchoolsTransitStatus extends Component {
     interval_id = null
 
     componentDidMount() {
-        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
-        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
         this.periodicCall()
@@ -66,17 +66,21 @@ class SchoolsTransitStatus extends Component {
     periodicCall = () => {
         // this.interval_id = setInterval(async () => {
         //     // @jessica update with correct api 
-        //     const result = await api.get(`students/detail?id=4`)
+        //     const result = await api.get(`transit`)
         //     console.log(result.data)
         // }, 1000)
+        api.get(`transit`)
+        .then(res => {
+            console.log(res)
+        })
 
-        this.interval_id = setInterval(() => {
-            this.setState(prevState => ({
-                test: prevState.test + 1
-            }))
+        // this.interval_id = setInterval(() => {
+        //     this.setState(prevState => ({
+        //         test: prevState.test + 1
+        //     }))
 
-            console.log(this.state.test)
-        }, 1000)
+        //     console.log(this.state.test)
+        // }, 1000)
     }
 
     // pagination
