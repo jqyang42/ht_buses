@@ -46,7 +46,7 @@ class SchoolsTransitStatus extends Component {
         // },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
-        test: 0
+        buses: {}
     }
 
     interval_id = null
@@ -72,6 +72,9 @@ class SchoolsTransitStatus extends Component {
         api.get(`transit`)
         .then(res => {
             console.log(res)
+            this.setState({
+                buses: res.data
+            })
         })
 
         // this.interval_id = setInterval(() => {
@@ -83,38 +86,38 @@ class SchoolsTransitStatus extends Component {
         // }, 1000)
     }
 
-    // pagination
-    getStudentsPage = (page, sortOptions, search) => {
-        getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const students_table = {
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-            }
-            this.setState({
-                students_page: res.data.students,
-                students_table: students_table
-            })
-        })
-    }
+    // // pagination
+    // getStudentsPage = (page, sortOptions, search) => {
+    //     getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+    //     .then(res => {
+    //         const students_table = {
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //         }
+    //         this.setState({
+    //             students_page: res.data.students,
+    //             students_table: students_table
+    //         })
+    //     })
+    // }
 
-    getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const stops_table = {
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-            }
-            this.setState({
-                stops_page: res.data.stops,
-                stops_table: stops_table
-            })
-        })
-    }
+    // getStopsPage = (page, sortOptions, search) => {
+    //     getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+    //     .then(res => {
+    //         const stops_table = {
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //         }
+    //         this.setState({
+    //             stops_page: res.data.stops,
+    //             stops_table: stops_table
+    //         })
+    //     })
+    // }
 
     getRouteDetail = () => {
         api.get(`routes/detail?id=${this.props.params.id}`)
