@@ -13,7 +13,7 @@ import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 
-class SchoolsTransitStatus extends Component {
+class GlobalTransitStatus extends Component {
     state = {
         route: [],
         students : [],
@@ -52,11 +52,11 @@ class SchoolsTransitStatus extends Component {
     interval_id = null
 
     componentDidMount() {
-        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
-        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
-        this.getRouteDetail()
-        this.getStops()
-        this.periodicCall()
+        // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        // this.getRouteDetail()
+        // this.getStops()
+        // this.periodicCall()
     }
 
     componentWillUnmount() {
@@ -80,129 +80,129 @@ class SchoolsTransitStatus extends Component {
     }
 
     // pagination
-    getStudentsPage = (page, sortOptions, search) => {
-        getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const students_table = {
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-            }
-            this.setState({
-                students_page: res.data.students,
-                students_table: students_table
-            })
-        })
-    }
+    // getStudentsPage = (page, sortOptions, search) => {
+    //     getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+    //     .then(res => {
+    //         const students_table = {
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //         }
+    //         this.setState({
+    //             students_page: res.data.students,
+    //             students_table: students_table
+    //         })
+    //     })
+    // }
 
-    getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const stops_table = {
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-            }
-            this.setState({
-                stops_page: res.data.stops,
-                stops_table: stops_table
-            })
-        })
-    }
+    // getStopsPage = (page, sortOptions, search) => {
+    //     getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+    //     .then(res => {
+    //         const stops_table = {
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //         }
+    //         this.setState({
+    //             stops_page: res.data.stops,
+    //             stops_table: stops_table
+    //         })
+    //     })
+    // }
 
-    getRouteDetail = () => {
-        api.get(`routes/detail?id=${this.props.params.id}`)
-            .then(res => {
-            const data = res.data;
-            const route = data.route;
-            const school = route.school;
-            const users = data.users;
-            const students = this.getStudentsFromUser(users)
+    // getRouteDetail = () => {
+    //     api.get(`routes/detail?id=${this.props.params.id}`)
+    //         .then(res => {
+    //         const data = res.data;
+    //         const route = data.route;
+    //         const school = route.school;
+    //         const users = data.users;
+    //         const students = this.getStudentsFromUser(users)
             
-            this.setState({ 
-                students: students,
-                users: users,
-                route: route, 
-                school: school, 
-                center: { 
-                    lat: school.location.lat, 
-                    lng: school.location.lng 
-                }, 
-            });
+    //         this.setState({ 
+    //             students: students,
+    //             users: users,
+    //             route: route, 
+    //             school: school, 
+    //             center: { 
+    //                 lat: school.location.lat, 
+    //                 lng: school.location.lng 
+    //             }, 
+    //         });
             
-            this.redirectToGoogleMapsPickup(this.state.stops)
-            this.redirectToGoogleMapsDropoff(this.state.stops)
-            this.setMarkers(users)            
-        })
-        .catch(error => {
-            if (error.response.status !== 200) {
-                this.setState({ 
-                    error_status: true,
-                    error_code: error.response.status 
-                });
-            }
-        })
-    }
+    //         this.redirectToGoogleMapsPickup(this.state.stops)
+    //         this.redirectToGoogleMapsDropoff(this.state.stops)
+    //         this.setMarkers(users)            
+    //     })
+    //     .catch(error => {
+    //         if (error.response.status !== 200) {
+    //             this.setState({ 
+    //                 error_status: true,
+    //                 error_code: error.response.status 
+    //             });
+    //         }
+    //     })
+    // }
 
-    getStudentsFromUser = (users) => {
-        const students = users?.map(user => {
-            return user.students.map(student => {
-                return {
-                    student_school_id: student.student_school_id,
-                    id: student.id,
-                    first_name: student.first_name,
-                    last_name: student.last_name,
-                    in_range: student.in_range
-                }
-            })
-        })
-        return [].concat.apply([], students)
-    }
+    // getStudentsFromUser = (users) => {
+    //     const students = users?.map(user => {
+    //         return user.students.map(student => {
+    //             return {
+    //                 student_school_id: student.student_school_id,
+    //                 id: student.id,
+    //                 first_name: student.first_name,
+    //                 last_name: student.last_name,
+    //                 in_range: student.in_range
+    //             }
+    //         })
+    //     })
+    //     return [].concat.apply([], students)
+    // }
 
-    setMarkers = (users) => {
-        const markers = []
-        users.map((user) => {
-            const studentIDs = [];
-            const studentNames = [];
-            user.students.map((student) => {
-                studentIDs.push(student.id);
-                const fullName = student.first_name + ' ' + student.last_name;
-                studentNames.push(fullName);
-            });
-            markers.push({
-                location: {
-                    lat: user.location.lat,
-                    lng: user.location.lng
-                },
-                id: user.id,
-                studentIDs: studentIDs,
-                studentNames: studentNames,
-                routeID: this.props.params.id   //TODO: change markers to create per student
-            })
-        });
-        this.setState({ markers: markers })
-    }
+    // setMarkers = (users) => {
+    //     const markers = []
+    //     users.map((user) => {
+    //         const studentIDs = [];
+    //         const studentNames = [];
+    //         user.students.map((student) => {
+    //             studentIDs.push(student.id);
+    //             const fullName = student.first_name + ' ' + student.last_name;
+    //             studentNames.push(fullName);
+    //         });
+    //         markers.push({
+    //             location: {
+    //                 lat: user.location.lat,
+    //                 lng: user.location.lng
+    //             },
+    //             id: user.id,
+    //             studentIDs: studentIDs,
+    //             studentNames: studentNames,
+    //             routeID: this.props.params.id   //TODO: change markers to create per student
+    //         })
+    //     });
+    //     this.setState({ markers: markers })
+    // }
 
-    getStops = () => {     
-        getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const data = res.data;
-            this.setState({ stops: data.stops })
-            // console.log(data.stops)
-            // console.log(this.state.center)
-            this.redirectToGoogleMapsPickup(this.state.stops)
-            this.redirectToGoogleMapsDropoff(this.state.stops)
-        })
-        .catch (error => {
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                this.setState({ error_status: true });
-                this.setState({ error_code: error.response.status });
-            }
-        })
-    }
+    // getStops = () => {     
+    //     getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+    //     .then(res => {
+    //         const data = res.data;
+    //         this.setState({ stops: data.stops })
+    //         // console.log(data.stops)
+    //         // console.log(this.state.center)
+    //         this.redirectToGoogleMapsPickup(this.state.stops)
+    //         this.redirectToGoogleMapsDropoff(this.state.stops)
+    //     })
+    //     .catch (error => {
+    //         if (error.response.status !== 200) {
+    //             // console.log(error.response.data)
+    //             this.setState({ error_status: true });
+    //             this.setState({ error_code: error.response.status });
+    //         }
+    //     })
+    // }
     
     // TODO: Fix undefined, undefined center starting error after refreshing
     redirectToGoogleMapsPickup = (stops) => {
@@ -263,32 +263,32 @@ class SchoolsTransitStatus extends Component {
     }
 
     // handlers
-    handleDelete = (event) => {
-        event.preventDefault()
+    // handleDelete = (event) => {
+    //     event.preventDefault()
 
-        api.delete(`routes/delete?id=${this.props.params.id}`)
-            .then(res => {
-                // console.log("hello")
-                const success = res.data.success
-                // console.log(res.data)
-                if (success) {
-                    this.setState({ 
-                        delete_success: 1,
-                        redirect: true
-                    })
-                } else {
-                    this.setState({ delete_success: -1})
-                }
-            }) 
-    }
+    //     api.delete(`routes/delete?id=${this.props.params.id}`)
+    //         .then(res => {
+    //             // console.log("hello")
+    //             const success = res.data.success
+    //             // console.log(res.data)
+    //             if (success) {
+    //                 this.setState({ 
+    //                     delete_success: 1,
+    //                     redirect: true
+    //                 })
+    //             } else {
+    //                 this.setState({ delete_success: -1})
+    //             }
+    //         }) 
+    // }
 
-    handleRoutesShowAll = () => {
-        this.setState(prevState => ({
-            routes_show_all: !prevState.routes_show_all
-        }), () => {
-            this.getStudentsPage(this.state.routes_show_all ? 0 : 1, null, '')
-        })
-    }
+    // handleRoutesShowAll = () => {
+    //     this.setState(prevState => ({
+    //         routes_show_all: !prevState.routes_show_all
+    //     }), () => {
+    //         this.getStudentsPage(this.state.routes_show_all ? 0 : 1, null, '')
+    //     })
+    // }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
@@ -308,10 +308,10 @@ class SchoolsTransitStatus extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
-                    <SidebarMenu activeTab="schools" />
+                    <SidebarMenu activeTab="transit status" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
-                        <HeaderMenu root="Schools" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.school.name} page="Transit Status"/>
+                        <HeaderMenu root="Transit Status" isRoot={true}/>
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
@@ -328,7 +328,7 @@ class SchoolsTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.markers ? 
+                                        {/* {this.state.markers ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
@@ -337,7 +337,7 @@ class SchoolsTransitStatus extends Component {
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
                                         />
-                                        : "" }
+                                        : "" } */}
                                         </div>
                                     </div>
                                     <div className="col">
@@ -370,8 +370,5 @@ class SchoolsTransitStatus extends Component {
 }
 
 export default (props) => (
-    <SchoolsTransitStatus
-        {...props}
-        params={useParams()}
-    />
+    <GlobalTransitStatus/>
 );
