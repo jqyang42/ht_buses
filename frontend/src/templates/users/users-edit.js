@@ -343,10 +343,15 @@ class UsersEdit extends Component {
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">User Type</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
-                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id}
+                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id || this.state.user.role_id === 4 || this.state.user.role_id === 5 }
                                                 onChange={(e) => this.handleRoleChange(e)} required>
                                                     <option value={0} disabled>Select a Role</option>
-                                                    <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option>
+                                                    { this.state.user.role_id === 4 ?
+                                                        <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option> : ""
+                                                    }
+                                                    { this.state.user.role_id === 5 ?
+                                                        <option value={4} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
+                                                    }
                                                     <option value={1} id="1" selected={this.state.edited_user.role_id === 1}>Administrator</option>
                                                     <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>School Staff</option>
                                                     <option value={3} id="3" selected={this.state.edited_user.role_id === 3}>Driver</option>
