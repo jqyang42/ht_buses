@@ -19,9 +19,12 @@ class BusRoutesTransitLog extends Component {
         error_code: 200,
     }
 
+    componentWillMount() {
+        this.getRouteDetail()
+    }
+
     componentDidMount() {
         this.getTransitLogPage()
-        this.getRouteDetail()
     }
 
     // pagination
@@ -47,19 +50,8 @@ class BusRoutesTransitLog extends Component {
         api.get(`routes/detail?id=${this.props.params.id}`)
             .then(res => {
             const data = res.data;
-            const route = data.route;
-            const school = route.school;
-            const users = data.users;
-            const students = this.getStudentsFromUser(users)            
             this.setState({ 
-                students: students,
-                users: users,
-                route: route, 
-                school: school, 
-                center: { 
-                    lat: school.location.lat, 
-                    lng: school.location.lng 
-                }, 
+                route: data.route
             });        
         })
         .catch(error => {
