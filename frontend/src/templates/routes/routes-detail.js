@@ -10,6 +10,7 @@ import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
+import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
@@ -50,6 +51,7 @@ class BusRoutesDetail extends Component {
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         in_transit: false,
+        startRunModalIsOpen: false
     }
 
     componentDidMount() {
@@ -277,12 +279,20 @@ class BusRoutesDetail extends Component {
         }))
     }
 
+    openStartRunModal = () => {
+        this.setState({ startRunModalIsOpen: true });
+    }
+
+    closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
+
     startRun = () => {
         this.setState({ in_transit: true })
+        // TODO: @jessica actually call methods to start the run
     }
 
     stopRun = () => {
         this.setState({ in_transit: false })
+        this.closeStartRunModal()
     }
 
     render() {
@@ -339,10 +349,10 @@ class BusRoutesDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                (localStorage.getItem('role') === 'Driver') ? 
+                                                (localStorage.getItem('role') === 'Administrator') ? 
                                                 (!this.state.in_transit ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" 
-                                                onClick={() => this.startRun()}>
+                                                onClick={() => this.openStartRunModal()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-play-circle me-2"></i>
                                                         Start Run
@@ -356,6 +366,42 @@ class BusRoutesDetail extends Component {
                                                     </span>
                                                 </button>) : ""
                                             }
+
+                                            <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
+                                                <form onSubmit={() => this.startRun()}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Start Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    <div className="form-group required pb-3">
+                                                        <label for="exampleInputBus" className="control-label pb-2">Bus Number</label>
+                                                        <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
+                                                            placeholder="Enter bus number" required
+                                                            onChange={this.handleBusNumberChange}></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3"
+                                                        // onChange={this.handleIsStaffChange.bind(this)}
+                                                    >
+                                                        <div>
+                                                            <label for="directionType" className="control-label pb-2">Direction</label>
+                                                        </div>
+                                                        <div className="form-check form-check-inline">
+                                                            <input className="form-check-input" type="radio" name="directionType" id="pickup" value={true}></input>
+                                                            <label className="form-check-label" for="pickup">Pickup</label>
+                                                        </div>
+                                                        <div className="form-check form-check-inline">
+                                                            <input className="form-check-input" type="radio" name="directionType" id="dropoff" value={false} ></input>
+                                                            <label className="form-check-label" for="dropoff">Dropoff</label>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-secondary" onClick={this.closeStartRunModal}>Cancel</button>
+                                                    <button type="submit" className="btn btn-primary">Start</button>
+                                                </Modal.Footer>
+                                                </form>
+                                            </Modal>
+
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
                                                 Export Roster
