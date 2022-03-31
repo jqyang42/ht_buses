@@ -11,7 +11,7 @@ import ParentDashboard from './templates/parent-view/parent-dashboard';
 import ParentDetail from './templates/parent-view/parent-detail';
 import ChangePassword from './templates/general/change-password';
 import Account from './templates/general/account';
-import StudentInfo from './templates/student-view/student-info';
+// import StudentInfo from './templates/student-view/student-info';
 
 import Students from "./templates/students/students";
 import StudentsDetail from "./templates/students/students-detail";
@@ -22,6 +22,7 @@ import Schools from "./templates/schools/schools";
 import SchoolsDetail from "./templates/schools/schools-detail";
 import SchoolsCreate from "./templates/schools/schools-create";
 import SchoolsEdit from "./templates/schools/schools-edit";
+import SchoolsTransitStatus from './templates/schools/schools-transit-status';
 
 import Users from "./templates/users/users";
 import UsersImport from './templates/users/users-import';
@@ -33,6 +34,7 @@ import BusRoutes from "./templates/routes/routes";
 import BusRoutesDetail from "./templates/routes/routes-detail";
 import BusRoutesPlanner from "./templates/routes/routes-planner";
 import BusRoutesEdit from "./templates/routes/routes-edit";
+import BusRoutesTransitLog from "./templates/routes/routes-transit-log";
 
 import Email from './templates/components/email';
 import EmailReset from './templates/general/email-reset';
@@ -59,6 +61,8 @@ import { SCHOOLS_EDIT_URL } from "./constants";
 import { STUDENTS_EDIT_URL } from "./constants";
 import { USERS_EDIT_URL } from "./constants";
 import { ROUTES_EDIT_URL } from "./constants";
+import { ROUTES_TRANSIT_LOG_URL } from "./constants";
+import { SCHOOLS_TRANSIT_STATUS_URL } from "./constants";
 import { SCHOOLS_EMAIL_URL } from './constants';
 import { ROUTES_EMAIL_URL } from './constants';
 import { PARENT_DASHBOARD_URL } from './constants';
@@ -80,7 +84,7 @@ class App extends Component {
           <Route path={PARENT_DASHBOARD_URL} element={<ParentDashboard />} />
           <Route path={PARENT_DETAIL_URL} element={<ParentDetail />} />
           <Route path={PASSWORD_URL} element={<ChangePassword />} />
-          <Route path={STUDENT_INFO_URL} element={<StudentInfo />} />
+          {/* <Route path={STUDENT_INFO_URL} element={<StudentInfo />} /> */}
 
           <Route path={STUDENTS_URL} element={<Students />} />
           <Route path={STUDENTS_DETAIL_URL} element={<StudentsDetail />} />
@@ -92,6 +96,7 @@ class App extends Component {
           <Route path={SCHOOLS_DETAIL_URL} element={<SchoolsDetail  route={this.props.route} />} />
           <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
           <Route path={SCHOOLS_EMAIL_URL} element={<Email source="Schools" />} />
+          <Route path={SCHOOLS_TRANSIT_STATUS_URL} element={<SchoolsTransitStatus />} />
 
           <Route path={USERS_URL} element={<Users />} />
           <Route path={USERS_IMPORT_URL} element={<UsersImport />} />
@@ -105,6 +110,7 @@ class App extends Component {
           <Route path={ROUTES_PLANNER_URL} element={<BusRoutesPlanner />} />
           <Route path={ROUTES_EDIT_URL} element={<BusRoutesEdit />} />
           <Route path={ROUTES_EMAIL_URL} element={<Email source="Routes" />} />
+          <Route path={ROUTES_TRANSIT_LOG_URL} element={<BusRoutesTransitLog />} />
 
           <Route path={ACCOUNT_URL} element={<Account />} />
           <Route path={EMAIL_RESET_URL} element={<EmailReset />} />
