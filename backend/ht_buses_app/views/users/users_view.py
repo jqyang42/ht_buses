@@ -101,7 +101,7 @@ def sorted_by_role_type(user_list, desc= False):
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
-def user_view(request):
-    user_list = get_parent_users().order_by("first_name")
+def all_parents(request):
+    user_list = get_parent_users(request.user).order_by("first_name")
     data = user_pagination(user_list, 0)
     return Response(data)
