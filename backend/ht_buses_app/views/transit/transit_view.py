@@ -14,10 +14,18 @@ import time
 @api_view(['GET'])
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def transit_fetch(request):
-    data = {}
+    data = {"buses": []}
     if not transit_updates.is_running:
         transit_updates.add_bus(4001)
         transit_updates.update_buses()
         time.sleep(1.0)
-    data = transit_updates.get_coords()
+    coords = transit_updates.get_coords()
+    for key, value in coords.items():
+        data["buses"].append({
+            "bus_id" : key,
+            "location": {
+                "lat": value["lat"],
+                "lng": value["lng"]
+            }
+        })
     return Response(data)

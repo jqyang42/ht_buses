@@ -21,8 +21,6 @@ def update_buses():
             data = r.json()
             if isinstance(data, dict):
                 bus_coords[update_queue[index]] = {'lat': data['lat'], 'lng':data['lng']}
-            else: 
-                bus_coords[update_queue[index]] = {'lat': 0, 'lng':0}
         print(update_queue)
         _next_ten()
 
