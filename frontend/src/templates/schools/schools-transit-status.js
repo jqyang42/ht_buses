@@ -120,16 +120,18 @@ class SchoolsTransitStatus extends Component {
     // }
 
     getRouteDetail = () => {
-        api.get(`routes/detail?id=${this.props.params.id}`)
+        api.get(`routes/detail?id=1`)
             .then(res => {
             const data = res.data;
+
+            console.log(data)
             const route = data.route;
             const school = route.school;
             const users = data.users;
-            const students = this.getStudentsFromUser(users)
+            // const students = this.getStudentsFromUser(users)
             
             this.setState({ 
-                students: students,
+                // students: students,
                 users: users,
                 route: route, 
                 school: school, 
@@ -141,7 +143,7 @@ class SchoolsTransitStatus extends Component {
             
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
-            this.setMarkers(users)            
+            // this.setMarkers(users)            
         })
         .catch(error => {
             if (error.response.status !== 200) {
@@ -335,15 +337,15 @@ class SchoolsTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.markers ? 
+                                        {this.state.buses ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
                                             active_route={this.props.params.id} 
                                             center={this.state.center}
-                                            students={this.state.markers}
+                                            // students={this.state.markers}
                                             existingStops={this.state.stops}
-                                            buses={this.state.buses}
+                                            // buses={this.state.buses}
                                         />
                                         : "" }
                                         </div>
