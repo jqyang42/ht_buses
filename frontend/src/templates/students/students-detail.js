@@ -159,6 +159,9 @@ class StudentsDetail extends Component {
                                             Email
                                         </p>
                                         <p className="gray-600">
+                                            Phone
+                                        </p>
+                                        <p className="gray-600">
                                             School
                                         </p>
                                         <p className="gray-600">
@@ -171,6 +174,9 @@ class StudentsDetail extends Component {
                                     <div className="col-5 me-6">
                                         <p>
                                             {this.state.student.email ? this.state.student.email : "–"}
+                                        </p>
+                                        <p>
+                                            {this.state.student.phone_number ? this.state.student.phone_number : "–"}
                                         </p>
                                         <a href={"/schools/" + this.state.school.id}>
                                             <p>
