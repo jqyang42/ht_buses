@@ -49,6 +49,7 @@ class BusRoutesDetail extends Component {
         },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
+        in_transit: false,
     }
 
     componentDidMount() {
@@ -56,6 +57,7 @@ class BusRoutesDetail extends Component {
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
+        // TODO: @jessica update value of this.state.in_transit in case route is in transit
     }
 
     // pagination
@@ -275,6 +277,14 @@ class BusRoutesDetail extends Component {
         }))
     }
 
+    startRun = () => {
+        this.setState({ in_transit: true })
+    }
+
+    stopRun = () => {
+        this.setState({ in_transit: false })
+    }
+
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -289,7 +299,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        // console.log(this.state.students)
+        console.log(this.state.in_transit)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -329,20 +339,22 @@ class BusRoutesDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                (localStorage.getItem('role') === 'School Staff') ? 
+                                                (localStorage.getItem('role') === 'Driver') ? 
                                                 (!this.state.in_transit ?
-                                                <Link to={"/routes/" + this.props.params.id + "/start-run"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3" 
+                                                onClick={() => this.startRun()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-play-circle me-2"></i>
                                                         Start Run
                                                     </span>
-                                                </Link> :
-                                                <Link to={"/routes/" + this.props.params.id + "/stop-run"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                </button> :
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3"
+                                                 onClick={() => this.stopRun()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-stop-circle me-2"></i>
                                                         Stop Run
                                                     </span>
-                                                </Link>) : ""
+                                                </button>) : ""
                                             }
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
