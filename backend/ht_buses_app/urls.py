@@ -25,6 +25,7 @@ from . views.bulk_import.creation import bulk_import_students_create, bulk_impor
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
 from . views.logs import log_create, log_view
 from . views.parents.detail import parent_student_stop
+from . views.transit import transit_view
 from . models import User
 
 try:
@@ -94,7 +95,8 @@ urlpatterns = [
     path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
     path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
     path('api/logs/create', log_create.create_log, name='log-create'),
-    path('api/logs', log_view.log_view, name='log-view')
+    path('api/logs', log_view.log_view, name='log-view'),
+    path('api/transit', transit_view.transit_fetch, name='transit-fetch')
 
 ]
 
