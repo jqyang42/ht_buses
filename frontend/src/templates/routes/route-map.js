@@ -221,6 +221,22 @@ class RouteMap extends Component {
                 position={this.props.center} 
               />
             }
+            {this.props.buses?.map((value, index) => {
+              return <Marker 
+                key={index} 
+                position={this.value.location}
+                // location={value.location} 
+                // assign_mode={this.props.assign_mode} 
+                // routeID={value.routeID} 
+                // active_route={this.props.active_route}
+                // id={value.id}
+                // studentIDs={value.studentIDs}
+                // studentNames={value.studentNames}
+                // onChange={this.handleRouteChanges} 
+                // data-bs-toggle="modal"
+                // data-bs-target="#staticBackdrop"
+                />
+            })}
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 

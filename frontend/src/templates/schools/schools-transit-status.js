@@ -343,6 +343,7 @@ class SchoolsTransitStatus extends Component {
                                             center={this.state.center}
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
+                                            buses={this.state.buses}
                                         />
                                         : "" }
                                         </div>
