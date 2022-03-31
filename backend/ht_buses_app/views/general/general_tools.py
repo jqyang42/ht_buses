@@ -151,11 +151,13 @@ def has_access_to_object(user, model_object):
         schools = get_objects_for_user(user,"change_school", School.objects.all())
         try:
             if type(model_object) is Student:
-                schools.get(pk = model_object.school_id.pk)
-                return model_object
+                #schools.get(pk = model_object.school_id.pk)
+                if schools.contains(model_object.school_id):
+                    return model_object
             if type(model_object) is Route:
-                schools.get(pk = model_object.school_id.pk)
-                return model_object
+                #schools.get(pk = model_object.school_id.pk)
+                if schools.contains(model_object.school_id):
+                    return model_object
             if type(model_object) is User:
                 try:
                     student = Student.objects.get(account = model_object)
