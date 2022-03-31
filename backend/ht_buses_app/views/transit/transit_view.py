@@ -7,13 +7,13 @@ from ...serializers import LocationSerializer, SchoolSerializer
 from django.core.paginator import Paginator
 from ...role_permissions import IsAdmin,IsSchoolStaff, IsDriver
 from guardian.shortcuts import get_objects_for_user
-import transit_updates
+from . import transit_updates
 import time
 
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
-def transit_view(request):
+def transit_fetch(request):
     data = {}
     if not transit_updates.is_running:
         transit_updates.update_buses()
