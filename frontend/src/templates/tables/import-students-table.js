@@ -36,6 +36,14 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
+                Header: 'Student Email',
+                // accessor: d => Array(`${d.name}`, false,``, true,`Name may be a duplicate`),
+                accessor: d => Array(`${d.student_email}`, d.error.student_email,`${d.error.error_message.student_email}`,d.error.student_email,`Student email may be a duplicate in file import`),
+                id: 'student_email',
+                disableSort: true,
+                // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+            },
+            {
                 Header: 'Parent Email',
                 // accessor: d => Array(`${d.email}`, true,`Email is invalid`, false,``),
                 accessor: d => Array(`${d.parent_email}`,d.error.parent_email,`${d.error.error_message.parent_email}`,d.error.duplicate_parent_email,`Parent email is a duplicate in file import`),

@@ -26,6 +26,14 @@ class School(models.Model):
                         ("add", "can create school"),
                       )
 
+class Bus(models.Model):
+    bus_number = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(default=datetime.datetime.now, blank=True)
+    location_id = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
+    is_running = models.BooleanField(default=False)
+    objects = models.Manager()
+
+
 class Route(models.Model):
     name = models.CharField(max_length=50)
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
@@ -44,13 +52,29 @@ class Route(models.Model):
                         ("add", "can create route"),
                       )
 
+class Log(models.Model):
+    route_id = models.ForeignKey('Route', default=None, on_delete=models.CASCADE)
+    bus_number = models.IntegerField(default=0)
+    user_id = models.ForeignKey('User', default=None, on_delete=models.SET(None), blank=True, null=True)
+    date = models.DateField(default=datetime.date.today, blank=True)
+    start_time = models.TimeField(default=datetime.time(00,00), blank=True)
+    duration = models.DurationField(default=datetime.timedelta(hours=0))
+    pickup = models.BooleanField(default=False)
+    objects = models.Manager()
+    class Meta:
+        indexes = [
+            models.Index(fields=['route_id']),
+            models.Index(fields=['user_id']),
+        ]
+
 class Student(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     school_id = models.ForeignKey('School', default=None, on_delete=models.CASCADE)
     student_school_id = models.IntegerField(default=0)
     route_id = models.ForeignKey('Route', default=None, on_delete=models.SET(None), blank=True, null=True)
-    user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE) 
+    user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE, related_name='user_id') 
+    account = models.ForeignKey('User', default=None, blank=True, null=True, on_delete=models.SET(None), related_name='account_id')
     in_range = models.BooleanField(default=False)
     objects = models.Manager()
     class Meta:
@@ -86,28 +110,24 @@ class Stop(models.Model):
                       )
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name,is_parent, address, password, lat, lng, role, phone_number):
+    def create_user(self, email, first_name, last_name, address, password, lat, lng, role, phone_number):
         if not email:
             raise ValueError('Users must have email address')
         if not first_name:
             raise ValueError('Users must have a first name')
         if not last_name:
             raise ValueError('Users must have a last name')
-        if is_parent is True and not address:
-                raise ValueError('Users must have an address')
         email = email.lower()
         location_obj = Location.objects.create(address=address, lat=lat, lng=lng)
         user = self.model(
             email= self.normalize_email(email),
             first_name = first_name,
             last_name = last_name,
-            is_parent = is_parent,
             phone_number = phone_number
             )
         user.location_id = location_obj.id
         user.set_password(password)
-        
-        if role < 5 and role > 0:
+        if role < 6 and role > 0:
             user.role = role
             user.save()
             if role == User.ADMIN:
@@ -123,8 +143,8 @@ class UserManager(BaseUserManager):
         user.save(using= self._db)
         return user 
        
-    def create_superuser(self, email, first_name, last_name, is_parent, password, address="", lat=0, lng=0,phone_number=None):
-        user = self.create_user(email, first_name, last_name, is_parent, address, password, lat, lng, role=User.ADMIN, phone_number=phone_number)
+    def create_superuser(self, email, first_name, last_name, password, address="", lat=0, lng=0,phone_number=None):
+        user = self.create_user(email, first_name, last_name, address, password, lat, lng, role=User.ADMIN, phone_number=phone_number)
         user.role = User.ADMIN
         user.save(using=self._db)
         return user
@@ -134,21 +154,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     SCHOOL_STAFF = 2
     DRIVER = 3
     GENERAL = 4
+    STUDENT = 5
     role_choices = (
         (ADMIN, "Administrator"),
         (SCHOOL_STAFF, "School Staff"),
         (DRIVER, "Driver"),
-        (GENERAL, "General")
+        (GENERAL, "General"),
+        (STUDENT, "Student")
     )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(verbose_name='email',unique=True,max_length=254)
     phone_number = models.CharField(max_length=18, default=None, blank=True, null=True)
-    is_parent = models.BooleanField(default=False)
     role = models.PositiveSmallIntegerField(choices=role_choices, default=GENERAL)
     location = models.ForeignKey('Location', default=None, on_delete=models.CASCADE, blank=True, null=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'is_parent']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
     objects = UserManager()
     class Meta:
         permissions = (

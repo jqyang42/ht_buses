@@ -44,15 +44,6 @@ def user_edit(request):
         user_object.location.lng = reqBody["user"]["location"]["lng"]
         user_object.phone_number = reqBody["user"]["phone_number"]
         user_object.location.save()
-        user_object.is_parent = reqBody["user"]["is_parent"]
-        """
-        if User.role_choices[0][1] == reqBody["user"]["role"]:
-            user_object.role = User.ADMIN
-        if User.role_choices[1][1] == reqBody["user"]["role"]:
-            user_object.role = User.DRIVER
-        if User.role_choices[2][1] == reqBody["user"]["role"]:
-            user_object.role = User.SCHOOL_STAFF
-        """
         user_object.save()
         if reqBody["user"]["role_id"] == None or reqBody["user"]["role_id"] > 4 or reqBody["user"]["role_id"] < 0:
             user_object.role = User.GENERAL
@@ -75,7 +66,7 @@ def user_edit(request):
         data["message"] = "user information was successfully updated"
         data["success"] = True
         location_serializer = LocationSerializer(user_object.location, many=False)
-        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role_id' : reqBody["user"]["role_id"], 'is_parent' : reqBody["user"]["is_parent"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
+        data["user"] = {'id' : id, 'first_name' : reqBody["user"]["first_name"], 'last_name' : reqBody["user"]["last_name"], 'email' : reqBody["user"]["email"], 'role_id' : reqBody["user"]["role_id"], 'phone_number': reqBody["user"]["phone_number"],'location' : location_serializer.data}
         return Response(data)
     except:
         return response_messages.UnsuccessfulAction(data, "user edit")

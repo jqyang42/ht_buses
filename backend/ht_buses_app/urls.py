@@ -17,14 +17,13 @@ from . views.stops import stops_create, stops_view_pag, stops_edit, stops_delete
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
-from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
 from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
-
+from . views.logs import log_create, log_view
 from . views.parents.detail import parent_student_stop
 from . models import User
 
@@ -54,7 +53,6 @@ urlpatterns = [
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
     path('api/users/edit/validate-email', user_edit.valid_email_edit, name="validate_email_edit"),
-    path('api/users/school', user_school.user_school_view, name="user_school"),
     path('api/email_exists', general_apis.email_exists, name="email_exists"),
     path('api/users/delete', user_delete.user_delete, name = "delete_user"),
     path('api/routeplanner', route_planner.routeplanner, name="routeplanner"),
@@ -94,7 +92,9 @@ urlpatterns = [
     path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
     path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete'),
     path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
-    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info")
+    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
+    path('api/logs/create', log_create.create_log, name='log-create'),
+    path('api/logs', log_view.log_view, name='log-view')
 
 ]
 

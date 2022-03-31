@@ -379,7 +379,7 @@ class BusRoutesDetail extends Component {
                                                             </div>
                                                             <div className="modal-body">
                                                                 Are you sure you want to delete this bus route?
-                                                                Note: All associated students will revert to having no bus route.
+                                                                Note: All associated students will revert to having no bus route. All transit log entries associated with this route will also be deleted.
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

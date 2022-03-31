@@ -28,3 +28,14 @@ class IsDriver(permissions.BasePermission):
             return False 
         except:
             return False
+
+'''
+class IsStudent(permissions.BasePermission):
+    def has_permission(self, request, view):
+        try:
+            if request.user.role == User.STUDENT:
+                return True
+            return False 
+        except:
+            return False
+'''
