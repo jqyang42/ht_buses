@@ -16,6 +16,7 @@ import time
 def transit_fetch(request):
     data = {}
     if not transit_updates.is_running:
+        transit_updates.add_bus(4001)
         transit_updates.update_buses()
         time.sleep(1.0)
     data = transit_updates.get_coords()
