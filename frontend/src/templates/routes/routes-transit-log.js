@@ -13,34 +13,43 @@ import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 
 class BusRoutesTransitLog extends Component {
     state = {
-        route : [],
-        students_show_all: false,
+        route: [],
+        logsPage: [],
+        logs_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+        },
+        sortOptions: {
+            accessor: 'name',
+            sortDirection: 'ASC'
+        },
+        searchValue: '',
+        logs_show_all: false,
         error_status: false,
         error_code: 200,
     }
 
-    componentWillMount() {
-        this.getRouteDetail()
-    }
-
     componentDidMount() {
         this.getTransitLogPage()
+        this.getRouteDetail()
     }
 
     // pagination
     // TODO: @jessica change this to be for transit log instead of students
     getTransitLogPage = (page, sortOptions, search) => {
-        getPage({ url: `students/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        getPage({ url: `logs`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
-            const transit_log = {
+            const log_table = {
                 pageIndex: res.pageIndex,
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
             }
             this.setState({
-                students_page: res.data.students,
-                transit_log: transit_log
+                logsPage: res.data.logs,
+                log_table: log_table
             })
         })
     }
