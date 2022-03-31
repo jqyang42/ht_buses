@@ -386,11 +386,11 @@ class BusRoutesDetail extends Component {
                                                             <label for="directionType" className="control-label pb-2">Direction</label>
                                                         </div>
                                                         <div className="form-check form-check-inline">
-                                                            <input className="form-check-input" type="radio" name="directionType" id="pickup" value={true}></input>
+                                                            <input className="form-check-input" type="radio" name="directionType" id="pickup" value={true} required></input>
                                                             <label className="form-check-label" for="pickup">Pickup</label>
                                                         </div>
                                                         <div className="form-check form-check-inline">
-                                                            <input className="form-check-input" type="radio" name="directionType" id="dropoff" value={false} ></input>
+                                                            <input className="form-check-input" type="radio" name="directionType" id="dropoff" value={false} required></input>
                                                             <label className="form-check-label" for="dropoff">Dropoff</label>
                                                         </div>
                                                     </div>
