@@ -71,9 +71,9 @@ class SchoolsTransitStatus extends Component {
         // }, 1000)
         api.get(`transit`)
         .then(res => {
-            console.log(res)
+            console.log(res.data.buses)
             this.setState({
-                buses: res.data
+                buses: res.data.buses
             })
         })
 
