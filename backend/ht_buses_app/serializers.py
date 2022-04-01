@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Location, Log, Route, School, Stop, Student, User
+from .models import Bus, Location, Log, Route, School, Stop, Student, User
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,4 +45,9 @@ class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Log
         fields = ('id', 'route_id', 'bus_number', 'user_id', 'date', 'start_time', 'duration', 'pickup')
+
+class BusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bus
+        fields = ('id','bus_number','last_updated','location_id','is_running')
     
