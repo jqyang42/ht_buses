@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
-from ..log_pagination import log_pagination
+from ..log_view import get_log_view
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
@@ -24,34 +24,3 @@ def log_school_view(request):
     log_list = Log.objects.filter(route_id__school_id=id)
     data = get_log_view(page_number, order_by, sort_by, search, log_list)
     return Response(data)
-
-def get_log_view(page_number, order_by, sort_by, search, log_list):
-    logs = log_search_and_sort(order_by, sort_by, search, log_list)
-    data = log_pagination(logs, page_number)
-    return data
-
-def log_search_and_sort(order_by, sort_by, search, log_list):
-    if sort_by == "name":
-        sort_by = "user_id__first_name"
-    if sort_by == "route":
-        sort_by = "route_id__name"
-    if sort_by == "school":
-        sort_by = "route_id__school_id__name"
-
-    if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
-        logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search)).order_by("id")
-    else:
-        if order_by == "asc":
-            if search != None:
-                logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search)).order_by(sort_by)
-            else:
-                logs = log_list.order_by(sort_by)
-        else:
-            if search != None:
-                logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search)).order_by("-" + sort_by)
-            else:
-                logs = log_list.order_by("-" + sort_by)
-    return logs
