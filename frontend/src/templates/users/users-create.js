@@ -632,6 +632,7 @@ class UsersCreate extends Component {
                                             }
                                         </div>
                                         <div className="col mt-2 w-50">
+                                            { this.state.new_user.role_id == 4 ?
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
                                                 <div>
@@ -729,7 +730,8 @@ class UsersCreate extends Component {
                                                       </div>) : ""
                                                       }
                                                 </div>
-                                            </div>
+                                            </div> : ""
+                                            }
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
