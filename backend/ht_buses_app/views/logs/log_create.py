@@ -1,5 +1,5 @@
-from ...serializers import LogSerializer
-from ...models import User, Route, Log
+from ...serializers import BusSerializer, LogSerializer
+from ...models import User, Route, Log, Bus, Location
 from rest_framework.response import Response
 import json
 from datetime import datetime, date, timezone
@@ -17,14 +17,36 @@ def create_log(request):
     reqBody = json.loads(request.body)
     edt = timezone('US/Eastern')
     log_obj = Log.objects.create(
-        bus_number = reqBody["bus_number"],
+        bus_number = reqBody["log"]["bus_number"],
         date = datetime.now(edt).date(),
         start_time = datetime.now(edt).time(),
-        user_id = User.objects.get(pk=reqBody["user_id"]),
-        route_id = Route.objects.get(pk=reqBody["route_id"])
+        user_id = User.objects.get(pk=reqBody["log"]["user_id"]),
+        route_id = Route.objects.get(pk=reqBody["log"]["route_id"]),
+        pickup = reqBody["log"]["pickup"]
     )
+    bus_update(reqBody["log"]["bus_number"])
     log_serializer = LogSerializer(log_obj, many=False)
     data["message"] = "log created successfully"
     data["log"] = log_serializer.data
     data["success"] = True
     return Response(data)
+
+def bus_update(bus_number):
+    bus_obj = Bus.objects.filter(bus_number=bus_number)
+    edt = timezone('US/Eastern')
+    if bus_obj is None or len(bus_obj) == 0:
+        bus_new = Bus.objects.create(
+            bus_number = bus_number,
+            last_updated = datetime.now(edt),
+            is_running = True,
+            location_id = Location.objects.create(
+                address = "",
+                lat = 0,
+                lng = 0
+        )
+    )
+    else:
+        bus_serializer = BusSerializer(bus_obj[0], many=False)
+        bus = Bus.objects.get(pk=bus_serializer.data["id"])
+        bus.is_running = True
+        bus.save()

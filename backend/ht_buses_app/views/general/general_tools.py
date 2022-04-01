@@ -10,7 +10,8 @@ from ...groups import get_driver_group, get_admin_group
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
-    return User.objects.filter(pk__in=user_ids)
+    student_users = students.values_list('account', flat=True)
+    return User.objects.filter(pk__in=user_ids) | User.objects.filter(pk__in=student_users)
 
 def filtered_schools_helper(students):
     school_ids = students.values_list('school_id', flat=True)
@@ -150,20 +151,28 @@ def has_access_to_object(user, model_object):
         schools = get_objects_for_user(user,"change_school", School.objects.all())
         try:
             if type(model_object) is Student:
-                schools.filter(pk = model_object.school_id.pk)
-                return model_object
+                #schools.get(pk = model_object.school_id.pk)
+                if schools.contains(model_object.school_id):
+                    return model_object
             if type(model_object) is Route:
-                schools.get(pk = model_object.school_id.pk)
-                return model_object
+                #schools.get(pk = model_object.school_id.pk)
+                if schools.contains(model_object.school_id):
+                    return model_object
             if type(model_object) is User:
-                students = Student.objects.filter(user_id = model_object.pk)
-                for student in students:
-                    try:
-                        schools.get(pk = student.school_id.pk)
+                try:
+                    student = Student.objects.get(account = model_object)
+                    student_user = student.account
+                    if schools.contains(student.school_id):
                         return model_object
-                    except:
-                        continue 
-                raise PermissionDenied
+                except:
+                    students = Student.objects.filter(user_id = model_object.pk)
+                    for student in students:
+                        try:
+                            schools.get(pk = student.school_id.pk)
+                            return model_object
+                        except:
+                            continue 
+                    raise PermissionDenied
             if type(model_object) is School:
                 schools.get(pk = model_object.pk)
                 return model_object
