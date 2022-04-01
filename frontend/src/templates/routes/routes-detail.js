@@ -51,7 +51,8 @@ class BusRoutesDetail extends Component {
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         in_transit: false,
-        startRunModalIsOpen: false
+        startRunModalIsOpen: false,
+        log: {}
     }
 
     componentDidMount() {
@@ -103,6 +104,12 @@ class BusRoutesDetail extends Component {
             const school = route.school;
             const users = data.users;
             const students = this.getStudentsFromUser(users)
+            const log = {
+                bus_number: null,
+                user_id: localStorage.getItem('user_id'),
+                route_id: this.props.params.id,
+                pickup: null
+            }
             
             this.setState({ 
                 students: students,
@@ -112,7 +119,8 @@ class BusRoutesDetail extends Component {
                 center: { 
                     lat: school.location.lat, 
                     lng: school.location.lng 
-                }, 
+                },
+                log: log
             });
             
             this.redirectToGoogleMapsPickup(this.state.stops)
@@ -279,6 +287,18 @@ class BusRoutesDetail extends Component {
         }))
     }
 
+    handleBusNumberChange = (event) => {
+        let log = {...this.state.log}
+        log.bus_number = event.target.value
+        this.setState({ log: log })
+    }
+
+    handleIsPickupChange = (event) => {
+        let log = {...this.state.log}
+        log.pickup = event.target.value
+        this.setState({ log: log })
+    }
+
     openStartRunModal = () => {
         this.setState({ startRunModalIsOpen: true });
     }
@@ -287,7 +307,12 @@ class BusRoutesDetail extends Component {
 
     startRun = () => {
         this.setState({ in_transit: true })
-        // TODO: @jessica actually call methods to start the run
+        const request = {
+            log: this.state.log
+
+        }
+        console.log(request)
+        api.post(`logs/create`, request)
     }
 
     stopRun = () => {
@@ -379,8 +404,7 @@ class BusRoutesDetail extends Component {
                                                             placeholder="Enter bus number" required
                                                             onChange={this.handleBusNumberChange}></input>
                                                     </div>
-                                                    <div className="form-group required pb-3"
-                                                        // onChange={this.handleIsStaffChange.bind(this)}
+                                                    <div className="form-group required pb-3" onChange={this.handleIsPickupChange.bind(this)}
                                                     >
                                                         <div>
                                                             <label for="directionType" className="control-label pb-2">Direction</label>
