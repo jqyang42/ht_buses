@@ -17,9 +17,9 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
         () => [
             {
                 Header: 'Driver',
-                accessor: 'driver',
-                id: 'driver',
-                sortDirection: sort.accessor === 'driver' ? sort.sortDirection : 'none'
+                accessor: d => `${d.user.first_name} ${d.user.last_name}`,
+                id: 'user',
+                sortDirection: sort.accessor === 'user' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Bus #',
@@ -59,9 +59,9 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 accessor: 'start_time',
                 id: 'start_time',
                 // @jessica use to format time when in 24 hour format
-                // Cell: ({ cell: { value } }) => (
-                //     toDisplayFormat({ twentyfour_time: value })
-                // )
+                Cell: ({ cell: { value } }) => (
+                    toDisplayFormat({ twentyfour_time: value })
+                ),
                 disableFilter: true,
                 sortDirection: sort.accessor === 'start_time' ? sort.sortDirection : 'none'
             },
