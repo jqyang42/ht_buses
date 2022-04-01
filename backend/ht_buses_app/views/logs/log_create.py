@@ -32,10 +32,7 @@ def create_log(request):
     return Response(data)
 
 def bus_update(bus_number):
-    delete_obj = Bus.objects.all()
-    print(delete_obj)
     bus_obj = Bus.objects.filter(bus_number=bus_number)
-    print(bus_obj)
     edt = timezone('US/Eastern')
     if bus_obj is None or len(bus_obj) == 0:
         bus_new = Bus.objects.create(
