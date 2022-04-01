@@ -295,7 +295,7 @@ class BusRoutesDetail extends Component {
 
     handleIsPickupChange = (event) => {
         let log = {...this.state.log}
-        log.pickup = event.target.value
+        log.pickup = event.target.value === 'true'
         this.setState({ log: log })
     }
 
