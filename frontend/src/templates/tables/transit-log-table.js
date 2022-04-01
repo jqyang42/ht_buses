@@ -58,7 +58,6 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 Header: 'Start Time',
                 accessor: 'start_time',
                 id: 'start_time',
-                // @jessica use to format time when in 24 hour format
                 Cell: ({ cell: { value } }) => (
                     toDisplayFormat({ twentyfour_time: value })
                 ),
