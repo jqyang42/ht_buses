@@ -1,4 +1,4 @@
-from ...serializers import LogSerializer
+from ...serializers import BusSerializer, LogSerializer
 from ...models import User, Route, Log, Bus, Location
 from rest_framework.response import Response
 import json
@@ -49,5 +49,7 @@ def bus_update(bus_number):
         )
     )
     else:
-        bus_obj[0].is_running = True
-        bus_obj[0].save()
+        bus_serializer = BusSerializer(bus_obj[0], many=False)
+        bus = Bus.objects.get(pk=bus_serializer.data["id"])
+        bus.is_running = True
+        bus.save()
