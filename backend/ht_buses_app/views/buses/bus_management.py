@@ -1,6 +1,3 @@
-# create bus entry when log is created
-# close a log api
-# bus that are active
 from ...models import Bus, Location
 from ...serializers import BusSerializer, LocationSerializer
 
