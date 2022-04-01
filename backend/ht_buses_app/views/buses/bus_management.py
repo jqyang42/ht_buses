@@ -21,7 +21,9 @@ def active_buses():
 
 def bus_location_update(bus_number, lat, lng):
     bus_obj = Bus.objects.filter(bus_number=bus_number)
-    bus_obj[0].location_id.lat = lat
-    bus_obj[0].location_id.lng = lng
-    bus_obj[0].location_id.save()
+    bus_serializer = BusSerializer(bus_obj[0], many=False)
+    bus = Bus.objects.get(pk=bus_serializer.data["id"])
+    bus.location_id.lat = lat
+    bus.location_id.lng = lng
+    bus.location_id.save()
 
