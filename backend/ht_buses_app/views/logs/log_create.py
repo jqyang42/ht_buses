@@ -17,14 +17,14 @@ def create_log(request):
     reqBody = json.loads(request.body)
     edt = timezone('US/Eastern')
     log_obj = Log.objects.create(
-        bus_number = reqBody["bus_number"],
+        bus_number = reqBody["log"]["bus_number"],
         date = datetime.now(edt).date(),
         start_time = datetime.now(edt).time(),
-        user_id = User.objects.get(pk=reqBody["user_id"]),
-        route_id = Route.objects.get(pk=reqBody["route_id"]),
-        pickup = reqBody["pickup"]
+        user_id = User.objects.get(pk=reqBody["log"]["user_id"]),
+        route_id = Route.objects.get(pk=reqBody["log"]["route_id"]),
+        pickup = reqBody["log"]["pickup"]
     )
-    bus_update(reqBody["bus_number"])
+    bus_update(reqBody["log"]["bus_number"])
     log_serializer = LogSerializer(log_obj, many=False)
     data["message"] = "log created successfully"
     data["log"] = log_serializer.data
