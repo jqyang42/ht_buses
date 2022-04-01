@@ -62,6 +62,7 @@ class RouteMap extends Component {
       lat: parseFloat(this.props.center.lat),
       lng: parseFloat(this.props.center.lng)
     },
+    buses: this.props.buses,
   }
 
   studentsChanged = []
@@ -221,10 +222,12 @@ class RouteMap extends Component {
                 position={this.props.center} 
               />
             }
+            {console.log(this.props.buses)}
             {this.props.buses?.map((value, index) => {
+              console.log(value)
               return <Marker 
                 key={index} 
-                position={this.value.location}
+                position={value.location}
                 // location={value.location} 
                 // assign_mode={this.props.assign_mode} 
                 // routeID={value.routeID} 

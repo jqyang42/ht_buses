@@ -16,8 +16,9 @@ import time
 def transit_fetch(request):
     data = {"buses": []}
     if not transit_updates.is_running:
+        print("not running yet")
         transit_updates.add_bus(4001)
-        transit_updates.update_buses()
+        transit_updates.start_updating()
         time.sleep(1.0)
     coords = transit_updates.get_coords()
     for key, value in coords.items():
