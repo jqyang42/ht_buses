@@ -55,7 +55,7 @@ class Route(models.Model):
 class Log(models.Model):
     route_id = models.ForeignKey('Route', default=None, on_delete=models.CASCADE)
     bus_number = models.IntegerField(default=0)
-    user_id = models.ForeignKey('User', default=None, on_delete=models.SET(None), blank=True, null=True)
+    user_id = models.ForeignKey('User', default=None, on_delete=models.CASCADE)
     date = models.DateField(default=datetime.date.today, blank=True)
     start_time = models.TimeField(default=datetime.time(00,00), blank=True)
     duration = models.DurationField(default=datetime.timedelta(hours=0))
