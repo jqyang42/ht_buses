@@ -60,7 +60,7 @@ class BusRoutesDetail extends Component {
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
-        // TODO: @jessica update value of this.state.in_transit in case route is in transit
+        // TODO: @jessica retrieve intransit and log id
     }
 
     // pagination
@@ -317,6 +317,8 @@ class BusRoutesDetail extends Component {
 
     stopRun = () => {
         this.setState({ in_transit: false })
+        // @jessica update to use log id
+        api.put(`logs/update?id=${1}`)
         this.closeStartRunModal()
     }
 
