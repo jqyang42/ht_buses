@@ -181,6 +181,7 @@ class StudentsEdit extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
+
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -231,14 +232,14 @@ class StudentsEdit extends Component {
                                             <div className="form-group pb-3 form-col">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
-                                                defaultValue={this.state.student.email} placeholder="Enter student email" required
+                                                defaultValue={this.state.student.email} placeholder="Enter student email"
                                                 onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
-                                                    {(!emailValidation({ email: this.state.edited_student?.email})) ? 
+                                                {(!emailValidation({ email: this.state.edited_student?.email}) && this.state.edited_student?.email) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
                                                 }
-                                                 {(!this.state.valid_email) ? 
+                                                 {(!this.state.valid_email && this.state.edited_student?.email) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Update unsuccessful. Please enter a different email, a student with this email already exists
                                                     </div>) : ""

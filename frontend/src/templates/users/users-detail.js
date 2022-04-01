@@ -280,7 +280,7 @@ class UsersDetail extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
-                                            {(localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                            {(localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') && this.state.user.role === "General" ?
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target={this.state.user.location?.address ? "#addModal" : ""} onClick={this.handleClickAddStudent}>
                                                 <i className="bi bi-person-plus me-2"></i>
                                                 Add Student
@@ -411,9 +411,11 @@ class UsersDetail extends Component {
                                             Phone
                                         </p> : ""
                                         }
-                                        <p className="gray-600">
-                                            Address
-                                        </p>
+                                        {this.state.user.role === "General" ?
+                                            <p className="gray-600">
+                                                Address
+                                            </p> : ""
+                                        }
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
@@ -422,13 +424,15 @@ class UsersDetail extends Component {
                                         <p>
                                             {this.state.user.phone_number }
                                         </p>
-                                        <p>
-                                            {this.state.user.location?.address}
-                                        </p>
+                                        {this.state.user.role === "General" ?
+                                            <p>
+                                                {this.state.user.location?.address}
+                                            </p> : ""
+                                        }
                                     </div>
                                 </div>
 
-                                {(!this.state.user.location?.address && this.state.add_student_clicked) ? 
+                                {(this.state.user.role === "General" && !this.state.user.location?.address && this.state.add_student_clicked) ? 
                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                         Please input an address before you add a student.
                                     </div>) : ""

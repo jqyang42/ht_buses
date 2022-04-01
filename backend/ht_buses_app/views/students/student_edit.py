@@ -9,6 +9,7 @@ from ..stops import check_in_range
 from ..routes import route_check_is_complete
 from ...role_permissions import IsAdmin, IsSchoolStaff
 from ..general.general_tools import has_access_to_object
+from ..students.student_account import get_students_email
 from ..general import response_messages
 from . student_account import create_student_account, update_students_user
 
@@ -67,7 +68,7 @@ def student_edit(request):
             student_route.is_complete = is_complete
             student_route.save()
         data["message"] = "student information successfully updated"
-        data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "school_name": student_object.school_id.name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "user_id": user_id.id}
+        data["student"] = {"first_name": new_first_name, "last_name": new_last_name, "school_name": student_object.school_id.name, "student_school_id": student_school_id, "route_id": reqBody["student"]["route_id"], "email": get_students_email(student_object), "user_id": user_id.id}
         data["success"] = True
         print(data)
         return Response(data)
