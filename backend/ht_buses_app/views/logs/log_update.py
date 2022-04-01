@@ -17,7 +17,6 @@ def update_log(request):
     edt = timezone('US/Eastern')
     id = request.query_params["id"]
     log_obj = Log.objects.get(pk=id)
-    log_serializer = LogSerializer(log_obj, many=False)
     time_end = datetime.now(edt)
     start_time = log_obj.start_time
     d_start_time = edt.localize(datetime.combine(log_obj.date, start_time))
