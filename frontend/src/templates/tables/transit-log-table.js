@@ -34,16 +34,16 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 disableFilter: true,
                 sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
             },
-            // {
-            //     Header: 'Route',
-            //     accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
-            //     disableFilter: true,
-            //     id: 'route',
-            //     Cell: ({ cell: { value } }) => (
-            //         value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
-            //     ),
-            //     sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
-            // },     
+            {
+                Header: 'Route',
+                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
+                disableFilter: true,
+                id: 'route',
+                Cell: ({ cell: { value } }) => (
+                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
+                ),
+                sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
+            },     
             {
                 Header: 'Direction',
                 accessor: 'pickup',
