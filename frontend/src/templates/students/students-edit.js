@@ -301,7 +301,7 @@ class StudentsEdit extends Component {
                                             </div>
                                             {(emailValidation({ email: this.state.edited_student.email}) && this.state.edited_student.email != "") ? 
                                                 (<div className="form-group pb-3">
-                                                <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone Number</label>
+                                                <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
                                                 <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
                                                 value={this.state.edited_student?.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>
                                             </div>) : ""

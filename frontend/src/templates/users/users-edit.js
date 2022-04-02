@@ -324,30 +324,19 @@ class UsersEdit extends Component {
                                                 }
                                                 */}
                                             </div> }
-                                                
-                                            <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
-                                                <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                {/* Uses autocomplete API, only uncomment when needed to */}
-                                                <Autocomplete
-                                                    apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={this.handleAddressChange}
-                                                    options={{
-                                                        types: ['address']
-                                                    }}
-                                                    placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    value={this.state.edited_user?.location?.address}
-                                                    onChange={this.handleAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.edited_user.is_parent}/>
-                                            </div>
-                
+
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
-                                                <label for="roleType" className="control-label pb-2">User Type</label>
+                                                <label for="roleType" className="control-label pb-2">Role</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
-                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id}
+                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id || this.state.user.role_id === 4 || this.state.user.role_id === 5 }
                                                 onChange={(e) => this.handleRoleChange(e)} required>
                                                     <option value={0} disabled>Select a Role</option>
-                                                    <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option>
+                                                    { this.state.user.role_id === 4 ?
+                                                        <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option> : ""
+                                                    }
+                                                    { this.state.user.role_id === 5 ?
+                                                        <option value={4} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
+                                                    }
                                                     <option value={1} id="1" selected={this.state.edited_user.role_id === 1}>Administrator</option>
                                                     <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>School Staff</option>
                                                     <option value={3} id="3" selected={this.state.edited_user.role_id === 3}>Driver</option>
@@ -368,6 +357,24 @@ class UsersEdit extends Component {
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
                                                 </div>
                                                  : ""                                            
+                                            }
+
+                                            { this.state.user.role === "General" ?
+                                                <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
+                                                    <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                    {/* Uses autocomplete API, only uncomment when needed to */}
+                                                    <Autocomplete
+                                                        apiKey={GOOGLE_API_KEY}
+                                                        onPlaceSelected={this.handleAddressChange}
+                                                        options={{
+                                                            types: ['address']
+                                                        }}
+                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                        value={this.state.edited_user?.location?.address}
+                                                        onChange={this.handleAddressChange}
+                                                        onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                                                        required={this.state.edited_user.is_parent}/>
+                                                </div> : ""
                                             }
                                         </div>
                                         <div className="col mt-2 extra-col">

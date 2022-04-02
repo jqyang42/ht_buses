@@ -579,23 +579,6 @@ class UsersCreate extends Component {
                                                 placeholder="Enter phone number" required onChange={this.handlePhoneChange}></input> 
                                             </div> }
 
-                                            <div className={"form-group pb-3 form-col " + (this.state.new_user.is_parent ? "required" : "")}>
-                                                <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                {/* Uses autocomplete API, only uncomment when needed to */}
-                                                <Autocomplete
-                                                    apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={this.handleAddressChange}
-                                                    options={{
-                                                        types: ['address']
-                                                    }}
-                                                    value={this.state.new_user?.location?.address}
-                                                    defaultValue=""
-                                                    placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
-                                                    onChange={this.handleAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.new_user.is_parent} />
-                                            </div>
-
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
                                                 <label for="roleType" className="control-label pb-2">Role</label>
                                                 {(localStorage.getItem('is_staff') && localStorage.getItem('role') === 'School Staff') ? 
@@ -628,8 +611,28 @@ class UsersCreate extends Component {
                                                 </div>
                                                  : ""                                            
                                             }
+
+                                            { this.state.new_user.role_id == 4 ?
+                                                <div className={"form-group pb-3 form-col " + (this.state.new_user.is_parent ? "required" : "")}>
+                                                    <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                    {/* Uses autocomplete API, only uncomment when needed to */}
+                                                    <Autocomplete
+                                                        apiKey={GOOGLE_API_KEY}
+                                                        onPlaceSelected={this.handleAddressChange}
+                                                        options={{
+                                                            types: ['address']
+                                                        }}
+                                                        value={this.state.new_user?.location?.address}
+                                                        defaultValue=""
+                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1"
+                                                        onChange={this.handleAddressChange}
+                                                        onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                                                        required={this.state.new_user.is_parent} />
+                                                </div> : ""
+                                            }
                                         </div>
                                         <div className="col mt-2 w-50">
+                                            { this.state.new_user.role_id == 4 ?
                                             <div className="form-group pb-3">
                                                 <label for="exampleInputStudents" className="pb-2">Students</label>
                                                 <div>
@@ -682,7 +685,7 @@ class UsersCreate extends Component {
                                                                             </div>
                                                                             {(emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
                                                                                     (<div className="form-group pb-3">
-                                                                                    <label for={"examplePhoneNumber" + count} className="control-label pb-2">Student Phone Number</label>
+                                                                                    <label for={"examplePhoneNumber" + count} className="control-label pb-2">Student Phone</label>
                                                                                     <input type="name" className="form-control pb-2" id={"examplePhoneNumber" + count}
                                                                                     value={this.state.students[this.accordionIndex(count)].phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e, count)}></input>
                                                                                 </div>) : ""
@@ -727,7 +730,8 @@ class UsersCreate extends Component {
                                                       </div>) : ""
                                                       }
                                                 </div>
-                                            </div>
+                                            </div> : ""
+                                            }
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">

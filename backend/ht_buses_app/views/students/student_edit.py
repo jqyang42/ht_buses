@@ -56,12 +56,9 @@ def student_edit(request):
         student_object.in_range = False
     student_object.save()
     if reqBody["student"]["email"] != "":
-        print(reqBody)
         try:
-            print("here")
             update_students_user(student_object, reqBody["student"]["email"], reqBody["student"]["phone_number"])
         except:
-            print("tru")
             update_students_user(student_object, reqBody["student"]["email"])
     else: 
         if student_object.account is not None:

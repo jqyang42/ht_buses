@@ -23,7 +23,8 @@ from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_js
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
-from . views.logs import log_create, log_view
+from . views.logs import log_create, log_view, log_update
+from . views.logs.detail import log_driver_view, log_route_view, log_school_view
 from . views.parents.detail import parent_student_stop
 from . models import User
 
@@ -95,7 +96,11 @@ urlpatterns = [
     path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
     path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
     path('api/logs/create', log_create.create_log, name='log-create'),
-    path('api/logs', log_view.log_view, name='log-view')
+    path('api/logs/update', log_update.update_log, name='log-update'),
+    path('api/logs', log_view.log_view, name='log-view'),
+    path('api/logs/driver', log_driver_view.log_driver_view, name='log-driver'),
+    path('api/logs/route', log_route_view.log_route_view, name="log-route"),
+    path('api/logs/school', log_route_view.log_route_view, name="log-school")
 
 ]
 
