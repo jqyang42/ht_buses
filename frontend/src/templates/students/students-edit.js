@@ -287,7 +287,7 @@ class StudentsEdit extends Component {
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
                                                 defaultValue={this.state.student.email} placeholder="Enter student email"
                                                 onChange={this.handlStudentEmailChange} ref={el => this.emailField = el}></input>
-                                                  <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student</small>
+                                                  <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student.</small>
                                                 {(!emailValidation({ email: this.state.edited_student?.email}) && this.state.edited_student.email !== undefined && this.state.edited_student.email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
