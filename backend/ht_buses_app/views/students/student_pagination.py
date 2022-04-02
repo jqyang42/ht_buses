@@ -1,6 +1,7 @@
 from ...models import School, Route, User, Student
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from django.core.paginator import Paginator
+from . student_account import get_students_phone, get_students_email
 
 def student_pagination(students, page_number):
     data = {}
@@ -49,10 +50,13 @@ def student_pagination(students, page_number):
             route_serializer = RouteSerializer(route, many=False)
             route_arr = {"id": student["route_id"], "name": route_serializer.data["name"], "color_id": route_serializer.data["color_id"]}
         try:
-            student_email = Student.objects.get(pk = student["id"]).account.email
+            student_object = Student.objects.get(pk = id)
+            student_email = get_students_email(student_object)
+            student_phone = get_students_phone(student_object)
         except:
-            student_email = ""
-        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'email': student_email, 'parent' : parent_name})
+            student_email = ''
+            student_phone = ''
+        student_list.append({'id' : id, 'student_school_id' : student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr, 'in_range': in_range, 'email': student_email, 'phone_number': student_phone, 'parent' : parent_name})
     data["students"] = student_list
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True

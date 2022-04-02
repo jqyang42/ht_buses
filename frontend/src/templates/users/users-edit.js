@@ -208,9 +208,10 @@ class UsersEdit extends Component {
             user.location.lng = 0
             user.location.address = ""
             this.setState({
-                new_user: user,
+                edited_user: user,
                 valid_address: true,
             })
+            return true
         }
         return this.state.valid_address
     }
