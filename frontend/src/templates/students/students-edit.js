@@ -33,6 +33,7 @@ class StudentsEdit extends Component {
         parents_dropdown: [],
         redirect: false,
         edit_success: 0,
+        valid_email: true, 
         error_status: false,
         error_code: 200
     }
@@ -62,8 +63,10 @@ class StudentsEdit extends Component {
                 first_name: student.first_name,
                 last_name: student.last_name,
                 student_school_id: student.student_school_id,
+                email: student.email,
                 school_id: school.id,
                 route_id: route.id,
+                phone_number: student.phone_number,
                 user_id: user.id,
                 in_range: false // TODO USE CLACLUATED VALUE
             }
@@ -126,6 +129,20 @@ class StudentsEdit extends Component {
         this.setState({ edited_student: student });  
     }
 
+    handlStudentEmailChange = (event) => {
+        const student_email = event.target.value
+        let student = this.state.edited_student
+        student.email = student_email
+        this.setState({ edited_student: student }); 
+    }
+
+    handleStudentPhoneChange = (event,) => {
+        const student_phone_number = event.target.value
+        let student = this.state.edited_student
+        student.phone_number = student_phone_number
+        this.setState({ edited_student: student });
+    }
+
     handleSchoolChange = (event) => {
         const school_id = event.target.value
         let student = this.state.edited_student
@@ -152,18 +169,54 @@ class StudentsEdit extends Component {
         this.setState({ edited_student: student });
     }
 
+    validateNewEmail = async () => {
+        try {
+            const request = {
+                user: {
+                    email: this.state.edited_student?.email
+                }
+            }
+            const user_id = parseInt(this.state.student.account_id)
+            const res = await api.put(`users/edit/validate-email?id=${user_id}`, request);
+            const success = res.data.success;
+            this.setState({ valid_email: success });
+            return success; 
+        }
+        catch {
+            const info = {
+                user: { email: this.state.edited_student.email }            
+            }
+            const res = await api.post(`email_exists`, info)
+            const email_exists = res.data.user_email_exists
+            if (email_exists ) {
+                this.setState({ valid_email: false });
+                return false; 
+            }
+            else {
+            this.setState({ valid_email: true });
+            return true; 
+            }
+        }
+    }
+
     handleSubmit = (event) => {
         event.preventDefault();
-        if(!emailValidation({ email: this.state.edited_user?.email }) || !validNumber({ value_to_check: this.state.edited_student.student_school_id })) {
+        if((!(emailValidation({ email: this.state.edited_student?.email })) && this.state.edited_student.email !== undefined && this.state.edited_student.email !== "") || !validNumber({ value_to_check: this.state.edited_student.student_school_id })) {
             this.setState({ edit_success: -1 })
             return
         }
+        else {
+    
+        this.validateNewEmail().then(success => {
+            if (success) {
+                const student = {
+                    student: this.state.edited_student
+                }
         
-        const student = {
-            student: this.state.edited_student
-        }
-
-        this.editStudent(student)
+                this.editStudent(student)
+            }
+        })
+    }
     }
 
     render() {
@@ -233,8 +286,9 @@ class StudentsEdit extends Component {
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
                                                 <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
                                                 defaultValue={this.state.student.email} placeholder="Enter student email"
-                                                onChange={this.handleEmailChange} ref={el => this.emailField = el}></input>
-                                                {(!emailValidation({ email: this.state.edited_student?.email}) && this.state.edited_student?.email) ? 
+                                                onChange={this.handlStudentEmailChange} ref={el => this.emailField = el}></input>
+                                                  <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student</small>
+                                                {(!emailValidation({ email: this.state.edited_student?.email}) && this.state.edited_student.email !== undefined && this.state.edited_student.email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
                                                     </div>) : ""
@@ -245,7 +299,13 @@ class StudentsEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                        
+                                            {(emailValidation({ email: this.state.edited_student.email}) && this.state.edited_student.email != "") ? 
+                                                (<div className="form-group pb-3">
+                                                <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone Number</label>
+                                                <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
+                                                value={this.state.edited_student?.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>
+                                            </div>) : ""
+                                            }
                                             <div className="form-group required pb-3 form-col">
                                                 <label for="exampleInputSchool1" className="control-label pb-2">School</label>
                                                 <select className="form-select" placeholder="Select a School" aria-label="Select a School"

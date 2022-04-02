@@ -37,14 +37,25 @@ def get_students_email(student_object):
     except:
         return ""
 
-def update_students_user(student_object, student_email):
+def get_students_phone(student_object):
+    student_user = student_object.account
+    try:
+        phone_number = student_user.phone_number
+        return phone_number
+    except:
+        return ""
+
+def update_students_user(student_object, student_email, phone_number = ""):
     student_user = student_object.account
     if student_user is not None:
         student_user.first_name = student_object.first_name
         student_user.last_name = student_object.last_name
         student_user.email = student_email
+        student_user.phone_number = phone_number
         student_user.location = student_object.user_id.location
         student_user.save()
         return True
-    return False 
+    else:
+        create_student_account(student_object, student_email, phone_number) #TODO add field to frontend
+        return True
     

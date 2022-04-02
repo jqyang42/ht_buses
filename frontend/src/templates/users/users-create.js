@@ -682,7 +682,7 @@ class UsersCreate extends Component {
                                                                             </div>
                                                                             {(emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
                                                                                     (<div className="form-group pb-3">
-                                                                                    <label for={"examplePhoneNumber" + count} className="control-label pb-2">Student Phone Number <i>(optional)</i></label>
+                                                                                    <label for={"examplePhoneNumber" + count} className="control-label pb-2">Student Phone Number</label>
                                                                                     <input type="name" className="form-control pb-2" id={"examplePhoneNumber" + count}
                                                                                     value={this.state.students[this.accordionIndex(count)].phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e, count)}></input>
                                                                                 </div>) : ""
