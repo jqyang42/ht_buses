@@ -101,7 +101,7 @@ urlpatterns = [
     path('api/logs/driver', log_driver_view.log_driver_view, name='log-driver'),
     path('api/logs/route', log_route_view.log_route_view, name="log-route"),
     path('api/logs/school', log_route_view.log_route_view, name="log-school"),
-    path('api/routes/transit', route_transit.route_transit, name="route_transit"),
+    path('api/routes/transit', route_transit.route_transit, name="route-transit"),
     path('api/users/transit', user_transit.user_transit, name="user-transit")
 
 ]
