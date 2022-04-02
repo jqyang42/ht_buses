@@ -48,6 +48,7 @@ urlpatterns = [
     path('api/routes/edit', route_edit.route_edit, name="route_edit"),
     path('api/routes/delete', route_delete.route_delete, name="route_delete"),
     path('api/users', users_view.user_view, name="users"),
+    path('api/users-with-address', users_view.users_with_address, name="users_with_address"),
     path('api/users/detail', user_detail.users_detail, name="users_detail"),
     path('api/users/create', user_create.user_create, name="users_create"),
     path('api/users/edit', user_edit.user_edit, name="users_edit"),

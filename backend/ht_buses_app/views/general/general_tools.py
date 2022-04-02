@@ -133,16 +133,15 @@ def get_users_for_user(user):
     else:
         return User.objects.none()
 
-def get_parent_users(user):
-    location_ids = user.values_list('location', flat=True)
-    #locations = Location.objects.filter(pk__in = location_ids)
-    locations_with_address = location_ids.filter(address = "", pk__in = location_ids)
-    print(locations_with_address)
+def get_users_with_address(user):
+    users = User.objects.filter(role = User.GENERAL)
+    user_location_ids = users.values_list('location', flat=True)
+    locations_with_address = Location.objects.filter(pk__in = user_location_ids).exclude(address = "")
     if user.role == User.ADMIN or user.role == User.DRIVER:
-        return User.objects.get(role = User.GENERAL, location_in = locations_with_address)
+        return users.filter(location__in = locations_with_address)
     if user.role == User.SCHOOL_STAFF:
-        parents = get_users_for_user(user).filter(role = User.GENERAL, location_in = locations_with_address)
-        return parents
+        staff_general_users = get_users_for_user(user).filter(role = User.GENERAL)
+        return staff_general_users.filter(location__in = locations_with_address)
     return User.objects.none()
         
 
