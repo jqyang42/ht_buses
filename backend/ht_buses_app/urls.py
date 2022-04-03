@@ -25,7 +25,7 @@ from . views.bulk_import.creation import bulk_import_students_create, bulk_impor
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
 from . views.logs import log_create, log_view, log_update
 from . views.parents.detail import parent_student_stop
-from . views.transit import transit_view
+from . views.buses import transit_view
 from . models import User
 
 try:

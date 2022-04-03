@@ -1,6 +1,8 @@
 import requests
 import threading
 import time
+import traceback
+from . import bus_management
 
 update_queue = []
 bus_coords = {}
@@ -27,14 +29,13 @@ def update_buses():
                 params = {'bus': update_queue[index]}
                 r = requests.get(url=url, params=params)
                 data = r.json()
-                print(data)
-                print(index)
-                print(update_queue[index])
                 if isinstance(data, dict):
                     bus_coords[update_queue[index]] = {'lat': data['lat'], 'lng':data['lng']}
+                    bus_management.bus_location_update(update_queue[index], data['lat'], data['lng'])
             print(update_queue)
             _next_ten()
         except:
+            traceback.print_exc()
             print("queue is empty")
 
 def add_bus(bus_id):
@@ -52,7 +53,10 @@ def get_coords():
     global bus_coords
     return bus_coords
 
-def start_updating():
+def initialize_updater(active_buses="none"):
+    global update_queue
+    if active_buses != "none":
+        update_queue = active_buses
     timer = RepeatTimer(1, update_buses)
     timer.start()
 
