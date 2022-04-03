@@ -170,8 +170,9 @@ def bulk_import_validate(request):
                 else:
                     school_name_error = False
 
-            if (row["student_email"] is None or row["student_email"] == "") and (row["phone_number"] is not None and row["phone_number"] != ""):
-                phone_number_error_message = "Student phone number will be ignored if a student email is not included"
+            if (row["student_email"] is None or row["student_email"] == "") and (row["phone_number"] is not None and row["phone_number"] != ""):    
+                phone_number_error = True
+                phone_number_error_message = "Student phone number cannot be added unless there is a valid student email"
             else:
                 # need to check if phone number limit is 18 chars
                 if len(row["phone_number"]) > 18:
