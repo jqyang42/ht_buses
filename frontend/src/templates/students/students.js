@@ -152,7 +152,7 @@ class Students extends Component {
                                     }
                                     {this.state.import_headers_error ? 
                                         <div class="alert alert-danger mt-2 mb-3" role="alert">
-                                            Your import file does not have the correct format. Please ensure that it contains the headers: name, parent_email, student_id, and school_name, in the respective order.
+                                            Your import file does not have the correct format. Please ensure that it contains the headers: name, parent_email, student_id, school_name, student_email, and phone_number in the respective order.
                                         </div> : ""
                                     }
                                     {this.state.loading ? 
