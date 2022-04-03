@@ -23,6 +23,7 @@ import SchoolsDetail from "./templates/schools/schools-detail";
 import SchoolsCreate from "./templates/schools/schools-create";
 import SchoolsEdit from "./templates/schools/schools-edit";
 import SchoolsTransitStatus from './templates/schools/schools-transit-status';
+import GlobalTransitStatus from './templates/general/transit-status';
 
 import Users from "./templates/users/users";
 import UsersImport from './templates/users/users-import';
@@ -63,6 +64,7 @@ import { USERS_EDIT_URL } from "./constants";
 import { ROUTES_EDIT_URL } from "./constants";
 import { ROUTES_TRANSIT_LOG_URL } from "./constants";
 import { SCHOOLS_TRANSIT_STATUS_URL } from "./constants";
+import { TRANSIT_STATUS_URL } from './constants';
 import { SCHOOLS_EMAIL_URL } from './constants';
 import { ROUTES_EMAIL_URL } from './constants';
 import { PARENT_DASHBOARD_URL } from './constants';
@@ -97,6 +99,7 @@ class App extends Component {
           <Route path={SCHOOLS_EDIT_URL} element={<SchoolsEdit />} />
           <Route path={SCHOOLS_EMAIL_URL} element={<Email source="Schools" />} />
           <Route path={SCHOOLS_TRANSIT_STATUS_URL} element={<SchoolsTransitStatus />} />
+          <Route path={TRANSIT_STATUS_URL} element={<GlobalTransitStatus />} />
 
           <Route path={USERS_URL} element={<Users />} />
           <Route path={USERS_IMPORT_URL} element={<UsersImport />} />

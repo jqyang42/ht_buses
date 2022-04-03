@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import { Table } from "./table";
 import { colors } from "../../static/colors";
+import { toDisplayFormat } from "../components/time";
 import { useState } from "react";
     
 export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
@@ -16,9 +17,9 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
         () => [
             {
                 Header: 'Driver',
-                accessor: 'driver',
-                id: 'driver',
-                sortDirection: sort.accessor === 'driver' ? sort.sortDirection : 'none'
+                accessor: d => `${d.user.first_name} ${d.user.last_name}`,
+                id: 'user',
+                sortDirection: sort.accessor === 'user' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Bus #',
@@ -57,6 +58,9 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 Header: 'Start Time',
                 accessor: 'start_time',
                 id: 'start_time',
+                Cell: ({ cell: { value } }) => (
+                    toDisplayFormat({ twentyfour_time: value })
+                ),
                 disableFilter: true,
                 sortDirection: sort.accessor === 'start_time' ? sort.sortDirection : 'none'
             },
@@ -64,6 +68,9 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 Header: 'Duration',
                 accessor: 'duration',
                 id: 'duration',
+                Cell: ({ cell: { value } }) => (
+                    value === "00:00" ? <div>{"Ongoing"}</div> : <div>{value}</div>
+                ),
                 disableFilter: true,
                 sortDirection: sort.accessor === 'duration' ? sort.sortDirection : 'none'
             },

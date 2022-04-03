@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { HT_LOGO, PARENT_DASHBOARD_URL } from "../../constants";
+import { HT_LOGO, PARENT_DASHBOARD_URL, TRANSIT_STATUS_URL } from "../../constants";
 import { API_DOMAIN } from '../../constants';
 import axios from "axios";
 import { INDEX_URL, STUDENTS_URL, ROUTES_URL, SCHOOLS_URL, USERS_URL, PASSWORD_URL} from "../../constants";
@@ -38,6 +38,7 @@ class SidebarMenu extends Component {
         var routesTab = (activeTab === "routes") ? 'active' : '';
         var schoolsTab = (activeTab === "schools") ? 'active' : '';
         var usersTab = (activeTab === "users") ? 'active' : '';
+        var transitTab = (activeTab === "transit status") ? 'active' : '';
         var dashboardTab = (activeTab === "dashboard") ? 'active' : '';
         
         return (
@@ -70,6 +71,12 @@ class SidebarMenu extends Component {
                             <a href={USERS_URL} className="nav-link px-0 align-middle mx-4 px-4">
                                 <i className="bi bi-people me-2"></i>
                                 <span className="ms-1 d-inline">Manage Users</span>
+                            </a>
+                        </li>
+                        <li className={"nav-item " + transitTab}>
+                            <a href={TRANSIT_STATUS_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                                <i className="bi bi-pin-map me-2"></i>
+                                <span className="ms-1 d-inline">Transit Status</span>
                             </a>
                         </li>
                         {/* {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?

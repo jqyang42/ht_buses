@@ -14,7 +14,7 @@ import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 class BusRoutesTransitLog extends Component {
     state = {
         route: [],
-        logsPage: [],
+        transit_log: [],
         logs_table: {
             pageIndex: 1,
             canPreviousPage: null,
@@ -22,8 +22,8 @@ class BusRoutesTransitLog extends Component {
             totalPages: null,
         },
         sortOptions: {
-            accessor: 'name',
-            sortDirection: 'ASC'
+            accessor: 'start_time',
+            sortDirection: 'DESC'
         },
         searchValue: '',
         logs_show_all: false,
@@ -32,15 +32,16 @@ class BusRoutesTransitLog extends Component {
     }
 
     componentDidMount() {
-        this.getTransitLogPage()
+        this.getTransitLogPage(this.state.logs_table.pageIndex, this.state.sortOptions, this.state.searchValue)
         this.getRouteDetail()
     }
 
     // pagination
     // TODO: @jessica change this to be for transit log instead of students
     getTransitLogPage = (page, sortOptions, search) => {
-        getPage({ url: `logs`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        getPage({ url: `logs/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}` })
         .then(res => {
+            console.log(res)
             const log_table = {
                 pageIndex: res.pageIndex,
                 canPreviousPage: res.canPreviousPage,
@@ -48,7 +49,7 @@ class BusRoutesTransitLog extends Component {
                 totalPages: res.totalPages,
             }
             this.setState({
-                logsPage: res.data.logs,
+                transit_log: res.data.logs,
                 log_table: log_table
             })
         })
@@ -108,23 +109,25 @@ class BusRoutesTransitLog extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-3">
-                                    <h7>BUS RUNS</h7>
-                                    {/* <TransitLogTable 
-                                    data={this.state.transit_log} 
-                                    showAll={this.state.bus_runs_show_all}
-                                    pageIndex={this.state.transit_log.pageIndex}
-                                    canPreviousPage={this.state.transit_log.canPreviousPage}
-                                    canNextPage={this.state.transit_log.canNextPage}
-                                    updatePageCount={this.getTransitLog}
-                                    pageSize={10}
-                                    totalPages={this.state.transit_log.totalPages}
-                                    searchValue={''} 
-                                    /> */}
-                                    <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleBusRunsShowAll}>
-                                        { !this.state.bus_runs_show_all ?
-                                            "Show All" : "Show Pages"
-                                        }
-                                    </button>
+                                    <div className="col">
+                                        <h7>BUS RUNS</h7>
+                                        <TransitLogTable 
+                                        data={this.state.transit_log} 
+                                        showAll={this.state.bus_runs_show_all}
+                                        pageIndex={this.state.logs_table.pageIndex}
+                                        canPreviousPage={this.state.logs_table.canPreviousPage}
+                                        canNextPage={this.state.logs_table.canNextPage}
+                                        updatePageCount={this.getTransitLogPage}
+                                        pageSize={10}
+                                        totalPages={this.state.logs_table.totalPages}
+                                        searchValue={''} 
+                                        />
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleBusRunsShowAll}>
+                                            { !this.state.bus_runs_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -279,7 +279,7 @@ class SchoolsTransitStatus extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
-                    <SidebarMenu activeTab="routes" />
+                    <SidebarMenu activeTab="schools" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root="Schools" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.school.name} page="Transit Status"/>

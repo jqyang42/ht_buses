@@ -10,6 +10,7 @@ import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
+import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
@@ -49,6 +50,9 @@ class BusRoutesDetail extends Component {
         },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
+        in_transit: false,
+        startRunModalIsOpen: false,
+        log: {}
     }
 
     componentDidMount() {
@@ -56,6 +60,7 @@ class BusRoutesDetail extends Component {
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
+        // TODO: @jessica retrieve intransit and log id
     }
 
     // pagination
@@ -99,6 +104,12 @@ class BusRoutesDetail extends Component {
             const school = route.school;
             const users = data.users;
             const students = this.getStudentsFromUser(users)
+            const log = {
+                bus_number: null,
+                user_id: localStorage.getItem('user_id'),
+                route_id: this.props.params.id,
+                pickup: null
+            }
             
             this.setState({ 
                 students: students,
@@ -108,7 +119,8 @@ class BusRoutesDetail extends Component {
                 center: { 
                     lat: school.location.lat, 
                     lng: school.location.lng 
-                }, 
+                },
+                log: log
             });
             
             this.redirectToGoogleMapsPickup(this.state.stops)
@@ -275,6 +287,41 @@ class BusRoutesDetail extends Component {
         }))
     }
 
+    handleBusNumberChange = (event) => {
+        let log = {...this.state.log}
+        log.bus_number = event.target.value
+        this.setState({ log: log })
+    }
+
+    handleIsPickupChange = (event) => {
+        let log = {...this.state.log}
+        log.pickup = event.target.value === 'true'
+        this.setState({ log: log })
+    }
+
+    openStartRunModal = () => {
+        this.setState({ startRunModalIsOpen: true });
+    }
+
+    closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
+
+    startRun = () => {
+        this.setState({ in_transit: true })
+        const request = {
+            log: this.state.log
+
+        }
+        console.log(request)
+        api.post(`logs/create`, request)
+    }
+
+    stopRun = () => {
+        this.setState({ in_transit: false })
+        // @jessica update to use log id
+        api.put(`logs/update?id=${1}`)
+        this.closeStartRunModal()
+    }
+
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -289,7 +336,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        // console.log(this.state.students)
+        console.log(this.state.in_transit)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -329,21 +376,58 @@ class BusRoutesDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                (localStorage.getItem('role') === 'School Staff') ? 
+                                                (localStorage.getItem('role') === 'Administrator') ? 
                                                 (!this.state.in_transit ?
-                                                <Link to={"/routes/" + this.props.params.id + "/start-run"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3" 
+                                                onClick={() => this.openStartRunModal()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-play-circle me-2"></i>
                                                         Start Run
                                                     </span>
-                                                </Link> :
-                                                <Link to={"/routes/" + this.props.params.id + "/stop-run"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                </button> :
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3"
+                                                 onClick={() => this.stopRun()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-stop-circle me-2"></i>
                                                         Stop Run
                                                     </span>
-                                                </Link>) : ""
+                                                </button>) : ""
                                             }
+
+                                            <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
+                                                <form onSubmit={() => this.startRun()}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Start Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    <div className="form-group required pb-3">
+                                                        <label for="exampleInputBus" className="control-label pb-2">Bus Number</label>
+                                                        <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
+                                                            placeholder="Enter bus number" required
+                                                            onChange={this.handleBusNumberChange}></input>
+                                                    </div>
+                                                    <div className="form-group required pb-3" onChange={this.handleIsPickupChange.bind(this)}
+                                                    >
+                                                        <div>
+                                                            <label for="directionType" className="control-label pb-2">Direction</label>
+                                                        </div>
+                                                        <div className="form-check form-check-inline">
+                                                            <input className="form-check-input" type="radio" name="directionType" id="pickup" value={true} required></input>
+                                                            <label className="form-check-label" for="pickup">Pickup</label>
+                                                        </div>
+                                                        <div className="form-check form-check-inline">
+                                                            <input className="form-check-input" type="radio" name="directionType" id="dropoff" value={false} required></input>
+                                                            <label className="form-check-label" for="dropoff">Dropoff</label>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-secondary" onClick={this.closeStartRunModal}>Cancel</button>
+                                                    <button type="submit" className="btn btn-primary">Start</button>
+                                                </Modal.Footer>
+                                                </form>
+                                            </Modal>
+
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
                                                 Export Roster

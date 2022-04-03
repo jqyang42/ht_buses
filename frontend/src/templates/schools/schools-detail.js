@@ -194,7 +194,7 @@ class SchoolsDetail extends Component {
                                                 (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff' || localStorage.getItem('role') === 'Driver') ?
                                                 <Link to={"/schools/" + this.props.params.id + "/transit-status"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
-                                                        <i className="bi bi-clipboard-check me-2"></i>
+                                                        <i className="bi bi-pin-map-fill me-2"></i>
                                                         Transit Status
                                                     </span>
                                                 </Link> : ""
