@@ -51,6 +51,7 @@ class BusRoutesDetail extends Component {
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         in_transit: false,
+        transit_log_id: null,
         startRunModalIsOpen: false,
         log: {}
     }
@@ -60,7 +61,22 @@ class BusRoutesDetail extends Component {
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
+        this.getInTransit()
         // TODO: @jessica retrieve intransit and log id
+    }
+
+    getInTransit = () => {
+        api.get(`routes/transit?id=${this.props.params.id}`)
+        .then(res => {
+            const in_transit_runs = res.data
+            const in_transit = in_transit_runs.length !== 0
+            const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
+
+            this.setState({
+                in_transit: in_transit,
+                transit_log_id: transit_log_id
+            })
+        })
     }
 
     // pagination
@@ -318,7 +334,7 @@ class BusRoutesDetail extends Component {
     stopRun = () => {
         this.setState({ in_transit: false })
         // @jessica update to use log id
-        api.put(`logs/update?id=${1}`)
+        api.put(`logs/update?id=${this.state.transit_log_id}`)
         this.closeStartRunModal()
     }
 
