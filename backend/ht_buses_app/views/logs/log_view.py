@@ -21,10 +21,10 @@ def log_view(request):
     order_by = request.query_params["order_by"]
     search = request.query_params["q"]
     active = request.query_params["active"]
+    # TODO: Logs need to have permissions --> for school staff only for schools they can see
     if active == "true":
         log_list = Log.objects.filter(duration=timedelta(hours=0))
     else:
-        # TODO: Logs need to have permissions --> for school staff only for schools they can see
         log_list = Log.objects.all()
     data = get_log_view(page_number, order_by, sort_by, search, log_list)
     return Response(data)
