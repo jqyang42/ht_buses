@@ -8,7 +8,7 @@ def active_buses():
     bus_serializer = BusSerializer(buses, many=True)
     bus_arr = []
     for bus in bus_serializer.data:
-        bus_number = bus["number"]
+        bus_number = bus["bus_number"]
         location_serializer = LocationSerializer(Location.objects.get(pk=bus["location_id"]), many=False)
         bus_lat = location_serializer.data["lat"]
         bus_lng = location_serializer.data["lng"]

@@ -1,6 +1,6 @@
 
 from django.core.exceptions import PermissionDenied
-from ...models import School, User, Student, Route
+from ...models import School, User, Student, Route, Location
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from guardian.shortcuts import assign_perm, remove_perm
@@ -132,6 +132,18 @@ def get_users_for_user(user):
         return filtered_users_helper(students)
     else:
         return User.objects.none()
+
+def get_users_with_address(user):
+    users = User.objects.filter(role = User.GENERAL)
+    user_location_ids = users.values_list('location', flat=True)
+    locations_with_address = Location.objects.filter(pk__in = user_location_ids).exclude(address = "")
+    if user.role == User.ADMIN or user.role == User.DRIVER:
+        return users.filter(location__in = locations_with_address)
+    if user.role == User.SCHOOL_STAFF:
+        staff_general_users = get_users_for_user(user).filter(role = User.GENERAL)
+        return staff_general_users.filter(location__in = locations_with_address)
+    return User.objects.none()
+        
 
 def get_students_for_user(user):
     try:

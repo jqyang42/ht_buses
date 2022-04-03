@@ -6,8 +6,8 @@ from . views.bulk_import.upload import bulk_import_view_students, bulk_import_vi
 from . import models 
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
-from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
-from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
+from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create, route_transit
+from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view, user_transit
 from . views.auth import auth_valid, login, logout
 from . views.parents import parent_dashboard, parent_student_detail
 from . views.announcements import announcements
@@ -24,6 +24,7 @@ from . views.bulk_import.validation import bulk_import_validate_students, bulk_i
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
 from . views.logs import log_create, log_view, log_update
+from . views.logs.detail import log_driver_view, log_route_view, log_school_view
 from . views.parents.detail import parent_student_stop
 from . views.buses import transit_view
 from . models import User
@@ -49,6 +50,7 @@ urlpatterns = [
     path('api/routes/edit', route_edit.route_edit, name="route_edit"),
     path('api/routes/delete', route_delete.route_delete, name="route_delete"),
     path('api/users', users_view.user_view, name="users"),
+    path('api/users-with-address', users_view.users_with_address, name="users_with_address"),
     path('api/users/detail', user_detail.users_detail, name="users_detail"),
     path('api/users/create', user_create.user_create, name="users_create"),
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
@@ -97,7 +99,12 @@ urlpatterns = [
     path('api/logs/create', log_create.create_log, name='log-create'),
     path('api/logs/update', log_update.update_log, name='log-update'),
     path('api/logs', log_view.log_view, name='log-view'),
-    path('api/transit', transit_view.transit_fetch, name='transit-fetch')
+    path('api/transit', transit_view.transit_fetch, name='transit-fetch'),
+    path('api/logs/driver', log_driver_view.log_driver_view, name='log-driver'),
+    path('api/logs/route', log_route_view.log_route_view, name="log-route"),
+    path('api/logs/school', log_route_view.log_route_view, name="log-school"),
+    path('api/routes/transit', route_transit.route_transit, name="route-transit"),
+    path('api/users/transit', user_transit.user_transit, name="user-transit")
 
 ]
 
