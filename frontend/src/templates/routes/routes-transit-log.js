@@ -109,23 +109,25 @@ class BusRoutesTransitLog extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-3">
-                                    <h7>BUS RUNS</h7>
-                                    <TransitLogTable 
-                                    data={this.state.transit_log} 
-                                    showAll={this.state.bus_runs_show_all}
-                                    pageIndex={this.state.logs_table.pageIndex}
-                                    canPreviousPage={this.state.logs_table.canPreviousPage}
-                                    canNextPage={this.state.logs_table.canNextPage}
-                                    updatePageCount={this.getTransitLogPage}
-                                    pageSize={10}
-                                    totalPages={this.state.logs_table.totalPages}
-                                    searchValue={''} 
-                                    />
-                                    <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleBusRunsShowAll}>
-                                        { !this.state.bus_runs_show_all ?
-                                            "Show All" : "Show Pages"
-                                        }
-                                    </button>
+                                    <div className="col">
+                                        <h7>BUS RUNS</h7>
+                                        <TransitLogTable 
+                                        data={this.state.transit_log} 
+                                        showAll={this.state.bus_runs_show_all}
+                                        pageIndex={this.state.logs_table.pageIndex}
+                                        canPreviousPage={this.state.logs_table.canPreviousPage}
+                                        canNextPage={this.state.logs_table.canNextPage}
+                                        updatePageCount={this.getTransitLogPage}
+                                        pageSize={10}
+                                        totalPages={this.state.logs_table.totalPages}
+                                        searchValue={''} 
+                                        />
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleBusRunsShowAll}>
+                                            { !this.state.bus_runs_show_all ?
+                                                "Show All" : "Show Pages"
+                                            }
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
