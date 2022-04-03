@@ -23,7 +23,7 @@ def user_transit(request):
             route = Route.objects.get(pk=log["route_id"])
             route_serializer = RouteSerializer(route, many=False)
             route_arr = {"id": log["route_id"], "name": route_serializer.data["name"]}
-            log_arr.append({"bus_number": bus_number, "route": route_arr})
+            log_arr.append({"bus_number": bus_number, "route": route_arr, "log_id": log["id"]})
     data = log_arr
     return Response(data)
 
