@@ -12,8 +12,11 @@ def get_bus(request):
     data = {}
     bus_number = request.query_params["bus_number"]
     bus_obj = Bus.objects.filter(bus_number=bus_number)
-    bus_serializer = BusSerializer(bus_obj[0], many=False)
-    location = Location.objects.get(pk=bus_serializer.data["location_id"])
-    location_serializer = LocationSerializer(location, many=False)
-    data["bus"] = {"bus_number": bus_number, "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
+    if len(bus_obj) != 0:
+        bus_serializer = BusSerializer(bus_obj[0], many=False)
+        location = Location.objects.get(pk=bus_serializer.data["location_id"])
+        location_serializer = LocationSerializer(location, many=False)
+        data["bus"] = {"bus_number": bus_serializer.data["bus_number"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
+    else:
+        data["bus"] = {}
     return Response(data)
