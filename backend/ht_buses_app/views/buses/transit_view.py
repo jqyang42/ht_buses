@@ -16,6 +16,7 @@ import time
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def transit_fetch(request):
     data = {}
+    print('received request')
     if not transit_updates.is_running:
         active_buses = bus_management.active_buses()
         print("not running yet")

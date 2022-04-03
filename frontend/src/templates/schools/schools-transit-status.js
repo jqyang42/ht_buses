@@ -64,21 +64,21 @@ class SchoolsTransitStatus extends Component {
     }
 
     periodicCall = () => {
-        this.interval_id = setInterval(async () => {
-            // @jessica update with correct api 
-            const result = await api.get(`transit`)
-            console.log(result.data.buses)
-            this.setState({
-                buses: result.data.buses
-            })
-        }, 1000)
-        // api.get(`transit`)
-        // .then(res => {
-        //     console.log(res.data.buses)
+        // this.interval_id = setInterval(async () => {
+        //     // @jessica update with correct api 
+        //     const result = await api.get(`transit`)
+        //     console.log(result.data.buses)
         //     this.setState({
-        //         buses: res.data.buses
+        //         buses: result.data.buses
         //     })
-        // })
+        // }, 1000)
+        api.get(`transit`)
+        .then(res => {
+            console.log(res.data.buses)
+            this.setState({
+                buses: res.data.buses
+            })
+        })
     }
 
     getRouteDetail = () => {
