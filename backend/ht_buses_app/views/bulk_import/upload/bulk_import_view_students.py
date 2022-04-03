@@ -167,6 +167,9 @@ def bulk_import(request):
         if len(row["student_email"]) > 254:
             student_email_error = True
             student_email_error_message = "Student email is over 254 character limit"
+        elif User.objects.filter(email = row["student_email"].lower()).exists():
+            student_email_error = True
+            student_email_error_message = "A user with this student email already exists"
         else:
             regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
             if re.fullmatch(regex, row["student_email"]):
@@ -194,7 +197,8 @@ def bulk_import(request):
                 student_email_error = False
 
         if (row["student_email"] is None or row["student_email"] == "") and (row["phone_number"] is not None and row["phone_number"] != ""):
-            phone_number_error_message = "Student phone number will be ignored if a student email is not included"    
+            phone_number_error = True
+            phone_number_error_message = "Student phone number cannot be added unless there is a valid student email"    
         else:
             # need to check if phone number limit is 18 chars
             if len(row["phone_number"]) > 18:
