@@ -67,6 +67,9 @@ def bulk_import_validate(request):
             if len(row["student_email"]) > 254:
                     student_email_error = True
                     student_email_error_message = "Student email is over 254 character limit"
+            elif User.objects.filter(email = row["student_email"].lower()).exists():
+                student_email_error = True
+                student_email_error_message = "A user with this student email already exists"
             else:
                 regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
                 if re.fullmatch(regex, row["student_email"]):

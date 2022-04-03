@@ -319,6 +319,7 @@ class StudentsImport extends Component {
                                                     )}
                                                 </ul> : ""
                                                 }
+                                                {error.student_email ? <li>{error.error_message.student_email}</li> : ""}
                                                 {error.parent_email ? <li>{error.error_message.parent_email}</li> : ""}
                                                 {error.school_name ? <li>{error.error_message.school_name}</li> : ""}
                                                 {error.duplicate_name ? <li>Name may be a duplicate in file import</li> : ""}
