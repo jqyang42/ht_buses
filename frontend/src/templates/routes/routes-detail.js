@@ -62,21 +62,6 @@ class BusRoutesDetail extends Component {
         this.getRouteDetail()
         this.getStops()
         this.getInTransit()
-        // TODO: @jessica retrieve intransit and log id
-    }
-
-    getInTransit = () => {
-        api.get(`routes/transit?id=${this.props.params.id}`)
-        .then(res => {
-            const in_transit_runs = res.data
-            const in_transit = in_transit_runs.length !== 0
-            const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
-
-            this.setState({
-                in_transit: in_transit,
-                transit_log_id: transit_log_id
-            })
-        })
     }
 
     // pagination
@@ -150,6 +135,20 @@ class BusRoutesDetail extends Component {
                     error_code: error.response.status 
                 });
             }
+        })
+    }
+
+    getInTransit = () => {
+        api.get(`routes/transit?id=${this.props.params.id}`)
+        .then(res => {
+            const in_transit_runs = res.data
+            const in_transit = in_transit_runs.length !== 0
+            const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
+
+            this.setState({
+                in_transit: in_transit,
+                transit_log_id: transit_log_id
+            })
         })
     }
 
