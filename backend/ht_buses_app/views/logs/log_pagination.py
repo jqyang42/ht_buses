@@ -44,11 +44,12 @@ def log_pagination(logs, page_number):
         user_first_name = user_serializer.data["first_name"]
         user_last_name = user_serializer.data["last_name"]
         user_obj = {"id": user_serializer.data["id"], "first_name": user_first_name, "last_name": user_last_name}
+        school_obj = {"id": school_serializer.data["id"], "name": school_name}
         date = log["date"]
         start_time = log["start_time"]
         duration = log["duration"]
         pickup = log["pickup"]
-        log_arr.append({"id": log["id"], "route": route_arr, "school_name": school_name, "bus_number": bus_number, "user": user_obj, "date": date, "start_time": start_time[:-10], "duration": duration[:-3], "pickup": pickup})
+        log_arr.append({"id": log["id"], "route": route_arr, "school": school_obj, "bus_number": bus_number, "user": user_obj, "date": date, "start_time": start_time[:-10], "duration": duration[:-3], "pickup": pickup})
 
     data["logs"] = log_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
