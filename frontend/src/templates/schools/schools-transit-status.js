@@ -46,6 +46,7 @@ class SchoolsTransitStatus extends Component {
 
     componentDidMount() {
         // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        console.log('component mounting')
         this.getRouteDetail()
         this.getStops()
         this.periodicCall()
@@ -56,40 +57,24 @@ class SchoolsTransitStatus extends Component {
     }
 
     periodicCall = () => {
-        this.interval_id = setInterval(async () => {
-            // @jessica update with correct api 
-            const result = await api.get(`transit`)
-            console.log(result.data)
-            const temp_buses = result.data.map(bus => {
-                return {
-                    bus_number: bus.bus_number,
-                    location: {
-                        lat: bus.lat,
-                        lng: bus.lng
-                    }
-                }
-            })
+        // this.interval_id = setInterval(async () => {
+        //     // @jessica update with correct api 
+        //     api.get(`transit`)
+        //     .then(res => {
+        //         console.log(res.data)
+        //         this.setState({
+        //             buses: res.data.buses
+        //         })
+        //     })
+        // }, 1000)
+
+        api.get(`transit`)
+        .then(res => {
+            console.log(res.data)
             this.setState({
-                buses: temp_buses
+                buses: res.data.buses
             })
-        }, 1000)
-        // api.get(`transit`)
-        // .then(res => {
-        //     console.log(res.data)
-        //     const temp_buses = res.data.map(bus => {
-        //         return {
-        //             bus_number: bus.bus_number,
-        //             location: {
-        //                 lat: bus.lat,
-        //                 lng: bus.lng
-        //             }
-        //         }
-        //     })
-        //     this.setState({
-        //         // buses: res.data.buses
-        //         buses: temp_buses
-        //     })
-        // })
+        })
     }
 
     getRouteDetail = () => {
@@ -181,6 +166,7 @@ class SchoolsTransitStatus extends Component {
     }
 
     render() {
+        console.log("test")
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }
