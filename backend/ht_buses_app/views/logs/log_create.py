@@ -13,6 +13,7 @@ from pytz import timezone
 @api_view(['POST'])
 @permission_classes([IsDriver|IsAdmin]) 
 def create_log(request):
+    # TODO: needs to have API error checks if not a driver
     data = {}
     reqBody = json.loads(request.body)
     edt = timezone('US/Eastern')
