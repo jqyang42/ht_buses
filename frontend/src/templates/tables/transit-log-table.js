@@ -32,6 +32,9 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 accessor: 'school_name',
                 id: 'school_name',
                 disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    <a>{value}</a>
+                ),
                 sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
             },
             {
@@ -56,10 +59,10 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
             },     
             {
                 Header: 'Start Time',
-                accessor: 'start_time',
+                accessor: d => Array(`${d.date}`,`${d.start_time}`),
                 id: 'start_time',
                 Cell: ({ cell: { value } }) => (
-                    toDisplayFormat({ twentyfour_time: value })
+                    value[0] + " " + toDisplayFormat({ twentyfour_time: value[1] })
                 ),
                 disableFilter: true,
                 sortDirection: sort.accessor === 'start_time' ? sort.sortDirection : 'none'
@@ -99,7 +102,7 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
             searchOn={true}
             searchLabel="Search by bus number, driver, school or route..."
             showAll={showAll}
-            // navUrl={"/students/"}
+            // navUrl={"/routes/"}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
