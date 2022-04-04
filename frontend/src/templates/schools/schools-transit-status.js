@@ -54,6 +54,7 @@ class SchoolsTransitStatus extends Component {
     componentDidMount() {
         // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        console.log('component mounting')
         this.getRouteDetail()
         this.getStops()
         this.periodicCall()
@@ -72,6 +73,7 @@ class SchoolsTransitStatus extends Component {
         //         buses: result.data.buses
         //     })
         // }, 1000)
+        console.log('reached')
         api.get(`transit`)
         .then(res => {
             console.log(res.data.buses)
@@ -79,6 +81,7 @@ class SchoolsTransitStatus extends Component {
                 buses: res.data.buses
             })
         })
+        console.log('finished')
     }
 
     getRouteDetail = () => {
@@ -262,6 +265,7 @@ class SchoolsTransitStatus extends Component {
     }
 
     render() {
+        console.log("test")
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }
