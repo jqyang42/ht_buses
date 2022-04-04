@@ -59,7 +59,11 @@ class UsersDetail extends Component {
                 sortDirection: 'none'
             },
             searchValue: ''
-        }
+        },
+        in_transit: false,
+        transit_log_id: null,
+        transit_bus_number: null,
+        transit_route_name: null
     }
 
     // initialize page
@@ -71,6 +75,7 @@ class UsersDetail extends Component {
             this.setState({ schools_dropdown: ret })
         })
         this.updateIsParent()
+        this.getInTransit()
     }
 
     // pagination
@@ -93,6 +98,25 @@ class UsersDetail extends Component {
     }
 
     // api calls
+    getInTransit = () => {
+        api.get(`users/transit?id=${this.props.params.id}`)
+        .then(res => {
+            const in_transit_runs = res.data
+            console.log(in_transit_runs)
+            const in_transit = in_transit_runs.length !== 0
+            const log_id = in_transit ? in_transit_runs[0].log_id : null
+            const bus_number = in_transit ? in_transit_runs[0].bus_number : null
+            const route_name = in_transit ? in_transit_runs[0].route.name : null
+
+            this.setState({
+                in_transit: in_transit,
+                transit_log_id: log_id,
+                transit_bus_number: bus_number,
+                transit_route_name: route_name
+            })
+        })
+    }
+
     getUserDetails = () => {
         api.get(`users/detail?id=${this.props.params.id}`)
         .then(res => {
@@ -270,7 +294,7 @@ class UsersDetail extends Component {
                                         <h5>
                                             {this.state.user.first_name} {this.state.user.last_name}
                                             {/* TODO: Add check for if driver is in transit, not just if role is Driver */}
-                                            { this.state.user.role === 'Driver' ? 
+                                            { this.state.user.role === 'Driver' && this.state.in_transit ? 
                                                 <span className="badge bg-blue ms-2">In Transit</span> : ""
                                             }
                                         </h5>
@@ -395,9 +419,9 @@ class UsersDetail extends Component {
                                     </div>) : ""
                                 }
                                 {/* TODO: Add check for if driver is in transit, add bus # and route name (with link) */}
-                                {(this.state.user.role === "Driver") ? 
+                                {(this.state.user.role === "Driver" && this.state.in_transit) ? 
                                         (<div class="alert alert-primary mt-4 mb-4" role="alert">
-                                            Currently in transit: Bus # on route [Route Name]
+                                            {`Currently in transit: Bus #${this.state.transit_bus_number} on route ${this.state.transit_route_name}`}
                                         </div>) : ""
                                     }
                                 <div className="row mt-4">
