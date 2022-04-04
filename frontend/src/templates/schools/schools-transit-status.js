@@ -44,6 +44,13 @@ class SchoolsTransitStatus extends Component {
             canNextPage: null,
             totalPages: null,
         },
+        buses_page: [],
+        buses_table: {
+            pageIndex: 1,
+            canPreviousPage: null,
+            canNextPage: null,
+            totalPages: null,
+        },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         test: 0
@@ -52,11 +59,12 @@ class SchoolsTransitStatus extends Component {
     interval_id = null
 
     componentDidMount() {
-        this.getStudentsPage(this.state.students_table.pageIndex, null, '')
-        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+        // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
-        this.periodicCall()
+        // this.periodicCall()
+        this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
     }
 
     componentWillUnmount() {
@@ -77,6 +85,22 @@ class SchoolsTransitStatus extends Component {
 
             console.log(this.state.test)
         }, 1000)
+    }
+
+    getActiveBuses = (page, sortOptions, search) => {
+        getPage({ url: `logs/school`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}&active=true` })
+        .then(res => {
+            const buses_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages
+            }
+            this.setState({
+                buses_page: res.data.logs,
+                buses_table: buses_table
+            })
+        })
     }
 
     // pagination
@@ -342,17 +366,17 @@ class SchoolsTransitStatus extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        {/* <TransitStatusTable 
-                                        data={this.state.students_page} 
+                                        <TransitStatusTable 
+                                        data={this.state.buses_page} 
                                         showAll={this.state.routes_show_all}
-                                        pageIndex={this.state.students_table.pageIndex}
-                                        canPreviousPage={this.state.students_table.canPreviousPage}
-                                        canNextPage={this.state.students_table.canNextPage}
-                                        updatePageCount={this.getStudentsPage}
+                                        pageIndex={this.state.buses_table.pageIndex}
+                                        canPreviousPage={this.state.buses_table.canPreviousPage}
+                                        canNextPage={this.state.buses_table.canNextPage}
+                                        updatePageCount={this.getActiveBuses}
                                         pageSize={10}
-                                        totalPages={this.state.students_table.totalPages}
+                                        totalPages={this.state.buses_table.totalPages}
                                         searchValue={''} 
-                                        /> */}
+                                        />
                                         <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
                                             { !this.state.routes_show_all ?
                                                 "Show All" : "Show Pages"

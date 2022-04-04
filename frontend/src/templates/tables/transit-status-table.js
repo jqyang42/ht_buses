@@ -6,7 +6,7 @@ import { useState } from "react";
 export function TransitStatusTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue}) {
 
-    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'full_name' });
 
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)
@@ -32,9 +32,12 @@ export function TransitStatusTable({ data, showAll, pageIndex, canPreviousPage, 
             },
             {
                 Header: 'Driver',
-                accessor: 'driver',
-                id: 'driver',
-                sortDirection: sort.accessor === 'driver' ? sort.sortDirection : 'none'
+                accessor: d => Array(`${d.user.first_name} ${d.user.last_name}`, `${d.user.id}`),
+                id: 'user',
+                Cell: ({ cell: { value } }) => (
+                    <a href={"/users/" + value[1]}>{value[0]}</a>
+                ),
+                sortDirection: sort.accessor === 'full_name' ? sort.sortDirection : 'none'
             }
         ],
         [sort]
