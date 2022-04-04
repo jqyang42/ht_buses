@@ -2,8 +2,8 @@ from ...serializers import LogSerializer
 from ...models import User, Route, Log
 from rest_framework.response import Response
 import json
-from datetime import datetime, date, timezone
-from ...role_permissions import IsAdmin, IsDriver
+from datetime import datetime, timedelta
+from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
@@ -14,13 +14,18 @@ from .log_pagination import log_pagination
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
 @api_view(['GET'])
-@permission_classes([IsDriver|IsAdmin]) 
+@permission_classes([IsDriver|IsAdmin|IsSchoolStaff]) 
 def log_view(request):
     page_number = request.query_params["page"]
     sort_by = request.query_params["sort_by"]
     order_by = request.query_params["order_by"]
     search = request.query_params["q"]
-    log_list = Log.objects.all()
+    active = request.query_params["active"]
+    # TODO: Logs need to have permissions --> for school staff only for schools they can see
+    if active == "true":
+        log_list = Log.objects.filter(duration=timedelta(hours=0))
+    else:
+        log_list = Log.objects.all()
     data = get_log_view(page_number, order_by, sort_by, search, log_list)
     return Response(data)
 
