@@ -37,13 +37,6 @@ class SchoolsTransitStatus extends Component {
         //     canNextPage: null,
         //     totalPages: null,
         // },
-        // stops_page:[],
-        // stops_table: {
-        //     pageIndex: 1,
-        //     canPreviousPage: null,
-        //     canNextPage: null,
-        //     totalPages: null,
-        // },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         buses: []
@@ -52,7 +45,6 @@ class SchoolsTransitStatus extends Component {
     interval_id = null
 
     componentDidMount() {
-        // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
@@ -74,9 +66,10 @@ class SchoolsTransitStatus extends Component {
         // }, 1000)
         api.get(`transit`)
         .then(res => {
-            console.log(res.data.buses)
+            // console.log(res.data)
             this.setState({
-                buses: res.data.buses
+                // buses: res.data.buses
+                buses: res.data
             })
         })
     }
@@ -90,22 +83,16 @@ class SchoolsTransitStatus extends Component {
             const route = data.route;
             const school = route.school;
             const users = data.users;
-            // const students = this.getStudentsFromUser(users)
             
             this.setState({ 
-                // students: students,
                 users: users,
                 route: route, 
                 school: school, 
                 center: { 
                     lat: school.location.lat, 
                     lng: school.location.lng 
-                }, 
-            });
-            
-            // this.redirectToGoogleMapsPickup(this.state.stops)
-            // this.redirectToGoogleMapsDropoff(this.state.stops)
-            // this.setMarkers(users)            
+                }
+            });        
         })
         .catch(error => {
             if (error.response.status !== 200) {
@@ -132,39 +119,11 @@ class SchoolsTransitStatus extends Component {
         return [].concat.apply([], students)
     }
 
-    // setMarkers = (users) => {
-    //     const markers = []
-    //     users.map((user) => {
-    //         const studentIDs = [];
-    //         const studentNames = [];
-    //         user.students.map((student) => {
-    //             studentIDs.push(student.id);
-    //             const fullName = student.first_name + ' ' + student.last_name;
-    //             studentNames.push(fullName);
-    //         });
-    //         markers.push({
-    //             location: {
-    //                 lat: user.location.lat,
-    //                 lng: user.location.lng
-    //             },
-    //             id: user.id,
-    //             studentIDs: studentIDs,
-    //             studentNames: studentNames,
-    //             routeID: this.props.params.id   //TODO: change markers to create per student
-    //         })
-    //     });
-    //     this.setState({ markers: markers })
-    // }
-
     getStops = () => {     
         getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            // console.log(data.stops)
-            // console.log(this.state.center)
-            this.redirectToGoogleMapsPickup(this.state.stops)
-            this.redirectToGoogleMapsDropoff(this.state.stops)
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -174,64 +133,6 @@ class SchoolsTransitStatus extends Component {
             }
         })
     }
-    
-    // // TODO: Fix undefined, undefined center starting error after refreshing
-    // redirectToGoogleMapsPickup = (stops) => {
-    //     this.setState({map_redirect_pickup: []})
-    //     let arrivingLinks = []
-    //     for (let i=0; i < stops.length; i+=10 ) {
-    //         // console.log(i)
-    //         let map_redirect_pickup = GOOGLE_MAP_URL
-    //         map_redirect_pickup += '&waypoints='
-    //         let j;
-    //         for (j = i; j < i + 9 && j < stops.length; j+=1) {
-    //             // console.log(stops[j])
-    //             map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
-    //         }
-    //         if (j == stops.length) {
-    //             map_redirect_pickup += '&destination=' + this.state.center.lat + ',' + this.state.center.lng 
-    //         } else {
-    //             map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
-    //         }
-    //         // console.log(map_redirect_pickup)
-    //         arrivingLinks.push(map_redirect_pickup)
-    //     }
-    //     // console.log(arrivingLinks)
-    //     this.setState({
-    //         map_redirect_pickup: arrivingLinks
-    //     })
-    // }
-
-    // redirectToGoogleMapsDropoff = (stops) => {
-    //     let reversed_stops = stops.slice().reverse();
-    //     let departingLinks = []
-    //     let i;
-    //     if (reversed_stops.length == 1) {
-    //         let map_redirect_dropoff = GOOGLE_MAP_URL
-    //         map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng
-    //         map_redirect_dropoff += '&destination=' + reversed_stops[0].location.lat + ',' + reversed_stops[0].location.lng
-    //         departingLinks.push(map_redirect_dropoff) 
-    //     } else {
-    //         for (i = 0; i < reversed_stops.length-1; i+=10 ) {
-    //             let map_redirect_dropoff = GOOGLE_MAP_URL 
-    //             // console.log(i)
-    //             if (i == 0) {
-    //                 map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
-    //             }
-    //             map_redirect_dropoff +=  '&waypoints=';
-    //             let j;
-    //             for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
-    //                 // console.log(reversed_stops)
-    //                 map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
-    //             }
-    //             //Think about cases where this could be in its own link
-    //             map_redirect_dropoff += '&destination=' + reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng
-    //             departingLinks.push(map_redirect_dropoff)
-    //         }
-    //     }
-    //     // console.log(departingLinks)
-    //     this.setState({map_redirect_dropoff: departingLinks})
-    // }
 
     // handlers
     handleDelete = (event) => {
