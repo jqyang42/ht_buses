@@ -56,27 +56,11 @@ class SchoolsTransitStatus extends Component {
     }
 
     periodicCall = () => {
-        // this.interval_id = setInterval(async () => {
-        //     // @jessica update with correct api 
-        //     const result = await api.get(`transit`)
-        //     console.log(result.data)
-        //     const temp_buses = result.data.map(bus => {
-        //         return {
-        //             bus_number: bus.bus_number,
-        //             location: {
-        //                 lat: bus.lat,
-        //                 lng: bus.lng
-        //             }
-        //         }
-        //     })
-        //     this.setState({
-        //         buses: temp_buses
-        //     })
-        // }, 1000)
-        api.get(`transit`)
-        .then(res => {
-            console.log(res.data)
-            const temp_buses = res.data.map(bus => {
+        this.interval_id = setInterval(async () => {
+            // @jessica update with correct api 
+            const result = await api.get(`transit`)
+            console.log(result.data)
+            const temp_buses = result.data.map(bus => {
                 return {
                     bus_number: bus.bus_number,
                     location: {
@@ -86,10 +70,26 @@ class SchoolsTransitStatus extends Component {
                 }
             })
             this.setState({
-                // buses: res.data.buses
                 buses: temp_buses
             })
-        })
+        }, 1000)
+        // api.get(`transit`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     const temp_buses = res.data.map(bus => {
+        //         return {
+        //             bus_number: bus.bus_number,
+        //             location: {
+        //                 lat: bus.lat,
+        //                 lng: bus.lng
+        //             }
+        //         }
+        //     })
+        //     this.setState({
+        //         // buses: res.data.buses
+        //         buses: temp_buses
+        //     })
+        // })
     }
 
     getRouteDetail = () => {

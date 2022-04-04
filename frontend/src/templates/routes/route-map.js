@@ -64,13 +64,18 @@ class RouteMap extends Component {
       lng: parseFloat(this.props.center.lng)
     },
     buses: this.props.buses,
-    
+    isLoaded: false
   }
 
   studentsChanged = []
 
   handleCenterChange = (event) => {
     //TODO: update state with new center
+  }
+
+  onLoad = () => {
+    console.log(`load is now true`)
+    this.setState({ isLoaded: true })
   }
 
   componentDidUpdate(prevProps) {
@@ -197,7 +202,7 @@ class RouteMap extends Component {
 
   render() {
     const center = this.props.center
-    // console.log(this.state.existingStops)
+    console.log(this.state.isLoaded)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -214,6 +219,7 @@ class RouteMap extends Component {
             }}
             zoom={13}
             onClick={this.createStopMarker}
+            onIdle={this.onLoad}
           >
             {this.props.centerIcon ? 
               <Marker 
@@ -239,7 +245,8 @@ class RouteMap extends Component {
                 assign_mode={false} 
                 routeID={5}
                 handleDeleteStopMarker={() => {}}
-                handleStopNameChange={() => {}}  
+                handleStopNameChange={() => {}}
+                mapLoaded={this.state.isLoaded}
                 // key={index} 
                 // position={value.location}
                 // location={value.location} 

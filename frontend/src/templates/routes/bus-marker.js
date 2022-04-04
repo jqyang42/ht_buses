@@ -27,7 +27,6 @@ class BusMarker extends Component {
         name: this.props.name,
         updated: false,
         showInfoWindow: true,
-        mapLoaded: false
       };
 
     handleClick = (event) => {
@@ -77,8 +76,8 @@ class BusMarker extends Component {
       onClick={this.handleClick}
       onDragEnd={this.editLocation}
       draggable={this.props.assign_mode}>
-        {console.log(showInfoWindow)}
-        {showInfoWindow && (
+        {console.log(this.props.mapLoaded)}
+        {this.props.mapLoaded && (
           <InfoWindow options={{maxWidth:300}}>
             {
               !this.props.assign_mode ? 
