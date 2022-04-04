@@ -66,10 +66,19 @@ class SchoolsTransitStatus extends Component {
         // }, 1000)
         api.get(`transit`)
         .then(res => {
-            // console.log(res.data)
+            console.log(res.data)
+            const temp_buses = res.data.map(bus => {
+                return {
+                    bus_number: bus.bus_number,
+                    location: {
+                        lat: bus.lat,
+                        lng: bus.lng
+                    }
+                }
+            })
             this.setState({
                 // buses: res.data.buses
-                buses: res.data
+                buses: temp_buses
             })
         })
     }
