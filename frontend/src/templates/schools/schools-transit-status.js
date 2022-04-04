@@ -59,9 +59,18 @@ class SchoolsTransitStatus extends Component {
         // this.interval_id = setInterval(async () => {
         //     // @jessica update with correct api 
         //     const result = await api.get(`transit`)
-        //     console.log(result.data.buses)
+        //     console.log(result.data)
+        //     const temp_buses = result.data.map(bus => {
+        //         return {
+        //             bus_number: bus.bus_number,
+        //             location: {
+        //                 lat: bus.lat,
+        //                 lng: bus.lng
+        //             }
+        //         }
+        //     })
         //     this.setState({
-        //         buses: result.data.buses
+        //         buses: temp_buses
         //     })
         // }, 1000)
         api.get(`transit`)

@@ -8,6 +8,7 @@ import { MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 import StudentMarker from './student-marker';
 import StopMarker from './stop-marker';
+import BusMarker from './bus-marker'
 import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
 
 const containerStyle = {
@@ -63,6 +64,7 @@ class RouteMap extends Component {
       lng: parseFloat(this.props.center.lng)
     },
     buses: this.props.buses,
+    
   }
 
   studentsChanged = []
@@ -225,9 +227,21 @@ class RouteMap extends Component {
             {console.log(this.props.buses)}
             {this.props.buses?.map((value, index) => {
               console.log(value)
-              return <Marker 
-                key={index} 
-                position={value.location}
+              return <BusMarker 
+                key={`${value.location.lat}+${value.location.lng}`}
+                id={index}
+                uid={1}
+                name={value.bus_number}
+                location={{
+                  lat: value.location.lat,
+                  lng: value.location.lng
+                }}
+                assign_mode={false} 
+                routeID={5}
+                handleDeleteStopMarker={() => {}}
+                handleStopNameChange={() => {}}  
+                // key={index} 
+                // position={value.location}
                 // location={value.location} 
                 // assign_mode={this.props.assign_mode} 
                 // routeID={value.routeID} 
