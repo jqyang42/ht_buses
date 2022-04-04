@@ -17,8 +17,11 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
         () => [
             {
                 Header: 'Driver',
-                accessor: d => `${d.user.first_name} ${d.user.last_name}`,
+                accessor: d => Array(`${d.user.first_name} ${d.user.last_name}`, `${d.user.id}`),
                 id: 'user',
+                Cell: ({ cell: { value } }) => (
+                    <a href={"/users/" + value[1]}>{value[0]}</a>
+                ),
                 sortDirection: sort.accessor === 'user' ? sort.sortDirection : 'none'
             },
             {
@@ -29,11 +32,11 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
             },
             {
                 Header: 'School',
-                accessor: 'school_name',
+                accessor: d => Array(`${d.school.name}`, `${d.school.id}`),
                 id: 'school_name',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
-                    <a>{value}</a>
+                    <a href={"/schools/" + value[1]}>{value[0]}</a>
                 ),
                 sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
             },
@@ -43,7 +46,7 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 disableFilter: true,
                 id: 'route',
                 Cell: ({ cell: { value } }) => (
-                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
+                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/><a href={'/routes/'+value[1]}>{value[2]}</a></>
                 ),
                 sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
             },     

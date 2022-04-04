@@ -391,7 +391,7 @@ class BusRoutesDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                                (localStorage.getItem('role') === 'Administrator') ? 
+                                                (localStorage.getItem('role') === 'Driver') ? 
                                                 (!this.state.in_transit ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" 
                                                 onClick={() => this.openStartRunModal()}>
