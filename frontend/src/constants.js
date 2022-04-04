@@ -2,6 +2,7 @@ import HT_Logo from './static/img/HT_Logo.png';
 import sort_asc from './static/img/sort_asc.png';
 import sort_desc from './static/img/sort_desc.png';
 import sort from './static/img/sort.png';
+import bus_icon from './static/img/bus_icon.png'
 import {colors} from './static/colors';
 import { stop_marker_icons } from './static/stop-marker-index';
 import { marker_icons } from './static/marker-index';
@@ -11,6 +12,7 @@ export const HT_LOGO = HT_Logo;
 export const SORT_ASC = sort_asc;
 export const SORT_DESC = sort_desc;
 export const SORT = sort;
+export const BUS_ICON = bus_icon;
 
 export const MARKER_COLORS = colors;
 export const MARKER_ICONS = marker_icons;
