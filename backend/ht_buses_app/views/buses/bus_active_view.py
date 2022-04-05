@@ -12,7 +12,7 @@ from datetime import timedelta
 def get_buses(request):
     data = {}
     school_id = request.query_params["id"]
-    data = active_buses_filter(school_id)
+    data["buses"] = active_buses_filter(school_id)
     return Response(data)
 
 def active_buses_filter(school_id):
