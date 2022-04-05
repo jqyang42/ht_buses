@@ -26,11 +26,12 @@ def active_buses_filter(school_id):
             location_serializer = LocationSerializer(Location.objects.get(pk=bus["location_id"]), many=False)
             bus_lat = location_serializer.data["lat"]
             bus_lng = location_serializer.data["lng"]
+            location_arr = {"id": location_serializer.data["id"], 'lat': bus_lat, 'lng': bus_lng}
             log_obj = Log.objects.filter(bus_number=bus_number, duration=timedelta(hours=0))
             log_obj_serializer = LogSerializer(log_obj[0], many=False)
             user_serializer = UserSerializer(User.objects.get(pk=log_obj_serializer.data["user_id"]), many=False)
             user_arr = {'id': log_obj_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"]}
-            bus_arr.append({'bus_number': bus_number, 'lat': bus_lat, 'lng': bus_lng, 'user': user_arr})
+            bus_arr.append({'bus_number': bus_number, 'location': location_arr, 'user': user_arr})
     else:
         # grab buses from school
         logs = Log.objects.filter(route_id__school_id=school_id, duration=timedelta(hours=0))
@@ -42,8 +43,9 @@ def active_buses_filter(school_id):
             location_serializer_l = LocationSerializer(Location.objects.get(pk=bus_serializer_l.data["location_id"]), many=False)
             bus_lat_l = location_serializer_l.data["lat"]
             bus_lng_l = location_serializer_l.data["lng"]
+            location_arr = {"id": location_serializer_l.data["id"], 'lat': bus_lat_l, 'lng': bus_lng_l}
             user_serializer = UserSerializer(User.objects.get(pk=log["user_id"]), many=False)
             user_arr = {"id": log["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"]}
-            bus_arr.append({'bus_number': bus_number, 'lat': bus_lat_l, 'lng': bus_lng_l, 'user': user_arr})
+            bus_arr.append({'bus_number': bus_number, 'location': location_arr, 'user': user_arr})
     data["buses"] = bus_arr
     return bus_arr
