@@ -61,7 +61,7 @@ class BusMarker extends Component {
           this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
         }
       }
-      this.props.toggleInfoWindow()
+      this.props.toggleInfoWindow(this.props.name)
     }
 
   render () {
@@ -75,7 +75,7 @@ class BusMarker extends Component {
       icon={this.state.icon} 
       id={this.props.id} 
       key={this.props.id} 
-      onClick={this.props.toggleInfoWindow}
+      onClick={() => {this.props.toggleInfoWindow(this.props.name)}}
       onDragEnd={this.editLocation}
       draggable={this.props.assign_mode}
       onLoad={() => {
@@ -85,7 +85,7 @@ class BusMarker extends Component {
         this.setState({ markerLoaded: false })
       }}
       >
-        {this.props.showInfoWindow && this.state.markerLoaded && (
+        {this.props.busToolTip[this.props.name] && this.state.markerLoaded && (
           <InfoWindow options={{maxWidth:300}}>
             {
               !this.props.assign_mode ? 

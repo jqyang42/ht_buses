@@ -39,7 +39,8 @@ class SchoolsTransitStatus extends Component {
         // },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
-        buses: []
+        buses: [],
+        bus_tooltip: {}
     }
 
     interval_id = null
@@ -60,9 +61,16 @@ class SchoolsTransitStatus extends Component {
             // @jessica update with correct api 
             api.get(`transit`)
             .then(res => {
-                console.log(res.data)
+                console.log(res.data.buses)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+
+                console.log(bus_tooltip)
                 this.setState({
-                    buses: res.data.buses
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip
                 })
             })
         }, 1000)
@@ -208,7 +216,7 @@ class SchoolsTransitStatus extends Component {
                                             key={this.state.assign_mode} 
                                             active_route={this.props.params.id} 
                                             center={this.state.center}
-                                            // students={this.state.markers}
+                                            bus_tooltip={this.state.bus_tooltip}
                                             existingStops={this.state.stops}
                                             buses={this.state.buses}
                                         />

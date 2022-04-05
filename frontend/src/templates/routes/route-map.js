@@ -64,7 +64,8 @@ class RouteMap extends Component {
       lng: parseFloat(this.props.center.lng)
     },
     buses: this.props.buses,
-    bus_info_window: false
+    // bus_info_window: false,
+    bus_tooltip: this.props.bus_tooltip
   }
 
   studentsChanged = []
@@ -73,10 +74,20 @@ class RouteMap extends Component {
     //TODO: update state with new center
   }
 
-  toggleBusInfoWindow = (event) => {
-    this.setState(prevState => ({
-      bus_info_window: !prevState.bus_info_window
-    }))
+  toggleBusInfoWindow = (bus_number) => {
+    // console.log(this.state.bus_tooltip)
+    // this.setState(prevState => ({
+    //   bus_tooltip: {
+    //     ...prevState.bus_tooltip,
+    //     [bus_number]: !prevState.bus_tooltip[bus_number]
+    //   }
+    // }))
+
+    const new_tooltip = this.state.bus_tooltip
+    new_tooltip[bus_number] = !new_tooltip[bus_number]
+    this.setState({
+      bus_tooltip: new_tooltip
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -242,7 +253,8 @@ class RouteMap extends Component {
                 routeID={5}
                 handleDeleteStopMarker={() => {}}
                 handleStopNameChange={() => {}}
-                showInfoWindow={this.state.bus_info_window}
+                // showInfoWindow={this.state.bus_info_window}
+                busToolTip={this.state.bus_tooltip}
                 toggleInfoWindow={this.toggleBusInfoWindow}
                 // key={index} 
                 // position={value.location}
