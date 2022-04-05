@@ -3,6 +3,7 @@ from ...models import Log, Bus
 from datetime import datetime, timezone
 from pytz import timezone
 from datetime import timedelta, datetime
+from ht_buses_app.views.buses import transit_updates
 
 def log_expiration():
     all_logs = Log.objects.all()
@@ -26,7 +27,8 @@ def log_expiration():
                 bus = Bus.objects.get(pk=bus_serializer.data["id"])
                 bus.is_running = False
                 bus.save()
-                # call thomas method to expire bus
+                if transit_updates.is_running:
+                    transit_updates.remove_bus(log_obj.bus_number)
 
             
 

@@ -30,10 +30,8 @@ def update_log(request):
     bus = Bus.objects.get(pk=bus_serializer.data["id"])
     bus.is_running = False
     bus.save()
-    
     if  transit_updates.is_running:
         transit_updates.remove_bus(log_obj.bus_number)
-    # Call Thomas method to remove bus
     final_log_serializer = LogSerializer(log_obj, many=False)
     data["log"] = final_log_serializer.data
     data["success"] = True
