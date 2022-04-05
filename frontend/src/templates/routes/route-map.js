@@ -246,13 +246,14 @@ class RouteMap extends Component {
               return <BusMarker 
                 key={`${value.location.lat}+${value.location.lng}`}
                 id={index}
-                uid={1}
-                name={value.bus_number}
+                // uid={1}
+                bus_number={value.bus_number}
+                driver={value.user}
                 location={value.location}
-                assign_mode={false} 
-                routeID={5}
-                handleDeleteStopMarker={() => {}}
-                handleStopNameChange={() => {}}
+                // assign_mode={false} 
+                // routeID={5}
+                // handleDeleteStopMarker={() => {}}
+                // handleStopNameChange={() => {}}
                 // showInfoWindow={this.state.bus_info_window}
                 busToolTip={this.state.bus_tooltip}
                 toggleInfoWindow={this.toggleBusInfoWindow}

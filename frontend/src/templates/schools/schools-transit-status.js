@@ -59,7 +59,7 @@ class SchoolsTransitStatus extends Component {
     periodicCall = () => {
         this.interval_id = setInterval(async () => {
             // @jessica update with correct api 
-            api.get(`transit`)
+            api.get(`buses/school?id=${this.props.params.id}`)
             .then(res => {
                 console.log(res.data.buses)
                 let bus_tooltip = {}
@@ -75,7 +75,7 @@ class SchoolsTransitStatus extends Component {
             })
         }, 1000)
 
-        // api.get(`transit`)
+        // api.get(`buses/school?id=${this.props.params.id}`)
         // .then(res => {
         //     console.log(res.data)
         //     this.setState({

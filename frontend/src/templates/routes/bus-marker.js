@@ -24,10 +24,11 @@ class BusMarker extends Component {
         currentRoute: this.props.routeID,
         icon: BUS_ICON,
         location: this.props.location,
-        name: this.props.name,
+        bus_number: this.props.bus_number,
         updated: false,
         // showInfoWindow: true,
-        markerLoaded: false
+        markerLoaded: false,
+        driver_name: `${this.props.driver.first_name} ${this.props.driver.last_name}`
       };
 
     // handleClick = (event) => {
@@ -36,33 +37,33 @@ class BusMarker extends Component {
     //   }))
     // }
 
-    editName = (event) => {
-      event.preventDefault();
-      this.setState({
-        name: event.target.value
-      });
-    }
+    // editName = (event) => {
+    //   event.preventDefault();
+    //   this.setState({
+    //     name: event.target.value
+    //   });
+    // }
 
-    editLocation = (event) => {
-      this.setState({
-        location: event.latLng.toJSON() 
-      })
-      this.handleSubmit(event)
-    }
+    // editLocation = (event) => {
+    //   this.setState({
+    //     location: event.latLng.toJSON() 
+    //   })
+    //   this.handleSubmit(event)
+    // }
  
-    handleSubmit = (event) => {
-      if (this.props.handleStopNameChange) {
-        if(this.props.uid) {
-          // console.log(this.state.name)
-          this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid, this.state.location)
-        } 
-        else {
-          // console.log(this.state.name)
-          this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
-        }
-      }
-      this.props.toggleInfoWindow(this.props.name)
-    }
+    // handleSubmit = (event) => {
+    //   if (this.props.handleStopNameChange) {
+    //     if(this.props.uid) {
+    //       // console.log(this.state.name)
+    //       this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid, this.state.location)
+    //     } 
+    //     else {
+    //       // console.log(this.state.name)
+    //       this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
+    //     }
+    //   }
+    //   this.props.toggleInfoWindow(this.props.name)
+    // }
 
   render () {
     // const { showInfoWindow } = this.state;
@@ -71,13 +72,13 @@ class BusMarker extends Component {
       <>
       {<Marker 
       position={this.state.location} 
-      className={this.state.currentRoute} 
+      // className={this.state.currentRoute} 
       icon={this.state.icon} 
       id={this.props.id} 
       key={this.props.id} 
-      onClick={() => {this.props.toggleInfoWindow(this.props.name)}}
-      onDragEnd={this.editLocation}
-      draggable={this.props.assign_mode}
+      onClick={() => {this.props.toggleInfoWindow(this.props.bus_number)}}
+      // onDragEnd={this.editLocation}
+      // draggable={this.props.assign_mode}
       onLoad={() => {
         this.setState({ markerLoaded: true })
       }}
@@ -85,32 +86,33 @@ class BusMarker extends Component {
         this.setState({ markerLoaded: false })
       }}
       >
-        {this.props.busToolTip[this.props.name] && this.state.markerLoaded && (
+        {this.props.busToolTip[this.props.bus_number] && this.state.markerLoaded && (
           <InfoWindow options={{maxWidth:300}}>
             {
-              !this.props.assign_mode ? 
+              // !this.props.assign_mode ? 
               <>
-                <h6>{this.state.name}</h6>
+                <h6>{this.state.bus_number}</h6>
+                <h6>{this.state.driver_name}</h6>
               </>
-              :
-              <>
-                <form>
-                  <div className='form-group mt-1 me-0 pe-0 px-0 overflow-hidden'>
-                      <input type='name' className="d-inline form-control w-auto ms-1 me-0" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.name}></input>
-                      <div className='row mt-3 mb-1 ms-1 w-auto d-flex justify-content-between'>
-                        <div className='float-start ms-0 ps-0 w-auto'>
-                          {/* <button onClick={showInfoWindow ? this.props.handleDeleteMarker(this.props.id) : () => {}} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button> */}
-                          <button onClick={(e) => this.props.handleDeleteStopMarker(e, this.props.id)} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
-                        </div>
-                        <div className='float-end w-auto text-align-end align-items-end pb-0'>
-                          <button onClick={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>
-                            Save
-                          </button>
-                        </div>
-                      </div>
-                  </div>
-                </form>
-              </>
+              // :
+              // <>
+              //   <form>
+              //     <div className='form-group mt-1 me-0 pe-0 px-0 overflow-hidden'>
+              //         <input type='name' className="d-inline form-control w-auto ms-1 me-0" placeholder='Enter bus stop name' onChange={this.editName} defaultValue={this.state.bus_number}></input>
+              //         <div className='row mt-3 mb-1 ms-1 w-auto d-flex justify-content-between'>
+              //           <div className='float-start ms-0 ps-0 w-auto'>
+              //             {/* <button onClick={showInfoWindow ? this.props.handleDeleteMarker(this.props.id) : () => {}} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button> */}
+              //             <button onClick={(e) => this.props.handleDeleteStopMarker(e, this.props.id)} className='h-100 w-auto btn btn-danger ms-0 me-2'>Delete</button>
+              //           </div>
+              //           <div className='float-end w-auto text-align-end align-items-end pb-0'>
+              //             <button onClick={this.handleSubmit} className='h-100 w-auto btn btn-primary mb-0 me-0'>
+              //               Save
+              //             </button>
+              //           </div>
+              //         </div>
+              //     </div>
+              //   </form>
+              // </>
             }
             
               
