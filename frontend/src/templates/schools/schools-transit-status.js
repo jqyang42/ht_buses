@@ -365,7 +365,7 @@ class SchoolsTransitStatus extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
-                                        <h7>ROUTES</h7>
+                                        <h7>BUS RUNS</h7>
                                         <TransitStatusTable 
                                         data={this.state.buses_page} 
                                         showAll={this.state.routes_show_all}

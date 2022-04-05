@@ -20,7 +20,7 @@ export function TransitStatusTable({ data, showAll, pageIndex, canPreviousPage, 
                 disableFilter: true,
                 id: 'route',
                 Cell: ({ cell: { value } }) => (
-                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/>{value[2]}</>
+                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/><a href={"/routes/"+value[1]}>{value[2]}</a></>
                 ),
                 sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
             }, 
@@ -32,12 +32,9 @@ export function TransitStatusTable({ data, showAll, pageIndex, canPreviousPage, 
             },
             {
                 Header: 'Driver',
-                accessor: d => Array(`${d.user.first_name} ${d.user.last_name}`, `${d.user.id}`),
+                accessor: d => `${d.user.first_name} ${d.user.last_name}`,
                 id: 'user',
-                Cell: ({ cell: { value } }) => (
-                    <a href={"/users/" + value[1]}>{value[0]}</a>
-                ),
-                sortDirection: sort.accessor === 'full_name' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'user' ? sort.sortDirection : 'none'
             }
         ],
         [sort]
@@ -64,7 +61,7 @@ export function TransitStatusTable({ data, showAll, pageIndex, canPreviousPage, 
             searchOn={false}
             // searchLabel="Search by bus number, driver, school or route..."
             showAll={showAll}
-            // navUrl={"/students/"}
+            // navUrl={"/routes/"}
             rowProps={row => ({
                 style: {
                     cursor: "pointer"
