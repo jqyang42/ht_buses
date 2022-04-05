@@ -16,14 +16,10 @@ import time
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def transit_fetch(request):
     data = {'buses':[]}
-    print('received request')
-    print(transit_updates.is_running)
     if not transit_updates.is_running:
         active_buses = bus_management.active_buses()
-        print("not running yet")
         transit_updates.initialize_updater(active_buses=active_buses)
         # transit_updates.add_bus(4001)
-        time.sleep(2.5)
 
     coords = bus_management.active_buses()
     for bus in coords:

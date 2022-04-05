@@ -39,10 +39,12 @@ def update_buses():
 def add_bus(bus_id):
     global update_queue
     update_queue.append(bus_id)
+    print(update_queue)
 
 def remove_bus(bus_id):
     global update_queue
     global bus_coords
+    print(bus_id)
     bus_coords.pop(bus_id, 0)
     update_queue.remove(bus_id)
     print(update_queue)
