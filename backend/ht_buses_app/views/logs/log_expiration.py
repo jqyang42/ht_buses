@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 from ht_buses_app.views.buses import transit_updates
 
 def log_expiration():
+    bus_arr = []
     all_logs = Log.objects.all()
     edt = timezone('US/Eastern')
     all_logs_serializer = LogSerializer(all_logs, many=True)
@@ -27,8 +28,11 @@ def log_expiration():
                 bus = Bus.objects.get(pk=bus_serializer.data["id"])
                 bus.is_running = False
                 bus.save()
-                if transit_updates.is_running:
-                    transit_updates.remove_bus(log_obj.bus_number)
+                bus_arr.append(log_obj.bus_number)
+    return bus_arr
+                
+                
+
 
             
 
