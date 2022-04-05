@@ -169,7 +169,7 @@ class SchoolsDetail extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h5>{this.state.school.name}</h5>
                                         <p>{this.state.school.location?.address}</p>
                                     </div>
@@ -190,6 +190,15 @@ class SchoolsDetail extends Component {
                                                         Route Planner
                                                     </span>
                                                 </Link>
+                                                {
+                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff' || localStorage.getItem('role') === 'Driver') ?
+                                                <Link to={"/schools/" + this.props.params.id + "/transit-status"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-pin-map-fill me-2"></i>
+                                                        Transit Status
+                                                    </span>
+                                                </Link> : ""
+                                                }
                                                 <Link to={"/schools/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>

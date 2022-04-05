@@ -26,7 +26,7 @@ from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_fi
 from . views.logs import log_create, log_view, log_update
 from . views.logs.detail import log_driver_view, log_route_view, log_school_view
 from . views.parents.detail import parent_student_stop
-from . views.buses import bus_view, bus_active_view
+from . views.buses import bus_view, bus_active_view, transit_view
 from . models import User
 
 try:
@@ -99,6 +99,7 @@ urlpatterns = [
     path('api/logs/create', log_create.create_log, name='log-create'),
     path('api/logs/update', log_update.update_log, name='log-update'),
     path('api/logs', log_view.log_view, name='log-view'),
+    path('api/transit', transit_view.transit_fetch, name='transit-fetch'),
     path('api/logs/driver', log_driver_view.log_driver_view, name='log-driver'),
     path('api/logs/route', log_route_view.log_route_view, name="log-route"),
     path('api/logs/school', log_route_view.log_route_view, name="log-school"),
