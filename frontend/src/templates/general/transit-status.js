@@ -342,7 +342,7 @@ class GlobalTransitStatus extends Component {
                                     </div>
                                     <div className="col">
                                         <h7>ROUTES</h7>
-                                        {/* <TransitStatusTable 
+                                        {/* <GlobalTransitStatusTable 
                                         data={this.state.students_page} 
                                         showAll={this.state.routes_show_all}
                                         pageIndex={this.state.students_table.pageIndex}
