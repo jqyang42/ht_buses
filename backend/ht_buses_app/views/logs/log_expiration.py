@@ -1,5 +1,5 @@
-from ...serializers import LogSerializer
-from ...models import Log
+from ...serializers import LogSerializer, BusSerializer
+from ...models import Log, Bus
 from datetime import datetime, timezone
 from pytz import timezone
 from datetime import timedelta, datetime
@@ -20,6 +20,13 @@ def log_expiration():
                 # expire log
                 log_obj.duration = timedelta(hours=3)
                 log_obj.save()
+                # need to make bus as not running
+                bus_obj = Bus.objects.filter(bus_number=log_obj.bus_number)
+                bus_serializer = BusSerializer(bus_obj[0], many=False)
+                bus = Bus.objects.get(pk=bus_serializer.data["id"])
+                bus.is_running = False
+                bus.save()
+                # call thomas method to expire bus
 
             
 
