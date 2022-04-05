@@ -26,14 +26,15 @@ class BusMarker extends Component {
         location: this.props.location,
         name: this.props.name,
         updated: false,
-        showInfoWindow: true,
+        // showInfoWindow: true,
+        markerLoaded: false
       };
 
-    handleClick = (event) => {
-      this.setState(prevState => ({
-        showInfoWindow: !prevState.showInfoWindow
-      }))
-    }
+    // handleClick = (event) => {
+    //   this.setState(prevState => ({
+    //     showInfoWindow: !prevState.showInfoWindow
+    //   }))
+    // }
 
     editName = (event) => {
       event.preventDefault();
@@ -60,24 +61,31 @@ class BusMarker extends Component {
           this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
         }
       }
-      this.handleClick()
+      this.props.toggleInfoWindow()
     }
 
   render () {
-    const { showInfoWindow } = this.state;
+    // const { showInfoWindow } = this.state;
+    console.log(this.props)
     return (
       <>
-      <Marker 
+      {<Marker 
       position={this.state.location} 
       className={this.state.currentRoute} 
       icon={this.state.icon} 
       id={this.props.id} 
       key={this.props.id} 
-      onClick={this.handleClick}
+      onClick={this.props.toggleInfoWindow}
       onDragEnd={this.editLocation}
-      draggable={this.props.assign_mode}>
-        {console.log(this.props.mapLoaded)}
-        {this.props.mapLoaded && (
+      draggable={this.props.assign_mode}
+      onLoad={() => {
+        this.setState({ markerLoaded: true })
+      }}
+      onUnmount={() => {
+        this.setState({ markerLoaded: false })
+      }}
+      >
+        {this.props.showInfoWindow && this.state.markerLoaded && (
           <InfoWindow options={{maxWidth:300}}>
             {
               !this.props.assign_mode ? 
@@ -109,6 +117,7 @@ class BusMarker extends Component {
           </InfoWindow>
         )}
       </Marker>
+  }
       </>
     )
   }

@@ -46,7 +46,6 @@ class SchoolsTransitStatus extends Component {
 
     componentDidMount() {
         // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
-        console.log('component mounting')
         this.getRouteDetail()
         this.getStops()
         this.periodicCall()
@@ -57,24 +56,24 @@ class SchoolsTransitStatus extends Component {
     }
 
     periodicCall = () => {
-        // this.interval_id = setInterval(async () => {
-        //     // @jessica update with correct api 
-        //     api.get(`transit`)
-        //     .then(res => {
-        //         console.log(res.data)
-        //         this.setState({
-        //             buses: res.data.buses
-        //         })
-        //     })
-        // }, 1000)
-
-        api.get(`transit`)
-        .then(res => {
-            console.log(res.data)
-            this.setState({
-                buses: res.data.buses
+        this.interval_id = setInterval(async () => {
+            // @jessica update with correct api 
+            api.get(`transit`)
+            .then(res => {
+                console.log(res.data)
+                this.setState({
+                    buses: res.data.buses
+                })
             })
-        })
+        }, 1000)
+
+        // api.get(`transit`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     this.setState({
+        //         buses: res.data.buses
+        //     })
+        // })
     }
 
     getRouteDetail = () => {
@@ -166,7 +165,6 @@ class SchoolsTransitStatus extends Component {
     }
 
     render() {
-        console.log("test")
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }

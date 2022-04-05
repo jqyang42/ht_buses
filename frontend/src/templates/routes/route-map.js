@@ -64,7 +64,7 @@ class RouteMap extends Component {
       lng: parseFloat(this.props.center.lng)
     },
     buses: this.props.buses,
-    isLoaded: false
+    bus_info_window: false
   }
 
   studentsChanged = []
@@ -73,9 +73,10 @@ class RouteMap extends Component {
     //TODO: update state with new center
   }
 
-  onLoad = () => {
-    console.log(`load is now true`)
-    this.setState({ isLoaded: true })
+  toggleBusInfoWindow = (event) => {
+    this.setState(prevState => ({
+      bus_info_window: !prevState.bus_info_window
+    }))
   }
 
   componentDidUpdate(prevProps) {
@@ -202,7 +203,6 @@ class RouteMap extends Component {
 
   render() {
     const center = this.props.center
-    console.log(this.state.isLoaded)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -219,7 +219,6 @@ class RouteMap extends Component {
             }}
             zoom={13}
             onClick={this.createStopMarker}
-            onIdle={this.onLoad}
           >
             {this.props.centerIcon ? 
               <Marker 
@@ -238,15 +237,13 @@ class RouteMap extends Component {
                 id={index}
                 uid={1}
                 name={value.bus_number}
-                location={{
-                  lat: value.location.lat,
-                  lng: value.location.lng
-                }}
+                location={value.location}
                 assign_mode={false} 
                 routeID={5}
                 handleDeleteStopMarker={() => {}}
                 handleStopNameChange={() => {}}
-                mapLoaded={this.state.isLoaded}
+                showInfoWindow={this.state.bus_info_window}
+                toggleInfoWindow={this.toggleBusInfoWindow}
                 // key={index} 
                 // position={value.location}
                 // location={value.location} 
