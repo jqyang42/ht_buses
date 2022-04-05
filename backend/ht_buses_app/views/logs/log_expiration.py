@@ -3,7 +3,6 @@ from ...models import Log, Bus
 from datetime import datetime, timezone
 from pytz import timezone
 from datetime import timedelta, datetime
-from ht_buses_app.views.buses import transit_updates
 
 def log_expiration():
     bus_arr = []
