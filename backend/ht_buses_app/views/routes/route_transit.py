@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
 from ..general.general_tools import has_access_to_object
+from datetime import timedelta
 
 # Routes in Transit GET API
 @csrf_exempt
@@ -13,7 +14,7 @@ from ..general.general_tools import has_access_to_object
 def route_transit(request):
     data = {}
     id = request.query_params["id"]
-    logs = Log.objects.filter(route_id=id)
+    logs = Log.objects.filter(route_id=id, duration=timedelta(hours=0))
     log_serializer = LogSerializer(logs, many=True)
     log_arr = []
     for log in log_serializer.data:
