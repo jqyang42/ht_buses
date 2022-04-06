@@ -298,6 +298,14 @@ li.page-item a[disabled]:hover {
     color: #ffffff;
 }
 
+.blue {
+    color: #084298;
+}
+
+a.blue:hover {
+    color: #0a58ca;
+}
+
 .badge {
     font-size: 0.6em;
     font-weight: 500;

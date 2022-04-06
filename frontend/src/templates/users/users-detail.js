@@ -421,7 +421,8 @@ class UsersDetail extends Component {
                                 {/* TODO: Add check for if driver is in transit, add bus # and route name (with link) */}
                                 {(this.state.user.role === "Driver" && this.state.in_transit) ? 
                                         (<div class="alert alert-primary mt-4 mb-4" role="alert">
-                                            {`Currently in transit: Bus #${this.state.transit_bus_number} on route ${this.state.transit_route_name}`}
+                                            Currently in transit: Bus #{this.state.transit_bus_number} on 
+                                            route <a className="blue" target="_blank" href={"/routes/"+this.state.transit_route_id}>{this.state.transit_route_name}<span><i className="bi bi-box-arrow-up-right ms-2"></i></span></a>
                                         </div>) : ""
                                     }
                                 <div className="row mt-4">
