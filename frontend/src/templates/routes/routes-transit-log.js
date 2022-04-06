@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { TransitLogTable } from "../tables/transit-log-table";
+import { RouteTransitLogTable } from "../tables/route-transit-log-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
@@ -112,7 +112,7 @@ class BusRoutesTransitLog extends Component {
                                     <div className="col">
                                         <h7>BUS RUNS</h7>
                                         <div className="mt-3">
-                                        <TransitLogTable 
+                                        <RouteTransitLogTable 
                                         className="mt-2"
                                         data={this.state.transit_log} 
                                         showAll={this.state.bus_runs_show_all}

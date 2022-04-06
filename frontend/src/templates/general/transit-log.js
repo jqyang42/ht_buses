@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { TransitLogTable } from "../tables/transit-log-table";
+import { GlobalTransitLogTable } from "../tables/global-transit-log-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
@@ -100,7 +100,7 @@ class BusRoutesTransitLog extends Component {
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         {/* TODO: @Kyra check that the route name is actually loading correctly */}
-                        <HeaderMenu root="Bus Routes" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.route.name} page="Transit Log" />
+                        <HeaderMenu root="Transit Log" isRoot={true} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
@@ -112,7 +112,7 @@ class BusRoutesTransitLog extends Component {
                                     <div className="col">
                                         <h7>BUS RUNS</h7>
                                         <div className="mt-3">
-                                        <TransitLogTable 
+                                        <GlobalTransitLogTable 
                                         className="mt-2"
                                         data={this.state.transit_log} 
                                         showAll={this.state.bus_runs_show_all}

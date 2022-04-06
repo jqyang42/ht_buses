@@ -4,7 +4,7 @@ import { colors } from "../../static/colors";
 import { toDisplayFormat } from "../components/time";
 import { useState } from "react";
     
-export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+export function RouteTransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue}) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'user' });
@@ -40,16 +40,16 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
                 ),
                 sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
             },
-            {
-                Header: 'Route',
-                accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
-                disableFilter: true,
-                id: 'route',
-                Cell: ({ cell: { value } }) => (
-                    value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/><a href={'/routes/'+value[1]}>{value[2]}</a></>
-                ),
-                sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
-            },     
+            // {
+            //     Header: 'Route',
+            //     accessor: d => Array(`${d.route.color_id}`,`${d.route.id}`, `${d.route.id != 0 ? d.route.name : ''}`),
+            //     disableFilter: true,
+            //     id: 'route',
+            //     Cell: ({ cell: { value } }) => (
+            //         value[1] == 0 ? <><div className="unassigned">{"Unassigned"}</div></> : <><span className={"circle me-2"} style={{backgroundColor: colors[value[0]]}}/><a href={'/routes/'+value[1]}>{value[2]}</a></>
+            //     ),
+            //     sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
+            // },     
             {
                 Header: 'Direction',
                 accessor: 'pickup',
@@ -103,7 +103,7 @@ export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, can
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by bus number, driver, school or route..."
+            searchLabel="Search by bus number, driver, or school..."
             showAll={showAll}
             // navUrl={"/routes/"}
             rowProps={row => ({
