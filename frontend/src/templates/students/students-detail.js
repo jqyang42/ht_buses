@@ -141,7 +141,7 @@ class StudentsDetail extends Component {
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div className="modal-body">
-                                                                Are you sure you want to delete this student?
+                                                                Are you sure you want to delete this student? If this student is associated with a login account, this will be disabled and all student records will be deleted as well.
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
