@@ -11,9 +11,3 @@ transit_updates.get_coords()
 transit_updates.add_bus(4002)
 time.sleep(10.0)
 transit_updates.get_coords()
-print("wow")
-print("cool")
-
-
-
-
