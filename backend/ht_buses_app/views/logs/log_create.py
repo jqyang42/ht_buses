@@ -7,15 +7,18 @@ from ...role_permissions import IsAdmin, IsDriver
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from pytz import timezone
+from ht_buses_app.views.buses import transit_updates
+from ht_buses_app.views.buses import bus_management
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsDriver|IsAdmin]) 
 def create_log(request):
+    # TODO: needs to have API error checks if not a driver
     data = {}
     reqBody = json.loads(request.body)
-    edt = timezone('US/Eastern')
+    edt = timezone('US/Eastern') 
     log_obj = Log.objects.create(
         bus_number = reqBody["log"]["bus_number"],
         date = datetime.now(edt).date(),
@@ -43,10 +46,20 @@ def bus_update(bus_number):
                 address = "",
                 lat = 0,
                 lng = 0
+            )
         )
-    )
+        if not transit_updates.is_running:
+            active_buses = bus_management.active_buses()
+            transit_updates.initialize_updater(active_buses=active_buses)
+        else:
+            transit_updates.add_bus(bus_number)
     else:
         bus_serializer = BusSerializer(bus_obj[0], many=False)
         bus = Bus.objects.get(pk=bus_serializer.data["id"])
         bus.is_running = True
         bus.save()
+        if not transit_updates.is_running:
+            active_buses = bus_management.active_buses()
+            transit_updates.initialize_updater(active_buses=active_buses)
+        else:
+            transit_updates.add_bus(bus.bus_number)
