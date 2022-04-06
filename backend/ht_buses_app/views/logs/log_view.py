@@ -24,7 +24,6 @@ def log_view(request):
     active = request.query_params["active"]
     # TODO: Logs need to have permissions --> for school staff only for schools they can see
     logs = get_logs_for_user(request.user)
-    print(logs)
     if active == "true":
         log_list = logs.filter(duration=timedelta(hours=0))
     else:
