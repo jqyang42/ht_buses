@@ -111,7 +111,9 @@ class BusRoutesTransitLog extends Component {
                                 <div className="row mt-3">
                                     <div className="col">
                                         <h7>BUS RUNS</h7>
+                                        <div className="mt-3">
                                         <TransitLogTable 
+                                        className="mt-2"
                                         data={this.state.transit_log} 
                                         showAll={this.state.bus_runs_show_all}
                                         pageIndex={this.state.logs_table.pageIndex}
@@ -127,6 +129,7 @@ class BusRoutesTransitLog extends Component {
                                                 "Show All" : "Show Pages"
                                             }
                                         </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
