@@ -52,6 +52,7 @@ class BusRoutesDetail extends Component {
         map_redirect_dropoff: [],
         in_transit: false,
         transit_driver: null,
+        transit_bus_number: null,
         transit_log_id: null,
         startRunModalIsOpen: false,
         log: {}
@@ -144,11 +145,16 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const in_transit_runs = res.data
             const in_transit = in_transit_runs.length !== 0
-            const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
-            const transit_driver = in_transit ? in_transit_runs[0].user.id : null
+            const user_route_logs = in_transit ? in_transit_runs.filter(logs => {
+                return logs.user.id === parseInt(localStorage.getItem("user_id"))
+            }) : []
+            const transit_log_id = in_transit ? user_route_logs[0].log_id : null
+            const transit_bus_number = in_transit ? user_route_logs[0].bus_number : null
+            const transit_driver = in_transit ? user_route_logs[0].user.id : null
             this.setState({
                 in_transit: in_transit,
                 transit_log_id: transit_log_id,
+                transit_bus_number: transit_bus_number,
                 transit_driver: transit_driver
             })
         })
@@ -394,7 +400,7 @@ class BusRoutesDetail extends Component {
                                             }
                                             {
                                                 (localStorage.getItem('role') === 'Driver') ? 
-                                                (!this.state.in_transit ?
+                                                ((!this.state.in_transit || !this.state.transit_driver )?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" 
                                                 onClick={() => this.openStartRunModal()}>
                                                     <span className="btn-text">
@@ -402,14 +408,14 @@ class BusRoutesDetail extends Component {
                                                         Start Run
                                                     </span>
                                                 </button> :
-                                                // (this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                 (this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"
                                                  onClick={() => this.stopRun()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-stop-circle me-2"></i>
-                                                        Stop Run
+                                                        Stop Run for Bus #{this.state.transit_bus_number}
                                                     </span>
-                                                </button> //: "")
+                                                </button> : "")
                                                 ): ""
                                             }
 
