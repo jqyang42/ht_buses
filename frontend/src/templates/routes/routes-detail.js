@@ -145,12 +145,9 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const in_transit_runs = res.data
             const in_transit = in_transit_runs.length !== 0
-            const user_route_logs = in_transit ? in_transit_runs.filter(logs => {
-                return logs.user.id === parseInt(localStorage.getItem("user_id"))
-            }) : []
-            const transit_log_id = in_transit ? user_route_logs[0].log_id : null
-            const transit_bus_number = in_transit ? user_route_logs[0].bus_number : null
-            const transit_driver = in_transit ? user_route_logs[0].user.id : null
+            const transit_driver = in_transit ? in_transit_runs[0].user.id : null
+            const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
+            const transit_bus_number = in_transit ? in_transit_runs[0].bus_number : null
             this.setState({
                 in_transit: in_transit,
                 transit_log_id: transit_log_id,
@@ -400,7 +397,7 @@ class BusRoutesDetail extends Component {
                                             }
                                             {
                                                 (localStorage.getItem('role') === 'Driver') ? 
-                                                ((!this.state.in_transit || !this.state.transit_driver )?
+                                                (!this.state.in_transit ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" 
                                                 onClick={() => this.openStartRunModal()}>
                                                     <span className="btn-text">
