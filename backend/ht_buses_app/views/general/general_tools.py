@@ -1,6 +1,6 @@
 
 from django.core.exceptions import PermissionDenied
-from ...models import School, User, Student, Route, Location
+from ...models import School, User, Student, Route, Location, Log
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from guardian.shortcuts import assign_perm, remove_perm
@@ -155,6 +155,17 @@ def get_students_for_user(user):
     except:
         return Student.objects.none()
 
+def get_logs_for_user(user):
+    try:
+        if user.role == User.ADMIN or user.role == User.SCHOOL_STAFF:
+            schools = get_objects_for_user(user, "change_school", School.objects.all())
+        else:
+            schools = get_objects_for_user(user, "view_school", School.objects.all())
+        route_ids = Route.objects.filter(school_id__in = schools)
+        return Log.objects.filter(route_id__in = route_ids)
+    except:
+        return Log.objects.none()
+
 def has_access_to_object(user, model_object):
     if user.role == User.ADMIN or user.role == User.DRIVER:
         return model_object
@@ -165,6 +176,9 @@ def has_access_to_object(user, model_object):
             if type(model_object) is Student:
                 #schools.get(pk = model_object.school_id.pk)
                 if schools.contains(model_object.school_id):
+                    return model_object
+            if type(model_object) is Log:
+                if schools.contains(model_object.route_id.school_id):
                     return model_object
             if type(model_object) is Route:
                 #schools.get(pk = model_object.school_id.pk)

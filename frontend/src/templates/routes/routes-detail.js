@@ -51,6 +51,7 @@ class BusRoutesDetail extends Component {
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         in_transit: false,
+        transit_driver: null,
         transit_log_id: null,
         startRunModalIsOpen: false,
         log: {}
@@ -144,10 +145,11 @@ class BusRoutesDetail extends Component {
             const in_transit_runs = res.data
             const in_transit = in_transit_runs.length !== 0
             const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
-
+            const transit_driver = in_transit ? in_transit_runs[0].user.id : null
             this.setState({
                 in_transit: in_transit,
-                transit_log_id: transit_log_id
+                transit_log_id: transit_log_id,
+                transit_driver: transit_driver
             })
         })
     }
@@ -400,13 +402,15 @@ class BusRoutesDetail extends Component {
                                                         Start Run
                                                     </span>
                                                 </button> :
+                                                // (this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"
                                                  onClick={() => this.stopRun()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-stop-circle me-2"></i>
                                                         Stop Run
                                                     </span>
-                                                </button>) : ""
+                                                </button> //: "")
+                                                ): ""
                                             }
 
                                             <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
