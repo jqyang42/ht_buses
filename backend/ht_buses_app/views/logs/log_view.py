@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
+from ..general.general_tools import get_logs_for_user
 from .log_pagination import log_pagination
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
@@ -22,10 +23,11 @@ def log_view(request):
     search = request.query_params["q"]
     active = request.query_params["active"]
     # TODO: Logs need to have permissions --> for school staff only for schools they can see
+    logs = get_logs_for_user(request.user)
     if active == "true":
-        log_list = Log.objects.filter(duration=timedelta(hours=0))
+        log_list = logs.filter(duration=timedelta(hours=0))
     else:
-        log_list = Log.objects.all()
+        log_list = logs
     data = get_log_view(page_number, order_by, sort_by, search, log_list)
     return Response(data)
 
