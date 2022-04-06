@@ -62,7 +62,7 @@ class SchoolsTransitStatus extends Component {
     componentDidMount() {
         // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
-        this.getStops()
+        // this.getStops()
         this.periodicCall()
         this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
     }
@@ -160,20 +160,20 @@ class SchoolsTransitStatus extends Component {
         return [].concat.apply([], students)
     }
 
-    getStops = () => {     
-        getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const data = res.data;
-            this.setState({ stops: data.stops })
-        })
-        .catch (error => {
-            if (error.response.status !== 200) {
-                // console.log(error.response.data)
-                this.setState({ error_status: true });
-                this.setState({ error_code: error.response.status });
-            }
-        })
-    }
+    // getStops = () => {     
+    //     getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+    //     .then(res => {
+    //         const data = res.data;
+    //         this.setState({ stops: data.stops })
+    //     })
+    //     .catch (error => {
+    //         if (error.response.status !== 200) {
+    //             // console.log(error.response.data)
+    //             this.setState({ error_status: true });
+    //             this.setState({ error_code: error.response.status });
+    //         }
+    //     })
+    // }
 
     // handlers
     handleDelete = (event) => {
