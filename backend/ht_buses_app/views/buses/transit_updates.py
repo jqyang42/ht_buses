@@ -34,8 +34,9 @@ def update_buses():
                     bus_coords[bus_num] = {'lat': data['lat'], 'lng':data['lng']}
                     bus_management.bus_location_update(bus_num, data['lat'], data['lng'])
             expired_buses = log_expiration()
-            for expired_bus in expired_buses:
-                remove_bus(expired_bus)
+            if len(expired_buses) > 0:
+                for expired_bus in expired_buses:
+                    remove_bus(expired_bus)
             _next_ten()
         except:
             traceback.print_exc()
