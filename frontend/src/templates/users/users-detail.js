@@ -63,7 +63,7 @@ class UsersDetail extends Component {
         in_transit: false,
         transit_log_id: null,
         transit_bus_number: null,
-        transit_route_name: null
+        transit_route: null
     }
 
     // initialize page
@@ -106,13 +106,13 @@ class UsersDetail extends Component {
             const in_transit = in_transit_runs.length !== 0
             const log_id = in_transit ? in_transit_runs[0].log_id : null
             const bus_number = in_transit ? in_transit_runs[0].bus_number : null
-            const route_name = in_transit ? in_transit_runs[0].route.name : null
+            const route = in_transit ? in_transit_runs[0].route : null
 
             this.setState({
                 in_transit: in_transit,
                 transit_log_id: log_id,
                 transit_bus_number: bus_number,
-                transit_route_name: route_name
+                transit_route: route
             })
         })
     }
@@ -422,7 +422,7 @@ class UsersDetail extends Component {
                                 {(this.state.user.role === "Driver" && this.state.in_transit) ? 
                                         (<div class="alert alert-primary mt-4 mb-4" role="alert">
                                             Currently in transit: Bus #{this.state.transit_bus_number} on 
-                                            route <a className="blue" target="_blank" href={"/routes/"+this.state.transit_route_id}>{this.state.transit_route_name}<span><i className="bi bi-box-arrow-up-right ms-2"></i></span></a>
+                                            route <a className="blue" target="_blank" href={"/routes/"+this.state.transit_route.id}>{this.state.transit_route.name}<span><i className="bi bi-box-arrow-up-right ms-2"></i></span></a>
                                         </div>) : ""
                                     }
                                 <div className="row mt-4">
