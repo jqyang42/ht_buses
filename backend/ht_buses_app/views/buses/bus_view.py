@@ -16,7 +16,8 @@ def get_bus(request):
         bus_serializer = BusSerializer(bus_obj[0], many=False)
         location = Location.objects.get(pk=bus_serializer.data["location_id"])
         location_serializer = LocationSerializer(location, many=False)
-        data["bus"] = {"bus_number": bus_serializer.data["bus_number"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
+        location_arr = {"id": location_serializer.data["id"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
+        data["bus"] = {"bus_number": bus_serializer.data["bus_number"], "location": location_arr}
     else:
         data["bus"] = {}
     return Response(data)

@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
+from datetime import timedelta
 
 
 @csrf_exempt
@@ -12,7 +13,7 @@ from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
 def user_transit(request):
     data = {}
     id = request.query_params["id"]
-    logs = Log.objects.filter(user_id=id)
+    logs = Log.objects.filter(user_id=id, duration=timedelta(hours=0))
     log_serializer = LogSerializer(logs, many=True)
     log_arr = []
     for log in log_serializer.data:

@@ -7,7 +7,7 @@ import { useState } from "react";
 export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue}) {
 
-    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
+    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'user' });
 
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)
