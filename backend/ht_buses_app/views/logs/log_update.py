@@ -1,3 +1,4 @@
+from syslog import LOG_INFO
 from ...serializers import BusSerializer, LogSerializer
 from ...models import User, Route, Log, Bus, Location
 from rest_framework.response import Response
@@ -15,9 +16,16 @@ from ht_buses_app.views.buses import transit_updates
 @permission_classes([IsDriver|IsAdmin]) 
 def update_log(request):
     data = {}
-    edt = timezone('US/Eastern')
     id = request.query_params["id"]
+    log_obj = update_log_status(id)
+    final_log_serializer = LogSerializer(log_obj, many=False)
+    data["log"] = final_log_serializer.data
+    data["success"] = True
+    return Response(data)
+
+def update_log_status(id):
     log_obj = Log.objects.get(pk=id)
+    edt = timezone('US/Eastern')
     time_end = datetime.now(edt)
     start_time = log_obj.start_time
     d_start_time = edt.localize(datetime.combine(log_obj.date, start_time))
@@ -32,7 +40,4 @@ def update_log(request):
     bus.save()
     if  transit_updates.is_running:
         transit_updates.remove_bus(log_obj.bus_number)
-    final_log_serializer = LogSerializer(log_obj, many=False)
-    data["log"] = final_log_serializer.data
-    data["success"] = True
-    return Response(data)
+    return log_obj

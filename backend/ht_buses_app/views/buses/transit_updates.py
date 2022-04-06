@@ -4,7 +4,7 @@ import time
 import traceback
 from . import bus_management
 
-from ht_buses_app.views.logs import log_expiration
+from ..logs.log_expiration import log_expiration
 
 update_queue = []
 bus_coords = {}

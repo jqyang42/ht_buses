@@ -51,6 +51,7 @@ class BusRoutesDetail extends Component {
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
         in_transit: false,
+        user_on_run: false,
         transit_driver: null,
         transit_bus_number: null,
         transit_log_id: null,
@@ -63,6 +64,7 @@ class BusRoutesDetail extends Component {
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
+        this.userOnRun()
         this.getInTransit()
     }
 
@@ -140,6 +142,18 @@ class BusRoutesDetail extends Component {
         })
     }
 
+
+    userOnRun = () => {
+        api.get(`users/transit?id=${localStorage.getItem("user_id")}`)
+        .then(res => {
+            const active_runs = res.data
+            const user_on_run = active_runs.length !== 0
+            this.setState({
+                user_on_run: user_on_run
+            })
+        })
+    }
+
     getInTransit = () => {
         api.get(`routes/transit?id=${this.props.params.id}`)
         .then(res => {
@@ -148,6 +162,7 @@ class BusRoutesDetail extends Component {
             const transit_driver = in_transit ? in_transit_runs[0].user.id : null
             const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
             const transit_bus_number = in_transit ? in_transit_runs[0].bus_number : null
+            console.log(in_transit_runs)
             this.setState({
                 in_transit: in_transit,
                 transit_log_id: transit_log_id,
@@ -320,6 +335,7 @@ class BusRoutesDetail extends Component {
     }
 
     openStartRunModal = () => {
+        this.userOnRun()
         this.setState({ startRunModalIsOpen: true });
     }
 
@@ -336,6 +352,7 @@ class BusRoutesDetail extends Component {
     }
 
     stopRun = () => {
+        this.getInTransit()
         this.setState({ in_transit: false })
         // @jessica update to use log id
         api.put(`logs/update?id=${this.state.transit_log_id}`)
@@ -397,23 +414,27 @@ class BusRoutesDetail extends Component {
                                             }
                                             {
                                                 (localStorage.getItem('role') === 'Driver') ? 
-                                                (!this.state.in_transit ?
+                                                (!this.state.in_transit || this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" 
                                                 onClick={() => this.openStartRunModal()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-play-circle me-2"></i>
                                                         Start Run
                                                     </span>
-                                                </button> :
+                                                </button> : "" )
+                                                : ""
+                                            }
+                                            {
+                                                (localStorage.getItem('role') === 'Driver') ? 
                                                  (this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
-                                                <button type="button" className="btn btn-primary float-end w-auto me-3"
-                                                 onClick={() => this.stopRun()}>
-                                                    <span className="btn-text">
-                                                        <i className="bi bi-stop-circle me-2"></i>
-                                                        Stop Run for Bus #{this.state.transit_bus_number}
-                                                    </span>
-                                                </button> : "")
-                                                ): ""
+                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"
+                                                  onClick={() => this.stopRun()}>
+                                                     <span className="btn-text">
+                                                         <i className="bi bi-stop-circle me-2"></i>
+                                                         Stop Run for Bus #{this.state.transit_bus_number}
+                                                     </span>
+                                                 </button> : "")
+                                                : ""
                                             }
 
                                             <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
@@ -442,6 +463,14 @@ class BusRoutesDetail extends Component {
                                                             <label className="form-check-label" for="dropoff">Dropoff</label>
                                                         </div>
                                                     </div>
+                                                    {(this.state.user_on_run) ? 
+                                                        (<div>
+                                                            <div class="alert alert-primary mt-3 mb-2" role="alert">
+                                                                <i className="bi bi-info-circle-fill me-2"></i>
+                                                                You already have an active run. Starting a new run will stop your active run. 
+                                                            </div>
+                                                        </div>) : ""
+                                                    }
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <button type="button" className="btn btn-secondary" onClick={this.closeStartRunModal}>Cancel</button>

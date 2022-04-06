@@ -2,13 +2,14 @@ from ...serializers import BusSerializer, LogSerializer
 from ...models import User, Route, Log, Bus, Location
 from rest_framework.response import Response
 import json
-from datetime import datetime, date, timezone
+from datetime import datetime, date, timezone, timedelta
 from ...role_permissions import IsAdmin, IsDriver
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from pytz import timezone
 from ht_buses_app.views.buses import transit_updates
 from ht_buses_app.views.buses import bus_management
+from .log_update import update_log_status
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
@@ -19,6 +20,9 @@ def create_log(request):
     data = {}
     reqBody = json.loads(request.body)
     edt = timezone('US/Eastern') 
+    if Log.objects.filter(user_id = request.user, duration = timedelta(hours=0)).exists():
+        active_run = Log.objects.filter(user_id = request.user, duration = timedelta(hours=0))[0]
+        update_log_status(active_run.pk)
     log_obj = Log.objects.create(
         bus_number = reqBody["log"]["bus_number"],
         date = datetime.now(edt).date(),
