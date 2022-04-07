@@ -7,7 +7,7 @@ import { useState } from "react";
 export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue}) {
 
-    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'user' });
+    const [sort, setSort] = useState({ sortDirection: 'DESC', accessor: 'start_time' });
 
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)

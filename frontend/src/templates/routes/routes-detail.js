@@ -343,8 +343,9 @@ class BusRoutesDetail extends Component {
 
     closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
 
-    startRun = () => {
-        this.setState({ in_transit: true })
+    startRun = (event) => {
+        // this.setState({ in_transit: true })
+        event.preventDefault()
         this.on_run = true 
         const request = {
             log: this.state.log
@@ -352,18 +353,25 @@ class BusRoutesDetail extends Component {
         }
         console.log(request)
         api.post(`logs/create`, request)
-        this.getInTransit()
+        .then(res => {
+            this.getInTransit()
+            this.closeStartRunModal()
+        })
     }
 
     stopRun = () => {
         this.on_run = false 
-        this.setState({ transit_driver: null })
-        this.setState({ in_transit: false })
+        this.setState({ 
+            transit_driver: null,
+            // in_transit: false 
+        })
         console.log(this.state.in_transit)
         console.log(this.state.transit_driver)
         api.put(`logs/update?id=${this.state.transit_log_id}`)
-        this.getInTransit()
-        this.closeStartRunModal()
+        .then(res => {
+            this.getInTransit()
+            // this.closeStartRunModal()    
+        })
     }
 
     render() {
@@ -445,7 +453,7 @@ class BusRoutesDetail extends Component {
                                             }
 
                                             <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
-                                                <form onSubmit={() => this.startRun()}>
+                                                <form onSubmit={(event) => this.startRun(event)}>
                                                 <Modal.Header>
                                                 <Modal.Title><h5>Start Run</h5></Modal.Title>
                                                 </Modal.Header>
