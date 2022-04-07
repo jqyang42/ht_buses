@@ -35,12 +35,29 @@ class SchoolsTransitStatus extends Component {
     interval_id = null
 
     componentDidMount() {
+        this.getSchoolDetails()
         this.periodicCall()
         this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
     }
 
     componentWillUnmount() {
         clearInterval(this.interval_id)
+    }
+
+    getSchoolDetails = () => {
+        api.get(`schools/detail?id=${this.props.params.id}`)
+        .then(res => {
+            const data = res.data
+            this.setState({ 
+                school: data.school
+            });
+        })
+        .catch (error => {
+            if (error.response.status !== 200) {
+                this.setState({ error_status: true });
+                this.setState({ error_code: error.response.status });
+            }
+        })
     }
 
     periodicCall = () => {
@@ -57,7 +74,7 @@ class SchoolsTransitStatus extends Component {
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
                     center: res.data.center,
-                    school: res.data.schools
+                    // school: res.data.schools
                 })
             })
             this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
