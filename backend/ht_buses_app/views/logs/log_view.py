@@ -46,18 +46,18 @@ def log_search_and_sort(order_by, sort_by, search, log_list):
 
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search)).order_by("id")
+        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search) | Q(bus_number__icontains = search)).order_by("id")
     else:
         if order_by == "asc":
             if search != None:
                 logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search)).order_by(sort_by)
+        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search) | Q(bus_number__icontains = search)).order_by(sort_by)
             else:
                 logs = log_list.order_by(sort_by)
         else:
             if search != None:
                 logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search)).order_by("-" + sort_by)
+        .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search) | Q(bus_number__icontains = search)).order_by("-" + sort_by)
             else:
                 logs = log_list.order_by("-" + sort_by)
     return logs
