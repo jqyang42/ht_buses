@@ -54,11 +54,9 @@ def bus_update(bus_number):
             )
         )
         if not transit_updates.is_running:
-            print("here")
             active_buses = bus_management.active_buses()
             transit_updates.initialize_updater(active_buses=active_buses)
         else:
-            print("add bus")
             transit_updates.add_bus(bus_number)
     else:
         bus_serializer = BusSerializer(bus_obj[0], many=False)
