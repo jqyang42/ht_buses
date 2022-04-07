@@ -4,6 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
+from ..general.general_tools import has_access_to_object
+from ..general.response_messages import PermissionDenied, DoesNotExist
 from datetime import timedelta
 
 # TODO: This method needs log permissions
@@ -13,6 +15,14 @@ from datetime import timedelta
 def get_buses(request):
     data = {}
     school_id = request.query_params["id"]
+    try:
+        school = School.objects.get(pk = school_id)
+    except:
+        return DoesNotExist(data, "school")
+    try:
+        school = has_access_to_object(request.user, school)
+    except:
+        return PermissionDenied(data, "school")
     data = active_buses_filter(school_id)
     if data["success"] == False:
         return Response(data, status=404)

@@ -8,7 +8,7 @@ from ...role_permissions import IsAdmin, IsDriver
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from pytz import timezone
-from ht_buses_app.views.buses import transit_updates
+from ..buses import transit_updates
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
@@ -38,6 +38,6 @@ def update_log_status(id):
     bus = Bus.objects.get(pk=bus_serializer.data["id"])
     bus.is_running = False
     bus.save()
-    if  transit_updates.is_running:
+    if transit_updates.is_running:
         transit_updates.remove_bus(log_obj.bus_number)
     return log_obj
