@@ -14,7 +14,10 @@ def get_buses(request):
     data = {}
     school_id = request.query_params["id"]
     data = active_buses_filter(school_id)
-    return Response(data)
+    if data["success"] == False:
+        return Response(data, status=404)
+    else: 
+        return Response(data)
 
 def active_buses_filter(school_id):
     data = {}
@@ -36,20 +39,22 @@ def active_buses_filter(school_id):
                 log_obj = Log.objects.filter(bus_number=bus_number, duration=timedelta(hours=0))
                 if len(log_obj) != 0:
                     log_obj_serializer = LogSerializer(log_obj[0], many=False)
-                    route_obj = Route.objects.get(pk=log_obj_serializer.data["route_id"])
-                    route_serializer = RouteSerializer(route_obj, many=False)
-                    school_obj = School.objects.get(pk=route_serializer.data["school_id"])
-                    school_serializer = SchoolSerializer(school_obj, many=False)
-                    school_location = Location.objects.get(pk=school_serializer.data["location_id"])
-                    school_location_serializer = LocationSerializer(school_location, many=False)
                     user_serializer = UserSerializer(User.objects.get(pk=log_obj_serializer.data["user_id"]), many=False)
                     user_arr = {'id': log_obj_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"]}
                     bus_arr.append({'bus_number': bus_number, 'location': location_arr, 'user': user_arr})
-                    school_location_arr = {'lat': school_location_serializer.data["lat"], 'lng': school_location_serializer.data["lng"]}
-                    school_arr.append({'id': school_serializer.data["id"], 'school': school_serializer.data["name"], 'location': school_location_arr})
-                    school_count += 1
-                    avg_lat += school_location_serializer.data["lat"]
-                    avg_lng += school_location_serializer.data["lng"]
+
+        schools = School.objects.all()
+        school_serializer = SchoolSerializer(schools, many=True)
+        for school in school_serializer.data:
+            school_location = Location.objects.get(pk=school["location_id"])
+            school_location_serializer = LocationSerializer(school_location, many=False)
+            school_location_arr = {'lat': school_location_serializer.data["lat"], 'lng': school_location_serializer.data["lng"]}
+            school_arr.append({'id': school["id"], 'school': school["name"], 'location': school_location_arr})
+            school_count += 1
+            avg_lat += school_location_serializer.data["lat"]
+            avg_lng += school_location_serializer.data["lng"]
+
+
     else:
         # grab buses from school
         logs = Log.objects.filter(route_id__school_id=school_id, duration=timedelta(hours=0))
@@ -66,6 +71,7 @@ def active_buses_filter(school_id):
                 user_serializer = UserSerializer(User.objects.get(pk=log["user_id"]), many=False)
                 user_arr = {"id": log["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"]}
                 bus_arr.append({'bus_number': bus_number, 'location': location_arr, 'user': user_arr})
+        try:
             school_obj = School.objects.get(pk=school_id)
             school_serializer = SchoolSerializer(school_obj, many=False)
             school_location_obj = Location.objects.get(pk=school_serializer.data["location_id"])
@@ -75,10 +81,17 @@ def active_buses_filter(school_id):
             avg_lat += school_location_serializer.data["lat"]
             avg_lng += school_location_serializer.data["lng"]
             school_count += 1
-    if school_count != 0:
-        avg_lat = avg_lat / school_count
-        avg_lng = avg_lng / school_count
+            if school_count != 0:
+                avg_lat = avg_lat / school_count
+                avg_lng = avg_lng / school_count
+        except:
+            data["success"] = False
+            data["buses"] = bus_arr
+            data["schools"] = school_arr
+            data["center"] = {'lat': avg_lat, 'lng': avg_lng}
+            return data
     data["buses"] = bus_arr
     data["schools"] = school_arr
     data["center"] = {'lat': avg_lat, 'lng': avg_lng}
+    data["success"] = True
     return data
