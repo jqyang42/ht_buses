@@ -66,6 +66,7 @@ export const ACCOUNT_ACTIVATION_URL = "/account-activation/:uuid&:token";
 
 export const GOOGLE_MAP_URL = "https://www.google.com/maps/dir/?api=1&"
 export const ROUTES_TRANSIT_LOG_URL = "/routes/:id/transit-log";
+export const TRANSIT_LOG_URL = "/transit-log";
 export const SCHOOLS_TRANSIT_STATUS_URL = "/schools/:id/transit-status";
 export const TRANSIT_STATUS_URL = "/transit-status";
 

@@ -2,7 +2,7 @@ import React, { Component, useEffect } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import RouteMap from '../routes/route-map';
-import { TransitStatusTable } from "../tables/transit-status-table";
+import { SchoolTransitStatusTable } from "../tables/school-transit-status-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";

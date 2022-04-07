@@ -56,9 +56,12 @@ class BusRoutesDetail extends Component {
         transit_bus_number: null,
         transit_log_id: null,
         startRunModalIsOpen: false,
-        log: {}
+        log: {},
+        buses: [],
+        bus_tooltip: {}
     }
 
+    interval_id = null
     on_run = true
 
     componentDidMount() {
@@ -68,6 +71,47 @@ class BusRoutesDetail extends Component {
         this.getStops()
         this.userOnRun()
         this.getInTransit()
+        // this.periodicCall()
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
+    }
+
+    periodicCall = (school_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/school?id=${school_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                    school: res.data.schools
+                })
+            })
+        }, 1000)
+
+        // api.get(`buses/school?id=${school_id}`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     let bus_tooltip = {}
+        //     bus_tooltip = res.data.buses.reduce(
+        //         (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+        //         {})
+        //     console.log(bus_tooltip)
+        //     this.setState({
+        //         buses: res.data.buses,
+        //         bus_tooltip: bus_tooltip,
+        //         center: res.data.center,
+        //         school: res.data.schools
+        //     })
+        // })
     }
 
     // pagination
@@ -132,7 +176,8 @@ class BusRoutesDetail extends Component {
             
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
-            this.setMarkers(users)            
+            this.setMarkers(users)
+            this.periodicCall(school.id)       
         })
         .catch(error => {
             if (error.response.status !== 200) {
@@ -343,8 +388,9 @@ class BusRoutesDetail extends Component {
 
     closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
 
-    startRun = () => {
-        this.setState({ in_transit: true })
+    startRun = (event) => {
+        // this.setState({ in_transit: true })
+        event.preventDefault()
         this.on_run = true 
         const request = {
             log: this.state.log
@@ -352,18 +398,25 @@ class BusRoutesDetail extends Component {
         }
         console.log(request)
         api.post(`logs/create`, request)
-        this.getInTransit()
+        .then(res => {
+            this.getInTransit()
+            this.closeStartRunModal()
+        })
     }
 
     stopRun = () => {
         this.on_run = false 
-        this.setState({ transit_driver: null })
-        this.setState({ in_transit: false })
+        this.setState({ 
+            transit_driver: null,
+            // in_transit: false 
+        })
         console.log(this.state.in_transit)
         console.log(this.state.transit_driver)
         api.put(`logs/update?id=${this.state.transit_log_id}`)
-        this.getInTransit()
-        this.closeStartRunModal()
+        .then(res => {
+            this.getInTransit()
+            // this.closeStartRunModal()    
+        })
     }
 
     render() {
@@ -445,11 +498,19 @@ class BusRoutesDetail extends Component {
                                             }
 
                                             <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
-                                                <form onSubmit={() => this.startRun()}>
+                                                <form onSubmit={(event) => this.startRun(event)}>
                                                 <Modal.Header>
                                                 <Modal.Title><h5>Start Run</h5></Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body>
+                                                    {(this.state.user_on_run) ? 
+                                                        (<div>
+                                                            <div class="alert alert-warning mb-3" role="alert">
+                                                                <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                You already have an active run. Starting a new run will stop your active run. 
+                                                            </div>
+                                                        </div>) : ""
+                                                    }
                                                     <div className="form-group required pb-3">
                                                         <label for="exampleInputBus" className="control-label pb-2">Bus Number</label>
                                                         <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
@@ -470,14 +531,6 @@ class BusRoutesDetail extends Component {
                                                             <label className="form-check-label" for="dropoff">Dropoff</label>
                                                         </div>
                                                     </div>
-                                                    {(this.state.user_on_run) ? 
-                                                        (<div>
-                                                            <div class="alert alert-primary mt-3 mb-2" role="alert">
-                                                                <i className="bi bi-info-circle-fill me-2"></i>
-                                                                You already have an active run. Starting a new run will stop your active run. 
-                                                            </div>
-                                                        </div>) : ""
-                                                    }
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <button type="button" className="btn btn-secondary" onClick={this.closeStartRunModal}>Cancel</button>
@@ -554,6 +607,8 @@ class BusRoutesDetail extends Component {
                                             center={this.state.center}
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
+                                            bus_tooltip={this.state.bus_tooltip}
+                                            buses={this.state.buses}
                                         />
                                         : "" }
                                         </div>

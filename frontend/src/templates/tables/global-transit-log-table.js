@@ -4,10 +4,10 @@ import { colors } from "../../static/colors";
 import { toDisplayFormat } from "../components/time";
 import { useState } from "react";
     
-export function TransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue}) {
 
-    const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'user' });
+    const [sort, setSort] = useState({ sortDirection: 'DESC', accessor: 'start_time' });
 
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)
