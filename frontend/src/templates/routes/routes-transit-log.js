@@ -47,9 +47,10 @@ class BusRoutesTransitLog extends Component {
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
             }
+            console.log(log_table)
             this.setState({
                 transit_log: res.data.logs,
-                log_table: log_table
+                logs_table: log_table
             })
         })
     }

@@ -50,7 +50,7 @@ class BusRoutesTransitLog extends Component {
             }
             this.setState({
                 transit_log: res.data.logs,
-                log_table: log_table
+                logs_table: log_table
             })
         })
     }
