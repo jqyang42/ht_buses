@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.db.models import Value as V
 from django.db.models.functions import Concat 
 from ..log_view import get_log_view
+from datetime import timedelta
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
@@ -21,6 +22,10 @@ def log_school_view(request):
     sort_by = request.query_params["sort_by"]
     order_by = request.query_params["order_by"]
     search = request.query_params["q"]
-    log_list = Log.objects.filter(route_id__school_id=id)
+    active = request.query_params["active"]
+    if active == "true":
+        log_list = Log.objects.filter(route_id__school_id=id, duration=timedelta(hours=0))
+    else:
+        log_list = Log.objects.filter(route_id__school_id=id)
     data = get_log_view(page_number, order_by, sort_by, search, log_list)
     return Response(data)
