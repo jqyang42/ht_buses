@@ -15,19 +15,10 @@ import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 
 class SchoolsTransitStatus extends Component {
     state = {
-        // route: [],
-        // students : [],
-        // users: [],
         school : [],
-        // stops: [],
         center: {},
         markers: null,
-        // assign_mode: false,
-        // active_route: 0,
         redirect: false,
-        // delete_success: 0,
-        // routes_show_all: false,
-        // stops_show_all: false,
         error_status: false,
         error_code: 200,
         buses_page: [],
@@ -37,8 +28,6 @@ class SchoolsTransitStatus extends Component {
             canNextPage: null,
             totalPages: null,
         },
-        // map_redirect_pickup: [],
-        // map_redirect_dropoff: [],
         buses: [],
         bus_tooltip: {}
     }
@@ -55,39 +44,41 @@ class SchoolsTransitStatus extends Component {
     }
 
     periodicCall = () => {
-        // this.interval_id = setInterval(async () => {
-        //     // @jessica update with correct api 
-        //     api.get(`buses/school?id=${this.props.params.id}`)
-        //     .then(res => {
-        //         console.log(res.data.buses)
-        //         let bus_tooltip = {}
-        //         bus_tooltip = res.data.buses.reduce(
-        //             (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
-        //             {})
-        //         console.log(bus_tooltip)
-        //         this.setState({
-        //             buses: res.data.buses,
-        //             bus_tooltip: bus_tooltip
-        //         })
-        //     })
-        // }, 1000)
-        
-        // @jessica for global - search for school by id
-        api.get(`buses/school?id=${this.props.params.id}`)
-        .then(res => {
-            console.log(res.data)
-            let bus_tooltip = {}
-            bus_tooltip = res.data.buses.reduce(
-                (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
-                {})
-            console.log(bus_tooltip)
-            this.setState({
-                buses: res.data.buses,
-                bus_tooltip: bus_tooltip,
-                center: res.data.center,
-                school: res.data.schools
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/school?id=${this.props.params.id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                    school: res.data.schools
+                })
             })
-        })
+            this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
+        }, 1000)
+        
+        // // @jessica for global - search for school by id
+        // api.get(`buses/school?id=${this.props.params.id}`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     let bus_tooltip = {}
+        //     bus_tooltip = res.data.buses.reduce(
+        //         (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+        //         {})
+        //     console.log(bus_tooltip)
+        //     this.setState({
+        //         buses: res.data.buses,
+        //         bus_tooltip: bus_tooltip,
+        //         center: res.data.center,
+        //         school: res.data.schools
+        //     })
+        // })
     }
     
     getActiveBuses = (page, sortOptions, search) => {
@@ -106,63 +97,48 @@ class SchoolsTransitStatus extends Component {
         })
     }
 
-    getStudentsFromUser = (users) => {
-        const students = users?.map(user => {
-            return user.students.map(student => {
-                return {
-                    student_school_id: student.student_school_id,
-                    id: student.id,
-                    first_name: student.first_name,
-                    last_name: student.last_name,
-                    in_range: student.in_range
-                }
-            })
-        })
-        return [].concat.apply([], students)
-    }
-
-    // getStops = () => {     
-    //     getPage({ url: 'stops', pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-    //     .then(res => {
-    //         const data = res.data;
-    //         this.setState({ stops: data.stops })
+    // getStudentsFromUser = (users) => {
+    //     const students = users?.map(user => {
+    //         return user.students.map(student => {
+    //             return {
+    //                 student_school_id: student.student_school_id,
+    //                 id: student.id,
+    //                 first_name: student.first_name,
+    //                 last_name: student.last_name,
+    //                 in_range: student.in_range
+    //             }
+    //         })
     //     })
-    //     .catch (error => {
-    //         if (error.response.status !== 200) {
-    //             // console.log(error.response.data)
-    //             this.setState({ error_status: true });
-    //             this.setState({ error_code: error.response.status });
-    //         }
-    //     })
+    //     return [].concat.apply([], students)
     // }
 
     // handlers
-    handleDelete = (event) => {
-        event.preventDefault()
+    // handleDelete = (event) => {
+    //     event.preventDefault()
 
-        api.delete(`routes/delete?id=${this.props.params.id}`)
-            .then(res => {
-                // console.log("hello")
-                const success = res.data.success
-                // console.log(res.data)
-                if (success) {
-                    this.setState({ 
-                        delete_success: 1,
-                        redirect: true
-                    })
-                } else {
-                    this.setState({ delete_success: -1})
-                }
-            }) 
-    }
+    //     api.delete(`routes/delete?id=${this.props.params.id}`)
+    //         .then(res => {
+    //             // console.log("hello")
+    //             const success = res.data.success
+    //             // console.log(res.data)
+    //             if (success) {
+    //                 this.setState({ 
+    //                     delete_success: 1,
+    //                     redirect: true
+    //                 })
+    //             } else {
+    //                 this.setState({ delete_success: -1})
+    //             }
+    //         }) 
+    // }
 
-    handleRoutesShowAll = () => {
-        this.setState(prevState => ({
-            routes_show_all: !prevState.routes_show_all
-        }), () => {
-            this.getStudentsPage(this.state.routes_show_all ? 0 : 1, null, '')
-        })
-    }
+    // handleRoutesShowAll = () => {
+    //     this.setState(prevState => ({
+    //         routes_show_all: !prevState.routes_show_all
+    //     }), () => {
+    //         this.getStudentsPage(this.state.routes_show_all ? 0 : 1, null, '')
+    //     })
+    // }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {

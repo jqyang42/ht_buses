@@ -56,9 +56,12 @@ class BusRoutesDetail extends Component {
         transit_bus_number: null,
         transit_log_id: null,
         startRunModalIsOpen: false,
-        log: {}
+        log: {},
+        buses: [],
+        bus_tooltip: {}
     }
 
+    interval_id = null
     on_run = true
 
     componentDidMount() {
@@ -68,6 +71,47 @@ class BusRoutesDetail extends Component {
         this.getStops()
         this.userOnRun()
         this.getInTransit()
+        // this.periodicCall()
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
+    }
+
+    periodicCall = (school_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/school?id=${school_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                    school: res.data.schools
+                })
+            })
+        }, 1000)
+
+        // api.get(`buses/school?id=${school_id}`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     let bus_tooltip = {}
+        //     bus_tooltip = res.data.buses.reduce(
+        //         (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+        //         {})
+        //     console.log(bus_tooltip)
+        //     this.setState({
+        //         buses: res.data.buses,
+        //         bus_tooltip: bus_tooltip,
+        //         center: res.data.center,
+        //         school: res.data.schools
+        //     })
+        // })
     }
 
     // pagination
@@ -132,7 +176,8 @@ class BusRoutesDetail extends Component {
             
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
-            this.setMarkers(users)            
+            this.setMarkers(users)
+            this.periodicCall(school.id)       
         })
         .catch(error => {
             if (error.response.status !== 200) {
@@ -562,6 +607,8 @@ class BusRoutesDetail extends Component {
                                             center={this.state.center}
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
+                                            bus_tooltip={this.state.bus_tooltip}
+                                            buses={this.state.buses}
                                         />
                                         : "" }
                                         </div>
