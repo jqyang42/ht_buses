@@ -59,6 +59,8 @@ class BusRoutesDetail extends Component {
         log: {}
     }
 
+    on_run = true
+
     componentDidMount() {
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
@@ -343,19 +345,24 @@ class BusRoutesDetail extends Component {
 
     startRun = () => {
         this.setState({ in_transit: true })
+        this.on_run = true 
         const request = {
             log: this.state.log
 
         }
         console.log(request)
         api.post(`logs/create`, request)
+        this.getInTransit()
     }
 
     stopRun = () => {
-        this.getInTransit()
+        this.on_run = false 
+        this.setState({ transit_driver: null })
         this.setState({ in_transit: false })
-        // @jessica update to use log id
+        console.log(this.state.in_transit)
+        console.log(this.state.transit_driver)
         api.put(`logs/update?id=${this.state.transit_log_id}`)
+        this.getInTransit()
         this.closeStartRunModal()
     }
 
@@ -426,7 +433,7 @@ class BusRoutesDetail extends Component {
                                             }
                                             {
                                                 (localStorage.getItem('role') === 'Driver') ? 
-                                                 (this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                 (this.on_run && this.state.in_transit && this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
                                                  <button type="button" className="btn btn-primary float-end w-auto me-3"
                                                   onClick={() => this.stopRun()}>
                                                      <span className="btn-text">

@@ -31,7 +31,8 @@ def create_log(request):
         route_id = Route.objects.get(pk=reqBody["log"]["route_id"]),
         pickup = reqBody["log"]["pickup"]
     )
-    bus_update(reqBody["log"]["bus_number"])
+    bus_number = int(reqBody["log"]["bus_number"])
+    bus_update(bus_number)
     log_serializer = LogSerializer(log_obj, many=False)
     data["message"] = "log created successfully"
     data["log"] = log_serializer.data
