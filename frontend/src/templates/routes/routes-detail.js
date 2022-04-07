@@ -443,6 +443,14 @@ class BusRoutesDetail extends Component {
                                                 <Modal.Title><h5>Start Run</h5></Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body>
+                                                    {(this.state.user_on_run) ? 
+                                                        (<div>
+                                                            <div class="alert alert-warning mb-3" role="alert">
+                                                                <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                You already have an active run. Starting a new run will stop your active run. 
+                                                            </div>
+                                                        </div>) : ""
+                                                    }
                                                     <div className="form-group required pb-3">
                                                         <label for="exampleInputBus" className="control-label pb-2">Bus Number</label>
                                                         <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
@@ -463,14 +471,6 @@ class BusRoutesDetail extends Component {
                                                             <label className="form-check-label" for="dropoff">Dropoff</label>
                                                         </div>
                                                     </div>
-                                                    {(this.state.user_on_run) ? 
-                                                        (<div>
-                                                            <div class="alert alert-primary mt-3 mb-2" role="alert">
-                                                                <i className="bi bi-info-circle-fill me-2"></i>
-                                                                You already have an active run. Starting a new run will stop your active run. 
-                                                            </div>
-                                                        </div>) : ""
-                                                    }
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <button type="button" className="btn btn-secondary" onClick={this.closeStartRunModal}>Cancel</button>
