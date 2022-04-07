@@ -90,13 +90,13 @@ class Account extends Component {
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
-                                            {this.state.user.email}
+                                            {this.state.user.email ? this.state.user.email : "–"}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number}
+                                            {this.state.user.phone_number ? this.state.user.phone_number : "–"}
                                         </p>
                                         <p>
-                                            {this.state.location.address ? this.state.location.address : ""}
+                                            {this.state.location.address ? this.state.location.address : "–"}
                                         </p>
                                     </div>
                                 </div>
