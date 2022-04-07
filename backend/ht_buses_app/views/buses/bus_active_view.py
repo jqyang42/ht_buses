@@ -68,6 +68,7 @@ def active_buses_filter(school_id):
     else:
         # grab buses from school
         logs = Log.objects.filter(route_id__school_id=school_id, duration=timedelta(hours=0))
+        print(logs)
         if len(logs) != 0:
             log_serializer = LogSerializer(logs, many=True)
             for log in log_serializer.data:
