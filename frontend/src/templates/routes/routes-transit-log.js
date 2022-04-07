@@ -37,9 +37,8 @@ class BusRoutesTransitLog extends Component {
     }
 
     // pagination
-    // TODO: @jessica change this to be for transit log instead of students
     getTransitLogPage = (page, sortOptions, search) => {
-        getPage({ url: `logs`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}&active=false` })
+        getPage({ url: `logs/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}&active=false` })
         .then(res => {
             console.log(res)
             const log_table = {

@@ -33,13 +33,13 @@ class BusRoutesTransitLog extends Component {
 
     componentDidMount() {
         this.getTransitLogPage(this.state.logs_table.pageIndex, this.state.sortOptions, this.state.searchValue)
-        this.getRouteDetail()
+        // this.getRouteDetail()
     }
 
     // pagination
     // TODO: @jessica change this to be for transit log instead of students
     getTransitLogPage = (page, sortOptions, search) => {
-        getPage({ url: `logs`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}&active=false` })
+        getPage({ url: `logs`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&active=false` })
         .then(res => {
             console.log(res)
             const log_table = {
@@ -55,24 +55,24 @@ class BusRoutesTransitLog extends Component {
         })
     }
 
-    // TODO: @jessica change this to get transit log api not details page
-    getRouteDetail = () => {
-        api.get(`routes/detail?id=${this.props.params.id}`)
-            .then(res => {
-            const data = res.data;
-            this.setState({ 
-                route: data.route
-            });        
-        })
-        .catch(error => {
-            if (error.response.status !== 200) {
-                this.setState({ 
-                    error_status: true,
-                    error_code: error.response.status 
-                });
-            }
-        })
-    }
+    // // TODO: @jessica change this to get transit log api not details page
+    // getRouteDetail = () => {
+    //     api.get(`routes/detail?id=${this.props.params.id}`)
+    //         .then(res => {
+    //         const data = res.data;
+    //         this.setState({ 
+    //             route: data.route
+    //         });        
+    //     })
+    //     .catch(error => {
+    //         if (error.response.status !== 200) {
+    //             this.setState({ 
+    //                 error_status: true,
+    //                 error_code: error.response.status 
+    //             });
+    //         }
+    //     })
+    // }
 
     handleBusRunsShowAll = () => {
         this.setState(prevState => ({
