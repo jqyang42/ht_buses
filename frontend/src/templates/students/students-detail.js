@@ -242,7 +242,7 @@ class StudentsDetail extends Component {
                                     <div className="col">
                                     <div className="row">
                                             <h7 className="mb-3">
-                                                ROUTES IN TRANSIT
+                                                BUS RUNS IN TRANSIT
                                             </h7>
                                             {/* TODO: @thomas @jessica add the Transit Status Map here for in transit bus runs on routes that the student is on */}
                                         </div>

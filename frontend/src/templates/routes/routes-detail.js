@@ -423,6 +423,7 @@ class BusRoutesDetail extends Component {
             this.closeStartRunModal()
         })
     }
+    }
 
     stopRun = () => {
         this.on_run = false 
