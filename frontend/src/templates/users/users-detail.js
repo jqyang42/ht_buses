@@ -122,6 +122,7 @@ class UsersDetail extends Component {
         .then(res => {
             const user = res.data.user;
             this.setState({ user: user });
+            console.log(user)
         })
         .catch (err => {
             if (err.response.status !== 200) {
