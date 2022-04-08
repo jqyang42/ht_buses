@@ -33,20 +33,12 @@ export function RouteTransitLogTable({ data, showAll, pageIndex, canPreviousPage
             {
                 Header: 'School',
                 accessor: d => Array(`${d.school.name}`, `${d.school.id}`),
-<<<<<<< HEAD
-                id: 'school_name',
-=======
                 id: 'school',
->>>>>>> 4b99197bb30168db6096b2b31fd65daf9e07a7c8
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
                     <a href={"/schools/" + value[1]}>{value[0]}</a>
                 ),
-<<<<<<< HEAD
-                sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
-=======
                 sortDirection: sort.accessor === 'school' ? sort.sortDirection : 'none'
->>>>>>> 4b99197bb30168db6096b2b31fd65daf9e07a7c8
             },
             // {
             //     Header: 'Route',
@@ -63,10 +55,7 @@ export function RouteTransitLogTable({ data, showAll, pageIndex, canPreviousPage
                 accessor: 'pickup',
                 disableFilter: true,
                 id: 'direction',
-<<<<<<< HEAD
-=======
                 disableSortBy: true,
->>>>>>> 4b99197bb30168db6096b2b31fd65daf9e07a7c8
                 Cell: ({ cell: { value } }) => (
                     value ? <div>{"To school"}</div> : <div>{"From school"}</div>
                 ),
