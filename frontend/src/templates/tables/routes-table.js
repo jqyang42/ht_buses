@@ -48,6 +48,17 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
                 id: 'is_complete',
                 sortDirection: sort.accessor === 'is_complete' ? sort.sortDirection : 'none'
             },
+            {
+                Header: 'Bus Run',
+                accessor:  d => Array(`${d.in_transit}`,`${d.bus_number}`,`${d.driver}`),
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value[0] ? <>{"None in transit"}</> : <>{"Driver " + value[2] + " on bus #" + value[1]}</>
+                ),
+                disableSortBy: true,
+                // id: 'is_complete',
+                // sortDirection: sort.accessor === 'is_complete' ? sort.sortDirection : 'none'
+            },
         ],
         [sort]
     )

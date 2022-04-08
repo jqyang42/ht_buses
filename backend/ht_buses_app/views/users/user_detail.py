@@ -41,8 +41,7 @@ def users_detail(request):
             role = User.role_choices[int(user_serializer.data["role"])-1][1]
         schools = get_objects_for_user(user,"view_school", School.objects.all())
         manage_schools_serializer = ManageSchoolsSerializer(schools, many=True)
-        student_id = "None"
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_is_parent(user), "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools": manage_schools_serializer.data, "student_id": student_id}
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_is_parent(user), "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools": manage_schools_serializer.data, "student__object_id": student_id}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)

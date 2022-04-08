@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { RouteTransitLogTable } from "../tables/route-transit-log-table";
+import { GlobalTransitLogTable } from "../tables/global-transit-log-table";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
@@ -33,12 +33,13 @@ class BusRoutesTransitLog extends Component {
 
     componentDidMount() {
         this.getTransitLogPage(this.state.logs_table.pageIndex, this.state.sortOptions, this.state.searchValue)
-        this.getRouteDetail()
+        // this.getRouteDetail()
     }
 
     // pagination
+    // TODO: @jessica change this to be for transit log instead of students
     getTransitLogPage = (page, sortOptions, search) => {
-        getPage({ url: `logs/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}&active=false` })
+        getPage({ url: `logs`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&active=false` })
         .then(res => {
             console.log(res)
             const log_table = {
@@ -47,7 +48,6 @@ class BusRoutesTransitLog extends Component {
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
             }
-            console.log(log_table)
             this.setState({
                 transit_log: res.data.logs,
                 logs_table: log_table
@@ -55,24 +55,24 @@ class BusRoutesTransitLog extends Component {
         })
     }
 
-    // TODO: @jessica change this to get transit log api not details page
-    getRouteDetail = () => {
-        api.get(`routes/detail?id=${this.props.params.id}`)
-            .then(res => {
-            const data = res.data;
-            this.setState({ 
-                route: data.route
-            });        
-        })
-        .catch(error => {
-            if (error.response.status !== 200) {
-                this.setState({ 
-                    error_status: true,
-                    error_code: error.response.status 
-                });
-            }
-        })
-    }
+    // // TODO: @jessica change this to get transit log api not details page
+    // getRouteDetail = () => {
+    //     api.get(`routes/detail?id=${this.props.params.id}`)
+    //         .then(res => {
+    //         const data = res.data;
+    //         this.setState({ 
+    //             route: data.route
+    //         });        
+    //     })
+    //     .catch(error => {
+    //         if (error.response.status !== 200) {
+    //             this.setState({ 
+    //                 error_status: true,
+    //                 error_code: error.response.status 
+    //             });
+    //         }
+    //     })
+    // }
 
     handleBusRunsShowAll = () => {
         this.setState(prevState => ({
@@ -96,11 +96,11 @@ class BusRoutesTransitLog extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
-                    <SidebarMenu activeTab="routes" />
+                    <SidebarMenu activeTab="transit log" />
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         {/* TODO: @Kyra check that the route name is actually loading correctly */}
-                        <HeaderMenu root="Bus Routes" isRoot={false} isSecond={false} id={this.props.params.id} name={this.state.route.name} page="Transit Log" />
+                        <HeaderMenu root="Transit Log" isRoot={true} />
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
@@ -112,7 +112,7 @@ class BusRoutesTransitLog extends Component {
                                     <div className="col">
                                         <h7>BUS RUNS</h7>
                                         <div className="mt-3">
-                                        <RouteTransitLogTable 
+                                        <GlobalTransitLogTable 
                                         className="mt-2"
                                         data={this.state.transit_log} 
                                         showAll={this.state.bus_runs_show_all}

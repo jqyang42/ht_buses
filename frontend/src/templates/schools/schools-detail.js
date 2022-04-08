@@ -202,8 +202,9 @@ class SchoolsDetail extends Component {
                                                         Edit
                                                     </span>
                                                 </Link>
-                                                </> : ""}
-                                                {
+                                                </> : ""
+                                            }
+                                            {
                                                 (localStorage.getItem('role') === 'Driver') ?
                                                 <Link to={"/schools/" + this.props.params.id + "/transit-status"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
@@ -211,7 +212,7 @@ class SchoolsDetail extends Component {
                                                         Transit Status
                                                     </span>
                                                 </Link> : ""
-                                                }
+                                            }
                                             {
                                                   localStorage.getItem('role') === 'Administrator' ? 
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">

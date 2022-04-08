@@ -23,11 +23,13 @@ def user_delete(request):
         return response_messages.PermissionDenied(data, "user")
     try:
         user_object.location.delete()
+        '''
         students = Student.objects.filter(user_id = user_object)
         for student in students:
             if student.account is not None:  #TODO: make sure works
                 student_user = student.account
                 student_user.delete()
+        '''
         user_object.delete()
         data["message"] = "user successfully deleted"
         data["success"] = True

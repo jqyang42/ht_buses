@@ -3,7 +3,7 @@ import { Table } from "./table";
 import { colors } from "../../static/colors";
 import { useState } from "react";
     
-export function TransitStatusTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
+export function SchoolTransitStatusTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue}) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'full_name' });
