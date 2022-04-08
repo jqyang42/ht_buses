@@ -57,7 +57,7 @@ export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPag
                 disableSortBy: true,
                 id: 'direction',
                 Cell: ({ cell: { value } }) => (
-                    value ? <div>{"To school"}</div> : <div>{"From school"}</div>
+                    value ? <div>{"Pickup"}</div> : <div>{"Dropoff"}</div>
                 ),
                 sortDirection: sort.accessor === 'direction' ? sort.sortDirection : 'none'
             },     

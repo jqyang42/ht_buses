@@ -57,6 +57,7 @@ class BusRoutesDetail extends Component {
         transit_log_id: null,
         valid_bus_number: true,
         startRunModalIsOpen: false,
+        startConfirmationRunModalIsOpen: false,
         log: {},
         buses: [],
         bus_tooltip: {}
@@ -407,7 +408,11 @@ class BusRoutesDetail extends Component {
 
     closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
 
-    startRun = () => {
+    openStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: true });
+
+    closeStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: false });
+
+    startRun = (event) => {
         event.preventDefault()
         if(this.state.valid_bus_number) {
         this.setState({ in_transit: true })
@@ -421,6 +426,7 @@ class BusRoutesDetail extends Component {
         .then(res => {
             this.getInTransit()
             this.closeStartRunModal()
+            this.openStartConfirmationRunModal()
         })
     }
     }
@@ -563,6 +569,18 @@ class BusRoutesDetail extends Component {
                                                     <button type="submit" className="btn btn-primary">Start</button>
                                                 </Modal.Footer>
                                                 </form>
+                                            </Modal>
+
+                                            <Modal backdrop="static" show={this.state.startConfirmationRunModalIsOpen} onHide={this.closeStartConfirmationRunModal}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Start Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    Your bus run has successfully started.
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-primary" onClick={this.closeStartConfirmationRunModal}>OK</button>
+                                                </Modal.Footer>
                                             </Modal>
 
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
