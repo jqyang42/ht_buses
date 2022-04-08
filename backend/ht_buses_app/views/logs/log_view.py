@@ -1,3 +1,5 @@
+from xmlrpc.client import DateTime
+from django.forms import CharField
 from ...serializers import LogSerializer
 from ...models import User, Route, Log
 from rest_framework.response import Response
@@ -6,9 +8,9 @@ from datetime import datetime, timedelta
 from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db.models import Q, F, DateTimeField
 from django.db.models import Value as V
-from django.db.models.functions import Concat 
+from django.db.models.functions import Concat, Cast
 from ..general.general_tools import get_logs_for_user
 from .log_pagination import log_pagination
 
@@ -43,21 +45,24 @@ def log_search_and_sort(order_by, sort_by, search, log_list):
         sort_by = "route_id__name"
     if sort_by == "school":
         sort_by = "route_id__school_id__name"
+    if sort_by == "start_time":
+        sort_by = "date_duration"
 
+    print(sort_by)
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
-        logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
+        logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'), date_duration=Cast(Concat('date', V(" "), 'start_time', output_field=DateTimeField()), output_field=DateTimeField()))\
         .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search) | Q(bus_number__icontains = search)).order_by("id")
     else:
         if order_by == "asc":
             if search != None:
-                logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
+                logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'), date_duration=Cast(Concat('date', V(" "), 'start_time', output_field=DateTimeField()), output_field=DateTimeField()))\
         .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search) | Q(bus_number__icontains = search)).order_by(sort_by)
             else:
-                logs = log_list.order_by(sort_by)
+                logs = log_list.annotate(date_duration=Cast(Concat('date', V(" "), 'start_time', output_field=DateTimeField())), output_field=DateTimeField()).order_by(sort_by)
         else:
             if search != None:
-                logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'))\
+                logs = log_list.annotate(full_name=Concat('user_id__first_name', V(' '), 'user_id__last_name'), date_duration=Cast(Concat('date', V(" "), 'start_time', output_field=DateTimeField()), output_field=DateTimeField()))\
         .filter(Q(full_name__icontains=search) | Q(user_id__first_name__icontains=search) | Q(user_id__last_name__icontains=search) | Q(route_id__name__icontains = search) | Q(route_id__school_id__name__icontains = search) | Q(bus_number__icontains = search)).order_by("-" + sort_by)
             else:
-                logs = log_list.order_by("-" + sort_by)
+                logs = log_list.annotate(date_duration=Cast(Concat('date', V(" "), 'start_time', output_field=DateTimeField()), output_field=DateTimeField())).order_by("-" + sort_by)
     return logs
