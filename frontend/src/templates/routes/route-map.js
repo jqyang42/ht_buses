@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
@@ -65,14 +65,12 @@ class RouteMap extends Component {
     },
     buses: this.props.buses,
     // bus_info_window: false,
-    bus_tooltip: this.props.bus_tooltip
+    bus_tooltip: this.props.bus_tooltip,
+    school: this.props.school,
+    school_tooltips: this.props.school_tooltips
   }
 
   studentsChanged = []
-
-  handleCenterChange = (event) => {
-    //TODO: update state with new center
-  }
 
   toggleBusInfoWindow = (bus_number) => {
     // console.log(this.state.bus_tooltip)
@@ -89,6 +87,23 @@ class RouteMap extends Component {
       bus_tooltip: new_tooltip
     })
   }
+
+  // toggleSchoolInfoWindow = (bus_number) => {
+  //   // console.log(this.state.bus_tooltip)
+  //   // this.setState(prevState => ({
+  //   //   bus_tooltip: {
+  //   //     ...prevState.bus_tooltip,
+  //   //     [bus_number]: !prevState.bus_tooltip[bus_number]
+  //   //   }
+  //   // }))
+
+  //   const new_tooltip = this.state.school
+  //   // new_tooltip[school_id] = !new_tooltip[school_id]
+  //   this.setState({
+  //     bus_tooltip: new_tooltip
+  //   })
+  // }
+
 
   componentDidUpdate(prevProps) {
     if(this.props.existingStops !== prevProps.existingStops){
@@ -214,6 +229,7 @@ class RouteMap extends Component {
 
   render() {
     const center = this.props.center
+    console.log(this.props.school)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -235,11 +251,18 @@ class RouteMap extends Component {
               <Marker 
                 position={this.props.center} 
                 icon={this.props.centerIcon}
-              /> :
+                
+              />: ""}
+            {this.props.school ? 
               <Marker 
                 position={this.props.center} 
-              />
-            }
+              >
+                <InfoWindow options={{maxWidth:300}}>
+                  <>
+                    <h6>{this.props.school.name}</h6>
+                  </>
+                </InfoWindow>
+              </Marker> : ""}
             {console.log(this.props.buses)}
             {this.props.buses?.map((value, index) => {
               console.log(value)

@@ -92,7 +92,6 @@ class BusRoutesDetail extends Component {
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
                     center: res.data.center,
-                    school: res.data.schools
                 })
             })
         }, 1000)
@@ -609,6 +608,7 @@ class BusRoutesDetail extends Component {
                                             existingStops={this.state.stops}
                                             bus_tooltip={this.state.bus_tooltip}
                                             buses={this.state.buses}
+                                            school={this.state.school}
                                         />
                                         : "" }
                                         </div>
