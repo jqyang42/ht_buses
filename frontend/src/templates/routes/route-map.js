@@ -8,7 +8,8 @@ import { MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 import StudentMarker from './student-marker';
 import StopMarker from './stop-marker';
-import BusMarker from './bus-marker'
+import BusMarker from './bus-marker';
+import SchoolMarker from './school-marker'
 import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
 
 const containerStyle = {
@@ -254,15 +255,12 @@ class RouteMap extends Component {
                 
               />: ""}
             {this.props.school ? 
-              <Marker 
-                position={this.props.center} 
-              >
-                <InfoWindow options={{maxWidth:300}}>
-                  <>
-                    <h6>{this.props.school.name}</h6>
-                  </>
-                </InfoWindow>
-              </Marker> : ""}
+              <SchoolMarker 
+                location={this.props.center} 
+                name={this.props.school.name}
+                id={this.props.school.id}
+                key={this.props.school.id}
+              /> : ""}
             {console.log(this.props.buses)}
             {this.props.buses?.map((value, index) => {
               console.log(value)

@@ -74,7 +74,6 @@ class SchoolsTransitStatus extends Component {
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
                     center: res.data.center,
-                    // school: res.data.schools
                 })
             })
             this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
