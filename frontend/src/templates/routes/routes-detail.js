@@ -58,6 +58,7 @@ class BusRoutesDetail extends Component {
         valid_bus_number: true,
         startRunModalIsOpen: false,
         startConfirmationRunModalIsOpen: false,
+        stopConfirmationRunModalIsOpen: false,
         log: {},
         buses: [],
         bus_tooltip: {}
@@ -412,6 +413,10 @@ class BusRoutesDetail extends Component {
 
     closeStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: false });
 
+    openStopConfirmationRunModal = () => this.setState({ stopConfirmationRunModalIsOpen: true });
+
+    closeStopConfirmationRunModal = () => this.setState({ stopConfirmationRunModalIsOpen: false });
+
     startRun = (event) => {
         event.preventDefault()
         if(this.state.valid_bus_number) {
@@ -442,7 +447,8 @@ class BusRoutesDetail extends Component {
         api.put(`logs/update?id=${this.state.transit_log_id}`)
         .then(res => {
             this.getInTransit()
-            // this.closeStartRunModal()    
+            // this.closeStartRunModal() 
+            this.openStopConfirmationRunModal()   
         })
     }
 
@@ -580,6 +586,18 @@ class BusRoutesDetail extends Component {
                                                 </Modal.Body>
                                                 <Modal.Footer>
                                                     <button type="button" className="btn btn-primary" onClick={this.closeStartConfirmationRunModal}>OK</button>
+                                                </Modal.Footer>
+                                            </Modal>
+
+                                            <Modal backdrop="static" show={this.state.stopConfirmationRunModalIsOpen} onHide={this.closeStopConfirmationRunModal}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Stop Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    Your bus run has successfully ended.
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-primary" onClick={this.closeStopConfirmationRunModal}>OK</button>
                                                 </Modal.Footer>
                                             </Modal>
 
