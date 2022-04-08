@@ -48,6 +48,7 @@ class SchoolsTransitStatus extends Component {
         api.get(`schools/detail?id=${this.props.params.id}`)
         .then(res => {
             const data = res.data
+            data["school"]["id"]=this.props.params.id
             this.setState({ 
                 school: data.school
             });
@@ -157,6 +158,7 @@ class SchoolsTransitStatus extends Component {
     // }
 
     render() {
+        console.log(this.state.school)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }
@@ -203,6 +205,7 @@ class SchoolsTransitStatus extends Component {
                                             bus_tooltip={this.state.bus_tooltip}
                                             existingStops={this.state.stops}
                                             buses={this.state.buses}
+                                            school={this.state.school}
                                         />
                                         : "" }
                                         </div>
