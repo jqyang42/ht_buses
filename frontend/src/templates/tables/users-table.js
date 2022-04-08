@@ -29,6 +29,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
                 Header: 'Phone Number',
                 accessor: 'phone_number',
                 id: 'phone_number',
+                disableSortBy: true,
                 sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
             },
             {
