@@ -52,7 +52,6 @@ def update_students_user(student_object, student_email, phone_number = ""):
         student_user.last_name = student_object.last_name
         student_user.email = student_email
         student_user.phone_number = phone_number
-        student_user.role = User.STUDENT
         student_user.location = student_object.user_id.location
         student_user.save()
         return True
