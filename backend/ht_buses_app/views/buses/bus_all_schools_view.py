@@ -51,7 +51,7 @@ def active_buses_filter(schools):
         school_location = Location.objects.get(pk=school["location_id"])
         school_location_serializer = LocationSerializer(school_location, many=False)
         school_location_arr = {'lat': school_location_serializer.data["lat"], 'lng': school_location_serializer.data["lng"]}
-        school_arr.append({'id': school["id"], 'school': school["name"], 'location': school_location_arr})
+        school_arr.append({'id': school["id"], 'name': school["name"], 'location': school_location_arr})
         school_count += 1
         avg_lat += school_location_serializer.data["lat"]
         avg_lng += school_location_serializer.data["lng"]

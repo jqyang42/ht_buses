@@ -114,51 +114,7 @@ class SchoolsTransitStatus extends Component {
         })
     }
 
-    // getStudentsFromUser = (users) => {
-    //     const students = users?.map(user => {
-    //         return user.students.map(student => {
-    //             return {
-    //                 student_school_id: student.student_school_id,
-    //                 id: student.id,
-    //                 first_name: student.first_name,
-    //                 last_name: student.last_name,
-    //                 in_range: student.in_range
-    //             }
-    //         })
-    //     })
-    //     return [].concat.apply([], students)
-    // }
-
-    // handlers
-    // handleDelete = (event) => {
-    //     event.preventDefault()
-
-    //     api.delete(`routes/delete?id=${this.props.params.id}`)
-    //         .then(res => {
-    //             // console.log("hello")
-    //             const success = res.data.success
-    //             // console.log(res.data)
-    //             if (success) {
-    //                 this.setState({ 
-    //                     delete_success: 1,
-    //                     redirect: true
-    //                 })
-    //             } else {
-    //                 this.setState({ delete_success: -1})
-    //             }
-    //         }) 
-    // }
-
-    // handleRoutesShowAll = () => {
-    //     this.setState(prevState => ({
-    //         routes_show_all: !prevState.routes_show_all
-    //     }), () => {
-    //         this.getStudentsPage(this.state.routes_show_all ? 0 : 1, null, '')
-    //     })
-    // }
-
     render() {
-        console.log(this.state.school)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }
@@ -203,10 +159,10 @@ class SchoolsTransitStatus extends Component {
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
-                                            active_route={this.props.params.id} 
+                                            // active_route={this.props.params.id} 
                                             center={this.state.center}
                                             bus_tooltip={this.state.bus_tooltip}
-                                            existingStops={this.state.stops}
+                                            // existingStops={this.state.stops}
                                             buses={this.state.buses}
                                             school={this.state.school}
                                         />
