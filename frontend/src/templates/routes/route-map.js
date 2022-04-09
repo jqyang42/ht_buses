@@ -55,20 +55,21 @@ const hidePOIs = [
 
 
 class RouteMap extends Component {
-  state = {
-    newStops: [],
-    editedStops: [],
-    existingStops: this.props.existingStops,
-    showModal: false,
-    center: {
-      lat: parseFloat(this.props.center.lat),
-      lng: parseFloat(this.props.center.lng)
-    },
-    buses: this.props.buses,
-    // bus_info_window: false,
-    bus_tooltip: this.props.bus_tooltip,
-    school: this.props.school,
-    school_tooltips: this.props.school_tooltips
+    state = {
+      newStops: [],
+      editedStops: [],
+      existingStops: this.props.existingStops,
+      showModal: false,
+      center: {
+        lat: parseFloat(this.props.center.lat),
+        lng: parseFloat(this.props.center.lng)
+      },
+      buses: this.props.buses,
+      // bus_info_window: false,
+      bus_tooltip: this.props.bus_tooltip,
+      school: this.props.school,
+      school_tooltips: this.props.school_tooltips
+    
   }
 
   studentsChanged = []
@@ -128,6 +129,9 @@ class RouteMap extends Component {
     }
   }
 
+  handleCenterChange = (event) =>{
+    console.log(event)
+  }
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
@@ -242,6 +246,7 @@ class RouteMap extends Component {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
+            onCenterChanged={(e) => this.handleCenterChange(e)}
             options={{
               styles: hidePOIs
             }}
