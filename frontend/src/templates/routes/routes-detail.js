@@ -55,7 +55,10 @@ class BusRoutesDetail extends Component {
         transit_driver: null,
         transit_bus_number: null,
         transit_log_id: null,
+        valid_bus_number: true,
         startRunModalIsOpen: false,
+        startConfirmationRunModalIsOpen: false,
+        stopConfirmationRunModalIsOpen: false,
         log: {},
         buses: [],
         bus_tooltip: {}
@@ -219,6 +222,23 @@ class BusRoutesDetail extends Component {
         })
     }
 
+    check_valid_bus_number = () => {
+        api.get(`transit`)
+        .then(res => {
+            const data = res.data
+            console.log(data)
+            const filtered_buses =  data.buses.filter(buses => {
+                return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)})
+
+            const valid_bus_number = filtered_buses.length === 0
+            console.log(data.buses.filter(buses => {
+                return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)}))
+            console.log(valid_bus_number)
+            this.setState({valid_bus_number: valid_bus_number})
+        })
+
+    }
+
     getStudentsFromUser = (users) => {
         const students = users?.map(user => {
             return user.students.map(student => {
@@ -373,6 +393,7 @@ class BusRoutesDetail extends Component {
         let log = {...this.state.log}
         log.bus_number = event.target.value
         this.setState({ log: log })
+        this.check_valid_bus_number()
     }
 
     handleIsPickupChange = (event) => {
@@ -388,9 +409,18 @@ class BusRoutesDetail extends Component {
 
     closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
 
+    openStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: true });
+
+    closeStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: false });
+
+    openStopConfirmationRunModal = () => this.setState({ stopConfirmationRunModalIsOpen: true });
+
+    closeStopConfirmationRunModal = () => this.setState({ stopConfirmationRunModalIsOpen: false });
+
     startRun = (event) => {
-        // this.setState({ in_transit: true })
         event.preventDefault()
+        if(this.state.valid_bus_number) {
+        this.setState({ in_transit: true })
         this.on_run = true 
         const request = {
             log: this.state.log
@@ -401,7 +431,9 @@ class BusRoutesDetail extends Component {
         .then(res => {
             this.getInTransit()
             this.closeStartRunModal()
+            this.openStartConfirmationRunModal()
         })
+    }
     }
 
     stopRun = () => {
@@ -415,7 +447,8 @@ class BusRoutesDetail extends Component {
         api.put(`logs/update?id=${this.state.transit_log_id}`)
         .then(res => {
             this.getInTransit()
-            // this.closeStartRunModal()    
+            // this.closeStartRunModal() 
+            this.openStopConfirmationRunModal()   
         })
     }
 
@@ -516,6 +549,11 @@ class BusRoutesDetail extends Component {
                                                         <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
                                                             placeholder="Enter bus number" required
                                                             onChange={this.handleBusNumberChange}></input>
+                                                        {(!this.state.valid_bus_number) ? 
+                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                            Please choose a different bus number. A bus with this bus number is already in transit.
+                                                        </div>) : ""
+                                                        }
                                                     </div>
                                                     <div className="form-group required pb-3" onChange={this.handleIsPickupChange.bind(this)}
                                                     >
@@ -537,6 +575,30 @@ class BusRoutesDetail extends Component {
                                                     <button type="submit" className="btn btn-primary">Start</button>
                                                 </Modal.Footer>
                                                 </form>
+                                            </Modal>
+
+                                            <Modal backdrop="static" show={this.state.startConfirmationRunModalIsOpen} onHide={this.closeStartConfirmationRunModal}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Start Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    Your bus run has successfully started.
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-primary" onClick={this.closeStartConfirmationRunModal}>OK</button>
+                                                </Modal.Footer>
+                                            </Modal>
+
+                                            <Modal backdrop="static" show={this.state.stopConfirmationRunModalIsOpen} onHide={this.closeStopConfirmationRunModal}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Stop Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    Your bus run has successfully ended.
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-primary" onClick={this.closeStopConfirmationRunModal}>OK</button>
+                                                </Modal.Footer>
                                             </Modal>
 
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
