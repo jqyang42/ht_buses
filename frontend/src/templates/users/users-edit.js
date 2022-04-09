@@ -16,7 +16,7 @@ import MultiSelectDropdown from "../components/multi-select";
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class UsersEdit extends Component {
     state = {

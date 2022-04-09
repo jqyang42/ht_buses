@@ -9,7 +9,7 @@ import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, ROUTES_URL, STUDENT_INFO_URL } from "../../constants";
 
 class BusRoutesTransitLog extends Component {
     state = {

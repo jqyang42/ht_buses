@@ -10,7 +10,7 @@ import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { toDisplayFormat } from "../components/time";
 
 class SchoolsDetail extends Component {

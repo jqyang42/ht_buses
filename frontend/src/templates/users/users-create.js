@@ -13,7 +13,7 @@ import MultiSelectDropdown from "../components/multi-select";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
 
 class UsersCreate extends Component {

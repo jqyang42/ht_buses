@@ -7,7 +7,7 @@ import api from "../components/api";
 import axios from "axios";
 import { API_DOMAIN } from "../../constants";
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class Email extends Component {
     state = {

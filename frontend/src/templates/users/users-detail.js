@@ -13,7 +13,7 @@ import { ManagedSchoolsTable } from '../tables/managed-schools-table';
 import { emailValidation, phoneValidation } from "../components/validation";
 
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { getPage } from '../tables/server-side-pagination';
 
 class UsersDetail extends Component {

@@ -9,9 +9,10 @@ import { StopsTable } from "../tables/stops-table";
 import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
 
-import { MARKER_ICONS } from '../../constants';
+import { MARKER_ICONS, PARENT_DASHBOARD_URL } from '../../constants';
 import { LOGIN_URL } from "../../constants";
 import { STUDENTS_URL } from "../../constants";
+import { Nav } from "react-bootstrap";
 
 class StudentInfo extends Component {
     state = {
@@ -88,6 +89,12 @@ class StudentInfo extends Component {
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        if (JSON.parse(localStorage.getItem('is_staff'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
+            return <Navigate to={PARENT_DASHBOARD_URL} />
         }
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />

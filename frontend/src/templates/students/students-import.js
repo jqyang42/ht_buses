@@ -8,7 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL, STUDENTS_URL } from '../../constants';
-import { STUDENTS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { STUDENTS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import api from "../components/api";
 
 class StudentsImport extends Component {

@@ -10,7 +10,7 @@ import api from "../components/api";
 
 import { LOGIN_URL } from "../../constants";
 import { SCHOOLS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
 import { validTime } from "../components/time";
 

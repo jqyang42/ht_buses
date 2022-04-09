@@ -6,7 +6,7 @@ import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import api from "../components/api";
 
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL, STUDENT_INFO_URL } from "../../constants";
 import SidebarMenu from "../components/sidebar-menu";
 import PasswordForm from "../components/password-form";
 

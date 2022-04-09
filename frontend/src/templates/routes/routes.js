@@ -6,7 +6,7 @@ import HeaderMenu from "../components/header-menu";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class BusRoutes extends Component {
     state = {

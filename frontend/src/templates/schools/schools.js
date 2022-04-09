@@ -7,7 +7,7 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from '../../constants';
 import { SCHOOLS_CREATE_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class Schools extends Component {
     state = {

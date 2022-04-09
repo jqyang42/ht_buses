@@ -13,7 +13,7 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";

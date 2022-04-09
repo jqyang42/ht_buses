@@ -8,7 +8,7 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { makeParentsDropdown, makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
 import { validNumber } from "../components/validation";
 import { emailValidation, phoneValidation } from "../components/validation";

@@ -13,7 +13,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { MARKER_ICONS } from '../../constants';
 
 import { LOGIN_URL } from "../../constants";
-import { STUDENTS_URL } from "../../constants";
+import { STUDENTS_URL, STUDENT_INFO_URL } from "../../constants";
 
 class ParentDetail extends Component {
     state = {
@@ -91,7 +91,7 @@ class ParentDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        if (JSON.parse(localStorage.getItem('is_staff')) && !JSON.parse(localStorage.getItem('is_parent'))) {
+        if (JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
         else if (JSON.parse(localStorage.getItem('role') === "Student")) {

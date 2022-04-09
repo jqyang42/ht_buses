@@ -7,7 +7,7 @@ import HeaderMenu from '../components/header-menu';
 import api from "../components/api";
 
 import { LOGIN_URL } from '../../constants';
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import ErrorPage from '../error-page';
 import RouteMap from "../routes/route-map";
 

@@ -14,7 +14,7 @@ import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, ROUTES_URL, STUDENT_INFO_URL } from "../../constants";
 import pdfRender from "../components/export-route";
 
 class BusRoutesDetail extends Component {

@@ -6,7 +6,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
 
-import { LOGIN_URL, STUDENT_INFO_URL } from '../../constants';
+import { LOGIN_URL } from '../../constants';
 import { USERS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { USERS_IMPORT_URL } from "../../constants";
 import api from "../components/api";
