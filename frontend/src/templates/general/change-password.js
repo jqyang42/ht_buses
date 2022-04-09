@@ -6,7 +6,7 @@ import ParentSidebarMenu from '../components/parent-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import api from "../components/api";
 
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL, STUDENT_INFO_URL } from "../../constants";
 import SidebarMenu from "../components/sidebar-menu";
 import PasswordForm from "../components/password-form";
 
@@ -25,6 +25,9 @@ class ChangePassword extends Component {
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

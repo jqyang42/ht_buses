@@ -16,7 +16,7 @@ import MultiSelectDropdown from "../components/multi-select";
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class UsersEdit extends Component {
     state = {
@@ -246,8 +246,11 @@ class UsersEdit extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         const redirect_url = USERS_URL + '/' + this.props.params.id;
@@ -312,10 +315,10 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            { <div className="form-group required pb-3 w-75">
+                                            { <div className={"form-group pb-3 w-75"}>
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
-                                                placeholder="Enter phone number" required defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
+                                                placeholder="Enter phone number" defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
                                                 {/*
                                                  {(!phoneValidation({ phone_number: this.state.edited_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
@@ -335,7 +338,7 @@ class UsersEdit extends Component {
                                                         <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option> : ""
                                                     }
                                                     { this.state.user.role_id === 5 ?
-                                                        <option value={4} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
+                                                        <option value={5} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
                                                     }
                                                     <option value={1} id="1" selected={this.state.edited_user.role_id === 1}>Administrator</option>
                                                     <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>School Staff</option>

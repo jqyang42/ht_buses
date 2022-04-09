@@ -13,7 +13,7 @@ import MultiSelectDropdown from "../components/multi-select";
 
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { makeSchoolsDropdown, makeRoutesDropdown, makeSchoolsMultiSelect } from "../components/dropdown";
 
 class UsersCreate extends Component {
@@ -513,8 +513,11 @@ class UsersCreate extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state.redirect;
         if (redirect) {
@@ -669,7 +672,7 @@ class UsersCreate extends Component {
                                                                             <div className="form-group pb-3">
                                                                                 <label for={"exampleInputStudentEmail" + count} className="control-label pb-2">Student Email</label>
                                                                                 <input type="email" className="form-control pb-2" id={"exampleInputStudentEmail" + count} 
-                                                                                defaultValue={this.state.students[this.accordionIndex(count)].email} placeholder="Enter student email" required
+                                                                                defaultValue={this.state.students[this.accordionIndex(count)].email} placeholder="Enter student email"
                                                                                 onChange={(e) => this.handlStudentEmailChange(e, count)} ></input>
                                                                                     <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student</small>
                                                                                     {(!emailValidation({ email: this.state.students[this.accordionIndex(count)].email}) &&  this.state.students[this.accordionIndex(count)].email != "") ? 
@@ -679,7 +682,7 @@ class UsersCreate extends Component {
                                                                                 }
                                                                                 {(this.state.students[this.accordionIndex(count)].valid_email === -1 ) ?  
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                                                        Creation unsuccessful. Please enter a different email, a student with this email already exists
+                                                                                        Creation unsuccessful. Please enter a different email, a user with this email already exists.
                                                                                     </div>) : ""
                                                                                 }
                                                                             </div>

@@ -10,7 +10,7 @@ import StudentMarker from './student-marker';
 import StopMarker from './stop-marker';
 import BusMarker from './bus-marker';
 import SchoolMarker from './school-marker'
-import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
+import { PARENT_DASHBOARD_URL , LOGIN_URL, STUDENT_INFO_URL } from "../../constants";
 
 const containerStyle = {
   width: '100%',
