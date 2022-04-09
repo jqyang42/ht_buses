@@ -54,8 +54,8 @@ const hidePOIs = [
 ]
 
 
-class RouteMap extends Component {
-    state = {
+class RouteMap extends Component {  
+  state = {
       newStops: [],
       editedStops: [],
       existingStops: this.props.existingStops,
@@ -68,8 +68,8 @@ class RouteMap extends Component {
       // bus_info_window: false,
       bus_tooltip: this.props.bus_tooltip,
       school: this.props.school,
-      school_tooltips: this.props.school_tooltips
-    
+      school_tooltips: this.props.school_tooltips,
+      center: this.props.center,
   }
 
   studentsChanged = []
@@ -106,7 +106,6 @@ class RouteMap extends Component {
   //   })
   // }
 
-
   componentDidUpdate(prevProps) {
     if(this.props.existingStops !== prevProps.existingStops){
       this.setState({
@@ -129,9 +128,6 @@ class RouteMap extends Component {
     }
   }
 
-  handleCenterChange = (event) =>{
-    console.log(event)
-  }
   // Handles onClick
   createStopMarker = (event) => {
     const coords = event.latLng.toJSON() 
@@ -232,9 +228,7 @@ class RouteMap extends Component {
     this.props.handleDeleteOrigStops(this.deleted_ids)
   }
 
-  render() {
-    const center = this.props.center
-    console.log(this.props.school)
+    render() {
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -244,9 +238,9 @@ class RouteMap extends Component {
           googleMapsApiKey={GOOGLE_API_KEY}
         >
           <GoogleMap
+            // ref={this.mapRef}
             mapContainerStyle={containerStyle}
-            center={center}
-            onCenterChanged={(e) => this.handleCenterChange(e)}
+            center={this.state.center}
             options={{
               styles: hidePOIs
             }}

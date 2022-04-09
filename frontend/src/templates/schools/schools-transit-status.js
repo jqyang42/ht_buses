@@ -16,7 +16,7 @@ import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
 class SchoolsTransitStatus extends Component {
     state = {
         school : [],
-        center: {},
+        center: null,
         markers: null,
         redirect: false,
         error_status: false,
@@ -196,7 +196,7 @@ class SchoolsTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.buses ? 
+                                        {this.state.buses && this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
