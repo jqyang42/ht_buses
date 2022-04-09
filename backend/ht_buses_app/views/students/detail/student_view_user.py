@@ -32,6 +32,8 @@ def student_search_and_sort(order_by, sort_by, search, user_id):
         sort_by = "route_id__name"
     if sort_by == "school_name":
         sort_by = "school_id__name"
+    if sort_by == "email":
+        sort_by = "account_id__email"
     
     students = Student.objects.filter(user_id = user_id)
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
