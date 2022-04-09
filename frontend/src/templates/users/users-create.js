@@ -682,7 +682,7 @@ class UsersCreate extends Component {
                                                                                 }
                                                                                 {(this.state.students[this.accordionIndex(count)].valid_email === -1 ) ?  
                                                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                                                        Creation unsuccessful. Please enter a different email, a student with this email already exists
+                                                                                        Creation unsuccessful. Please enter a different email, a user with this email already exists.
                                                                                     </div>) : ""
                                                                                 }
                                                                             </div>

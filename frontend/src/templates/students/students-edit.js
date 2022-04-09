@@ -300,7 +300,7 @@ class StudentsEdit extends Component {
                                                 }
                                                  {(!this.state.valid_email && this.state.edited_student?.email) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Update unsuccessful. Please enter a different email, a student with this email already exists
+                                                        Update unsuccessful. Please enter a different email, a user with this email already exists.
                                                     </div>) : ""
                                                 }
                                             </div>
