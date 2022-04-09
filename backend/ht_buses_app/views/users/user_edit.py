@@ -45,10 +45,13 @@ def user_edit(request):
         user_object.phone_number = reqBody["user"]["phone_number"]
         user_object.location.save()
         user_object.save()
-        if reqBody["user"]["role_id"] == None or reqBody["user"]["role_id"] > 4 or reqBody["user"]["role_id"] < 0:
+        if reqBody["user"]["role_id"] == None or reqBody["user"]["role_id"] > 5 or reqBody["user"]["role_id"] < 0:
             user_object.role = User.GENERAL
         else:
-            user_object.role = reqBody["user"]["role_id"]
+            if user_object.role == User.STUDENT or user_object.role == User.GENERAL:
+                user_object.role =  user_object.role
+            else:
+                user_object.role = reqBody["user"]["role_id"]
         if user_object.role == User.SCHOOL_STAFF:
             try:
                 schools = reqBody["user"]["managed_schools"]
