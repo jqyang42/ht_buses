@@ -10,8 +10,11 @@ class PasswordResetConfirmation extends Component {
         if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
-        else if (JSON.parse(localStorage.getItem('logged_in')) && !JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         return (
             <div className="container-fluid py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">

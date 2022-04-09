@@ -91,6 +91,12 @@ class ParentDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
+        if (JSON.parse(localStorage.getItem('is_staff')) && !JSON.parse(localStorage.getItem('is_parent'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
+        }
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }

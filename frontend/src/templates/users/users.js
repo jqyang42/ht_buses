@@ -6,8 +6,8 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
 
-import { LOGIN_URL } from '../../constants';
-import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { LOGIN_URL, STUDENT_INFO_URL } from '../../constants';
+import { USERS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { USERS_IMPORT_URL } from "../../constants";
 import api from "../components/api";
 import { API_DOMAIN } from "../../constants";
@@ -132,8 +132,11 @@ class Users extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.import_redirect) {
             return <Navigate to={ USERS_IMPORT_URL } state={{file: this.fileUploaded}}/>

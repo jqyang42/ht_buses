@@ -91,8 +91,11 @@ class Email extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         var root = (this.props.source === "Users") ? "Manage Users" : (this.props.source === "Routes" ? "Bus Routes" : this.props.source)
         var name = (this.props.source === "Users") ? "Send Announcement" : this.state.name
