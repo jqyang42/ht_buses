@@ -74,7 +74,7 @@ class UsersDetail extends Component {
         makeSchoolsDropdown().then(ret => {
             this.setState({ schools_dropdown: ret })
         })
-        this.updateIsParent()
+        // this.updateIsParent()
         this.getInTransit()
     }
 
@@ -134,10 +134,6 @@ class UsersDetail extends Component {
         })
     }
 
-    updateIsParent = () => {
-       
-    }
-
     deleteUser() {
         api.delete(`users/delete?id=${this.props.params.id}`)
         .then(res => {
@@ -149,6 +145,21 @@ class UsersDetail extends Component {
                 })
                 this.getUserDetails()
                 return <Navigate to={ USERS_URL }/>;
+            } else {
+                this.setState({ delete_success: -1 });
+            }
+        })
+    }
+
+    deleteStudentObject = () => {
+        api.delete(`students/delete?id=${this.state.user.student_object_id}`)
+        .then(res => {
+            const success = res.data.success
+            if (success) {
+                this.setState({ 
+                    delete_success: 1,
+                    redirect: true 
+                });
             } else {
                 this.setState({ delete_success: -1 });
             }
@@ -261,7 +272,7 @@ class UsersDetail extends Component {
 
         this.addStudent(student)
         }
-        this.updateIsParent()
+        // this.updateIsParent()
         }
 
     render() {
@@ -409,8 +420,8 @@ class UsersDetail extends Component {
                                                                 {this.state.user.role === "Student" ?
                                                                 <>
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Delete Records</button> 
-                                                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal">Disable Login</button> 
+                                                                <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={() => this.deleteStudentObject() }>Delete Records</button> 
+                                                                <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Disable Login</button> 
                                                                 </>
                                                                 :
                                                                 <>
