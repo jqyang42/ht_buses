@@ -312,10 +312,10 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            { <div className="form-group required pb-3 w-75">
+                                            { <div className={this.state.edited_user.role_id !== 5 ? "form-group pb-3 w-75 required" : "form-group pb-3 w-75"}>
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
-                                                placeholder="Enter phone number" required defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
+                                                placeholder="Enter phone number" required={this.state.edited_user.role_id !== 5} defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
                                                 {/*
                                                  {(!phoneValidation({ phone_number: this.state.edited_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
@@ -335,7 +335,7 @@ class UsersEdit extends Component {
                                                         <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option> : ""
                                                     }
                                                     { this.state.user.role_id === 5 ?
-                                                        <option value={4} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
+                                                        <option value={5} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
                                                     }
                                                     <option value={1} id="1" selected={this.state.edited_user.role_id === 1}>Administrator</option>
                                                     <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>School Staff</option>
