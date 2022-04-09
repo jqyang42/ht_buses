@@ -10,6 +10,7 @@ import api from '../components/api';
 import { validNumber } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 import { ManagedSchoolsTable } from '../tables/managed-schools-table';
+import { emailValidation, phoneValidation } from "../components/validation";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -22,6 +23,8 @@ class UsersDetail extends Component {
             first_name: '',
             last_name: '',
             school_id: '',
+            email: '',
+            phone_number: '',
             route_id: null,
             student_school_id: '',
             in_range: false
@@ -230,6 +233,20 @@ class UsersDetail extends Component {
         this.setState({ valid_id: validNumber({ value_to_check: student_school_id}) ? 1 : -1})
     }
 
+    handlStudentEmailChange = (event) => {
+        const email = event.target.value
+        let student = this.state.new_student
+        student.email = email
+        this.setState({ new_student: student })
+    }
+
+    handleStudentPhoneChange = (event) => {
+        const phone = event.target.value
+        let student = this.state.new_student
+        student.phone_number = phone
+        this.setState({ new_student: student })
+    }
+
     handleSchoolChange = (event) => {
         const school_id = event.target.value
         let student = this.state.new_student
@@ -339,6 +356,30 @@ class UsersDetail extends Component {
                                                                     </div>)
                                                                     }
                                                                 </div>
+                                                                <div className="form-group pb-3">
+                                                                    <label for={"exampleInputStudentEmail"} className="control-label pb-2">Student Email</label>
+                                                                    <input type="email" className="form-control pb-2 mb-1" id={"exampleInputStudentEmail"} 
+                                                                    defaultValue={this.state.new_student.email} placeholder="Enter student email"
+                                                                    onChange={(e) => this.handlStudentEmailChange(e)} ></input>
+                                                                        <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student</small>
+                                                                        {(!emailValidation({ email: this.state.new_student.email}) &&  this.state.new_student.email != "") ? 
+                                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                            Please enter a valid email
+                                                                        </div>) : ""
+                                                                    }
+                                                                    {(this.state.new_student.valid_email === -1 ) ?  
+                                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                            Creation unsuccessful. Please enter a different email, a student with this email already exists
+                                                                        </div>) : ""
+                                                                    }
+                                                                </div>
+                                                                {(emailValidation({ email: this.state.new_student.email}) &&  this.state.new_student.email != "") ? 
+                                                                        (<div className="form-group pb-3">
+                                                                        <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
+                                                                        <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
+                                                                        value={this.state.new_student.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>
+                                                                    </div>) : ""
+                                                                }
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School"
