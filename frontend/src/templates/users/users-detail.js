@@ -10,6 +10,7 @@ import api from '../components/api';
 import { validNumber } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 import { ManagedSchoolsTable } from '../tables/managed-schools-table';
+import { emailValidation, phoneValidation } from "../components/validation";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL } from "../../constants";
@@ -22,6 +23,8 @@ class UsersDetail extends Component {
             first_name: '',
             last_name: '',
             school_id: '',
+            email: '',
+            phone_number: '',
             route_id: null,
             student_school_id: '',
             in_range: false
@@ -242,6 +245,20 @@ class UsersDetail extends Component {
         this.setState({ valid_id: validNumber({ value_to_check: student_school_id}) ? 1 : -1})
     }
 
+    handlStudentEmailChange = (event) => {
+        const email = event.target.value
+        let student = this.state.new_student
+        student.email = email
+        this.setState({ new_student: student })
+    }
+
+    handleStudentPhoneChange = (event) => {
+        const phone = event.target.value
+        let student = this.state.new_student
+        student.phone_number = phone
+        this.setState({ new_student: student })
+    }
+
     handleSchoolChange = (event) => {
         const school_id = event.target.value
         let student = this.state.new_student
@@ -351,6 +368,30 @@ class UsersDetail extends Component {
                                                                     </div>)
                                                                     }
                                                                 </div>
+                                                                <div className="form-group pb-3">
+                                                                    <label for={"exampleInputStudentEmail"} className="control-label pb-2">Student Email</label>
+                                                                    <input type="email" className="form-control pb-2 mb-1" id={"exampleInputStudentEmail"} 
+                                                                    defaultValue={this.state.new_student.email} placeholder="Enter student email"
+                                                                    onChange={(e) => this.handlStudentEmailChange(e)} ></input>
+                                                                        <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student</small>
+                                                                        {(!emailValidation({ email: this.state.new_student.email}) &&  this.state.new_student.email != "") ? 
+                                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                            Please enter a valid email
+                                                                        </div>) : ""
+                                                                    }
+                                                                    {(this.state.new_student.valid_email === -1 ) ?  
+                                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                                            Creation unsuccessful. Please enter a different email, a student with this email already exists
+                                                                        </div>) : ""
+                                                                    }
+                                                                </div>
+                                                                {(emailValidation({ email: this.state.new_student.email}) &&  this.state.new_student.email != "") ? 
+                                                                        (<div className="form-group pb-3">
+                                                                        <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
+                                                                        <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
+                                                                        value={this.state.new_student.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>
+                                                                    </div>) : ""
+                                                                }
                                                                 <div className="form-group required pb-3">
                                                                     <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School"
@@ -460,11 +501,9 @@ class UsersDetail extends Component {
                                         <p className="gray-600">
                                             Email
                                         </p>
-                                        {this.state.user.phone_number !== "" ?
                                         <p className="gray-600">
                                             Phone
-                                        </p> : ""
-                                        }
+                                        </p>
                                         {this.state.user.role === "General" ?
                                             <p className="gray-600">
                                                 Address
@@ -476,11 +515,11 @@ class UsersDetail extends Component {
                                             {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number }
+                                            {this.state.user.phone_number ? this.state.user.phone_number : "–" }
                                         </p>
                                         {this.state.user.role === "General" ?
                                             <p>
-                                                {this.state.user.location?.address}
+                                                {this.state.user.location.address ? this.state.user.location.address : "–"}
                                             </p> : ""
                                         }
                                     </div>
@@ -527,23 +566,24 @@ class UsersDetail extends Component {
                                         </div> : ""
                                     }
                                     <div className="col">
-                                        <h7>STUDENTS</h7>
-                                        <UserStudentsTable 
-                                        data={this.state.students_page} 
-                                        showAll={this.state.students_show_all}
-                                        pageIndex={this.state.students_table.pageIndex}
-                                        canPreviousPage={this.state.students_table.canPreviousPage}
-                                        canNextPage={this.state.students_table.canNextPage}
-                                        updatePageCount={this.getStudentsPage}
-                                        pageSize={10}
-                                        totalPages={this.state.students_table.totalPages}
-                                        searchValue={this.state.students_table.searchValue}
-                                        />
-                                        <button className="btn btn-secondary align-self-center" onClick={this.handleStudentShowAll}>
-                                            { !this.state.students_show_all ?
-                                                "Show All" : "Show Pages"
-                                            }
-                                        </button>
+                                        {this.state.user.role === "General" ?
+                                        <>
+                                            <h7>STUDENTS</h7>
+                                            <UserStudentsTable
+                                                data={this.state.students_page}
+                                                showAll={this.state.students_show_all}
+                                                pageIndex={this.state.students_table.pageIndex}
+                                                canPreviousPage={this.state.students_table.canPreviousPage}
+                                                canNextPage={this.state.students_table.canNextPage}
+                                                updatePageCount={this.getStudentsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.students_table.totalPages}
+                                                searchValue={this.state.students_table.searchValue} />
+                                            <button className="btn btn-secondary align-self-center" onClick={this.handleStudentShowAll}>
+                                                {!this.state.students_show_all ?
+                                                    "Show All" : "Show Pages"}
+                                            </button>
+                                        </> : ""}
                                     </div>
                                     
                                 </div>
