@@ -14,7 +14,7 @@ import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, ROUTES_URL, STUDENT_INFO_URL } from "../../constants";
 import pdfRender from "../components/export-route";
 
 class BusRoutesDetail extends Component {
@@ -456,8 +456,11 @@ class BusRoutesDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         if (redirect) {

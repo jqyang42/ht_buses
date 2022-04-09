@@ -8,7 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL, STUDENTS_URL } from '../../constants';
-import { STUDENTS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { STUDENTS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import api from "../components/api";
 
 class StudentsImport extends Component {
@@ -203,8 +203,11 @@ class StudentsImport extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.students_redirect) {
             return <Navigate to={ STUDENTS_URL }/>
