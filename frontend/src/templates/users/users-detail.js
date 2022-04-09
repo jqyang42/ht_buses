@@ -448,11 +448,9 @@ class UsersDetail extends Component {
                                         <p className="gray-600">
                                             Email
                                         </p>
-                                        {this.state.user.phone_number !== "" ?
                                         <p className="gray-600">
                                             Phone
-                                        </p> : ""
-                                        }
+                                        </p>
                                         {this.state.user.role === "General" ?
                                             <p className="gray-600">
                                                 Address
@@ -464,11 +462,11 @@ class UsersDetail extends Component {
                                             {this.state.user.email}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number }
+                                            {this.state.user.phone_number ? this.state.user.phone_number : "–" }
                                         </p>
                                         {this.state.user.role === "General" ?
                                             <p>
-                                                {this.state.user.location?.address}
+                                                {this.state.user.location.address ? this.state.user.location.address : "–"}
                                             </p> : ""
                                         }
                                     </div>
@@ -515,23 +513,24 @@ class UsersDetail extends Component {
                                         </div> : ""
                                     }
                                     <div className="col">
-                                        <h7>STUDENTS</h7>
-                                        <UserStudentsTable 
-                                        data={this.state.students_page} 
-                                        showAll={this.state.students_show_all}
-                                        pageIndex={this.state.students_table.pageIndex}
-                                        canPreviousPage={this.state.students_table.canPreviousPage}
-                                        canNextPage={this.state.students_table.canNextPage}
-                                        updatePageCount={this.getStudentsPage}
-                                        pageSize={10}
-                                        totalPages={this.state.students_table.totalPages}
-                                        searchValue={this.state.students_table.searchValue}
-                                        />
-                                        <button className="btn btn-secondary align-self-center" onClick={this.handleStudentShowAll}>
-                                            { !this.state.students_show_all ?
-                                                "Show All" : "Show Pages"
-                                            }
-                                        </button>
+                                        {this.state.user.role === "General" ?
+                                        <>
+                                            <h7>STUDENTS</h7>
+                                            <UserStudentsTable
+                                                data={this.state.students_page}
+                                                showAll={this.state.students_show_all}
+                                                pageIndex={this.state.students_table.pageIndex}
+                                                canPreviousPage={this.state.students_table.canPreviousPage}
+                                                canNextPage={this.state.students_table.canNextPage}
+                                                updatePageCount={this.getStudentsPage}
+                                                pageSize={10}
+                                                totalPages={this.state.students_table.totalPages}
+                                                searchValue={this.state.students_table.searchValue} />
+                                            <button className="btn btn-secondary align-self-center" onClick={this.handleStudentShowAll}>
+                                                {!this.state.students_show_all ?
+                                                    "Show All" : "Show Pages"}
+                                            </button>
+                                        </> : ""}
                                     </div>
                                     
                                 </div>

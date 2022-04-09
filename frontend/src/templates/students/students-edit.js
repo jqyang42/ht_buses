@@ -284,10 +284,12 @@ class StudentsEdit extends Component {
                                             </div>
                                             <div className="form-group pb-3 form-col">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
-                                                <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
+                                                <input type="email" className="form-control pb-2 mb-2" id="exampleInputEmail1" 
                                                 defaultValue={this.state.student.email} placeholder="Enter student email"
                                                 onChange={this.handlStudentEmailChange} ref={el => this.emailField = el}></input>
-                                                  <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student.</small>
+                                                    <small id="emailHelp" className="form-text text-muted pb-2">
+                                                        Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student.
+                                                    </small>
                                                 {(!emailValidation({ email: this.state.edited_student?.email}) && this.state.edited_student.email !== undefined && this.state.edited_student.email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
@@ -300,7 +302,7 @@ class StudentsEdit extends Component {
                                                 }
                                             </div>
                                             {(emailValidation({ email: this.state.edited_student.email}) && this.state.edited_student.email != "") ? 
-                                                (<div className="form-group pb-3">
+                                                (<div className="form-group pb-3 form-col">
                                                 <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
                                                 <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
                                                 value={this.state.edited_student?.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>
