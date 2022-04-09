@@ -4,24 +4,24 @@ import { Link , Navigate} from "react-router-dom";
 import { STOP_MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 
-const options = {
-  fillColor: "#FFC107",
-  strokeColor: "#FFC107",
-  strokeOpacity: 1,
-  strokeWeight: 1.5,
-  fillOpacity: 0.35,
-  clickable: false,
-  draggable: false,
-  editable: false,
-  visible: true,
-  zIndex: 1
-}
+// const options = {
+//   fillColor: "#FFC107",
+//   strokeColor: "#FFC107",
+//   strokeOpacity: 1,
+//   strokeWeight: 1.5,
+//   fillOpacity: 0.35,
+//   clickable: false,
+//   draggable: false,
+//   editable: false,
+//   visible: true,
+//   zIndex: 1
+// }
 
 class SchoolMarker extends Component {
 
     state = {
-        location: this.props.location,
-        name: this.props.name,
+        // location: this.props.location,
+        // name: this.props.name,
         showInfoWindow: false
       };
 
@@ -35,14 +35,14 @@ class SchoolMarker extends Component {
   render () {
     const { showInfoWindow } = this.state;
     console.log(this.state.location)
-    console.log(this.props.id)
-    console.log(this.props.id)
+    // console.log(this.props.id)
+    // console.log(this.props.id)
     return (
       <>
       <Marker 
-      position={this.state.location} 
+      position={this.props.location} 
       id={this.props.id} 
-      key={this.props.id} 
+      key={this.props.key} 
       onClick={this.handleClick}
       onDragEnd={this.editLocation}
       draggable={this.props.assign_mode}>
@@ -50,7 +50,7 @@ class SchoolMarker extends Component {
           <InfoWindow options={{maxWidth:300}}>
             { 
               <>
-                <h6>{this.state.name}</h6>
+                <h6>{this.props.name}</h6>
               </>
             }
           </InfoWindow>
