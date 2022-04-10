@@ -14,7 +14,7 @@ from datetime import timedelta
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def get_buses(request):
     try:
-        schools = get_objects_for_user(request.user,"change_school", School.objects.all())
+        schools = get_objects_for_user(request.user,"view_school", School.objects.all())
     except:
         return PermissionDenied(data, "school")
     data = active_buses_filter(schools)
@@ -58,7 +58,7 @@ def active_buses_filter(schools):
     
     if len(schools) != 0:
         avg_lat = avg_lat / school_count
-        avg_lng = avg_lng / schools_count
+        avg_lng = avg_lng / school_count
     data["buses"] = bus_arr
     data["schools"] = school_arr
     data["center"] = {'lat': avg_lat, 'lng': avg_lng}
