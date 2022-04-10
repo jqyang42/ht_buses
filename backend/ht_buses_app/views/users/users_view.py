@@ -65,21 +65,21 @@ def user_search_and_sort(sort_by, order_by, search, role, user_list):
                     if sort_by == "role":
                         users = sorted_by_role_type(users)
                     else:
-                        users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
+                        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
             elif sort_by == "role":
                 users = sorted_by_role_type(user_list)
             else:
                 if role == 1 or role == 2 or role == 3 or role == 4 or role == 5:
-                    users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=role).order_by(sort_by)
+                    users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=role).order_by(sort_by)
                 else:
-                    users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
+                    users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
         else:
             if search != None and search != "":
                 if role == 1 or role == 2 or role == 3 or role == 4 or role == 5:
                     if sort_by == "role":
                         users = sorted_by_role_type(user_list.filter(role=role), True)
                     else:
-                        users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=role).order_by("-" + sort_by)
+                        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=role).order_by("-" + sort_by)
                 else:
                     if role == 1 or role == 2 or role == 3 or role == 4 or role == 5:
                         users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
@@ -90,7 +90,7 @@ def user_search_and_sort(sort_by, order_by, search, role, user_list):
                     if sort_by == "role":
                         users = sorted_by_role_type(users, True)
                     else:
-                        users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
+                        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
             elif sort_by == "role":
                 if role == 1 or role == 2 or role == 3 or role == 4 or role == 5:
                     users = sorted_by_role_type(user_list.filter(role=role), True)
@@ -98,9 +98,9 @@ def user_search_and_sort(sort_by, order_by, search, role, user_list):
                     users = sorted_by_role_type(user_list, True)
             else:
                 if role == 1 or role == 2 or role == 3 or role == 4 or role == 5:
-                    users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=role).order_by("-" + sort_by)
+                    users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=role).order_by("-" + sort_by)
                 else:
-                    users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
+                    users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
     return users
 
 def sorted_by_role_type(user_list, desc= False):
