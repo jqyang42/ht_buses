@@ -19,17 +19,18 @@ def user_view(request):
     sort_by = request.query_params["sort_by"] # will look for asc or desc
     page_num = request.query_params["page"]
     search = request.query_params["q"]
+    role = request.query_params["role"]
     user_list = get_users_for_user(request.user)
-    data = get_user_view(order_by, sort_by, page_num, search, user_list)
+    data = get_user_view(order_by, sort_by, page_num, search, role, user_list)
     return Response(data)
 
-def get_user_view(order_by, sort_by, page_number, search, user_list):
+def get_user_view(order_by, sort_by, page_number, search, role, user_list):
     data = {}
-    users = user_search_and_sort(sort_by, order_by, search, user_list)
+    users = user_search_and_sort(sort_by, order_by, search, role, user_list)
     data = user_pagination(users, page_number)
     return data
 
-def user_search_and_sort(sort_by, order_by, search, user_list):
+def user_search_and_sort(sort_by, order_by, search, role, user_list):
     # sort type
     if sort_by == "name":
         sort_by = "first_name"
@@ -37,21 +38,22 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
         sort_by = "location__address"
     users = user_list
     # search only
-    search_clean = search.lower()
-    if search_clean == "administrator":
-        search = 1
-    elif search_clean == "school staff":
-        search = 2
-    elif search_clean == "driver":
-        search = 3
-    elif search_clean == "general":
-        search = 4
+    role_clean = role.lower()
+    if role_clean == "administrator":
+        role = 1
+    elif role_clean == "school staff":
+        role = 2
+    elif role_clean == "driver":
+        role = 3
+    elif role_clean == "general":
+        role = 4
     else:
         search = search
     #User.role_choices[int(user["role"])-1][1]
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
-        if search == 1 or search == 2 or search == 3 or search == 4:
-            users = user_list.filter(role=search).order_by("id")
+        if role == 1 or role == 2 or role == 3 or role == 4:
+            users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
+    .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search)).filter(role=role).order_by("id")
         else:
             users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
     .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search)).order_by("id")
@@ -59,7 +61,7 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
     else:
         if order_by == "asc":
             if search != None and search != "":
-                if search == 1 or search == 2 or search == 3 or search == 4:
+                if role == 1 or role == 2 or role == 3 or role == 4:
                     if sort_by == "role":
                         users = sorted_by_role_type(user_list.filter(role=search))
                     else:
@@ -77,11 +79,11 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
                 users = user_list.order_by(sort_by)
         else:
             if search != None and search != "":
-                if search == 1 or search == 2 or search == 3 or search == 4:
+                if role == 1 or role == 2 or role == 3 or role == 4:
                     if sort_by == "role":
-                        users = sorted_by_role_type(user_list.filter(role=search), True)
+                        users = sorted_by_role_type(user_list.filter(role=role), True)
                     else:
-                        users = user_list.filter(role=search).order_by("-" + sort_by)
+                        users = user_list.filter(role=role).order_by("-" + sort_by)
                 else:
                     users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search))
