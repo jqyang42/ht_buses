@@ -69,7 +69,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by name, email or role..."
+            searchLabel="Search by name or email..."
             filterOn={true}
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
