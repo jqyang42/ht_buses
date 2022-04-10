@@ -25,11 +25,13 @@ def student_detail(request):
     if student_serializer.data["route_id"] == None:
         route_id = 0
         route_name = ""
+        route_desc = ""
     else:
         route = Route.objects.get(pk=student_serializer.data["route_id"])
         route_serializer = RouteSerializer(route, many=False)
         route_id = route_serializer.data["id"]
         route_name = route_serializer.data["name"]
+        route_desc = route_serializer.data["description"]
     in_range = student_serializer.data["in_range"]
     school = School.objects.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
@@ -37,7 +39,8 @@ def student_detail(request):
     user_serializer = UserSerializer(user,many=False)
     location = Location.objects.get(pk=user_serializer.data["location"])
     location_serializer = LocationSerializer(location, many=False)
-    user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "address": location_serializer.data["address"], "phone_number": user_serializer.data["phone_number"], "email": user_serializer.data["email"]}
+    location_arr = {"id": location_serializer.data["id"], "address": location_serializer.data["address"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
+    user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "location": location_arr, "phone_number": user_serializer.data["phone_number"], "email": user_serializer.data["email"]}
     student_user = student.account
     try:
         account_id = student_user.pk
@@ -47,6 +50,6 @@ def student_detail(request):
     data["student"] = student_arr
     data["user"] = user_arr
     data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
-    data["route"] = {'id' : route_id, 'name' : route_name}
+    data["route"] = {'id' : route_id, 'name' : route_name, "description": route_desc}
     data["success"] = True
     return Response(data)
