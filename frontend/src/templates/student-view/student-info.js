@@ -39,7 +39,7 @@ class StudentInfo extends Component {
 
     // pagination
     getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('id')}`, only_pagination: true })
         .then(res => {
             const stops_table = {
                 pageIndex: res.pageIndex,
@@ -56,7 +56,7 @@ class StudentInfo extends Component {
 
     // api calls
     getStudentDetail = () => {
-        api.get(`dashboard/students/detail?id=${this.props.params.id}`)
+        api.get(`dashboard/students/detail?id=${localStorage.getItem('id')}`)
         .then(res => {
             // console.log(res.data.student)
             const student = res.data.student
