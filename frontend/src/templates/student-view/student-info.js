@@ -33,13 +33,13 @@ class StudentInfo extends Component {
     }
 
     componentDidMount() {
-        this.getStudentDetail()
-        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        // this.getStudentDetail()
+        // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
     }
 
     // pagination
     getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('id')}`, only_pagination: true })
+        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}`, only_pagination: true })
         .then(res => {
             const stops_table = {
                 pageIndex: res.pageIndex,
@@ -56,7 +56,7 @@ class StudentInfo extends Component {
 
     // api calls
     getStudentDetail = () => {
-        api.get(`dashboard/students/detail?id=${localStorage.getItem('id')}`)
+        api.get(`dashboard/students/detail?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             // console.log(res.data.student)
             const student = res.data.student
@@ -141,7 +141,7 @@ class StudentInfo extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-md-7 me-4">
+                                    {/* <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
                                         {Object.keys(this.state.student).length ? 
                                         <RouteMap 
@@ -154,8 +154,8 @@ class StudentInfo extends Component {
                                         />
                                         : "" }
                                         </div>
-                                    </div>
-                                    <div className="col">
+                                    </div> */}
+                                    {/* <div className="col">
                                         <h7>STOPS</h7>
                                             <StopsTable 
                                             data={this.state.stops_page}
@@ -174,7 +174,7 @@ class StudentInfo extends Component {
                                                     "Show All" : "Show Pages"
                                                 }
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
