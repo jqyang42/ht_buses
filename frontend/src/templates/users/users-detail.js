@@ -404,7 +404,7 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputSchool"} className="control-label pb-2">School</label>
                                                                     <select className="form-select" placeholder="Select a School" aria-label="Select a School"
                                                                     ref={el => this.schoolField = el} onChange={(e) => this.handleSchoolChange(e)} required>
-                                                                        <option value="" disabled >Select a School</option>
+                                                                        <option value="" selected >Select a School</option>
                                                                         {this.state.schools_dropdown.map(school => 
                                                                             <option value={school.value} id={school.display}>{school.display}</option>
                                                                         )}

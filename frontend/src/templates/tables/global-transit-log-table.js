@@ -54,12 +54,12 @@ export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPag
                 Header: 'Direction',
                 accessor: 'pickup',
                 disableFilter: true,
-                disableSortBy: true,
-                id: 'direction',
+                // disableSortBy: true,
+                id: 'pickup',
                 Cell: ({ cell: { value } }) => (
                     value ? <div>{"Pickup"}</div> : <div>{"Dropoff"}</div>
                 ),
-                sortDirection: sort.accessor === 'direction' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'pickup' ? sort.sortDirection : 'none'
             },     
             {
                 Header: 'Start Time',
