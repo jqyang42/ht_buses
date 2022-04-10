@@ -37,7 +37,6 @@ class Login extends Component {
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
-            // console.log(data)
             this.setState({message: data.message, valid_login: data.valid_login})
             localStorage.setItem('token', data.token)
             if (data.valid_login) {
@@ -47,7 +46,7 @@ class Login extends Component {
                 localStorage.setItem('user_id', data.info.user_id)
                 localStorage.setItem('first_name', data.info.first_name)
                 localStorage.setItem('last_name', data.info.last_name)
-                localStorage.setItem('is_staff', data.info.role_id !== 4)
+                localStorage.setItem('is_staff', data.info.role_id !== 4 && data.info.role_id !== 5)
                 localStorage.setItem('is_parent', data.info.is_parent)
                 localStorage.setItem('role',  data.info.role_value)
                 localStorage.setItem('logged_in', data.valid_login)

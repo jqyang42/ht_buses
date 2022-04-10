@@ -4,8 +4,16 @@ import api from "../components/api";
 export async function getPage({ url, pageIndex, sortOptions, searchValue, additionalParams, only_pagination }) {
     const has_sort = sortOptions === null ? false : sortOptions.sortDirection!== 'none' 
     
-    const order_by = has_sort ? sortOptions.sortDirection.toLowerCase() : ''
+    let order_by = has_sort ? sortOptions.sortDirection.toLowerCase() : ''
     const sort_by = has_sort ? sortOptions.accessor : ''
+
+    if ((sort_by === 'in_range' || sort_by === 'pickup')&& (order_by === 'asc' || order_by === 'desc')) {
+        if (order_by === 'asc') {
+            order_by = 'desc'
+        } else {
+            order_by = 'asc'
+        }
+    }
     const params = additionalParams ? additionalParams : ''
 
     // console.log(only_pagination)
