@@ -70,29 +70,29 @@ def user_search_and_sort(sort_by, order_by, search, user_list):
                     if sort_by == "role":
                         users = sorted_by_role_type(users)
                     else:
-                        users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
+                        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
             elif sort_by == "role":
                 users = sorted_by_role_type(user_list)
             else:
-                users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
+                users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by(sort_by)
         else:
             if search != None and search != "":
                 if search == 1 or search == 2 or search == 3 or search == 4:
                     if sort_by == "role":
                         users = sorted_by_role_type(user_list.filter(role=search), True)
                     else:
-                        users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=search).order_by("-" + sort_by)
+                        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).filter(role=search).order_by("-" + sort_by)
                 else:
                     users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains = search))
                     if sort_by == "role":
                         users = sorted_by_role_type(users, True)
                     else:
-                        users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
+                        users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
             elif sort_by == "role":
                 users = sorted_by_role_type(user_list, True)
             else:
-                users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
+                users = users.annotate(full_name=Concat('first_name', V(' '), 'last_name')).order_by("-" + sort_by)
     return users
 
 def sorted_by_role_type(user_list, desc= False):
