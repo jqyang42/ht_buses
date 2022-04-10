@@ -65,7 +65,7 @@ def initialize_updater(active_buses="none"):
         print(active_buses)
         for bus in active_buses:
             update_queue.append(bus.get('bus_number'))
-    timer = RepeatTimer(1, update_buses)
+    timer = RepeatTimer(4, update_buses)
     timer.start()
 
 def _next_ten():
