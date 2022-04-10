@@ -6,11 +6,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.core.paginator import Paginator
 from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from rest_framework.permissions import IsAuthenticated
 
 # Stops GET API
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
+@permission_classes([IsAuthenticated]) 
 def stops_view(request):
     data = {}
     id = request.query_params["id"] # this is route id
