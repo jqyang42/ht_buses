@@ -14,11 +14,9 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
-        console.log(e.currentTarget.value);
+        // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
         updatePageCount(pageIndex, sortOptions, searchValue)
-        // TODO: Call backend API for search here, pass in value as query @jessica
-        // setGlobalFilter(value);
     };
 
     const handleRoleInputChange = (e) => {
@@ -33,11 +31,10 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
 
     useEffect(() => {
         setRecords(data)
-        console.log(data)
+        // console.log(data)
     }, [data])
 
     const getRowId = React.useCallback(row => {
-        // console.log(row)
         return row.id
     }, [])
 
@@ -47,16 +44,6 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
         headerGroups,
         prepareRow,
         rows,
-        // page,
-        // canPreviousPage,
-        // canNextPage,
-        // pageOptions,
-        // nextPage,
-        // previousPage,
-        // state: { 
-            // pageIndex,
-            // pageSize
-        // },
         setGlobalFilter,
     } = useTable(
         {
@@ -68,15 +55,12 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
         manualSortBy: true,
         initialState: { 
             searchInput: "",
-            // pageIndex: 0,
-            // pageSize: 10,
             sortBy: dnd ? [] : ( hasCustomSortBy ? customSortBy : [
                 {
                     id: 'name',
                     desc: false
                 }
             ]),
-            // hiddenColumns: customHiddenColumn || []
         },
         },
         useFilters,
@@ -93,12 +77,9 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
               [hoverIndex, 0, dragRecord],
           ],
         })
-        // console.log(records)
         const new_order = new_records.map(row => {
             return row.id
         })
-        // console.log(new_records)
-        // console.log(new_order)
         handleReorder(new_order)
         setRecords(new_records)
     }
@@ -106,7 +87,6 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
     return (
         <>
             { searchOn ?
-            // <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> 
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
             : "" }
             { filterOn ?
@@ -125,6 +105,7 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
+            <div className='table-responsive mb-4 w-100'>
             <table {...getTableProps()} className="table table-striped table-hover">
                 <thead>
                 {// Loop over the header rows
@@ -138,9 +119,6 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
                         <th {...column.getHeaderProps(column.getSortByToggleProps())} onClick={() => columnHeaderClick(column)}>
                         {// Render the header
                         column.render('Header')}
-                        
-                        {/* Column filter UI */}
-                        {/* <div>{column.canFilter ? column.render('Filter') : null}</div> */}
                         
                         {/* Sorting UI */}
                         <span className="w-auto ms-2 me-0 float-right text-end">
@@ -158,7 +136,6 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                // showAll ? 
                 (dnd ? 
                 rows.map((row, i) => 
                     // Prepare the row for display
@@ -183,52 +160,25 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
                     </tr>
                     )
                 }))
-                //  : (dnd ? 
-                // page.map((row, i) => 
-                //     // Prepare the row for display
-                //     prepareRow(row) || (
-                //         <Row
-                //         index={i}
-                //         row={row}
-                //         moveRow={moveRow}
-                //         navUrl={navUrl}
-                //         {...row.getRowProps(rowProps(row))}
-                //         />
-                //     )
-                // ) :
-                // page.map((row, i) => {
-                //     // Prepare the row for display
-                //     prepareRow(row)
-                //     return (
-                //     <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                //         {row.cells.map(cell => {
-                //         return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                //         })}
-                //     </tr>
-                //     )
-                // }))}
                 }
                 </tbody>
             </table>
+            </div>
             </DndProvider>
 
             {
                 showAll ? "" :
                 <TablePagination
                     pageIndex={pageIndex}
-                    // pageOptions={pageOptions}
-                    // previousPage={previousPage}
                     canPreviousPage={canPreviousPage}
-                    // nextPage={nextPage}
                     canNextPage={canNextPage}
                     updatePageCount={updatePageCount}
                     pageSize={pageSize}
                     totalPages={totalPages}
                     sortOptions={sortOptions}
                     searchValue={searchValue}
-                    // page={page}
                 />
-            }
+            } 
         </>
     )
 }
@@ -274,7 +224,6 @@ const Row = ({ row, index, moveRow, navUrl }) => {
       }
       // Time to actually perform the action
       moveRow(dragIndex, hoverIndex)
-      // console.log(row)
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
@@ -296,15 +245,8 @@ const Row = ({ row, index, moveRow, navUrl }) => {
   preview(drop(dropRef))
   drag(dragRef)
 
-  // console.log(row)
 
   return (
-    // <tr ref={dropRef} style={{ opacity }}>
-    //   <td ref={dragRef}><i className="bi bi-list me-2"></i></td>
-    //   {row.cells.map(cell => {
-    //     return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-    //   })}
-    // </tr>
     <tr ref={dropRef} style={{ opacity }} {...row.getRowProps()} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
       <td ref={dragRef}><i className='bi bi-list'></i></td>
       {row.cells.map(cell => {

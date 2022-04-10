@@ -16,7 +16,7 @@ import MultiSelectDropdown from "../components/multi-select";
 import { LOGIN_URL } from "../../constants";
 import { USERS_URL } from "../../constants";
 import { GOOGLE_API_KEY } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class UsersEdit extends Component {
     state = {
@@ -36,7 +36,6 @@ class UsersEdit extends Component {
     // initialize page
     componentDidMount() {
         makeSchoolsMultiSelect().then(ret => {
-            // console.log(ret)
             this.setState({ schools_multiselect: ret })
             this.getUserDetails()
         })
@@ -58,7 +57,7 @@ class UsersEdit extends Component {
                 edited_user: user,
                 managed_schools: managed_schools
             });
-            console.log(user)
+            // console.log(user)
         })
         .catch(err => {
             if (err.response.status !== 200) {
@@ -81,7 +80,7 @@ class UsersEdit extends Component {
         api.put(`users/edit?id=${this.props.params.id}`, request)
         .then(res => {
             const success = res.data.success
-            console.log(success)
+            // console.log(success)
             this.setState({ edit_success: success ? 1 : -1 })
             if (success) {
                 this.setState({
@@ -146,7 +145,7 @@ class UsersEdit extends Component {
     handleRoleChange = (event) => {
         const role_value = event.target.value
         let user = this.state.edited_user
-        console.log(role_value)
+        // console.log(role_value)
         user.role = this.role_conversion(role_value)
         user.role_id = parseInt(role_value)
         this.setState({ edited_user: user });
@@ -194,7 +193,7 @@ class UsersEdit extends Component {
             return { 'id': school.value, 'name': school.label }
         })
         let user = {...this.state.edited_user}
-        console.log(user)
+        // console.log(user)
         user.managed_schools = selected_schools
         this.setState({ edited_user: user })
         this.setState({ managed_schools: selected })
@@ -209,9 +208,10 @@ class UsersEdit extends Component {
             user.location.lng = 0
             user.location.address = ""
             this.setState({
-                new_user: user,
+                edited_user: user,
                 valid_address: true,
             })
+            return true
         }
         return this.state.valid_address
     }
@@ -246,8 +246,11 @@ class UsersEdit extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         const redirect_url = USERS_URL + '/' + this.props.params.id;
@@ -312,10 +315,10 @@ class UsersEdit extends Component {
                                                     </div>) : ""
                                                 }
                                             </div>
-                                            { <div className="form-group required pb-3 w-75">
+                                            { <div className={"form-group pb-3 w-75"}>
                                                 <label for="exampleInputPhone" className="control-label pb-2">Phone</label>
                                                 <input type="tel" className="form-control pb-2" id="exampleInputPhone" 
-                                                placeholder="Enter phone number" required defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
+                                                placeholder="Enter phone number" defaultValue= {this.state.edited_user.phone_number} onChange={this.handlePhoneChange}></input> 
                                                 {/*
                                                  {(!phoneValidation({ phone_number: this.state.edited_user.phone })) && this.state.valid_phone === -1 ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
@@ -324,53 +327,19 @@ class UsersEdit extends Component {
                                                 }
                                                 */}
                                             </div> }
-                                                
-                                            <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
-                                                <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
-                                                {/* Uses autocomplete API, only uncomment when needed to */}
-                                                <Autocomplete
-                                                    apiKey={GOOGLE_API_KEY}
-                                                    onPlaceSelected={this.handleAddressChange}
-                                                    options={{
-                                                        types: ['address']
-                                                    }}
-                                                    placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
-                                                    value={this.state.edited_user?.location?.address}
-                                                    onChange={this.handleAddressChange}
-                                                    onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
-                                                    required={this.state.edited_user.is_parent}/>
-                                                {/* <input type="address" className="form-control pb-2" id="exampleInputAddress1" placeholder="Enter home address" defaultValue={this.state.address} onChange={this.handleAddressChange} required={this.state.user.is_parent}></input> */}
-                                            </div>
-                                            
-                                            {/* <div onChange={this.handleRoleChange.bind(this)} className="form-group required pb-3 w-75">
-                                                <div>
-                                                    <label for="adminType" className="control-label pb-2">User Type</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="administrator" checked={this.state.edited_user.role_id === 1} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={1}></input>
-                                                    <label className="form-check-label" for="administrator">Administrator</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="school_staff" checked={this.state.edited_user.role_id === 2} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={2} ></input>
-                                                    <label className="form-check-label" for="achool_staff">School Staff</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="bus_driver" checked={this.state.edited_user.role_id === 3} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={3} ></input>
-                                                    <label className="form-check-label" for="bus_driver">Bus Driver</label>
-                                                </div>
-                                                <div className="form-check form-check-inline">
-                                                    <input className="form-check-input" type="radio" name="roleType" id="general" checked={this.state.edited_user.role_id === 4} disabled={ localStorage.getItem("user_id") == this.props.params.id} value={4} ></input>
-                                                    <label className="form-check-label" for="general">General</label>
-                                                </div>
-                                            </div> */}
-                
+
                                             <div onChange={this.handleRoleChange.bind(this)} className="form-group pb-3 form-col required">
-                                                <label for="roleType" className="control-label pb-2">User Type</label>
+                                                <label for="roleType" className="control-label pb-2">Role</label>
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType"
-                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id}
+                                                disabled={ localStorage.getItem("role") !== "Administrator" || localStorage.getItem("user_id") == this.props.params.id || this.state.user.role_id === 4 || this.state.user.role_id === 5 }
                                                 onChange={(e) => this.handleRoleChange(e)} required>
                                                     <option value={0} disabled>Select a Role</option>
-                                                    <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option>
+                                                    { this.state.user.role_id === 4 ?
+                                                        <option value={4} id="4" selected={this.state.edited_user.role_id === 4}>General</option> : ""
+                                                    }
+                                                    { this.state.user.role_id === 5 ?
+                                                        <option value={5} id="5" selected={this.state.edited_user.role_id === 5}>Student</option> : ""
+                                                    }
                                                     <option value={1} id="1" selected={this.state.edited_user.role_id === 1}>Administrator</option>
                                                     <option value={2} id="2" selected={this.state.edited_user.role_id === 2}>School Staff</option>
                                                     <option value={3} id="3" selected={this.state.edited_user.role_id === 3}>Driver</option>
@@ -389,38 +358,32 @@ class UsersEdit extends Component {
                                                         options={this.state.schools_multiselect}
                                                         isMulti={true}
                                                         handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}/>
-                                                    {/* TODO: @jessica link up schools in the options field */}
-                                                    {/* <DropdownMultiselect
-                                                        // options={["Australia", "Canada", "USA", "Poland", "Spain", "1", "adsfasdf asdf", "asd fadsfasdf ", "24t fgwaf", "asdf", "afdghjghmkjgahg", "adfhgsjhmej", "8", "9", "adfghsjj", "uy765re", "3456y7uijhgfe2", "fghjeretytu"]}
-                                                        options={this.state.schools_multiselect}
-                                                        id="managedSchools"
-                                                        placeholder="Select Schools to Manage"
-                                                        buttonClass="form-select border"
-                                                        actionBtnStyle="ms-1 mt-1 bg-primary w-75"
-                                                        selectDeselectLabel="Select / Deselect All"
-                                                        // selected={[]}   // array of ids of schools
-                                                        // handleOnChange={(selected) => {this.handleManagedSchoolsChange(selected)}}
-                                                    />
-                                                    {/* @jessica for your reference */}
-                                                    {/* <select className="form-select selectpicker" placeholder="Select School(s)" aria-label="Select School(s)" id="managedSchools"
-                                                    onChange={(e) => this.handleManagedSchoolChange(e)} multiple="multiple" required>
-                                                        <option value="" disabled selected>Select a School</option>
-                                                        <option value="1">School 1</option>
-                                                        <option value="2">School 2</option>
-                                                        <option value="3">School 3</option>
-                                                        {this.state.schools_dropdown.map(school => 
-                                                            <option value={school.value} id={school.display}>{school.display}</option>
-                                                        )}
-                                                    </select> */}
                                                 </div>
                                                  : ""                                            
+                                            }
+
+                                            { this.state.user.role === "General" ?
+                                                <div className={"form-group pb-3 form-col " + (this.state.edited_user.is_parent ? "required" : "")}>
+                                                    <label for="exampleInputAddress1" className="control-label pb-2">Address</label>
+                                                    {/* Uses autocomplete API, only uncomment when needed to */}
+                                                    <Autocomplete
+                                                        apiKey={GOOGLE_API_KEY}
+                                                        onPlaceSelected={this.handleAddressChange}
+                                                        options={{
+                                                            types: ['address']
+                                                        }}
+                                                        placeholder="Enter home address" className="form-control pb-2" id="exampleInputAddress1" 
+                                                        value={this.state.edited_user?.location?.address}
+                                                        onChange={this.handleAddressChange}
+                                                        onBlur={event => {setTimeout(this.handleAddressValidation, 500)}}
+                                                        required={this.state.edited_user.is_parent}/>
+                                                </div> : ""
                                             }
                                         </div>
                                         <div className="col mt-2 extra-col">
                                         </div>
                                     </div>
                                     <div className="row justify-content-end mt-2 me-0">
-                                        {/* <button type="button" className="btn btn-secondary w-auto me-3 justify-content-end">Cancel</button> */}
                                         <Link to={"/users/" + this.props.params.id} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">
                                             <span className="btn-text">
                                                 Cancel

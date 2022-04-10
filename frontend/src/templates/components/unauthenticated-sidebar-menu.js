@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { HT_LOGO } from "../../constants";
 
 class UnauthenticatedSidebarMenu extends Component {
-
     render() {
         return (
             <div className="col-auto col-md-3 col-xl-2 px-0 bg-dark">

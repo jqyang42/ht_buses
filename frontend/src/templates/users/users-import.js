@@ -8,7 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL, USERS_URL } from '../../constants';
-import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { USERS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import api from "../components/api";
 
 class UsersImport extends Component {
@@ -16,10 +16,13 @@ class UsersImport extends Component {
         users: [],
         errors: [],
         edited_users: [],
-        // verifyCheck: false,
+        to_verify_users: [],
+        verified_errors: [],
+        verified_users: [],
         users_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
+        createConfirmationModalIsOpen: false,
         loading: true,
         createUserCount: 0
     }
@@ -29,19 +32,35 @@ class UsersImport extends Component {
     }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
-    closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
+    closeSuccessVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            users: this.state.verified_users,
+            successVerifyModalIsOpen: false,
+        });
+    }
+
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
-    closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    closeErrorVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            users: this.state.verified_users,
+            errorVerifyModalIsOpen: false 
+        });
+    }
+
     openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedUsers = () => {
-        api.get(`bulk-import/users`)
+        // @thomas i send you the file token here
+        api.get(`bulk-import/users?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
+            const sorted_errors = this.sortErrors(res.data.errors)
             this.setState({ 
                 users: res.data.users,
-                errors: res.data.errors,
+                errors: sorted_errors,
                 loading: false
             })
         })
@@ -50,9 +69,8 @@ class UsersImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_users: new_data,
-            // verifyCheck: false
         }, () => {
-            console.log(this.state.edited_users)
+            // console.log(this.state.edited_users)
         })
     }
 
@@ -61,18 +79,36 @@ class UsersImport extends Component {
         // redirect to USERS_URL (ignoring all changes from import)
         event.preventDefault()
         this.setState({ loading: true })
-        api.delete(`bulk-import/users/delete-temp-file`)
+        api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
+            // @thomas i remove the token from localstorage after deleting the temp-file
+            localStorage.removeItem('users_import_file_token')
             this.setState({ 
                 users_redirect: true,
                 loading: false
             })
         })
         .catch(err => {
-            console.log(err)
+            // console.log(err)
             this.setState({ loading: false })
         })
+    }
+
+    sortErrors = (errors) => {
+        const sorted_errors = errors
+        sorted_errors.sort((a, b) => {
+            return a.row_num - b.row_num
+        })
+
+        const no_duplicates = sorted_errors.reduce((unique, a) => {
+            if (!unique.some(err => err.row_num === a.row_num)) {
+                unique.push(a)
+            }
+            return unique
+        }, [])
+
+        return no_duplicates
     }
 
     isVerified = (err_arr) => {
@@ -105,15 +141,19 @@ class UsersImport extends Component {
             users: this.state.edited_users
         }
         
-        this.setState({ loading: true })
+        this.setState({ 
+            loading: true,
+            to_verify_users: data
+        })
+
         api.post(`bulk-import/users/validate`, data)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const data = res.data
+            const sorted_errors = this.sortErrors(data.errors)
             this.setState({
-                // verifyCheck: this.isVerified(data.errors),
-                errors: data.errors,
-                users: data.users,
+                verified_errors: sorted_errors,
+                verified_users: data.users,
                 loading: false
             }, () => {
                 if (this.isVerified(data.errors)) {
@@ -124,7 +164,6 @@ class UsersImport extends Component {
             })
         })
         .catch(err => {
-            console.log(err)
             this.setState({ loading: false })
         })
     }
@@ -133,24 +172,19 @@ class UsersImport extends Component {
     handleSubmitImport = (event) => {
         event.preventDefault()
 
-        // save table changes
-        const data = {
-            users: this.state.edited_users
-        }
-
         this.setState({ loading: true })
-        api.post(`bulk-import/users/create`, data)
+        api.post(`bulk-import/users/create`, this.state.to_verify_users)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ createUserCount: res.data.user_count })
-            api.delete(`bulk-import/users/delete-temp-file`)
+            api.delete(`bulk-import/users/delete-temp-file?token=${localStorage.getItem('users_import_file_token')}`)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
             .catch(err => {
-                console.log(err)
+                // console.log(err)
                 this.setState({ loading: false })
             })
         })
@@ -161,14 +195,18 @@ class UsersImport extends Component {
 
     handleUsersRedirect = () => {
         this.setState({ users_redirect: true })
+        localStorage.removeItem('users_import_file_token')
     }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.users_redirect) {
             return <Navigate to={ USERS_URL }/>
@@ -180,6 +218,8 @@ class UsersImport extends Component {
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root={"Import Users"} isRoot={true} />
+
+                        { localStorage.getItem('users_import_file_token') ?
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div className="row d-inline-flex float-end mb-4">
@@ -213,9 +253,9 @@ class UsersImport extends Component {
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.verifyImport}>Verify</button>
 
                                     {/* Success verify confirmation modal */}
-                                    <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
+                                    <Modal backdrop="static" show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -229,8 +269,8 @@ class UsersImport extends Component {
                                     </Modal>
 
                                     {/* Error verify confirmation modal */}
-                                    <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
-                                        <Modal.Header closeButton>
+                                    <Modal backdrop="static" show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -242,9 +282,9 @@ class UsersImport extends Component {
                                     </Modal>
 
                                     {/* Create confirmation modal */}
-                                    <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
+                                    <Modal backdrop="static" show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
                                         <form onSubmit={this.handleUsersRedirect}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Import Users</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -255,60 +295,18 @@ class UsersImport extends Component {
                                         </Modal.Footer>
                                         </form>
                                     </Modal>
-
-                                    {/* <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form onSubmit={this.state.verifyCheck ? this.handleSubmitImport : ''}>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Verify Users</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        { this.state.verifyCheck ? "All users have been verified and no errors exist. Your import is ready to be submitted!" :
-                                                        "Errors still exist in the file import. Please correct them before submitting."
-                                                        }
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type={this.state.verifyCheck ? "submit" : "button"} className="btn btn-secondary" data-bs-dismiss="modal">Save and Import</button>
-                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Continue Editing</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div> */}
-                                    {/* Submit button */}
-                                    {/* @jessica add  */}
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
-
-                                    {/* Submit confirmation modal */}
-                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form onSubmit={this.handleSubmitImport}>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Import Users</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        Are you sure you want to save and import all users?
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div className="extra-margin">
+                                <div class="alert alert-primary mt-2 mb-2" role="alert">
+                                    Please note that you can only import parent users.
+                                </div>
                                 {this.state.loading ? 
-                                    <div class="alert alert-primary mt-2 mb-3" role="alert">
+                                    <div class="alert alert-primary mt-2 mb-2" role="alert">
                                         Please wait patiently while we load and verify your file import.
                                     </div> : ""
                                 }
+                                
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
                                         error.exclude ? "" :
@@ -358,6 +356,15 @@ class UsersImport extends Component {
                                 </div>
                             </div>
                         </div>
+                        : 
+                        <div className="container my-4 mx-0 w-100 mw-100">
+                            <div className="alert alert-danger mt-2 me-3" role="alert">
+                                <p className="mb-1">
+                                    No file was found. Please upload a csv file through the Users page before attempting to import.
+                                </p>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>

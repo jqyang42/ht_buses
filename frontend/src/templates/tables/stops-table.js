@@ -64,7 +64,6 @@ export function StopsTable({ data, showAll, dnd, handleReorder, pageIndex, canPr
             updatePageCount={updatePageCount}
             pageSize={pageSize}
             totalPages={totalPages}
-            // columnHeaderClick={columnHeaderClick}
             sortOptions={null}
             searchValue={''}
         />

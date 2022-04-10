@@ -9,7 +9,6 @@ import PasswordForm from "../components/password-form";
 import { LOGIN_URL } from "../../constants";
 
 class ResetPassword extends Component {
-
     
     state = {
         valid_url: 0,
@@ -30,7 +29,7 @@ class ResetPassword extends Component {
     }
   
     checkURL = () => {
-        console.log("there")
+        // console.log("there")
       api.get(`reset-password-valid-url?uuid=${this.props.params.uuid}&token=${this.props.params.token}`) 
         .then(res => {
             const valid_url = res.data.success
@@ -68,7 +67,7 @@ class ResetPassword extends Component {
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 {this.state.valid_url === -1 ? <p>{" This url is not valid or it has expired."}  <a href="/" className="mt-0">Click here to go to our home page.</a></p>  :
-                <div className="row flex-nowrap">
+                <div className="row flex-wrap">
                     <UnauthenticatedSidebarMenu />
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <UnauthenticatedHeaderMenu />

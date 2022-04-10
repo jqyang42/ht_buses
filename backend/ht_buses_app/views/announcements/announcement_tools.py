@@ -12,7 +12,7 @@ import datetime
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, StopSerializer, LocationSerializer
 from ..stops import check_in_range 
 from datetime import datetime
-from ..general.general_tools import filtered_users_helper
+from ..general.general_tools import user_is_parent
 
 
 def email_request_parser(reqBody):
@@ -24,7 +24,7 @@ def email_request_parser(reqBody):
         include_route_info = False
     return subject, body, include_route_info
 
-def announcement_substitutions(user, subject, body, include_route_info):
+def announcement_substitutions(user, sender_role, subject, body, include_route_info):
     from_email = 'Hypothetical Transportation'
     #Add text content later
     text_content = """ 
@@ -33,16 +33,16 @@ def announcement_substitutions(user, subject, body, include_route_info):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [user.email], reply_to=[constants.DEFAULT_NO_REPLY_EMAIL])
     students_arr = []
     include_parent_info = False
-    if include_route_info and user.is_parent:
+    if include_route_info and user_is_parent(user):
         students_arr = get_students_info(user)
         include_parent_info = True
-    msg_html = render_to_string('basic-email.html', ({'include_parent_info': include_parent_info,'first_name': user.first_name, 'last_name': user.last_name, 'body': body, 'students': students_arr, 'home_url': constants.HOME_URL}))
+    msg_html = render_to_string('basic-email.html', ({'include_parent_info': include_parent_info,'first_name': user.first_name, 'last_name': user.last_name, 'sender_role': sender_role, 'body': body, 'students': students_arr, 'home_url': constants.HOME_URL}))
     msg.attach_alternative(msg_html, "text/html")
     return msg
 
 def get_students_info(user):
     students_array = []
-    if user.is_parent:
+    if user_is_parent(user):
         students = Student.objects.filter(user_id = user)
         for student in students:
             student_array = parent_student_detail.student_arr_data(student)
@@ -79,13 +79,13 @@ def get_stop_array(user, route_id):
         stops_array = []
     return stops_array
 
-def send_mass_announcement(subject, body, recipients, include_route_info=False):
+def send_mass_announcement(sender_role, subject, body, recipients, include_route_info=False):
     data = {}
     to_emails = []
     messages = []
     for user in recipients:
         if "@example.com" not in user.email: 
-            messages.append(announcement_substitutions(user, subject, body, include_route_info))     
+            messages.append(announcement_substitutions(user, sender_role, subject, body, include_route_info))     
     try:
         connection = get_connection(
             username=settings.EMAIL_HOST_USER, password=settings.EMAIL_HOST_PASSWORD, fail_silently=True)

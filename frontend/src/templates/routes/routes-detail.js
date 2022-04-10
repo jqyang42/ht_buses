@@ -10,10 +10,11 @@ import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
+import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL, ROUTES_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, ROUTES_URL, STUDENT_INFO_URL } from "../../constants";
 import pdfRender from "../components/export-route";
 
 class BusRoutesDetail extends Component {
@@ -39,11 +40,6 @@ class BusRoutesDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {
-            //     accessor: '',
-            //     sortDirection: 'none'
-            // },
-            // searchValue: ''
         },
         stops_page:[],
         stops_table: {
@@ -54,13 +50,71 @@ class BusRoutesDetail extends Component {
         },
         map_redirect_pickup: [],
         map_redirect_dropoff: [],
+        in_transit: false,
+        user_on_run: false,
+        transit_driver: null,
+        transit_bus_number: null,
+        transit_log_id: null,
+        valid_bus_number: true,
+        startRunModalIsOpen: false,
+        startConfirmationRunModalIsOpen: false,
+        stopConfirmationRunModalIsOpen: false,
+        log: {},
+        buses: [],
+        bus_tooltip: {}
     }
+
+    interval_id = null
+    on_run = true
 
     componentDidMount() {
         this.getStudentsPage(this.state.students_table.pageIndex, null, '')
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getRouteDetail()
         this.getStops()
+        this.userOnRun()
+        this.getInTransit()
+        // this.periodicCall()
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
+    }
+
+    periodicCall = (school_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/school?id=${school_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                    school: res.data.schools
+                })
+            })
+        }, 1000)
+
+        // api.get(`buses/school?id=${school_id}`)
+        // .then(res => {
+        //     console.log(res.data)
+        //     let bus_tooltip = {}
+        //     bus_tooltip = res.data.buses.reduce(
+        //         (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+        //         {})
+        //     console.log(bus_tooltip)
+        //     this.setState({
+        //         buses: res.data.buses,
+        //         bus_tooltip: bus_tooltip,
+        //         center: res.data.center,
+        //         school: res.data.schools
+        //     })
+        // })
     }
 
     // pagination
@@ -72,8 +126,6 @@ class BusRoutesDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 students_page: res.data.students,
@@ -90,8 +142,6 @@ class BusRoutesDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 stops_page: res.data.stops,
@@ -108,8 +158,12 @@ class BusRoutesDetail extends Component {
             const school = route.school;
             const users = data.users;
             const students = this.getStudentsFromUser(users)
-
-            console.log(students)
+            const log = {
+                bus_number: null,
+                user_id: localStorage.getItem('user_id'),
+                route_id: this.props.params.id,
+                pickup: null
+            }
             
             this.setState({ 
                 students: students,
@@ -119,23 +173,70 @@ class BusRoutesDetail extends Component {
                 center: { 
                     lat: school.location.lat, 
                     lng: school.location.lng 
-                }, 
-            }, console.log(this.state.center));
+                },
+                log: log
+            });
             
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
-            this.setMarkers(users)            
+            this.setMarkers(users)
+            this.periodicCall(school.id)       
         })
         .catch(error => {
-            // console.log(error.response)
             if (error.response.status !== 200) {
-                // console.log(error.response.data)
                 this.setState({ 
                     error_status: true,
                     error_code: error.response.status 
                 });
             }
         })
+    }
+
+
+    userOnRun = () => {
+        api.get(`users/transit?id=${localStorage.getItem("user_id")}`)
+        .then(res => {
+            const active_runs = res.data
+            const user_on_run = active_runs.length !== 0
+            this.setState({
+                user_on_run: user_on_run
+            })
+        })
+    }
+
+    getInTransit = () => {
+        api.get(`routes/transit?id=${this.props.params.id}`)
+        .then(res => {
+            const in_transit_runs = res.data
+            const in_transit = in_transit_runs.length !== 0
+            const transit_driver = in_transit ? in_transit_runs[0].user.id : null
+            const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
+            const transit_bus_number = in_transit ? in_transit_runs[0].bus_number : null
+            console.log(in_transit_runs)
+            this.setState({
+                in_transit: in_transit,
+                transit_log_id: transit_log_id,
+                transit_bus_number: transit_bus_number,
+                transit_driver: transit_driver
+            })
+        })
+    }
+
+    check_valid_bus_number = () => {
+        api.get(`transit`)
+        .then(res => {
+            const data = res.data
+            console.log(data)
+            const filtered_buses =  data.buses.filter(buses => {
+                return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)})
+
+            const valid_bus_number = filtered_buses.length === 0
+            console.log(data.buses.filter(buses => {
+                return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)}))
+            console.log(valid_bus_number)
+            this.setState({valid_bus_number: valid_bus_number})
+        })
+
     }
 
     getStudentsFromUser = (users) => {
@@ -173,18 +274,6 @@ class BusRoutesDetail extends Component {
                 studentNames: studentNames,
                 routeID: this.props.params.id   //TODO: change markers to create per student
             })
-            // this.setState(prevState => ({
-            //     markers: [...prevState.markers, {
-            //         position: {
-            //             lat: user.location.lat,
-            //             lng: user.location.lng
-            //         },
-            //         id: user.id,
-            //         studentIDs: studentIDs,
-            //         studentNames: studentNames,
-            //         routeID: this.props.params.id 
-            //     }]
-            // }));
         });
         this.setState({ markers: markers })
     }
@@ -194,8 +283,8 @@ class BusRoutesDetail extends Component {
         .then(res => {
             const data = res.data;
             this.setState({ stops: data.stops })
-            console.log(data.stops)
-            console.log(this.state.center)
+            // console.log(data.stops)
+            // console.log(this.state.center)
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
         })
@@ -213,12 +302,12 @@ class BusRoutesDetail extends Component {
         this.setState({map_redirect_pickup: []})
         let arrivingLinks = []
         for (let i=0; i < stops.length; i+=10 ) {
-            console.log(i)
+            // console.log(i)
             let map_redirect_pickup = GOOGLE_MAP_URL
             map_redirect_pickup += '&waypoints='
             let j;
             for (j = i; j < i + 9 && j < stops.length; j+=1) {
-                console.log(stops[j])
+                // console.log(stops[j])
                 map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
             }
             if (j == stops.length) {
@@ -226,10 +315,10 @@ class BusRoutesDetail extends Component {
             } else {
                 map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
             }
-            console.log(map_redirect_pickup)
+            // console.log(map_redirect_pickup)
             arrivingLinks.push(map_redirect_pickup)
         }
-        console.log(arrivingLinks)
+        // console.log(arrivingLinks)
         this.setState({
             map_redirect_pickup: arrivingLinks
         })
@@ -247,14 +336,14 @@ class BusRoutesDetail extends Component {
         } else {
             for (i = 0; i < reversed_stops.length-1; i+=10 ) {
                 let map_redirect_dropoff = GOOGLE_MAP_URL 
-                console.log(i)
+                // console.log(i)
                 if (i == 0) {
                     map_redirect_dropoff += 'origin=' + this.state.center.lat + ',' + this.state.center.lng 
                 }
                 map_redirect_dropoff +=  '&waypoints=';
                 let j;
                 for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
-                    console.log(reversed_stops)
+                    // console.log(reversed_stops)
                     map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
                 }
                 //Think about cases where this could be in its own link
@@ -262,7 +351,7 @@ class BusRoutesDetail extends Component {
                 departingLinks.push(map_redirect_dropoff)
             }
         }
-        console.log(departingLinks)
+        // console.log(departingLinks)
         this.setState({map_redirect_dropoff: departingLinks})
     }
 
@@ -280,7 +369,6 @@ class BusRoutesDetail extends Component {
                         delete_success: 1,
                         redirect: true
                     })
-                    // console.log(this.state.redirect)
                 } else {
                     this.setState({ delete_success: -1})
                 }
@@ -301,12 +389,78 @@ class BusRoutesDetail extends Component {
         }))
     }
 
+    handleBusNumberChange = (event) => {
+        let log = {...this.state.log}
+        log.bus_number = event.target.value
+        this.setState({ log: log })
+        this.check_valid_bus_number()
+    }
+
+    handleIsPickupChange = (event) => {
+        let log = {...this.state.log}
+        log.pickup = event.target.value === 'true'
+        this.setState({ log: log })
+    }
+
+    openStartRunModal = () => {
+        this.userOnRun()
+        this.setState({ startRunModalIsOpen: true });
+    }
+
+    closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
+
+    openStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: true });
+
+    closeStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: false });
+
+    openStopConfirmationRunModal = () => this.setState({ stopConfirmationRunModalIsOpen: true });
+
+    closeStopConfirmationRunModal = () => this.setState({ stopConfirmationRunModalIsOpen: false });
+
+    startRun = (event) => {
+        event.preventDefault()
+        if(this.state.valid_bus_number) {
+        this.setState({ in_transit: true })
+        this.on_run = true 
+        const request = {
+            log: this.state.log
+
+        }
+        console.log(request)
+        api.post(`logs/create`, request)
+        .then(res => {
+            this.getInTransit()
+            this.closeStartRunModal()
+            this.openStartConfirmationRunModal()
+        })
+    }
+    }
+
+    stopRun = () => {
+        this.on_run = false 
+        this.setState({ 
+            transit_driver: null,
+            // in_transit: false 
+        })
+        console.log(this.state.in_transit)
+        console.log(this.state.transit_driver)
+        api.put(`logs/update?id=${this.state.transit_log_id}`)
+        .then(res => {
+            this.getInTransit()
+            // this.closeStartRunModal() 
+            this.openStopConfirmationRunModal()   
+        })
+    }
+
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
           }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         if (redirect) {
@@ -315,7 +469,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.students)
+        console.log(this.state.in_transit)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -326,14 +480,13 @@ class BusRoutesDetail extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h5 className="align-top">{this.state.route.name}
                                             { this.state.route.is_complete ? "" :
                                                 <span className="badge bg-red ms-2">Incomplete</span>
                                             }
                                         </h5>
                                         <p className="mb-2"><a href={"/schools/" + this.state.school.id}>{this.state.school.name}</a></p>
-                                        {/* <span className="badge bg-red mt-0">Incomplete</span> */}
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
@@ -346,9 +499,114 @@ class BusRoutesDetail extends Component {
                                                     </span>
                                                 </Link> : ""
                                             }
+                                            {
+                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff' || localStorage.getItem('role') === 'Driver') ?
+                                                <Link to={"/routes/" + this.props.params.id + "/transit-log"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-clock-history me-2"></i>
+                                                        Transit Log
+                                                    </span>
+                                                </Link> : ""
+                                            }
+                                            {
+                                                (localStorage.getItem('role') === 'Driver') ? 
+                                                (!this.state.in_transit || this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                <button type="button" className="btn btn-primary float-end w-auto me-3" 
+                                                onClick={() => this.openStartRunModal()}>
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-play-circle me-2"></i>
+                                                        Start Run
+                                                    </span>
+                                                </button> : "" )
+                                                : ""
+                                            }
+                                            {
+                                                (localStorage.getItem('role') === 'Driver') ? 
+                                                 (this.on_run && this.state.in_transit && this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"
+                                                  onClick={() => this.stopRun()}>
+                                                     <span className="btn-text">
+                                                         <i className="bi bi-stop-circle me-2"></i>
+                                                         Stop Run for Bus #{this.state.transit_bus_number}
+                                                     </span>
+                                                 </button> : "")
+                                                : ""
+                                            }
+
+                                            <Modal backdrop="static" show={this.state.startRunModalIsOpen} onHide={this.closeStartRunModal}>
+                                                <form onSubmit={(event) => this.startRun(event)}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Start Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    {(this.state.user_on_run) ? 
+                                                        (<div>
+                                                            <div class="alert alert-warning mb-3" role="alert">
+                                                                <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                You already have an active run. Starting a new run will stop your active run. 
+                                                            </div>
+                                                        </div>) : ""
+                                                    }
+                                                    <div className="form-group required pb-3">
+                                                        <label for="exampleInputBus" className="control-label pb-2">Bus Number</label>
+                                                        <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
+                                                            placeholder="Enter bus number" required
+                                                            onChange={this.handleBusNumberChange}></input>
+                                                        {(!this.state.valid_bus_number) ? 
+                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
+                                                            Please choose a different bus number. A bus with this bus number is already in transit.
+                                                        </div>) : ""
+                                                        }
+                                                    </div>
+                                                    <div className="form-group required pb-3" onChange={this.handleIsPickupChange.bind(this)}
+                                                    >
+                                                        <div>
+                                                            <label for="directionType" className="control-label pb-2">Direction</label>
+                                                        </div>
+                                                        <div className="form-check form-check-inline">
+                                                            <input className="form-check-input" type="radio" name="directionType" id="pickup" value={true} required></input>
+                                                            <label className="form-check-label" for="pickup">Pickup</label>
+                                                        </div>
+                                                        <div className="form-check form-check-inline">
+                                                            <input className="form-check-input" type="radio" name="directionType" id="dropoff" value={false} required></input>
+                                                            <label className="form-check-label" for="dropoff">Dropoff</label>
+                                                        </div>
+                                                    </div>
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-secondary" onClick={this.closeStartRunModal}>Cancel</button>
+                                                    <button type="submit" className="btn btn-primary">Start</button>
+                                                </Modal.Footer>
+                                                </form>
+                                            </Modal>
+
+                                            <Modal backdrop="static" show={this.state.startConfirmationRunModalIsOpen} onHide={this.closeStartConfirmationRunModal}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Start Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    Your bus run has successfully started.
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-primary" onClick={this.closeStartConfirmationRunModal}>OK</button>
+                                                </Modal.Footer>
+                                            </Modal>
+
+                                            <Modal backdrop="static" show={this.state.stopConfirmationRunModalIsOpen} onHide={this.closeStopConfirmationRunModal}>
+                                                <Modal.Header>
+                                                <Modal.Title><h5>Stop Run</h5></Modal.Title>
+                                                </Modal.Header>
+                                                <Modal.Body>
+                                                    Your bus run has successfully ended.
+                                                </Modal.Body>
+                                                <Modal.Footer>
+                                                    <button type="button" className="btn btn-primary" onClick={this.closeStopConfirmationRunModal}>OK</button>
+                                                </Modal.Footer>
+                                            </Modal>
+
                                             <button type="button" className="btn btn-primary float-end w-auto me-3"  onClick={() => this.state.route.length !== 0 ? pdfRender(this.state.route, this.state.users) : ""}>
                                                 <i className="bi bi-download me-2"></i>
-                                                Export
+                                                Export Roster
                                             </button>
                                             {
                                                   (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
@@ -357,6 +615,12 @@ class BusRoutesDetail extends Component {
                                                     <span className="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>
                                                         Edit
+                                                    </span>
+                                                </Link>
+                                                <Link to={"/schools/" + this.state.school.id + "/routes-planner"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-geo-alt-fill me-2"></i>
+                                                        Route Planner
                                                     </span>
                                                 </Link>
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -375,7 +639,7 @@ class BusRoutesDetail extends Component {
                                                             </div>
                                                             <div className="modal-body">
                                                                 Are you sure you want to delete this bus route?
-                                                                Note: All associated students will revert to having no bus route.
+                                                                Note: All associated students will revert to having no bus route. All transit log entries associated with this route will also be deleted.
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -408,38 +672,40 @@ class BusRoutesDetail extends Component {
                                             center={this.state.center}
                                             students={this.state.markers}
                                             existingStops={this.state.stops}
+                                            bus_tooltip={this.state.bus_tooltip}
+                                            buses={this.state.buses}
                                         />
                                         : "" }
                                         </div>
                                         { this.state.map_redirect_dropoff.length !== 0 ?
                                             <div className="mt-3"> 
                                             <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
-                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Pickup"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
                                                             </div>
                                                         </div>
                                             })}
-                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Dropoff"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>

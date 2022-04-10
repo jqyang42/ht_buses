@@ -6,20 +6,8 @@ import { useState } from "react";
 export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
     updatePageCount, pageSize, totalPages, searchValue }) {
 
-    // const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
-
-    // useEffect(() => {
-    //     updatePageCount(pageIndex, null, searchValue)
-    // }, [sort])
-
     const columns = React.useMemo(
         () => [
-            // {
-            //     Header: '#',
-            //     accessor: d => `${d.id}`, // accessor is the "key" in the data
-            //     id: 'id',
-            //     disableSortBy: true
-            // },
             {
                 Header: 'ID',
                 accessor: 'student_school_id', // accessor is the "key" in the data
@@ -32,6 +20,12 @@ export function SchoolStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
                 // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none',
+                disableSortBy: true
+            },
+            {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
                 disableSortBy: true
             },
             {

@@ -7,7 +7,7 @@ import HeaderMenu from '../components/header-menu';
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from '../../constants';
-import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { USERS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { USERS_IMPORT_URL } from "../../constants";
 import api from "../components/api";
 import { API_DOMAIN } from "../../constants";
@@ -86,7 +86,7 @@ class Users extends Component {
 
     getFile = (event) => {
         this.fileUploaded = event.target.files[0]
-        console.log(this.fileUploaded)
+        // console.log(this.fileUploaded)
         var ext = this.getExtension(this.fileUploaded)
         if (ext.toLowerCase() === "csv") {
             this.submitFile(this.fileUploaded)
@@ -109,8 +109,10 @@ class Users extends Component {
         this.setState({ loading: true })
         api.post(`bulk-import/users-upload`, formData, config)
         .then(res => {
-            console.log("posted successfully")
-            console.log(res)
+            // console.log("posted successfully")
+            // console.log(res)
+            // @thomas i set the token from users-upload here
+            localStorage.setItem('users_import_file_token', res.data.users_token)
             this.setState({ 
                 import_redirect: true,
                 loading: false
@@ -122,7 +124,7 @@ class Users extends Component {
                 loading: false
             })
             this.fileUploaded = null
-            console.log(err)
+            // console.log(err)
         })
     }
 
@@ -130,8 +132,11 @@ class Users extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.import_redirect) {
             return <Navigate to={ USERS_IMPORT_URL } state={{file: this.fileUploaded}}/>
@@ -161,7 +166,7 @@ class Users extends Component {
                                             Please wait patiently while we load and verify your file import.
                                         </div> : ""
                                     }
-                                    <div className="row d-inline-flex float-end">
+                                    <div className="row d-inline-flex float-end ms-1 row-buttons">
                                         {
                                               localStorage.getItem('role') === 'Administrator' ?
                                             <Link to={"/users/email"} className="btn btn-primary float-end w-auto me-3" role="button">
@@ -207,7 +212,7 @@ class Users extends Component {
                                     totalPages={this.state.totalPages}
                                     searchValue={this.state.searchValue}
                                     />
-                                    <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
+                                    <button className="btn btn-secondary align-self-center show-all" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?
                                             "Show All" : "Show Pages"
                                         }

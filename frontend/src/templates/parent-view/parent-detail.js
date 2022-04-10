@@ -13,7 +13,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { MARKER_ICONS } from '../../constants';
 
 import { LOGIN_URL } from "../../constants";
-import { STUDENTS_URL } from "../../constants";
+import { STUDENTS_URL, STUDENT_INFO_URL } from "../../constants";
 
 class ParentDetail extends Component {
     state = {
@@ -47,8 +47,6 @@ class ParentDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 stops_page: res.data.stops,
@@ -61,7 +59,7 @@ class ParentDetail extends Component {
     getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
         .then(res => {
-            console.log(res.data.student)
+            // console.log(res.data.student)
             const student = res.data.student
             this.setState({ 
                 stops: student.stops,
@@ -93,16 +91,21 @@ class ParentDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
+        if (JSON.parse(localStorage.getItem('is_staff'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
+        }
         if (this.state.error_status) {
-            // console.log("reached")
             return <ErrorPage code={this.state.error_code} />
         }
         if (Object.keys(this.state.student).length) {
-            console.log(this.state.active_route)
-            console.log(this.state.center)
-            console.log(this.state.stops)
+            // console.log(this.state.active_route)
+            // console.log(this.state.center)
+            // console.log(this.state.stops)
         } else {
-            console.log("theres nothing woahhhhhhh")
+            // console.log("theres nothing woahhhhhhh")
         }
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">

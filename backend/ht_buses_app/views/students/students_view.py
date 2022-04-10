@@ -37,22 +37,26 @@ def student_search_and_sort(order_by, sort_by, search, student_list):
         sort_by = "user_id__first_name"
     if sort_by == "school_name":
         sort_by = "school_id__name"
+    if sort_by == "phone":
+        sort_by = "user_id__phone_number"
+    if sort_by == "email":
+        sort_by = "account_id__email"
     
     # search only
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("id")
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search) | Q(account_id__email__icontains = search)).order_by("id")
     else:
         if order_by == "asc":
             if search != None:
                 students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
-            .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by(sort_by)
+            .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search) | Q(account_id__email__icontains = search)).order_by(sort_by)
             else:
                 students = student_list.order_by(sort_by)
         else:
             if search != None:
                 students = student_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
-        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).order_by("-" + sort_by)
+        .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search) | Q(account_id__email__icontains = search)).order_by("-" + sort_by)
             else:
                 students = student_list.order_by("-" + sort_by)
     return students

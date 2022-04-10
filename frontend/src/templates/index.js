@@ -37,11 +37,11 @@ class Login extends Component {
         axios.post(API_DOMAIN + ``, creds)
         .then(res => {
             const data = res.data
-            console.log(data)
+            // console.log(data)
             this.setState({message: data.message, valid_login: data.valid_login})
             localStorage.setItem('token', data.token)
             if (data.valid_login) {
-                console.log(data.info)
+                // console.log(data.info)
                 this.emailField.value = ''
                 this.passwordField.value =''
                 localStorage.setItem('user_id', data.info.user_id)
@@ -58,7 +58,6 @@ class Login extends Component {
                 this.passwordField.value = '';
                 this.setState({password: ''})
             }
-            // console.log(localStorage.getItem('token'))
         })
     }   
     
@@ -78,7 +77,7 @@ class Login extends Component {
                             <UnauthenticatedHeaderMenu />
                             <div className="container mt-4 mx-4 mx-md-2">
                                 <div className="row">
-                                    <div className="col-md-6">
+                                    <div className="col-md-6 col-10">
                                         <h2 className="pb-3">Log In</h2>
                                         {(!this.state.valid_login && this.state.message !== "") ? 
                                             (<div>

@@ -36,6 +36,22 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
+                Header: 'Student Email',
+                // accessor: d => Array(`${d.name}`, false,``, true,`Name may be a duplicate`),
+                accessor: d => Array(`${d.student_email}`, d.error.student_email,`${d.error.error_message.student_email}`), //d.error.student_email,`Student email may be a duplicate in file import`
+                id: 'student_email',
+                disableSort: true,
+                // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Student Phone',
+                // accessor: d => Array(`${d.name}`, false,``, true,`Name may be a duplicate`),
+                accessor: d => Array(`${d.phone_number}`, d.error.phone_number,`${d.error.error_message.phone_number}`),
+                id: 'phone_number',
+                disableSort: true,
+                // sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+            },
+            {
                 Header: 'Parent Email',
                 // accessor: d => Array(`${d.email}`, true,`Email is invalid`, false,``),
                 accessor: d => Array(`${d.parent_email}`,d.error.parent_email,`${d.error.error_message.parent_email}`,d.error.duplicate_parent_email,`Parent email is a duplicate in file import`),
@@ -60,37 +76,19 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
                 disableSort: true
             },
         ],
-        // [sort]
     )
-
-    // const columnHeaderClick = async (column) => {
-    //     switch (column.sortDirection) {
-    //       case 'none':
-    //         setSort({ sortDirection: 'ASC', accessor: column.id });
-    //         break;
-    //       case 'ASC':
-    //         setSort({ sortDirection: 'DESC', accessor: column.id });
-    //         break;
-    //       case 'DESC':
-    //         setSort({ sortDirection: 'none', accessor: column.id });
-    //         break;
-    //     }
-    // };
 
     return (
         <TableEditable
             columns={columns}
             origData={data}
             searchOn={false}
-            // searchLabel="Search by name or email..."
-            // ourGlobalFilterFunction={ourGlobalFilterFunction}
-            // showAll={showAll}
             navUrl={"/students/"}
-            rowProps={row => ({
-                style: {
-                    cursor: "pointer"
-                }
-            })}
+            // rowProps={row => ({
+            //     style: {
+            //         cursor: "pointer"
+            //     }
+            // })}
             // pageIndex={pageIndex}
             // canPreviousPage={canPreviousPage}
             // canNextPage={canNextPage}

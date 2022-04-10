@@ -51,11 +51,11 @@ class StopMarker extends Component {
     handleSubmit = (event) => {
       if (this.props.handleStopNameChange) {
         if(this.props.uid) {
-          console.log(this.state.name)
+          // console.log(this.state.name)
           this.props.handleStopNameChange(this.state.name, this.props.id, this.props.uid, this.state.location)
         } 
         else {
-          console.log(this.state.name)
+          // console.log(this.state.name)
           this.props.handleStopNameChange(this.state.name, this.props.id, this.state.location)
         }
       }

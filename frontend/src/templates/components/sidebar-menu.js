@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { HT_LOGO, PARENT_DASHBOARD_URL } from "../../constants";
+import { HT_LOGO, PARENT_DASHBOARD_URL, TRANSIT_STATUS_URL } from "../../constants";
 import { API_DOMAIN } from '../../constants';
 import axios from "axios";
-import { INDEX_URL, STUDENTS_URL, ROUTES_URL, SCHOOLS_URL, USERS_URL, PASSWORD_URL} from "../../constants";
+import { INDEX_URL, STUDENTS_URL, ROUTES_URL, SCHOOLS_URL, USERS_URL, PASSWORD_URL, TRANSIT_LOG_URL} from "../../constants";
 import api from "../components/api";
 
 class SidebarMenu extends Component {
@@ -25,7 +25,6 @@ class SidebarMenu extends Component {
         })
     }
 
-
     componentDidMount() {
         const config = {
         headers: {
@@ -39,6 +38,8 @@ class SidebarMenu extends Component {
         var routesTab = (activeTab === "routes") ? 'active' : '';
         var schoolsTab = (activeTab === "schools") ? 'active' : '';
         var usersTab = (activeTab === "users") ? 'active' : '';
+        var transitStatusTab = (activeTab === "transit status") ? 'active' : '';
+        var transitLogTab = (activeTab === "transit log") ? 'active' : '';
         var dashboardTab = (activeTab === "dashboard") ? 'active' : '';
         
         return (
@@ -73,7 +74,20 @@ class SidebarMenu extends Component {
                                 <span className="ms-1 d-inline">Manage Users</span>
                             </a>
                         </li>
-                        {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
+                        <hr></hr>
+                        <li className={"nav-item " + transitStatusTab}>
+                            <a href={TRANSIT_STATUS_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                                <i className="bi bi-pin-map me-2"></i>
+                                <span className="ms-1 d-inline">Transit Status</span>
+                            </a>
+                        </li>
+                        <li className={"nav-item " + transitLogTab}>
+                            <a href={TRANSIT_LOG_URL} className="nav-link px-0 align-middle mx-4 px-4">
+                                <i className="bi bi-clock-history me-2"></i>
+                                <span className="ms-1 d-inline">Transit Logs</span>
+                            </a>
+                        </li>
+                        {/* {(JSON.parse(localStorage.getItem('is_staff')) && JSON.parse(localStorage.getItem('is_parent'))) ?
                             <>
                                 <li className='hbar my-4'></li>
                                 <li className={"nav-item " + dashboardTab}>
@@ -83,15 +97,9 @@ class SidebarMenu extends Component {
                                     </a>
                                 </li>
                             </> : ""
-                        }
-                        
+                        } */}
                     </ul>
                     <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
-                        {/* <Link to={PASSWORD_URL} className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
-                            <span className="btn-text">
-                                Change Password
-                            </span>
-                        </Link> */}
                         <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                             Log Out
                         </button> 

@@ -6,8 +6,8 @@ from . views.bulk_import.upload import bulk_import_view_students, bulk_import_vi
 from . import models 
 from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
-from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create
-from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view
+from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create, route_transit
+from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view, user_transit
 from . views.auth import auth_valid, login, logout
 from . views.parents import parent_dashboard, parent_student_detail
 from . views.announcements import announcements
@@ -17,15 +17,16 @@ from . views.stops import stops_create, stops_view_pag, stops_edit, stops_delete
 from . views.students.detail import student_view_route, student_view_school
 from . views.routes.detail import route_view_school
 from . views.students.detail import student_view_user
-from . views.users.detail import user_school
 from . views.stops import stops_view_pag
 from . views.general.general_tools import permission_setup
 from . views.bulk_import.retrieval import bulk_import_json_users, bulk_import_json_students
 from . views.bulk_import.validation import bulk_import_validate_students, bulk_import_validate_users
 from . views.bulk_import.creation import bulk_import_students_create, bulk_import_users_create
 from . views.bulk_import.temp import bulk_import_file_users_temp, bulk_import_file_students_temp
-
+from . views.logs import log_create, log_view, log_update
+from . views.logs.detail import log_driver_view, log_route_view, log_school_view
 from . views.parents.detail import parent_student_stop
+from . views.buses import bus_view, bus_active_view, transit_view, bus_active_route_view, bus_all_schools_view
 from . models import User
 
 try:
@@ -49,12 +50,12 @@ urlpatterns = [
     path('api/routes/edit', route_edit.route_edit, name="route_edit"),
     path('api/routes/delete', route_delete.route_delete, name="route_delete"),
     path('api/users', users_view.user_view, name="users"),
+    path('api/users-with-address', users_view.users_with_address, name="users_with_address"),
     path('api/users/detail', user_detail.users_detail, name="users_detail"),
     path('api/users/create', user_create.user_create, name="users_create"),
     path('api/users/edit', user_edit.user_edit, name="users_edit"),
     path('api/users/password-edit', user_edit_password.user_password_edit, name="user_password_edit"),
     path('api/users/edit/validate-email', user_edit.valid_email_edit, name="validate_email_edit"),
-    path('api/users/school', user_school.user_school_view, name="user_school"),
     path('api/email_exists', general_apis.email_exists, name="email_exists"),
     path('api/users/delete', user_delete.user_delete, name = "delete_user"),
     path('api/routeplanner', route_planner.routeplanner, name="routeplanner"),
@@ -94,7 +95,20 @@ urlpatterns = [
     path('api/bulk-import/users/delete-temp-file', bulk_import_file_users_temp.bulk_import_temp, name='bulk-import-users-temp-delete'),
     path('api/bulk-import/students/delete-temp-file', bulk_import_file_students_temp.bulk_import_temp, name='bulk-import-students-temp-delete'),
     path('api/dashboard/students/stops', parent_student_stop.parent_student_stops, name='parent_student_stop'),
-    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info")
+    path('api/users/update-stored-info', user_detail.update_stored_user_info, name="update-stored-info"),
+    path('api/logs/create', log_create.create_log, name='log-create'),
+    path('api/logs/update', log_update.update_log, name='log-update'),
+    path('api/logs', log_view.log_view, name='log-view'),
+    path('api/transit', transit_view.transit_fetch, name='transit-fetch'),
+    path('api/logs/driver', log_driver_view.log_driver_view, name='log-driver'),
+    path('api/logs/route', log_route_view.log_route_view, name="log-route"),
+    path('api/logs/school', log_school_view.log_school_view, name="log-school"),
+    path('api/routes/transit', route_transit.route_transit, name="route-transit"),
+    path('api/users/transit', user_transit.user_transit, name="user-transit"),
+    path('api/buses', bus_view.get_bus, name="bus-view"),
+    path('api/buses/school', bus_active_view.get_buses, name="buses-active-school"),
+    path('api/buses/route', bus_active_route_view.get_buses, name="buses-active-route"),
+    path('api/buses/all-schools', bus_all_schools_view.get_buses, name="buses-all-schools")
 
 ]
 

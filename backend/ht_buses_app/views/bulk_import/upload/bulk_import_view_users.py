@@ -6,7 +6,7 @@ from ....google_funcs import geocode_address
 from rest_framework.response import Response
 from ....serializers import UserSerializer, LocationSerializer, BulkImportUserSerializer
 from io import StringIO
-from ..bulk_import_file_manage import bulk_import_file_save
+from ..bulk_import_file_manage import bulk_import_file_save, generate_unique_token
 import csv
 import re
 from django.db.models import Q
@@ -15,7 +15,8 @@ from django.db.models.functions import Concat
 from guardian.shortcuts import get_objects_for_user
 
 # Bulk import temporary file name
-FILENAME = 'bulk_import_users_temp.json'
+FILENAME = 'bulk_import_users_temp_'
+JSON_EXTENSION = '.json'
 
 # Bulk Import POST API: Checking for Users
 @csrf_exempt
@@ -29,10 +30,7 @@ def bulk_import(request):
     errors = []
     errors_msg = []
     row_num = 1
-    email_error_message = ""
-    phone_number_error_message = ""
-    name_error_message = ""
-    address_error_message = ""
+    users_token = generate_unique_token()
     headers = ["email", "name", "address", "phone_number"]
     # regex
     file_regex = r'.*\.csv$'
@@ -60,6 +58,10 @@ def bulk_import(request):
     for row in reader:
         exclude = False
         existing_users = []
+        email_error_message = ""
+        phone_number_error_message = ""
+        name_error_message = ""
+        address_error_message = ""
         # email, name, address, phone_number
         if row["email"] is None or row["email"] == "":
             email_error = True
@@ -288,7 +290,8 @@ def bulk_import(request):
     data["users"] = users
     data["errors"] = errors
     data["success"] = True
-    bulk_import_file_save(FILENAME, data)
+    data["users_token"] = users_token
+    bulk_import_file_save(FILENAME + users_token + JSON_EXTENSION, data)
     return Response(data)
 
 

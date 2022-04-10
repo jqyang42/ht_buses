@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .student_create import create_student
 from ...models import User
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import has_access_to_object, update_schools_staff_rights
+from ..general.general_tools import has_access_to_object
 from ..general import response_messages
 from guardian.shortcuts import assign_perm
 
@@ -24,7 +24,6 @@ def add_new_students(request):
     try:
         for student in reqBody["students"]:
             create_student(student, user_id)
-        update_schools_staff_rights()
         data["message"] = "students created successfully"
         data["success"] = True
         return Response(data)

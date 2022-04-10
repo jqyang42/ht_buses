@@ -34,7 +34,6 @@ def user_pagination(users, page_number):
         last_name = user["last_name"]
         email = user["email"]
         role = user["role"]
-        is_parent = user["is_parent"]
         phone_number = user["phone_number"]
         try:
             location = Location.objects.get(pk=user["location"])
@@ -46,7 +45,7 @@ def user_pagination(users, page_number):
             role_name = "General"
         else:
             role_name = User.role_choices[int(user["role"])-1][1]
-        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'role' : role_name, 'phone_number': phone_number,'is_parent' : is_parent, 'location' : location_arr})
+        users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'role' : role_name, 'phone_number': phone_number, 'location' : location_arr})
     data["users"] = users_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
     data["success"] = True

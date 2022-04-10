@@ -8,7 +8,8 @@ import { MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 import StudentMarker from './student-marker';
 import StopMarker from './stop-marker';
-import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
+import BusMarker from './bus-marker'
+import { PARENT_DASHBOARD_URL , LOGIN_URL, STUDENT_INFO_URL } from "../../constants";
 
 const containerStyle = {
   width: '100%',
@@ -62,12 +63,31 @@ class RouteMap extends Component {
       lat: parseFloat(this.props.center.lat),
       lng: parseFloat(this.props.center.lng)
     },
+    buses: this.props.buses,
+    // bus_info_window: false,
+    bus_tooltip: this.props.bus_tooltip
   }
 
   studentsChanged = []
 
   handleCenterChange = (event) => {
     //TODO: update state with new center
+  }
+
+  toggleBusInfoWindow = (bus_number) => {
+    // console.log(this.state.bus_tooltip)
+    // this.setState(prevState => ({
+    //   bus_tooltip: {
+    //     ...prevState.bus_tooltip,
+    //     [bus_number]: !prevState.bus_tooltip[bus_number]
+    //   }
+    // }))
+
+    const new_tooltip = this.state.bus_tooltip
+    new_tooltip[bus_number] = !new_tooltip[bus_number]
+    this.setState({
+      bus_tooltip: new_tooltip
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -111,7 +131,7 @@ class RouteMap extends Component {
           lat: coords.lat,
           lng: coords.lng
         }
-      }), console.log(this.state.newStops))
+      }))
     }
     this.handleUpdateNewStops()
     this.setState({ showModal: true })
@@ -120,7 +140,7 @@ class RouteMap extends Component {
 
   handleUpdateNewStops = () => {
     if (this.props.handleUpdateNewStops) {
-      console.log(this.state.newStops)
+      // console.log(this.state.newStops)
       this.props.handleUpdateNewStops(this.state.newStops)
     }
   }
@@ -132,7 +152,7 @@ class RouteMap extends Component {
     newStop.lat = location.lat;
     newStop.lng = location.lng;
     newStopNames[index] = newStop;
-    console.log(newStopNames)
+    // console.log(newStopNames)
     return newStopNames
   }
 
@@ -140,13 +160,13 @@ class RouteMap extends Component {
     const newStopNames = this.handleStopNameChange(this.state.newStops, name, index, location)
     this.setState({
       newStops: newStopNames
-    }, console.log(this.state.newStops)) 
+    }) 
     this.handleUpdateNewStops()
   }
   
   handleStopModify = () => {
     if (this.props.handleStopModification) {
-      console.log(this.state.editedStops)
+      // console.log(this.state.editedStops)
       this.props.handleStopModification(this.state.editedStops)
     }
   }
@@ -161,18 +181,15 @@ class RouteMap extends Component {
         "lng": location.lng,
       }
     }
-    console.log(editedStop)
+    // console.log(editedStop)
     const editedStopNames = this.state.editedStops;
     editedStopNames.push(editedStop)
-    // this.setState(prevState => ({
-    //   editedStops: [...prevState.editedStops, editedStop]
-    // }), console.log(this.state.editedStops))
     this.setState({
       editedStops: editedStopNames,
       existingStops: updatedStopNames
     })
-    console.log(this.state.editedStops)
-    console.log(this.state.existingStops)
+    // console.log(this.state.editedStops)
+    // console.log(this.state.existingStops)
     this.handleStopModify()
   }
 
@@ -197,7 +214,6 @@ class RouteMap extends Component {
 
   render() {
     const center = this.props.center
-    console.log(this.state.existingStops)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -224,6 +240,37 @@ class RouteMap extends Component {
                 position={this.props.center} 
               />
             }
+            {console.log(this.props.buses)}
+            {this.props.buses?.map((value, index) => {
+              console.log(value)
+              return <BusMarker 
+                key={`${value.location.lat}+${value.location.lng}`}
+                id={index}
+                // uid={1}
+                bus_number={value.bus_number}
+                driver={value.user}
+                location={value.location}
+                // assign_mode={false} 
+                // routeID={5}
+                // handleDeleteStopMarker={() => {}}
+                // handleStopNameChange={() => {}}
+                // showInfoWindow={this.state.bus_info_window}
+                busToolTip={this.state.bus_tooltip}
+                toggleInfoWindow={this.toggleBusInfoWindow}
+                // key={index} 
+                // position={value.location}
+                // location={value.location} 
+                // assign_mode={this.props.assign_mode} 
+                // routeID={value.routeID} 
+                // active_route={this.props.active_route}
+                // id={value.id}
+                // studentIDs={value.studentIDs}
+                // studentNames={value.studentNames}
+                // onChange={this.handleRouteChanges} 
+                // data-bs-toggle="modal"
+                // data-bs-target="#staticBackdrop"
+                />
+            })}
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 

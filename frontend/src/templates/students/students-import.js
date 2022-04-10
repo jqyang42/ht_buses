@@ -8,7 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL, STUDENTS_URL } from '../../constants';
-import { STUDENTS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { STUDENTS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import api from "../components/api";
 
 class StudentsImport extends Component {
@@ -16,7 +16,9 @@ class StudentsImport extends Component {
         students: [],
         errors: [],
         edited_students: [],
-        // verifyCheck: false,
+        to_verify_students: [],
+        verified_errors: [],
+        verified_students: [],
         students_redirect: false,
         successVerifyModalIsOpen: false,
         errorVerifyModalIsOpen: false,
@@ -30,19 +32,35 @@ class StudentsImport extends Component {
     }
 
     openSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: true });
-    closeSuccessVerifyModal = () => this.setState({ successVerifyModalIsOpen: false });
+    closeSuccessVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            students: this.state.verified_students,
+            successVerifyModalIsOpen: false
+        });
+    }
+
     openErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: true });
-    closeErrorVerifyModal = () => this.setState({ errorVerifyModalIsOpen: false });
+    closeErrorVerifyModal = () => {
+        this.setState({ 
+            errors: this.state.verified_errors,
+            students: this.state.verified_students,
+            errorVerifyModalIsOpen: false 
+        });
+    }
+
     openCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: true });
     closeCreateConfirmationModal = () => this.setState({ createConfirmationModalIsOpen: false });
 
     getUploadedStudents = () => {
-        api.get(`bulk-import/students`)
+        // @thomas i send you the file token here
+        api.get(`bulk-import/students?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
+            const sorted_errors = this.sortErrors(res.data.errors)
             this.setState({ 
                 students: res.data.students,
-                errors: res.data.errors,
+                errors: sorted_errors,
                 loading: false
             })
         })
@@ -51,9 +69,8 @@ class StudentsImport extends Component {
     handleGetTableEdits = (new_data) => {
         this.setState({ 
             edited_students: new_data,
-            // verifyCheck: false
         }, () => {
-            console.log(this.state.edited_students)
+            // console.log(this.state.edited_students)
         })
     }
 
@@ -62,18 +79,36 @@ class StudentsImport extends Component {
         // redirect to USERS_URL (ignoring all changes from import)
         event.preventDefault()
         this.setState({ loading: true })
-        api.delete(`bulk-import/students/delete-temp-file`)
+        api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
+            // @thomas i remove the file token here
+            localStorage.removeItem('students_import_file_token')
             this.setState({ 
                 students_redirect: true,
                 loading: false
             })
         })
         .catch(err => {
-            console.log(err)
+            // console.log(err)
             this.setState({ loading: false })
         })
+    }
+
+    sortErrors = (errors) => {
+        const sorted_errors = errors
+        sorted_errors.sort((a, b) => {
+            return a.row_num - b.row_num
+        })
+
+        const no_duplicates = sorted_errors.reduce((unique, a) => {
+            if (!unique.some(err => err.row_num === a.row_num)) {
+                unique.push(a)
+            }
+            return unique
+        }, [])
+        
+        return no_duplicates
     }
 
     isVerified = (err_arr) => {
@@ -107,15 +142,19 @@ class StudentsImport extends Component {
             students: this.state.edited_students
         }
         
-        this.setState({ loading: true })
+        this.setState({ 
+            loading: true,
+            to_verify_students: data
+        })
+
         api.post(`bulk-import/students/validate`, data)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const data = res.data
+            const sorted_errors = this.sortErrors(data.errors)
             this.setState({
-                // verifyCheck: data.errors.length === 0,
-                errors: data.errors,
-                students: data.students,
+                verified_errors: sorted_errors,
+                verified_students: data.students,
                 loading: false
             }, () => {
                 if (this.isVerified(data.errors)) {
@@ -134,24 +173,19 @@ class StudentsImport extends Component {
     handleSubmitImport = (event) => {
         event.preventDefault()
 
-        // save table changes
-        const data = {
-            students: this.state.edited_students
-        }
-
         this.setState({ loading: true })
-        api.post(`bulk-import/students/create`, data)
+        api.post(`bulk-import/students/create`, this.state.to_verify_students)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.setState({ createStudentCount: res.data.student_count })
-            api.delete(`bulk-import/students/delete-temp-file`)
+            api.delete(`bulk-import/students/delete-temp-file?token=${localStorage.getItem('students_import_file_token')}`)
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 this.closeSuccessVerifyModal()
                 this.openCreateConfirmationModal()
             })
             .catch(err => {
-                console.log(err)
+                // console.log(err)
                 this.setState({ loading: false })
             })
         })
@@ -162,14 +196,18 @@ class StudentsImport extends Component {
 
     handleStudentsRedirect = () => {
         this.setState({ students_redirect: true })
+        localStorage.removeItem('students_import_file_token')
     }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.students_redirect) {
             return <Navigate to={ STUDENTS_URL }/>
@@ -181,6 +219,8 @@ class StudentsImport extends Component {
 
                     <div className="col mx-0 px-0 bg-gray w-100">
                         <HeaderMenu root={"Import Students"} isRoot={true} />
+
+                        { localStorage.getItem('students_import_file_token') ?
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 ml-2 mr-2 py-4 my-4 bg-white shadow-sm rounded align-content-start">
                                 <div className="row d-inline-flex float-end mb-4">
@@ -214,9 +254,9 @@ class StudentsImport extends Component {
                                     <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.verifyImport}>Verify</button>
 
                                     {/* Success verify confirmation modal */}
-                                    <Modal show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
+                                    <Modal backdrop="static" show={this.state.successVerifyModalIsOpen} onHide={this.closeSuccessVerifyModal}>
                                         <form onSubmit={this.handleSubmitImport}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -230,8 +270,8 @@ class StudentsImport extends Component {
                                     </Modal>
 
                                     {/* Error verify confirmation modal */}
-                                    <Modal show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
-                                        <Modal.Header closeButton>
+                                    <Modal backdrop="static" show={this.state.errorVerifyModalIsOpen} onHide={this.closeErrorVerifyModal}>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Verify Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -243,9 +283,9 @@ class StudentsImport extends Component {
                                     </Modal>
 
                                     {/* Create confirmation modal */}
-                                    <Modal show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
+                                    <Modal backdrop="static" show={this.state.createConfirmationModalIsOpen} onHide={this.closeCreateConfirmationModal}>
                                         <form onSubmit={this.handleStudentsRedirect}>
-                                        <Modal.Header closeButton>
+                                        <Modal.Header>
                                         <Modal.Title><h5>Import Students</h5></Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
@@ -256,64 +296,15 @@ class StudentsImport extends Component {
                                         </Modal.Footer>
                                         </form>
                                     </Modal>
-
-                                    {/* Verify confirmation modal */}
-                                    {/* <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Verify Students</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        { this.state.verifyCheck ? "All students have been verified and no errors exist. Your import is ready to be submitted!" :
-                                                        "Errors still exist in the file import. Please correct them before submitting."
-                                                        }
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div> */}
-                                    {/* Submit button */}
-                                    {/* @jessica add  */}
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal">Save and Import</button> */}
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
-
-                                    {/* Submit confirmation modal */}
-                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form onSubmit={this.handleSubmitImport}>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Import Students</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        Are you sure you want to save and import all students?
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
- 
-                                
 
                                 <div className="extra-margin">
                                 {this.state.loading ? 
-                                    <div class="alert alert-primary mt-2 mb-3" role="alert">
+                                    <div class="alert alert-primary mt-2 mb-2" role="alert">
                                         Please wait patiently while we load and verify your file import.
                                     </div> : ""
                                 }
-                                <div class="alert alert-primary mt-2 mb-3" role="alert">
+                                <div class="alert alert-primary mt-2 mb-2" role="alert">
                                     Please note that all parent users must be imported before students can be associated to them.
                                 </div>
                                 {(this.state.errors.length !== 0) ? 
@@ -331,6 +322,8 @@ class StudentsImport extends Component {
                                                     )}
                                                 </ul> : ""
                                                 }
+                                                {error.student_email ? <li>{error.error_message.student_email}</li> : ""}
+                                                {error.phone_number ? <li>{error.error_message.phone_number}</li> : ""}
                                                 {error.parent_email ? <li>{error.error_message.parent_email}</li> : ""}
                                                 {error.school_name ? <li>{error.error_message.school_name}</li> : ""}
                                                 {error.duplicate_name ? <li>Name may be a duplicate in file import</li> : ""}
@@ -344,27 +337,23 @@ class StudentsImport extends Component {
                                 <div>
                                     <ImportStudentsTable 
                                     data={this.state.students} 
-                                    // showAll={this.state.show_all}
-                                    // pageIndex={this.state.pageIndex}
-                                    // canPreviousPage={this.state.canPreviousPage}
-                                    // canNextPage={this.state.canNextPage}
-                                    // updatePageCount={this.getUsersPage}
-                                    // pageSize={10}
-                                    // totalPages={this.state.totalPages}
-                                    // searchValue={this.state.searchValue}
                                     updateImportData={this.handleGetTableEdits}
                                     />
-                                    {/* <button className="btn btn-secondary align-self-center" onClick={this.handleShowAll}>
-                                        { !this.state.show_all ?
-                                            "Show All" : "Show Pages"
-                                        }
-                                    </button> */}
                                 </div>
                                 : ""
                                 }
                                 </div>
                             </div>
                         </div>
+                        : 
+                        <div className="container my-4 mx-0 w-100 mw-100">
+                            <div className="alert alert-danger mt-2 me-3" role="alert">
+                                <p className="mb-1">
+                                    No file was found. Please upload a csv file through the Students page before attempting to import.
+                                </p>
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>

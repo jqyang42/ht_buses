@@ -100,6 +100,11 @@
     background-color: #FFF3CD;
 } */
 
+.table {
+    overflow-x: scroll;
+    width: 100%;
+}
+
 .table-hover tbody tr:hover td {
     --bs-table-accent-bg: #FFF3CD; 
 }
@@ -189,10 +194,6 @@ li.page-item a[disabled]:hover {
         max-width: 50%;
     }
 
-    .sidebar {
-        max-height: 50vh;
-    }
-
     .extra-col {
         width: 0px;
         max-width: 0px;
@@ -204,8 +205,20 @@ li.page-item a[disabled]:hover {
     }
 
     .search-bar {
-        width: 50%;
-        max-width: 50%;
+        width: auto;
+        max-width: 100%;
+    }
+
+    .row-buttons {
+        margin-bottom: 16px;
+    }
+
+    .row .btn {
+        margin-bottom: 8px;
+    }
+
+    .row .btn-links {
+        margin-bottom: 0px;
     }
 }
 
@@ -226,8 +239,8 @@ li.page-item a[disabled]:hover {
     }
 
     .search-bar {
-        width: 25%;
-        max-width: 25%;
+        width: 35%;
+        max-width: 35%;
     }
 }
 
@@ -273,6 +286,24 @@ li.page-item a[disabled]:hover {
 .bg-red {
     background-color: #E35D6A;
     color: #ffffff;
+}
+
+.bg-yellow {
+    background-color: #FFC107;
+    color: #ffffff;
+}
+
+.bg-blue {
+    background-color: #0a58ca;
+    color: #ffffff;
+}
+
+.blue {
+    color: #084298;
+}
+
+a.blue:hover {
+    color: #0a58ca;
 }
 
 .badge {

@@ -1,19 +1,17 @@
 
 from django.core.exceptions import PermissionDenied
-from ...models import School, User, Student, Route
+from ...models import School, User, Student, Route, Location, Log
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 from guardian.shortcuts import assign_perm, remove_perm
 from guardian.shortcuts import get_objects_for_user
 from ...groups import get_driver_group, get_admin_group
 
-def get_all_school_perms():
-    school_content_type = ContentType.objects.get_for_model(School)
-    return Permission.objects.filter(content_type=school_content_type)
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
-    return User.objects.filter(pk__in=user_ids)
+    student_users = students.values_list('account', flat=True)
+    return User.objects.filter(pk__in=user_ids) | User.objects.filter(pk__in=student_users)
 
 def filtered_schools_helper(students):
     school_ids = students.values_list('school_id', flat=True)
@@ -26,7 +24,6 @@ def user_is_parent(user_id):
     except:
         return False
     return False
-
 
 def get_role_string(role_id):
     return User.role_choices[int(role_id)-1][1]
@@ -51,6 +48,10 @@ def get_object_for_user(user, model_object, access_level):
     else:
         raise PermissionDenied
 """
+
+def get_all_school_perms():
+    school_content_type = ContentType.objects.get_for_model(School)
+    return Permission.objects.filter(content_type=school_content_type)
 
 def permission_setup():
     admin_perms = [*get_all_school_perms()]
@@ -78,24 +79,6 @@ def assign_school_perms(user, schools):
     for perm in get_all_school_perms():
         new_perms_to_many_objects(user, perm, schools)
     return 
-
-def assign_user_perms(user, students):
-    for perm in get_all_user_perms():
-        new_perms_to_many_objects(user, perm, filtered_users_helper(students))
-    return 
-    
-#todo: get rid
-def reassign_after_creation(new_user):
-    if user_is_parent(new_user.pk):
-        students = Student.objects.filter(user_id = new_user)
-        schools = filtered_schools_helper(students)
-        for school in schools:
-            users_with_access = User.objects.filter(pk__in=[obj.pk for obj in User.objects.all() if obj.has_perm('change_school', school)])
-            for user in users_with_access: 
-                for perm in get_all_user_perms():
-                    assign_perm(perm, user, new_user)
-        return True
-    return False
 
 def remove_perms_to_many_objects(user, access_level, object_list): 
     if object_list is not None:
@@ -140,14 +123,6 @@ def reassign_groups(edited_user):
     edited_user.save()
     return True
 
-
-def update_schools_staff_rights():
-    school_staffs = User.objects.filter(role = User.SCHOOL_STAFF)
-    for school_staff in school_staffs:
-        schools = get_objects_for_user(school_staff,"change_school", School.objects.all())
-        assign_school_staff_perms(school_staff, schools)
-    return True
-
 def get_users_for_user(user):
     schools = get_objects_for_user(user,"change_school", School.objects.all())
     students = Student.objects.filter(school_id__in = schools)
@@ -157,6 +132,18 @@ def get_users_for_user(user):
         return filtered_users_helper(students)
     else:
         return User.objects.none()
+
+def get_users_with_address(user):
+    users = User.objects.filter(role = User.GENERAL)
+    user_location_ids = users.values_list('location', flat=True)
+    locations_with_address = Location.objects.filter(pk__in = user_location_ids).exclude(address = "")
+    if user.role == User.ADMIN or user.role == User.DRIVER:
+        return users.filter(location__in = locations_with_address)
+    if user.role == User.SCHOOL_STAFF:
+        staff_general_users = get_users_for_user(user).filter(role = User.GENERAL)
+        return staff_general_users.filter(location__in = locations_with_address)
+    return User.objects.none()
+        
 
 def get_students_for_user(user):
     try:
@@ -168,6 +155,17 @@ def get_students_for_user(user):
     except:
         return Student.objects.none()
 
+def get_logs_for_user(user):
+    try:
+        if user.role == User.ADMIN or user.role == User.SCHOOL_STAFF:
+            schools = get_objects_for_user(user, "change_school", School.objects.all())
+        else:
+            schools = get_objects_for_user(user, "view_school", School.objects.all())
+        route_ids = Route.objects.filter(school_id__in = schools)
+        return Log.objects.filter(route_id__in = route_ids)
+    except:
+        return Log.objects.none()
+
 def has_access_to_object(user, model_object):
     if user.role == User.ADMIN or user.role == User.DRIVER:
         return model_object
@@ -176,20 +174,31 @@ def has_access_to_object(user, model_object):
         schools = get_objects_for_user(user,"change_school", School.objects.all())
         try:
             if type(model_object) is Student:
-                schools.filter(pk = model_object.school_id.pk)
-                return model_object
+                #schools.get(pk = model_object.school_id.pk)
+                if schools.contains(model_object.school_id):
+                    return model_object
+            if type(model_object) is Log:
+                if schools.contains(model_object.route_id.school_id):
+                    return model_object
             if type(model_object) is Route:
-                schools.get(pk = model_object.school_id.pk)
-                return model_object
+                #schools.get(pk = model_object.school_id.pk)
+                if schools.contains(model_object.school_id):
+                    return model_object
             if type(model_object) is User:
-                students = Student.objects.filter(user_id = model_object.pk)
-                for student in students:
-                    try:
-                        schools.get(pk = student.school_id.pk)
+                try:
+                    student = Student.objects.get(account = model_object)
+                    student_user = student.account
+                    if schools.contains(student.school_id):
                         return model_object
-                    except:
-                        continue 
-                raise PermissionDenied
+                except:
+                    students = Student.objects.filter(user_id = model_object.pk)
+                    for student in students:
+                        try:
+                            schools.get(pk = student.school_id.pk)
+                            return model_object
+                        except:
+                            continue 
+                    raise PermissionDenied
             if type(model_object) is School:
                 schools.get(pk = model_object.pk)
                 return model_object

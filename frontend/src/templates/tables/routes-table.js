@@ -12,17 +12,6 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
         updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
 
-    // Filter by multiple columns
-    // const ourGlobalFilterFunction = useCallback(
-    //     (rows, ids, query) => {
-    //         return rows.filter((row) => 
-    //             row.values["name"].toLowerCase().includes(query.toLowerCase())
-    //         );
-    //     },
-    //     [],
-    // );
-    // console.log(data)
-
     const columns = React.useMemo(
         () => [
             {
@@ -59,6 +48,17 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
                 id: 'is_complete',
                 sortDirection: sort.accessor === 'is_complete' ? sort.sortDirection : 'none'
             },
+            {
+                Header: 'Bus Run',
+                accessor:  d => Array(`${d.in_transit}`,`${d.bus_number}`,`${d.driver}`),
+                disableFilter: true,
+                Cell: ({ cell: { value } }) => (
+                    value[0] ? <>{"None in transit"}</> : <>{"Driver " + value[2] + " on bus #" + value[1]}</>
+                ),
+                disableSortBy: true,
+                // id: 'is_complete',
+                // sortDirection: sort.accessor === 'is_complete' ? sort.sortDirection : 'none'
+            },
         ],
         [sort]
     )
@@ -66,24 +66,13 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
     const columnHeaderClick = async (column) => {
         switch (column.sortDirection) {
           case 'none':
-            // console.log(column.sortDirection)
-            // console.log(column.id)
             setSort({ sortDirection: 'ASC', accessor: column.id });
-            // const desc = await getClients( 'ASC', column.id );
-            // setData(desc);
-            console.log(sort)
             break;
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
-            // const asc = await getClients('DESC', column.id);
-            console.log(sort)
-            // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
-            // const newData = await getClients('none', column.id);
-            // setData(newData);
-            console.log(sort)
             break;
         }
     };
@@ -94,7 +83,6 @@ export function RoutesTable({ data, showAll, pageIndex, canPreviousPage, canNext
             data={data}
             searchOn={true}
             searchLabel="Search by name..."
-            // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/routes/"}
             rowProps={row => ({

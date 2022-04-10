@@ -13,7 +13,7 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
@@ -49,8 +49,6 @@ class BusRoutesPlanner extends Component {
                 canPreviousPage: null,
                 canNextPage: null,
                 totalPages: null,
-                // sortOptions: {},
-                // searchValue: ''
             },
             stops_page: [],
             stops_table: {
@@ -132,7 +130,7 @@ class BusRoutesPlanner extends Component {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
-                console.log(stops)
+                // console.log(stops)
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
@@ -149,7 +147,7 @@ class BusRoutesPlanner extends Component {
             }
         })
         .catch (error => {
-            console.log(error)
+            // console.log(error)
             if (error.response.status !== 200) {
                 this.setState({ error_status: true,
                     error_code: error.response.status 
@@ -157,7 +155,7 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
-        console.log(this.state.stops)
+        // console.log(this.state.stops)
     }
 
     handleStudentsShowAll = () => {
@@ -177,7 +175,7 @@ class BusRoutesPlanner extends Component {
     }
 
     handleReorder = (new_order) => {
-        console.log(new_order)
+        // console.log(new_order)
         this.setState({ stops_order: new_order })
     }
 
@@ -195,7 +193,7 @@ class BusRoutesPlanner extends Component {
         api.get(`schools/detail?id=${this.props.params.id}`)
             .then(res => {
                 const data = res.data
-                console.log(data)
+                // console.log(data)
                 this.setState({ 
                     school: data.school,
                     students: data.students,
@@ -216,7 +214,7 @@ class BusRoutesPlanner extends Component {
     handleLocationsGet = () => {
         api.get(`routeplanner?id=${this.props.params.id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 const school_location = res.data.school.location;
                 this.setState({ 
                     center: { 
@@ -247,7 +245,7 @@ class BusRoutesPlanner extends Component {
                     }));
                 });
             }).catch (error => {
-                console.log(error.response)
+                // console.log(error.response)
                 if (error.response.status === 404) {
                     this.setState({ error_status: true });
                 }
@@ -262,7 +260,7 @@ class BusRoutesPlanner extends Component {
             const stops = res.data.stops;
             const is_complete = res.data.route.is_complete
             if (stops.length !== 0) {
-                console.log(stops)
+                // console.log(stops)
                 this.handleStopTimeCalc(stops)
                 .then(res => {
                     this.editStops(res)
@@ -290,7 +288,7 @@ class BusRoutesPlanner extends Component {
             }
         } 
         )
-        console.log(this.state.stops)
+        // console.log(this.state.stops)
     }
 
     handleAssignMode = event => {
@@ -373,7 +371,7 @@ class BusRoutesPlanner extends Component {
             map_redirect_pickup += '&waypoints='
             let j;
             for (j = i; j < i + 9 && j < stops.length; j+=1) {
-                console.log(stops[j])
+                // console.log(stops[j])
                 map_redirect_pickup += stops[j].location.lat + ',' + stops[j].location.lng +'|'
             }
             if (j == stops.length) {
@@ -381,7 +379,7 @@ class BusRoutesPlanner extends Component {
             } else {
                 map_redirect_pickup += '&destination=' + stops[j].location.lat + ',' + stops[j].location.lng
             }
-            console.log(map_redirect_pickup)
+            // console.log(map_redirect_pickup)
             arrivingLinks.push(map_redirect_pickup)
         }
         this.setState({
@@ -407,7 +405,7 @@ class BusRoutesPlanner extends Component {
                 map_redirect_dropoff +=  '&waypoints=';
                 let j;
                 for (j = i; j < i + 9 && j < stops.length-1; j+=1) {
-                    console.log(reversed_stops)
+                    // console.log(reversed_stops)
                     map_redirect_dropoff += reversed_stops[j].location.lat + ',' + reversed_stops[j].location.lng +'|'
                 }
                 //Think about cases where this could be in its own link
@@ -415,7 +413,7 @@ class BusRoutesPlanner extends Component {
                 departingLinks.push(map_redirect_dropoff)
             }
         }
-        console.log(departingLinks)
+        // console.log(departingLinks)
         this.setState({map_redirect_dropoff: departingLinks})
     }
 
@@ -428,14 +426,14 @@ class BusRoutesPlanner extends Component {
 
     handleNewStopsChange = (stops) => {
         this.newStops["stops"] = stops;
-        console.log("new stops")
-        console.log(this.newStops)
+        // console.log("new stops")
+        // console.log(this.newStops)
     }
 
     handleRouteStopModification = (stops) => {
         this.editedStops["stops"] = stops;
-        console.log("edited stops")
-        console.log(this.editedStops)
+        // console.log("edited stops")
+        // console.log(this.editedStops)
     }
 
     delete_orig_stop_ids = {'stops': []}
@@ -443,13 +441,13 @@ class BusRoutesPlanner extends Component {
         const deletion_ids = stop_ids.map(id => {
             return { 'id': id }
         })
-        console.log(deletion_ids)
+        // console.log(deletion_ids)
         this.delete_orig_stop_ids["stops"] = deletion_ids;
     }
 
     handleAssignModeSave = event => {
         event.preventDefault();
-        console.log("saved!")
+        // console.log("saved!")
         this.setState({
             assign_mode: false,
         })
@@ -461,7 +459,7 @@ class BusRoutesPlanner extends Component {
             this.setState({markers: []})            
             api.put('stops/edit-name', this.editedStops)
             .then(res => {  
-                console.log(this.editedStops)
+                // console.log(this.editedStops)
                 this.editedStops = {"stops":[]};
                 api.post('stops/create', this.newStops)
                 .then(res => {
@@ -473,7 +471,7 @@ class BusRoutesPlanner extends Component {
                         this.handleLocationsGet()
                         this.handleStopsGet()
                     }).catch(error => {
-                        console.log(error)
+                        // console.log(error)
                     })
                 })
             })
@@ -490,13 +488,11 @@ class BusRoutesPlanner extends Component {
         })
         this.handleStopTimeCalc(ordered_stops)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             this.editStops(res)
             .then(res => {
                 this.switchStopsEditMode()
             })
-            // this.setState({ stops: res })
-            
         })
         
     }
@@ -520,7 +516,11 @@ class BusRoutesPlanner extends Component {
         )}
 
         // console.log(edit_body)
-        await api.put(`stops/edit`, edit_body)
+        api.put(`stops/edit`, edit_body)
+        .then(res => {
+            // this.getStudentsPage(this.state.students_table.pageIndex, null, '')
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        })
         // .then(res => {
         //     const success = res.data.success
         //     const new_stops = res.data.stops
@@ -539,7 +539,7 @@ class BusRoutesPlanner extends Component {
         //         location: { lat: stop.location.lat, lng: stop.location.lng }
         //     }
         // })
-        console.log(stops)
+        // console.log(stops)
         const stop_info = await getStopInfo({
             // first_stop: { lat: stops[0]?.location.lat, lng: stops[0]?.location.lng },
             school: {location : { lat: school.location.lat, lng: school.location.lng }},
@@ -548,16 +548,16 @@ class BusRoutesPlanner extends Component {
             departure_time: school.departure
         })
         
-        console.log(stop_info)
+        // console.log(stop_info)
         const updated_stops = this.updateStopInfo(stop_info, stops)
-        console.log(updated_stops)
+        // console.log(updated_stops)
         return updated_stops
     }
 
     updateStopInfo = (stop_info, orig_stops) => {
         const stop_times = stop_info.stop_times
         const stop_addresses = stop_info.stop_addresses
-        console.log(stop_times[orig_stops])
+        // console.log(stop_times[orig_stops])
         return orig_stops.map(stop => {
                 return {
                 ...stop,
@@ -575,8 +575,11 @@ class BusRoutesPlanner extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
@@ -636,7 +639,7 @@ class BusRoutesPlanner extends Component {
 
                                             {/* TODO: Ensure that this dropdown is consistent with the dropdown in the assign mode ON div */}
                                             <div className="col justify-content-end">
-                                                <select className="w-md-50 form-select float-end" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
+                                                <select className="w-md-50 form-select float-end mb-2 mb-md-0" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection} required>
                                                     <option selected value={0}>Select a route to assign</option>
                                                     {/* <option value={0}>No Route</option> */}
                                                     {this.state.route_dropdown.map(route => 
@@ -670,13 +673,6 @@ class BusRoutesPlanner extends Component {
                                             <div className="col-auto align-self-center">
                                                 
                                                 <div className="row d-flex float-end me-0">
-                                                    {/* <select className="w-50 form-select float-end me-3" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                        <option selected value={0}>Select a Route</option>
-                                                        <option selected value={0}>Unassign Student</option>
-                                                        {this.state.route_dropdown.map(route => 
-                                                            <option value={route.value} id={route.display}>{route.display}</option>
-                                                        )}
-                                                    </select> */}
                                                     {/* TODO: Change onClick handler to dismiss */}
                                                     <button type="button" className="btn btn-secondary w-auto me-3" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
@@ -685,18 +681,6 @@ class BusRoutesPlanner extends Component {
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            {/* Cancel and Save buttons */}
-                                            {/* <div className="col-auto">
-                                                <div className="row d-inline-flex"> */}
-                                                    {/* TODO: Change onClick handler to dismiss */}
-                                                    {/* <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button> */}
-                                                    {/* TODO: Change onClick handler to save changes */}
-                                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}> */}
-                                                        {/* Save
-                                                    </button>
-                                                </div>
-                                            </div> */}
                                         </div>
                                         }
 
@@ -729,7 +713,7 @@ class BusRoutesPlanner extends Component {
                                             (<div>
                                                 <div class="alert alert-primary mt-3 mb-2" role="alert">
                                                     <i className="bi bi-info-circle-fill me-2"></i>
-                                                        Click on a location marker to add students to this route. Click any location on the map to add a new stop there.
+                                                        Click on a location marker to add students to this route. Click any location on the map to add a new stop there in order of pickup time.
                                                 </div>
                                             </div>) : ""
                                         }
@@ -752,32 +736,32 @@ class BusRoutesPlanner extends Component {
                                         { this.state.map_redirect_dropoff.length !== 0 ?
                                             <div className="mt-3"> 
                                             <h7 className="text-muted text-small track-wide">MAP DIRECTIONS</h7>
-                                            {this.state.map_redirect_dropoff?.map((value, index) => {
+                                            {this.state.map_redirect_pickup?.map((value, index) => {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Departure"}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Pickup"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
                                                             </div>
                                                         </div>
                                             })}
-                                            {this.state.map_redirect_pickup?.map((value, index) => {
+                                            {this.state.map_redirect_dropoff?.map((value, index) => {
                                                 let num = index + 1
                                                 return  <div className="row d-flex align-items-center align-middle mt-2">
                                                             <div className="col-auto align-items-center">
-                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Arrival"}</p>
+                                                                <p className="align-self-center align-text-center align-middle my-auto">{"Leg " + num + " Dropoff"}</p>
                                                             </div>
                                                             <div className="col-auto align-items-center">
-                                                                <a className="btn btn-primary" href={this.state.map_redirect_pickup[index]} target="_blank" rel="noreferrer">
+                                                                <a className="btn btn-primary btn-links" href={this.state.map_redirect_dropoff[index]} target="_blank" rel="noreferrer">
                                                                     <span>
-                                                                        Open in Google Maps
+                                                                        Google Maps
                                                                         <i className="bi bi-box-arrow-up-right ms-2"></i>
                                                                     </span>
                                                                 </a>
@@ -863,17 +847,9 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-// function RouteSelectDropdown() { 
-//     let routes = this.state.routes(route => {
-//         return {value: route.id, display: route.name}
-//     })
-//     this.setState({ route_dropdown: routes })
-// }
-
 export default (props) => (
     <BusRoutesPlanner
         {...props}
         params={useParams()}
     />
 );
-// export default BusRoutesPlanner;
