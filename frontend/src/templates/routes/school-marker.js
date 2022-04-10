@@ -50,7 +50,7 @@ class SchoolMarker extends Component {
           <InfoWindow options={{maxWidth:300}}>
             { 
               <>
-                <h6>{this.props.name}</h6>
+                <h6 className="mb-0">{this.props.name}</h6>
               </>
             }
           </InfoWindow>

@@ -17,9 +17,14 @@ import { Nav } from "react-bootstrap";
 class StudentInfo extends Component {
     state = {
         student: {},
+        route: {},
+        school: {},
+        user: {},
+        buses: [],
+        bus_tooltip: {},
         center: {},
-        stops: {},
-        active_route: 1,
+        // stops: {},
+        // active_route: 1,
         error_status: false,
         error_code: 200,
         stops_show_all: false,
@@ -34,41 +39,48 @@ class StudentInfo extends Component {
 
     componentDidMount() {
         this.getStudentDetail()
-        this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
     }
 
     // pagination
-    getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
-        .then(res => {
-            const stops_table = {
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-            }
-            this.setState({
-                stops_page: res.data.stops,
-                stops_table: stops_table
-            })
-        })
-    }
+    // getStopsPage = (page, sortOptions, search) => {
+    //     getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}`, only_pagination: true })
+    //     .then(res => {
+    //         const stops_table = {
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //         }
+    //         this.setState({
+    //             stops_page: res.data.stops,
+    //             stops_table: stops_table
+    //         })
+    //     })
+    // }
 
     // api calls
     getStudentDetail = () => {
-        api.get(`dashboard/students/detail?id=${this.props.params.id}`)
+        api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
-            // console.log(res.data.student)
-            const student = res.data.student
+            console.log(res.data)
             this.setState({ 
-                stops: student.stops,
-                active_route: student.route.id,
+                // stops: student.stops,
+                // active_route: student.route.id,
+                // center: {
+                //     lat: student.location.lat,
+                //     lng: student.location.lng
+                // },
+                student: res.data.student,
+                route: res.data.route,
+                school: res.data.school,
+                user: res.data.user,
                 center: {
-                    lat: student.location.lat,
-                    lng: student.location.lng
-                },
-                student: student,
+                    lat: res.data.user.location.lat,
+                    lng: res.data.user.location.lng,
+                }
              })
+             this.periodicCall(res.data.route.id)
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -86,6 +98,25 @@ class StudentInfo extends Component {
         }))
     }
 
+    periodicCall = (route_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/route?id=${route_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                })
+            })
+        }, 1000)
+    }
+
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
@@ -96,9 +127,9 @@ class StudentInfo extends Component {
         else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        if (this.state.error_status) {
-            return <ErrorPage code={this.state.error_code} />
-        }
+        // if (this.state.error_status) {
+        //     return <ErrorPage code={this.state.error_code} />
+        // }
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">
@@ -111,7 +142,7 @@ class StudentInfo extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
-                                        <h7>ID #{this.state.student.school_student_id}</h7>
+                                        <h7>ID #{this.state.student.student_school_id}</h7>
                                     </div>
                                     <div className="col">
                                     </div>
@@ -130,10 +161,10 @@ class StudentInfo extends Component {
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
-                                            {this.state.student.school_name}
+                                            {this.state.school.name}
                                         </p>
                                         <p>
-                                            {this.state.student.route?.name}
+                                            {this.state.route?.name}
                                         </p>
                                         <p>
                                             {this.state.student.route?.description}
@@ -150,12 +181,14 @@ class StudentInfo extends Component {
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
                                             existingStops={this.state.stops}
-                                            centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
+                                            centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
+                                            buses={this.state.buses}
+                                            bus_tooltip={this.state.bus_tooltip}
                                         />
                                         : "" }
                                         </div>
                                     </div>
-                                    <div className="col">
+                                    {/* <div className="col">
                                         <h7>STOPS</h7>
                                             <StopsTable 
                                             data={this.state.stops_page}
@@ -174,7 +207,7 @@ class StudentInfo extends Component {
                                                     "Show All" : "Show Pages"
                                                 }
                                         </button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
