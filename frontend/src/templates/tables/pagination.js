@@ -1,6 +1,6 @@
 import React from "react";
 
-export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, sortOptions, searchValue} ) {
+export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, sortOptions, searchValue, filterParam} ) {
     const prevPage = parseInt(pageIndex) - 1
     const nextPage = parseInt(pageIndex) + 1
 
@@ -25,12 +25,12 @@ export function TablePagination( {pageIndex, canPreviousPage, canNextPage, updat
                 <nav className="row d-inline-flex float-end" aria-label="Students Pagination">
                     <ul className="pagination">
                     <li className="page-item">
-                        <a className="page-link" onClick={canPreviousPage ? () => {updatePageCount(prevPage, sortOptions, searchValue)} : () => {}} disabled={!canPreviousPage}>
+                        <a className="page-link" onClick={canPreviousPage ? () => {updatePageCount(prevPage, sortOptions, searchValue, filterParam)} : () => {}} disabled={!canPreviousPage}>
                             Previous
                         </a>
                     </li>
                     <li className="page-item">
-                        <a className="page-link" disabled={!canNextPage} onClick={canNextPage ? () => {updatePageCount(nextPage, sortOptions, searchValue)} : () => {}} >
+                        <a className="page-link" disabled={!canNextPage} onClick={canNextPage ? () => {updatePageCount(nextPage, sortOptions, searchValue, filterParam)} : () => {}} >
                             Next
                         </a>
                     </li>

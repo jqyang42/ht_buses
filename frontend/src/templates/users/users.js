@@ -30,6 +30,7 @@ class Users extends Component {
             sortDirection: 'ASC'
         },
         searchValue: '',
+        filterValue: '',
         import_redirect: false,
         fileUploaded: null,
         loading: false,
@@ -38,7 +39,7 @@ class Users extends Component {
     }
     
     componentDidMount() {
-        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue, '')
+        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue, this.state.filterValue)
     }
 
     // pagination
@@ -52,7 +53,8 @@ class Users extends Component {
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
                 sortOptions: sortOptions,
-                searchValue: search
+                searchValue: search,
+                filterValue: roleFilter
             })
         })
     }
@@ -62,7 +64,7 @@ class Users extends Component {
         this.setState(prev => ({
             show_all: !prev.show_all
         }), () => {
-            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue)
+            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue, this.state.roleFilter)
         })
     }
   
@@ -211,6 +213,7 @@ class Users extends Component {
                                     pageSize={10}
                                     totalPages={this.state.totalPages}
                                     searchValue={this.state.searchValue}
+                                    filterRoleValue={this.state.filterValue}
                                     />
                                     <button className="btn btn-secondary align-self-center show-all" onClick={this.handleShowAll}>
                                         { !this.state.show_all ?

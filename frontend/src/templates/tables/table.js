@@ -9,19 +9,18 @@ import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
 export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
-  totalPages, columnHeaderClick, sortOptions, searchValue }) {
+  totalPages, columnHeaderClick, sortOptions, searchValue, filterRoleValue }) {
 
     const navigate = useNavigate();
-    let filterRoleValue = '';
+    // let filterRoleValue = '';
 
     const handleFilterInputChange = (e) => {
         // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
-        updatePageCount(pageIndex, sortOptions, searchValue)
+        updatePageCount(pageIndex, sortOptions, searchValue, filterRoleValue)
     };
 
     const handleRoleInputChange = (e) => {
-      console.log(e.currentTarget);
       filterRoleValue = e.currentTarget.value;
       updatePageCount(pageIndex, sortOptions, searchValue, filterRoleValue)
       // TODO: Call backend API for search here, pass in value as query @jessica
@@ -179,6 +178,7 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
                     totalPages={totalPages}
                     sortOptions={sortOptions}
                     searchValue={searchValue}
+                    filterParam={filterRoleValue}
                 />
             } 
         </>
