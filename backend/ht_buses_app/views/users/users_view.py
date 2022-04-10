@@ -41,7 +41,6 @@ def user_search_and_sort(sort_by, order_by, search, role, user_list):
     users = user_list
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         if role == 1 or role == 2 or role == 3 or role == 4 or role == 5:
-            print("do we enter here")
             users = user_list.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
     .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(email__icontains=search), role=role).order_by("id")
         else:
