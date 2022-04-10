@@ -17,9 +17,12 @@ import { Nav } from "react-bootstrap";
 class StudentInfo extends Component {
     state = {
         student: {},
-        center: {},
-        stops: {},
-        active_route: 1,
+        route: {},
+        school: {},
+        user: {},
+        // center: {},
+        // stops: {},
+        // active_route: 1,
         error_status: false,
         error_code: 200,
         stops_show_all: false,
@@ -38,36 +41,38 @@ class StudentInfo extends Component {
     }
 
     // pagination
-    getStopsPage = (page, sortOptions, search) => {
-        getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}`, only_pagination: true })
-        .then(res => {
-            const stops_table = {
-                pageIndex: res.pageIndex,
-                canPreviousPage: res.canPreviousPage,
-                canNextPage: res.canNextPage,
-                totalPages: res.totalPages,
-            }
-            this.setState({
-                stops_page: res.data.stops,
-                stops_table: stops_table
-            })
-        })
-    }
+    // getStopsPage = (page, sortOptions, search) => {
+    //     getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}`, only_pagination: true })
+    //     .then(res => {
+    //         const stops_table = {
+    //             pageIndex: res.pageIndex,
+    //             canPreviousPage: res.canPreviousPage,
+    //             canNextPage: res.canNextPage,
+    //             totalPages: res.totalPages,
+    //         }
+    //         this.setState({
+    //             stops_page: res.data.stops,
+    //             stops_table: stops_table
+    //         })
+    //     })
+    // }
 
     // api calls
     getStudentDetail = () => {
         api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
-            console.log(res.data.student)
-            const student = res.data.student
+            console.log(res.data)
             this.setState({ 
-                stops: student.stops,
-                active_route: student.route.id,
-                center: {
-                    lat: student.location.lat,
-                    lng: student.location.lng
-                },
-                student: student,
+                // stops: student.stops,
+                // active_route: student.route.id,
+                // center: {
+                //     lat: student.location.lat,
+                //     lng: student.location.lng
+                // },
+                student: res.data.student,
+                route: res.data.route,
+                school: res.data.school,
+                user: res.data.user
              })
         }).catch (error => {
             if (error.response.status !== 200) {
@@ -111,7 +116,7 @@ class StudentInfo extends Component {
                                 <div className="row">
                                     <div className="col">
                                         <h5>{this.state.student.first_name} {this.state.student.last_name}</h5>
-                                        <h7>ID #{this.state.student.school_student_id}</h7>
+                                        <h7>ID #{this.state.student.student_school_id}</h7>
                                     </div>
                                     <div className="col">
                                     </div>
@@ -130,10 +135,10 @@ class StudentInfo extends Component {
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
-                                            {this.state.student.school_name}
+                                            {this.state.school.name}
                                         </p>
                                         <p>
-                                            {this.state.student.route?.name}
+                                            {this.state.route?.name}
                                         </p>
                                         <p>
                                             {this.state.student.route?.description}
