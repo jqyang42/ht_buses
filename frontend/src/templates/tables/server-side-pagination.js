@@ -7,7 +7,7 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue, additi
     let order_by = has_sort ? sortOptions.sortDirection.toLowerCase() : ''
     const sort_by = has_sort ? sortOptions.accessor : ''
 
-    if (sort_by === 'in_range' && (order_by === 'asc' || order_by === 'desc')) {
+    if ((sort_by === 'in_range' || sort_by === 'pickup')&& (order_by === 'asc' || order_by === 'desc')) {
         if (order_by === 'asc') {
             order_by = 'desc'
         } else {
