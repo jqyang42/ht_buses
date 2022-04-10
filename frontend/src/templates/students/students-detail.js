@@ -264,7 +264,7 @@ class StudentsDetail extends Component {
                                                     {this.state.user.phone_number}
                                                 </p>
                                                 <p>
-                                                    {this.state.user.address}
+                                                    {this.state.user.location?.address}
                                                 </p>
                                             </div>
                                         </div>
