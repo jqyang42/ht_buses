@@ -20,7 +20,9 @@ class StudentInfo extends Component {
         route: {},
         school: {},
         user: {},
-        // center: {},
+        buses: [],
+        bus_tooltip: {},
+        center: {},
         // stops: {},
         // active_route: 1,
         error_status: false,
@@ -72,8 +74,13 @@ class StudentInfo extends Component {
                 student: res.data.student,
                 route: res.data.route,
                 school: res.data.school,
-                user: res.data.user
+                user: res.data.user,
+                center: {
+                    lat: res.data.user.location.lat,
+                    lng: res.data.user.location.lng,
+                }
              })
+             this.periodicCall(res.data.route.id)
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -89,6 +96,25 @@ class StudentInfo extends Component {
         this.setState(prevState => ({
             stops_show_all: !prevState.stops_show_all
         }))
+    }
+
+    periodicCall = (route_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/route?id=${route_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                })
+            })
+        }, 1000)
     }
 
     render() {
@@ -146,7 +172,7 @@ class StudentInfo extends Component {
                                     </div>
                                 </div>
                                 <div className="row mt-4">
-                                    {/* <div className="col-md-7 me-4">
+                                    <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
                                         {Object.keys(this.state.student).length ? 
                                         <RouteMap 
@@ -155,11 +181,13 @@ class StudentInfo extends Component {
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
                                             existingStops={this.state.stops}
-                                            centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
+                                            centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
+                                            buses={this.state.buses}
+                                            bus_tooltip={this.state.bus_tooltip}
                                         />
                                         : "" }
                                         </div>
-                                    </div> */}
+                                    </div>
                                     {/* <div className="col">
                                         <h7>STOPS</h7>
                                             <StopsTable 

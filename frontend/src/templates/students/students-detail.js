@@ -6,6 +6,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import api from "../components/api";
 
+import { MARKER_ICONS } from '../../constants';
 import { LOGIN_URL } from '../../constants';
 import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import ErrorPage from '../error-page';
@@ -17,6 +18,9 @@ class StudentsDetail extends Component {
         user: {},
         route: {},
         school: {},
+        center: {},
+        buses: [],
+        bus_tooltip: {},
         redirect: false,
         delete_success: 0,
         error_status: false,
@@ -40,8 +44,13 @@ class StudentsDetail extends Component {
                 student: data.student, 
                 route: data.route, 
                 school: data.school,
-                user: data.user
+                user: data.user,
+                center: {
+                    lat: 0, //TODO: changes to data.user.location.lat and lng
+                    lng: 0
+                }
             });
+            this.periodicCall(data.route.id)
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -68,6 +77,24 @@ class StudentsDetail extends Component {
         })
     }
 
+    periodicCall = (route_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/route?id=${route_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                })
+            })
+        }, 1000)
+    }
 
     updateIsParent = () => {
        
@@ -248,6 +275,21 @@ class StudentsDetail extends Component {
                                                 BUS RUNS IN TRANSIT
                                             </h7>
                                             {/* TODO: @thomas @jessica add the Transit Status Map here for in transit bus runs on routes that the student is on */}
+                                            <div className="col-md-7 me-4">
+                                        <div className="bg-gray rounded mb-4">
+                                        {Object.keys(this.state.buses) ? 
+                                        <RouteMap 
+                                            assign_mode={false} 
+                                            key={false}
+                                            center={this.state.center}
+                                            existingStops={this.state.stops}
+                                            centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
+                                            buses={this.state.buses}
+                                            bus_tooltip={this.state.bus_tooltip}
+                                        />
+                                        : "" }
+                                        </div>
+                                    </div>
                                         </div>
                                     </div>
                                 </div>
