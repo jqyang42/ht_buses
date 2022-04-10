@@ -35,7 +35,7 @@ def get_log_view(page_number, order_by, sort_by, search, log_list):
 
 def log_search_and_sort(order_by, sort_by, search, log_list):
     if sort_by == "user":
-        sort_by = "user_id__first_name"
+        sort_by = "full_name"
     if sort_by == "route":
         sort_by = "route_id__name"
     if sort_by == "school":

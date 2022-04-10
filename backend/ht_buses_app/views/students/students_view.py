@@ -30,7 +30,7 @@ def get_student_view(page_number, order_by, sort_by, search, student_list):
 
 def student_search_and_sort(order_by, sort_by, search, student_list):
     if sort_by == "name":
-        sort_by = "first_name"
+        sort_by = "full_name"
     if sort_by == "route":
         sort_by = "route_id__name"
     if sort_by == "parent":
