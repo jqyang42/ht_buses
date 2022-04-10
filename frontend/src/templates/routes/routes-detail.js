@@ -74,16 +74,16 @@ class BusRoutesDetail extends Component {
         this.getStops()
         this.userOnRun()
         this.getInTransit()
-        // this.periodicCall()
+        this.periodicCall()
     }
     
     componentWillUnmount() {
         clearInterval(this.interval_id)
     }
 
-    periodicCall = (school_id) => {
+    periodicCall = () => {
         this.interval_id = setInterval(async () => {
-            api.get(`buses/school?id=${school_id}`)
+            api.get(`buses/route?id=${this.props.params.id}`)
             .then(res => {
                 console.log(res.data)
                 let bus_tooltip = {}
@@ -99,7 +99,7 @@ class BusRoutesDetail extends Component {
             })
         }, 1000)
 
-        // api.get(`buses/school?id=${school_id}`)
+        // api.get(`buses/route?id=${this.props.params.id}`)
         // .then(res => {
         //     console.log(res.data)
         //     let bus_tooltip = {}
@@ -111,7 +111,6 @@ class BusRoutesDetail extends Component {
         //         buses: res.data.buses,
         //         bus_tooltip: bus_tooltip,
         //         center: res.data.center,
-        //         school: res.data.schools
         //     })
         // })
     }
@@ -179,7 +178,6 @@ class BusRoutesDetail extends Component {
             this.redirectToGoogleMapsPickup(this.state.stops)
             this.redirectToGoogleMapsDropoff(this.state.stops)
             this.setMarkers(users)
-            this.periodicCall(school.id)       
         })
         .catch(error => {
             if (error.response.status !== 200) {
