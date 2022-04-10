@@ -3,10 +3,8 @@ from ...models import Location, User
 from ...serializers import UserSerializer, LocationSerializer
 
 
-def user_pagination(users, page_number, role):
+def user_pagination(users, page_number):
     data = {}
-    if role != None or role != "":
-        role = int(role)
     if int(page_number) == 0:
         prev_page = False
         next_page = False
@@ -50,6 +48,5 @@ def user_pagination(users, page_number, role):
         users_arr.append({'id' : id, 'first_name' : first_name, 'last_name' : last_name, 'email' : email, 'role' : role_name, 'phone_number': phone_number, 'location' : location_arr})
     data["users"] = users_arr
     data["page"] = {"current_page": page_number, "can_prev_page": prev_page, "can_next_page": next_page, "total_pages": total_page_num}
-    data["filter"] = {"id": role}
     data["success"] = True
     return data
