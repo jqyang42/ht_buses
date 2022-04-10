@@ -55,6 +55,10 @@ def active_buses_filter(schools):
         school_count += 1
         avg_lat += school_location_serializer.data["lat"]
         avg_lng += school_location_serializer.data["lng"]
+    
+    if len(schools) != 0:
+        avg_lat = avg_lat / school_count
+        avg_lng = avg_lng / schools_count
     data["buses"] = bus_arr
     data["schools"] = school_arr
     data["center"] = {'lat': avg_lat, 'lng': avg_lng}
