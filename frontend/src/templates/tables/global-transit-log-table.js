@@ -54,7 +54,7 @@ export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPag
                 Header: 'Direction',
                 accessor: 'pickup',
                 disableFilter: true,
-                disableSortBy: true,
+                // disableSortBy: true,
                 id: 'direction',
                 Cell: ({ cell: { value } }) => (
                     value ? <div>{"Pickup"}</div> : <div>{"Dropoff"}</div>
