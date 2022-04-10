@@ -3,12 +3,12 @@ import { Table } from "./table";
 import { useState } from "react";
     
 export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
-    updatePageCount, pageSize, totalPages, searchValue }) {
+    updatePageCount, pageSize, totalPages, searchValue, filterRoleValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
     useEffect(() => {
-        updatePageCount(pageIndex, sort, searchValue)
+        updatePageCount(pageIndex, sort, searchValue, filterRoleValue)
     }, [sort])
 
     const columns = React.useMemo(
@@ -88,6 +88,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
             searchValue={searchValue}
+            filterRoleValue={filterRoleValue}
         />
     )
 }

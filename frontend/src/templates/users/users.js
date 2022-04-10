@@ -55,6 +55,8 @@ class Users extends Component {
                 sortOptions: sortOptions,
                 searchValue: search,
                 filterValue: roleFilter
+            }, () => {
+                console.log(this.state.filterValue)
             })
         })
     }
@@ -64,7 +66,7 @@ class Users extends Component {
         this.setState(prev => ({
             show_all: !prev.show_all
         }), () => {
-            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue, this.state.roleFilter)
+            this.getUsersPage(this.state.show_all ? 0 : 1, this.state.sortOptions, this.state.searchValue, this.state.filterValue)
         })
     }
   

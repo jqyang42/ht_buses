@@ -12,7 +12,6 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
   totalPages, columnHeaderClick, sortOptions, searchValue, filterRoleValue }) {
 
     const navigate = useNavigate();
-    // let filterRoleValue = '';
 
     const handleFilterInputChange = (e) => {
         // console.log(e.currentTarget.value);
