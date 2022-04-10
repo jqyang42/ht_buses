@@ -38,12 +38,12 @@ class Users extends Component {
     }
     
     componentDidMount() {
-        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue)
+        this.getUsersPage(this.state.pageIndex, this.state.sortOptions, this.state.searchValue, '')
     }
 
     // pagination
-    getUsersPage = (page, sortOptions, search) => {
-        getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search })
+    getUsersPage = (page, sortOptions, search, roleFilter) => {
+        getPage({ url: 'users', pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&role=${roleFilter}` })
         .then(res => {
             this.setState({
                 users: res.data.users,
