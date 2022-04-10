@@ -211,6 +211,8 @@ class UsersDetail extends Component {
         this.lastNameField.value = ""
         this.firstNameField.value = ""
         this.idField.value = ""
+        this.email.value = ""
+        this.phone.value = ""
         this.schoolField.value = ""
         this.routeField.value = ""
         this.setState({ valid_id: 0})
@@ -311,7 +313,7 @@ class UsersDetail extends Component {
         }
 
         // console.log(this.state.user.managed_schools)
-        console.log(this.state.user)
+        console.log(this.state.user.role)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -375,6 +377,7 @@ class UsersDetail extends Component {
                                                                     <label for={"exampleInputStudentEmail"} className="control-label pb-2">Student Email</label>
                                                                     <input type="email" className="form-control pb-2 mb-1" id={"exampleInputStudentEmail"} 
                                                                     defaultValue={this.state.new_student.email} placeholder="Enter student email"
+                                                                    ref={el => this.email = el}
                                                                     onChange={(e) => this.handlStudentEmailChange(e)} ></input>
                                                                         <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student</small>
                                                                         {(!emailValidation({ email: this.state.new_student.email}) &&  this.state.new_student.email != "") ? 
@@ -392,7 +395,9 @@ class UsersDetail extends Component {
                                                                         (<div className="form-group pb-3">
                                                                         <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
                                                                         <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
-                                                                        value={this.state.new_student.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>
+                                                                        value={this.state.new_student.phone_number} placeholder="Enter student phone number"
+                                                                        ref={el => this.phone = el}
+                                                                        onChange={(e) => this.handleStudentPhoneChange(e)}></input>
                                                                     </div>) : ""
                                                                 }
                                                                 <div className="form-group required pb-3">
