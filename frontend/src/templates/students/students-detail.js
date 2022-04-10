@@ -184,9 +184,9 @@ class StudentsDetail extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row mt-4">
-                                    <div className="col">
-                                        <div className="row">
+                                <div className="row mt-4 flex-wrap">
+                                    <div className="col-auto">
+                                        <div className="row flex-nowrap">
                                             <div className="col-auto me-2">
                                                 <p className="gray-600">
                                                     Email
@@ -204,7 +204,7 @@ class StudentsDetail extends Component {
                                                     Bus Stops
                                                 </p>
                                             </div>
-                                            <div className="col-5 me-6">
+                                            <div className="col me-6">
                                                 <p>
                                                     {this.state.student.email ? this.state.student.email : "–"}
                                                 </p>
@@ -235,7 +235,7 @@ class StudentsDetail extends Component {
                                                 }
                                             </div>
                                         </div>
-                                        <div className="row mt-4">
+                                        <div className="row mt-4 mb-4">
                                             <h7 className="mb-3">
                                                 PARENT CONTACT INFO
                                             </h7>
@@ -253,7 +253,7 @@ class StudentsDetail extends Component {
                                                     Address
                                                 </p>
                                             </div>
-                                            <div className="col-5 me-6">
+                                            <div className="col me-6">
                                                 <p>
                                                     {this.state.user.first_name} {this.state.user.last_name}
                                                 </p>
@@ -270,27 +270,27 @@ class StudentsDetail extends Component {
                                         </div>
                                     </div>
                                     <div className="col">
-                                    <div className="row">
+                                        {/* <div className="row flex-wrap"> */}
                                             <h7 className="mb-3">
                                                 BUS RUNS IN TRANSIT
                                             </h7>
                                             {/* TODO: @thomas @jessica add the Transit Status Map here for in transit bus runs on routes that the student is on */}
-                                            <div className="col-md-7 me-4">
-                                        <div className="bg-gray rounded mb-4">
-                                        {Object.keys(this.state.buses) ? 
-                                        <RouteMap 
-                                            assign_mode={false} 
-                                            key={false}
-                                            center={this.state.center}
-                                            existingStops={this.state.stops}
-                                            centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
-                                            buses={this.state.buses}
-                                            bus_tooltip={this.state.bus_tooltip}
-                                        />
-                                        : "" }
-                                        </div>
-                                    </div>
-                                        </div>
+                                            {/* <div className="col-md-7 me-4"> */}
+                                                <div className="mt-2">
+                                                {Object.keys(this.state.buses) ? 
+                                                <RouteMap 
+                                                    assign_mode={false} 
+                                                    key={false}
+                                                    center={this.state.center}
+                                                    existingStops={this.state.stops}
+                                                    centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
+                                                    buses={this.state.buses}
+                                                    bus_tooltip={this.state.bus_tooltip}
+                                                />
+                                                : "" }
+                                                </div>
+                                            {/* </div> */}
+                                        {/* </div> */}
                                     </div>
                                 </div>
                             </div>
