@@ -39,38 +39,32 @@ class StudentInfo extends Component {
 
     componentDidMount() {
         this.getStudentDetail()
-        // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
     }
 
     // pagination
-    // getStopsPage = (page, sortOptions, search) => {
-    //     getPage({ url: `dashboard/students/stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${localStorage.getItem('user_id')}`, only_pagination: true })
-    //     .then(res => {
-    //         const stops_table = {
-    //             pageIndex: res.pageIndex,
-    //             canPreviousPage: res.canPreviousPage,
-    //             canNextPage: res.canNextPage,
-    //             totalPages: res.totalPages,
-    //         }
-    //         this.setState({
-    //             stops_page: res.data.stops,
-    //             stops_table: stops_table
-    //         })
-    //     })
-    // }
+    getStopsPage = (page, sortOptions, search, route_id) => {
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${route_id}`, only_pagination: true })
+        .then(res => {
+            const stops_table = {
+                pageIndex: res.pageIndex,
+                canPreviousPage: res.canPreviousPage,
+                canNextPage: res.canNextPage,
+                totalPages: res.totalPages,
+            }
+            this.setState({
+                stops_page: res.data.stops,
+                stops_table: stops_table
+            })
+        })
+    }
 
     // api calls
     getStudentDetail = () => {
         api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             console.log(res.data)
-            this.setState({ 
-                // stops: student.stops,
-                // active_route: student.route.id,
-                // center: {
-                //     lat: student.location.lat,
-                //     lng: student.location.lng
-                // },
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '', res.data.route.id)
+            this.setState({
                 student: res.data.student,
                 route: res.data.route,
                 school: res.data.school,
@@ -167,7 +161,7 @@ class StudentInfo extends Component {
                                             {this.state.route?.name}
                                         </p>
                                         <p>
-                                            {this.state.student.route?.description}
+                                            {this.state.route?.description}
                                         </p>
                                     </div>
                                 </div>
