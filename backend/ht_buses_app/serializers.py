@@ -4,7 +4,7 @@ from .models import Bus, Location, Log, Route, School, Stop, Student, User
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('id', 'first_name', 'last_name', 'school_id', 'student_school_id', 'route_id', 'user_id', 'in_range')
+        fields = ('id', 'first_name', 'last_name', 'school_id', 'student_school_id', 'route_id', 'user_id', 'in_range', 'account_id')
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
