@@ -33,7 +33,7 @@ class StudentInfo extends Component {
     }
 
     componentDidMount() {
-        // this.getStudentDetail()
+        this.getStudentDetail()
         // this.getStopsPage(this.state.stops_table.pageIndex, null, '')
     }
 
@@ -56,9 +56,9 @@ class StudentInfo extends Component {
 
     // api calls
     getStudentDetail = () => {
-        api.get(`dashboard/students/detail?id=${localStorage.getItem('user_id')}`)
+        api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
-            // console.log(res.data.student)
+            console.log(res.data.student)
             const student = res.data.student
             this.setState({ 
                 stops: student.stops,
@@ -96,9 +96,9 @@ class StudentInfo extends Component {
         else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
         }
-        if (this.state.error_status) {
-            return <ErrorPage code={this.state.error_code} />
-        }
+        // if (this.state.error_status) {
+        //     return <ErrorPage code={this.state.error_code} />
+        // }
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">
