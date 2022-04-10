@@ -132,7 +132,7 @@ class GlobalTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.buses ? 
+                                        {this.state.buses  && this.state.schools ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
@@ -141,7 +141,7 @@ class GlobalTransitStatus extends Component {
                                             bus_tooltip={this.state.bus_tooltip}
                                             // existingStops={this.state.stops}                                            
                                             buses={this.state.buses}
-                                            school={this.state.schools}
+                                            school_tooltips={this.state.schools}
                                         />
                                         : "" }
                                         </div>

@@ -261,7 +261,18 @@ class RouteMap extends Component {
                 id={this.props.school.id}
                 key={this.props.school.id}
               /> : ""}
-            {console.log(this.props.center)}
+            {console.log(this.props.school_tooltips)}
+            {this.props.school_tooltips?.map((value, index) => {
+            {console.log(value.location)}
+            {console.log(value.id)}
+            {console.log(value.name)}
+            <SchoolMarker 
+              location={value.location} 
+              name={value.name}
+              id={value.id}
+              key={value.id}
+          />
+            })}
             {this.props.buses?.map((value, index) => {
               console.log(value)
               return <BusMarker 
