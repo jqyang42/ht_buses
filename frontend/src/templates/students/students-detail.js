@@ -7,7 +7,7 @@ import HeaderMenu from '../components/header-menu';
 import api from "../components/api";
 
 import { LOGIN_URL } from '../../constants';
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import ErrorPage from '../error-page';
 import RouteMap from "../routes/route-map";
 
@@ -86,8 +86,11 @@ class StudentsDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         if (redirect) {
@@ -242,7 +245,7 @@ class StudentsDetail extends Component {
                                     <div className="col">
                                     <div className="row">
                                             <h7 className="mb-3">
-                                                ROUTES IN TRANSIT
+                                                BUS RUNS IN TRANSIT
                                             </h7>
                                             {/* TODO: @thomas @jessica add the Transit Status Map here for in transit bus runs on routes that the student is on */}
                                         </div>

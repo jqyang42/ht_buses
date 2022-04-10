@@ -8,7 +8,7 @@ import ErrorPage from "../error-page";
 import api from "../components/api";
 
 import { LOGIN_URL, STUDENTS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { makeParentsDropdown, makeSchoolsDropdown, makeRoutesDropdown } from "../components/dropdown";
 import { validNumber } from "../components/validation";
 import { emailValidation, phoneValidation } from "../components/validation";
@@ -223,8 +223,11 @@ class StudentsEdit extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         const redirect_url = STUDENTS_URL + '/' + this.props.params.id;
@@ -284,10 +287,12 @@ class StudentsEdit extends Component {
                                             </div>
                                             <div className="form-group pb-3 form-col">
                                                 <label for="exampleInputEmail1" className="control-label pb-2">Email</label>
-                                                <input type="email" className="form-control pb-2" id="exampleInputEmail1" 
+                                                <input type="email" className="form-control pb-2 mb-2" id="exampleInputEmail1" 
                                                 defaultValue={this.state.student.email} placeholder="Enter student email"
                                                 onChange={this.handlStudentEmailChange} ref={el => this.emailField = el}></input>
-                                                  <small id="emailHelp" className="form-text text-muted pb-2">Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student.</small>
+                                                    <small id="emailHelp" className="form-text text-muted pb-2">
+                                                        Entering a valid email will create a user account for this student. Leaving this field blank will delete any existing user account for this student.
+                                                    </small>
                                                 {(!emailValidation({ email: this.state.edited_student?.email}) && this.state.edited_student.email !== undefined && this.state.edited_student.email !== "") ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
                                                         Please enter a valid email
@@ -295,12 +300,12 @@ class StudentsEdit extends Component {
                                                 }
                                                  {(!this.state.valid_email && this.state.edited_student?.email) ? 
                                                     (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                        Update unsuccessful. Please enter a different email, a student with this email already exists
+                                                        Update unsuccessful. Please enter a different email, a user with this email already exists.
                                                     </div>) : ""
                                                 }
                                             </div>
                                             {(emailValidation({ email: this.state.edited_student.email}) && this.state.edited_student.email != "") ? 
-                                                (<div className="form-group pb-3">
+                                                (<div className="form-group pb-3 form-col">
                                                 <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
                                                 <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
                                                 value={this.state.edited_student?.phone_number} placeholder="Enter student phone number" onChange={(e) => this.handleStudentPhoneChange(e)}></input>

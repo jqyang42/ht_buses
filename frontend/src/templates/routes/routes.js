@@ -6,7 +6,7 @@ import HeaderMenu from "../components/header-menu";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class BusRoutes extends Component {
     state = {
@@ -58,8 +58,11 @@ class BusRoutes extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">

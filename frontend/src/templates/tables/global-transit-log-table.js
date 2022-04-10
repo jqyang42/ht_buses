@@ -33,12 +33,12 @@ export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPag
             {
                 Header: 'School',
                 accessor: d => Array(`${d.school.name}`, `${d.school.id}`),
-                id: 'school_name',
+                id: 'school',
                 disableFilter: true,
                 Cell: ({ cell: { value } }) => (
                     <a href={"/schools/" + value[1]}>{value[0]}</a>
                 ),
-                sortDirection: sort.accessor === 'school_name' ? sort.sortDirection : 'none'
+                sortDirection: sort.accessor === 'school' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'Route',
@@ -54,9 +54,10 @@ export function GlobalTransitLogTable({ data, showAll, pageIndex, canPreviousPag
                 Header: 'Direction',
                 accessor: 'pickup',
                 disableFilter: true,
+                disableSortBy: true,
                 id: 'direction',
                 Cell: ({ cell: { value } }) => (
-                    value ? <div>{"To school"}</div> : <div>{"From school"}</div>
+                    value ? <div>{"Pickup"}</div> : <div>{"Dropoff"}</div>
                 ),
                 sortDirection: sort.accessor === 'direction' ? sort.sortDirection : 'none'
             },     

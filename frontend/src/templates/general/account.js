@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link , Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
 import ParentSidebarMenu from '../components/parent-sidebar-menu';
+import StudentSidebarMenu from '../components/student-sidebar-menu';
 import { UserStudentsTable } from '../tables/user-students-table';
 import HeaderMenu from "../components/header-menu";
 import api from "../components/api";
@@ -50,7 +51,7 @@ class Account extends Component {
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
                     {
-                        localStorage.getItem('is_staff') == "false" ? <ParentSidebarMenu /> : <SidebarMenu />
+                        localStorage.getItem('is_staff') == "false" ? (localStorage.getItem('role') === "Student" ? <StudentSidebarMenu /> : <ParentSidebarMenu />) : <SidebarMenu />
                     }
 
                     <div className="col mx-0 px-0 bg-gray w-100">
@@ -68,11 +69,13 @@ class Account extends Component {
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
+                                            { localStorage.getItem('role') !== "Student" ?
                                             <Link to={PASSWORD_URL} className="btn btn-primary float-end w-auto me-3" role="button">
                                                 <span className="btn-text">
                                                     Change Password
                                                 </span>
-                                            </Link>
+                                            </Link> : ""
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -84,20 +87,24 @@ class Account extends Component {
                                         <p className="gray-600">
                                             Phone
                                         </p>
-                                        <p className="gray-600">
-                                            Address
-                                        </p>
+                                        { localStorage.getItem('role') === "General" ?
+                                            <p className="gray-600">
+                                                Address
+                                            </p> : ""
+                                        }
                                     </div>
                                     <div className="col-5 me-4">
                                         <p>
-                                            {this.state.user.email}
+                                            {this.state.user.email ? this.state.user.email : "–"}
                                         </p>
                                         <p>
-                                            {this.state.user.phone_number}
+                                            {this.state.user.phone_number ? this.state.user.phone_number : "–"}
                                         </p>
-                                        <p>
-                                            {this.state.location.address ? this.state.location.address : ""}
-                                        </p>
+                                        { localStorage.getItem('role') === "General" ? 
+                                            <p>
+                                                {this.state.location.address ? this.state.location.address : "–"}
+                                            </p> : ""
+                                        }
                                     </div>
                                 </div>
                             </div>

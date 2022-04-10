@@ -25,7 +25,7 @@ def user_delete(request):
         user_object.location.delete()
         students = Student.objects.filter(user_id = user_object)
         for student in students:
-            if student.account is not None:  #TODO: make sure works
+            if student.account is not None:  
                 student_user = student.account
                 student_user.delete()
         user_object.delete()
