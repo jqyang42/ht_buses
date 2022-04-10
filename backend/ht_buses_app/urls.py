@@ -4,7 +4,7 @@ from django.db import models
 
 from . views.bulk_import.upload import bulk_import_view_students, bulk_import_view_users
 from . import models 
-from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add
+from . views.students import students_view, student_detail, student_route_edit, student_edit, student_delete, student_add, student_account_view
 from . views.schools import school_create, school_delete, school_detail, school_edit, schools_view, school_edit_time
 from . views.routes import route_delete, route_edit, route_planner, routes_view, route_detail, route_create, route_transit
 from . views.users import user_create, user_delete, user_detail, user_edit, user_edit_password, users_view, user_transit
@@ -80,6 +80,7 @@ urlpatterns = [
     path('api/stops/edit', stops_edit.stops_edit, name='stops_edit'),
     path('api/stops/delete', stops_delete.stops_delete, name='stops_delete'),
     path('api/stops/edit-name', stops_name_edit.stops_name_edit, name='stops_name_edit'),
+    path('api/students/account', student_account_view.student_detail, name='student-account'),
     path('api/students/route', student_view_route.students_route, name="student_view_route"),
     path('api/students/school', student_view_school.students_school, name="student_view_school"),
     path('api/students/user', student_view_user.students_user, name="student_view_user"),
