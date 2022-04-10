@@ -14,7 +14,7 @@ from datetime import timedelta
 @permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
 def get_buses(request):
     try:
-        schools = get_objects_for_user(request.user,"change_school", School.objects.all())
+        schools = get_objects_for_user(request.user,"view_school", School.objects.all())
     except:
         return PermissionDenied(data, "school")
     data = active_buses_filter(schools)
