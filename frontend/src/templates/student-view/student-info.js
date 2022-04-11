@@ -42,8 +42,8 @@ class StudentInfo extends Component {
     }
 
     // pagination
-    getStopsPage = (page, sortOptions, search, route_id) => {
-        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${route_id}`, only_pagination: true })
+    getStopsPage = (page, sortOptions, search) => {
+        getPage({ url: `stops`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.state.route.id}`, only_pagination: true })
         .then(res => {
             const stops_table = {
                 pageIndex: res.pageIndex,
@@ -63,7 +63,7 @@ class StudentInfo extends Component {
         api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
             console.log(res.data)
-            this.getStopsPage(this.state.stops_table.pageIndex, null, '', res.data.route.id)
+            // this.getStopsPage(this.state.stops_table.pageIndex, null, '', res.data.route.id)
             this.setState({
                 student: res.data.student,
                 route: res.data.route,
@@ -73,6 +73,8 @@ class StudentInfo extends Component {
                     lat: res.data.user.location.lat,
                     lng: res.data.user.location.lng,
                 }
+             }, () => {
+                this.getStopsPage(this.state.stops_table.pageIndex, null, '')
              })
              this.periodicCall(res.data.route.id)
         }).catch (error => {
@@ -89,7 +91,9 @@ class StudentInfo extends Component {
     handleStopsShowAll = () => {
         this.setState(prevState => ({
             stops_show_all: !prevState.stops_show_all
-        }))
+        }), () => {
+            this.getStopsPage(this.state.stops_show_all ? 0 : 1, null, '')
+        })
     }
 
     periodicCall = (route_id) => {
