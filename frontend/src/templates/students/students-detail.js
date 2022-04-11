@@ -46,8 +46,8 @@ class StudentsDetail extends Component {
                 school: data.school,
                 user: data.user,
                 center: {
-                    lat: 0, //TODO: changes to data.user.location.lat and lng
-                    lng: 0
+                    lat: data.user.location.lat, //TODO: changes to data.user.location.lat and lng
+                    lng: data.user.location.lng
                 }
             });
             this.periodicCall(data.route.id)
