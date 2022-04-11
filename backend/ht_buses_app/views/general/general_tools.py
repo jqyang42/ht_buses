@@ -10,8 +10,7 @@ from ...groups import get_driver_group, get_admin_group
 
 def filtered_users_helper(students):
     user_ids = students.values_list('user_id', flat=True)
-    student_users = students.values_list('account', flat=True)
-    return User.objects.filter(pk__in=user_ids) | User.objects.filter(pk__in=student_users)
+    return User.objects.filter(pk__in=user_ids, role=4)
 
 def filtered_schools_helper(students):
     school_ids = students.values_list('school_id', flat=True)
