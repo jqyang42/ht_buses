@@ -242,6 +242,11 @@ li.page-item a[disabled]:hover {
         width: 35%;
         max-width: 35%;
     }
+
+    .table {
+        overflow-x: scroll;
+        width: 100%;
+    }
 }
 
 .unassigned {

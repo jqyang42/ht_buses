@@ -80,7 +80,7 @@ class StopMarker extends Component {
             {
               !this.props.assign_mode ? 
               <>
-                <h6>{this.state.name}</h6>
+                <h6 className="mb-0">{this.state.name}</h6>
               </>
               :
               <>

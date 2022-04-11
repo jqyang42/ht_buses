@@ -655,7 +655,7 @@ class BusRoutesDetail extends Component {
                                     </div>) : ""
                                 }
                                 <div className="row mt-4">
-                                    <div className="col-md-7 me-4">
+                                    <div className="col min-w-50 me-4 mb-4">
                                         <h6>Description</h6>
                                         <p>
                                             {this.state.route.description}
@@ -713,7 +713,7 @@ class BusRoutesDetail extends Component {
                                             </div> : ""
                                         }
                                     </div>
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h7>STUDENTS</h7>
                                         <RouteStudentsTable 
                                         data={this.state.students_page} 
@@ -726,12 +726,12 @@ class BusRoutesDetail extends Component {
                                         totalPages={this.state.students_table.totalPages}
                                         searchValue={''} 
                                         />
-                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4 mt-0" onClick={this.handleStudentsShowAll}>
                                             { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"
                                             }
                                         </button>
-
+                                        <div className="mb-4"></div>
                                         {
                                             this.state.stops_page ?
                                             <>
@@ -750,7 +750,7 @@ class BusRoutesDetail extends Component {
                                                 searchValue={''}
                                                 dnd={false} 
                                                 handleReorder={() => {}}/>
-                                                <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                <button className="btn btn-secondary align-self-center w-auto mb-4 mt-0" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
