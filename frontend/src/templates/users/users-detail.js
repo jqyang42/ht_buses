@@ -11,6 +11,7 @@ import { validNumber } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 import { ManagedSchoolsTable } from '../tables/managed-schools-table';
 import { emailValidation, phoneValidation } from "../components/validation";
+import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
@@ -80,8 +81,6 @@ class UsersDetail extends Component {
         })
         // this.updateIsParent()
         this.getInTransit()
-        console.log("value")
-        console.log(this.state.valid_student_email)
     }
 
     // pagination
@@ -261,7 +260,20 @@ class UsersDetail extends Component {
         let student = this.state.new_student
         student.email = email
         this.setState({ new_student: student })
-        console.log(this.state.new_student)
+        if (email && email !== "") {
+            const request = {
+                user: {
+                    email: email
+                }            
+            } 
+            api.post(`email_exists`, request)
+            .then(res => {
+                const email_exists = res.data.user_email_exists
+                this.setState({ 
+                    valid_student_email: !email_exists
+                })
+            })
+        }
     }
 
     handleStudentPhoneChange = (event) => {
@@ -299,48 +311,17 @@ class UsersDetail extends Component {
     }
 
     handleAddStudentSubmit = (event) => {
-        var email_exists = true
-        if (this.state.new_student.email && this.state.new_student.email !== "") {
-            const request = {
-                user: {
-                    email: this.state.new_student.email
-                }            
-            } 
-            api.post(`email_exists`, request)
-            .then(res => {
-                email_exists = res.data.user_email_exists
-                console.log('email exists ')
-                console.log(email_exists)
-                this.setState({ 
-                    valid_student_email: !email_exists
-                })
-                if (!validNumber({ value_to_check: this.state.new_student.student_school_id }) || email_exists) {
-                    event.preventDefault();
-                    return
-                }
-                else {
-                    this.sendStudentRequest(!email_exists)
-                }
-            })
+      
+        if (!validNumber({ value_to_check: this.state.new_student.student_school_id }) || !this.state.valid_student_email) {
+            event.preventDefault();
+            return
         }
         else {
-            email_exists = false 
-            this.setState({ 
-                valid_student_email: true
-            })
-            if (!validNumber({ value_to_check: this.state.new_student.student_school_id })) {
-                this.setState({ modal_dismiss: false})
-                console.log("preventing")
-                event.preventDefault();
-                return
-            }
-            else {
-                this.setState({ modal_dismiss: true})
-                this.sendStudentRequest(true)
-            }
+            this.setState({ modal_dismiss: true})
+            this.sendStudentRequest(true)
         }
        
-        }
+    }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
