@@ -81,8 +81,6 @@ class UsersDetail extends Component {
         })
         // this.updateIsParent()
         this.getInTransit()
-        console.log("value")
-        console.log(this.state.valid_student_email)
     }
 
     // pagination
@@ -316,7 +314,6 @@ class UsersDetail extends Component {
       
         if (!validNumber({ value_to_check: this.state.new_student.student_school_id }) || !this.state.valid_student_email) {
             event.preventDefault();
-            console.log("preventing")
             return
         }
         else {
