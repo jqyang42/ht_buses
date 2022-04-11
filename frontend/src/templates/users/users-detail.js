@@ -11,6 +11,7 @@ import { validNumber } from '../components/validation';
 import { makeSchoolsDropdown, makeRoutesDropdown } from '../components/dropdown';
 import { ManagedSchoolsTable } from '../tables/managed-schools-table';
 import { emailValidation, phoneValidation } from "../components/validation";
+import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL } from "../../constants";
 import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
@@ -35,6 +36,7 @@ class UsersDetail extends Component {
         redirect: false,
         add_student_clicked: false,
         create_success: 0,
+        valid_student_email: true,
         modal_dismiss: false,
         delete_success: 0,    
         error_status: false,
@@ -79,6 +81,8 @@ class UsersDetail extends Component {
         })
         // this.updateIsParent()
         this.getInTransit()
+        console.log("value")
+        console.log(this.state.valid_student_email)
     }
 
     // pagination
@@ -170,7 +174,7 @@ class UsersDetail extends Component {
     }
 
     addStudent = (student) => {
-        // console.log(student)
+       
         api.post(`users/add-students?id=${this.props.params.id}`, student)
         .then(res => {
             const success = res.data.success
@@ -208,14 +212,17 @@ class UsersDetail extends Component {
     }
 
     resetStudentValues = () => {
+        this.setState({ 
+            valid_student_email: true
+        })
         this.lastNameField.value = ""
         this.firstNameField.value = ""
         this.idField.value = ""
         this.email.value = ""
-        this.phone.value = ""
         this.schoolField.value = ""
         this.routeField.value = ""
         this.setState({ valid_id: 0})
+        this.phone.value = ""
     }
     
     handleClickAddStudent = () => {
@@ -248,10 +255,27 @@ class UsersDetail extends Component {
     }
 
     handlStudentEmailChange = (event) => {
+        this.setState({ 
+            valid_student_email: true
+        })
         const email = event.target.value
         let student = this.state.new_student
         student.email = email
         this.setState({ new_student: student })
+        if (email && email !== "") {
+            const request = {
+                user: {
+                    email: email
+                }            
+            } 
+            api.post(`email_exists`, request)
+            .then(res => {
+                const email_exists = res.data.user_email_exists
+                this.setState({ 
+                    valid_student_email: !email_exists
+                })
+            })
+        }
     }
 
     handleStudentPhoneChange = (event) => {
@@ -279,20 +303,28 @@ class UsersDetail extends Component {
         this.setState({ new_student: student })
     }
 
-    handleAddStudentSubmit = (event) => {
-        if (!validNumber({ value_to_check: this.state.new_student.student_school_id })) {
-            event.preventDefault();
-            return
-        }
-        else {
+    sendStudentRequest = (valid_email) => {
+        if (valid_email) {
             const student = {
                 students: [this.state.new_student]
             }
+            this.addStudent(student)
+        }
+    }
 
-        this.addStudent(student)
+    handleAddStudentSubmit = (event) => {
+      
+        if (!validNumber({ value_to_check: this.state.new_student.student_school_id }) || !this.state.valid_student_email) {
+            event.preventDefault();
+            console.log("preventing")
+            return
         }
-        // this.updateIsParent()
+        else {
+            this.setState({ modal_dismiss: true})
+            this.sendStudentRequest(true)
         }
+       
+    }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
@@ -385,9 +417,9 @@ class UsersDetail extends Component {
                                                                             Please enter a valid email
                                                                         </div>) : ""
                                                                     }
-                                                                    {(this.state.new_student.valid_email === -1 ) ?  
+                                                                    {(!this.state.valid_student_email ) ?  
                                                                         (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                                            Creation unsuccessful. Please enter a different email, a student with this email already exists
+                                                                            Creation unsuccessful. Please enter a different email, a user with this email already exists.
                                                                         </div>) : ""
                                                                     }
                                                                 </div>
@@ -395,7 +427,7 @@ class UsersDetail extends Component {
                                                                         (<div className="form-group pb-3">
                                                                         <label for={"examplePhoneNumber"} className="control-label pb-2">Student Phone</label>
                                                                         <input type="name" className="form-control pb-2" id={"examplePhoneNumber"}
-                                                                        value={this.state.new_student.phone_number} placeholder="Enter student phone number"
+                                                                        defaultValue={this.state.new_student.phone_number} placeholder="Enter student phone number"
                                                                         ref={el => this.phone = el}
                                                                         onChange={(e) => this.handleStudentPhoneChange(e)}></input>
                                                                     </div>) : ""

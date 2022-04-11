@@ -201,6 +201,11 @@ class StudentsEdit extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
+        if (this.state.edited_student.email !== document.getElementById('exampleInputEmail1').value) {
+            const student = this.state.edited_student
+            student.email = document.getElementById('exampleInputEmail1').value
+            this.setState({ edited_student: student })
+        }
         if((!(emailValidation({ email: this.state.edited_student?.email })) && this.state.edited_student.email !== undefined && this.state.edited_student.email !== "") || !validNumber({ value_to_check: this.state.edited_student.student_school_id })) {
             this.setState({ edit_success: -1 })
             return
