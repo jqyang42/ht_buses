@@ -24,7 +24,7 @@ class BusRoutesDetail extends Component {
         users: [],
         school : [],
         stops: [],
-        center: {},
+        center: null,
         markers: null,
         assign_mode: false,
         active_route: 0,
@@ -661,7 +661,7 @@ class BusRoutesDetail extends Component {
                                             {this.state.route.description}
                                         </p>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.markers ? 
+                                        {this.state.markers && this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
