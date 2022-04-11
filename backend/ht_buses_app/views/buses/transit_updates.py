@@ -48,15 +48,23 @@ def update_buses():
 
 def add_bus(bus_id):
     global update_queue
-    update_queue.append(bus_id)
+    try:
+        update_queue.append(int(bus_id))
+    except:
+            traceback.print_exc()
+            print("invalid bus number")
     print(update_queue)
 
 def remove_bus(bus_id):
     global update_queue
     global bus_coords
     print(bus_id)
-    bus_coords.pop(bus_id, 0)
-    update_queue.remove(bus_id)
+    try:
+        bus_coords.pop(int(bus_id), 0)
+        update_queue.remove(int(bus_id))
+    except:
+        traceback.print_exc()
+        print("invalid bus number")
     print(update_queue)
 
 def get_coords():
@@ -67,8 +75,12 @@ def initialize_updater(active_buses="none"):
     global update_queue
     if active_buses != "none":
         print(active_buses)
-        for bus in active_buses:
-            update_queue.append(bus.get('bus_number'))
+        try:
+            for bus in active_buses:
+                update_queue.append(int(bus.get('bus_number')))
+        except:
+            traceback.print_exc()
+            print("invalid bus number")
     timer = RepeatTimer(4, update_buses)
     timer.start()
 
