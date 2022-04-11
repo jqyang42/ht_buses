@@ -142,6 +142,7 @@ class GlobalTransitStatus extends Component {
                                             // existingStops={this.state.stops}                                            
                                             buses={this.state.buses}
                                             school_tooltips={this.state.schools}
+                                            zoom={10}
                                         />
                                         : "" }
                                         </div>

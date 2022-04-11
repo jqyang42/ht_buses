@@ -232,6 +232,8 @@ class RouteMap extends Component {
 
   render() {
     // const center = this.props.center
+    const zoom = this.props.zoom ? this.props.zoom : 12 
+    // const center = this.props.center
     console.log(this.props.school)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
@@ -247,7 +249,7 @@ class RouteMap extends Component {
             options={{
               styles: hidePOIs
             }}
-            zoom={13}
+            zoom={zoom}
             onClick={this.createStopMarker}
           >
             {this.props.centerIcon ? 
