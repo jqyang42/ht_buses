@@ -14,8 +14,9 @@ import { PARENT_DASHBOARD_URL , LOGIN_URL, STUDENT_INFO_URL } from "../../consta
 
 const containerStyle = {
   width: '100%',
-  height: '400px'
+  height: '600px'
 };
+
 const hidePOIs = [
   {
     "featureType": "administrative",
