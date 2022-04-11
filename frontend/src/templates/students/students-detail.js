@@ -90,7 +90,6 @@ class StudentsDetail extends Component {
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
-                    center: res.data.center,
                 })
             })
         }, 1000)
