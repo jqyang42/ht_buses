@@ -22,7 +22,7 @@ class StudentInfo extends Component {
         user: {},
         buses: [],
         bus_tooltip: {},
-        center: {},
+        center: null,
         // stops: {},
         // active_route: 1,
         error_status: false,
@@ -109,7 +109,6 @@ class StudentInfo extends Component {
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
-                    center: res.data.center,
                 })
             })
         }, 1000)
@@ -282,7 +281,7 @@ class StudentInfo extends Component {
                                             BUS RUNS IN TRANSIT
                                         </h7>
                                         <div className="bg-gray rounded mb-4 mt-3">
-                                            {Object.keys(this.state.student).length ? 
+                                            {Object.keys(this.state.student).length && this.state.center ? 
                                             <RouteMap 
                                                 assign_mode={false} 
                                                 key={false}
