@@ -141,7 +141,122 @@ class StudentInfo extends Component {
                                     <div className="col">
                                     </div>
                                 </div>
-                                <div className="row mt-4">
+                                <div className="row mt-4 flex-wrap">
+                                    <div className="col-auto">
+                                        <div className="row flex-nowrap">
+                                            <div className="col-auto me-2">
+                                                <p className="gray-600">
+                                                    Email
+                                                </p>
+                                                <p className="gray-600">
+                                                    Phone
+                                                </p>
+                                                <p className="gray-600">
+                                                    School
+                                                </p>
+                                                <p className="gray-600">
+                                                    Route
+                                                </p>
+                                                <p className="gray-600">
+                                                    Route Description
+                                                </p>
+                                                <p className="gray-600">
+                                                    Bus Stops
+                                                </p>
+                                            </div>
+                                            <div className="col me-6">
+                                                <p>
+                                                    {this.state.student.email ? this.state.student.email : "–"}
+                                                </p>
+                                                <p>
+                                                    {this.state.student.phone_number ? this.state.student.phone_number : "–"}
+                                                </p>
+                                                <a href={"/schools/" + this.state.school.id}>
+                                                    <p>
+                                                        {this.state.school.name}
+                                                    </p>
+                                                </a>
+                                                {(this.state.route.name === "Unassigned" || this.state.route.name === "" ) ?
+                                                    <>
+                                                        <p className="unassigned"> {"Unassigned"}</p>
+                                                        <p>–</p>
+                                                    </> :
+                                                    <>
+                                                        <a href={"/routes/" + this.state.route.id}>
+                                                            <p>
+                                                                {this.state.route.name}
+                                                            </p>
+                                                        </a> 
+                                                        <p>
+                                                            {this.state.route.description === "" ? "–" : this.state.route.description}
+                                                        </p>
+                                                    </>
+                                                }
+                                                {
+                                                    (this.state.student.in_range ?
+                                                        <p>
+                                                            In Range
+                                                        </p> :
+                                                        <p className="unassigned"> {"Out of Range"}</p> 
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                        <div className="row mt-4 mb-4">
+                                            <h7 className="mb-3">
+                                                PARENT CONTACT INFO
+                                            </h7>
+                                            <div className="col-auto me-2">
+                                                <p className="gray-600">
+                                                    Name
+                                                </p>
+                                                <p className="gray-600">
+                                                    Email
+                                                </p>
+                                                <p className="gray-600">
+                                                    Phone
+                                                </p>
+                                                <p className="gray-600">
+                                                    Address
+                                                </p>
+                                            </div>
+                                            <div className="col me-6">
+                                                <p>
+                                                    {this.state.user.first_name} {this.state.user.last_name}
+                                                </p>
+                                                <p>
+                                                    {this.state.user.email}
+                                                </p>
+                                                <p>
+                                                    {this.state.user.phone_number}
+                                                </p>
+                                                <p>
+                                                    {this.state.user.location?.address}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col">
+                                        <h7 className="mb-3">
+                                            BUS RUNS IN TRANSIT
+                                        </h7>
+                                        <div className="bg-gray rounded mb-4">
+                                            {Object.keys(this.state.student).length ? 
+                                            <RouteMap 
+                                                assign_mode={false} 
+                                                key={false}
+                                                active_route={this.state.active_route} 
+                                                center={this.state.center}
+                                                existingStops={this.state.stops}
+                                                centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
+                                                buses={this.state.buses}
+                                                bus_tooltip={this.state.bus_tooltip}
+                                            />
+                                            : "" }
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* <div className="row mt-4">
                                     <div className="col-auto me-2">
                                         <p className="gray-600">
                                             School
@@ -182,27 +297,7 @@ class StudentInfo extends Component {
                                         : "" }
                                         </div>
                                     </div>
-                                    {/* <div className="col">
-                                        <h7>STOPS</h7>
-                                            <StopsTable 
-                                            data={this.state.stops_page}
-                                            showAll={this.state.stops_show_all} 
-                                            pageIndex={this.state.stops_table.pageIndex}
-                                            canPreviousPage={this.state.stops_table.canPreviousPage}
-                                            canNextPage={this.state.stops_table.canNextPage}
-                                            updatePageCount={this.getStopsPage}
-                                            pageSize={10}
-                                            totalPages={this.state.stops_table.totalPages}
-                                            searchValue={''} 
-                                            dnd={false} 
-                                            handleReorder={() => {}}/>
-                                            <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
-                                                { !this.state.stops_show_all ?
-                                                    "Show All" : "Show Pages"
-                                                }
-                                        </button>
-                                    </div> */}
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
