@@ -7,11 +7,12 @@ from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
 from ..general.general_tools import has_access_to_object
 from ..general.response_messages import PermissionDenied, DoesNotExist
 from datetime import timedelta
+from rest_framework.permissions import IsAuthenticated
 
 # TODO: This method needs log permissions
 @csrf_exempt
 @api_view(["GET"])
-@permission_classes([IsAdmin|IsSchoolStaff|IsDriver]) 
+@permission_classes([IsAuthenticated]) 
 def get_buses(request):
     data = {}
     route_id = request.query_params["id"]

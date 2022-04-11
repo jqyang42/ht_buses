@@ -6,6 +6,7 @@ import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import api from "../components/api";
 
+import { MARKER_ICONS } from '../../constants';
 import { LOGIN_URL } from '../../constants';
 import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import ErrorPage from '../error-page';
@@ -17,6 +18,9 @@ class StudentsDetail extends Component {
         user: {},
         route: {},
         school: {},
+        center: {},
+        buses: [],
+        bus_tooltip: {},
         redirect: false,
         delete_success: 0,
         error_status: false,
@@ -40,8 +44,13 @@ class StudentsDetail extends Component {
                 student: data.student, 
                 route: data.route, 
                 school: data.school,
-                user: data.user
+                user: data.user,
+                center: {
+                    lat: 0, //TODO: changes to data.user.location.lat and lng
+                    lng: 0
+                }
             });
+            this.periodicCall(data.route.id)
         })
         .catch (error => {
             if (error.response.status !== 200) {
@@ -68,6 +77,24 @@ class StudentsDetail extends Component {
         })
     }
 
+    periodicCall = (route_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/route?id=${route_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                })
+            })
+        }, 1000)
+    }
 
     updateIsParent = () => {
        
@@ -157,9 +184,9 @@ class StudentsDetail extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row mt-4">
-                                    <div className="col">
-                                        <div className="row">
+                                <div className="row mt-4 flex-wrap">
+                                    <div className="col-auto">
+                                        <div className="row flex-nowrap">
                                             <div className="col-auto me-2">
                                                 <p className="gray-600">
                                                     Email
@@ -177,7 +204,7 @@ class StudentsDetail extends Component {
                                                     Bus Stops
                                                 </p>
                                             </div>
-                                            <div className="col-5 me-6">
+                                            <div className="col me-6">
                                                 <p>
                                                     {this.state.student.email ? this.state.student.email : "–"}
                                                 </p>
@@ -208,7 +235,7 @@ class StudentsDetail extends Component {
                                                 }
                                             </div>
                                         </div>
-                                        <div className="row mt-4">
+                                        <div className="row mt-4 mb-4">
                                             <h7 className="mb-3">
                                                 PARENT CONTACT INFO
                                             </h7>
@@ -226,7 +253,7 @@ class StudentsDetail extends Component {
                                                     Address
                                                 </p>
                                             </div>
-                                            <div className="col-5 me-6">
+                                            <div className="col me-6">
                                                 <p>
                                                     {this.state.user.first_name} {this.state.user.last_name}
                                                 </p>
@@ -237,18 +264,33 @@ class StudentsDetail extends Component {
                                                     {this.state.user.phone_number}
                                                 </p>
                                                 <p>
-                                                    {this.state.user.address}
+                                                    {this.state.user.location?.address}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="col">
-                                    <div className="row">
+                                        {/* <div className="row flex-wrap"> */}
                                             <h7 className="mb-3">
                                                 BUS RUNS IN TRANSIT
                                             </h7>
                                             {/* TODO: @thomas @jessica add the Transit Status Map here for in transit bus runs on routes that the student is on */}
-                                        </div>
+                                            {/* <div className="col-md-7 me-4"> */}
+                                                <div className="mt-2">
+                                                {Object.keys(this.state.buses) ? 
+                                                <RouteMap 
+                                                    assign_mode={false} 
+                                                    key={false}
+                                                    center={this.state.center}
+                                                    existingStops={this.state.stops}
+                                                    centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
+                                                    buses={this.state.buses}
+                                                    bus_tooltip={this.state.bus_tooltip}
+                                                />
+                                                : "" }
+                                                </div>
+                                            {/* </div> */}
+                                        {/* </div> */}
                                     </div>
                                 </div>
                             </div>

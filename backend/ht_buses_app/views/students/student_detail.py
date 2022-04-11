@@ -41,7 +41,8 @@ def students_detail(request):
         user_serializer = UserSerializer(user,many=False)
         location = Location.objects.get(pk=user_serializer.data["location"])
         location_serializer = LocationSerializer(location, many=False)
-        user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "address": location_serializer.data["address"], "phone_number": user_serializer.data["phone_number"], "email": user_serializer.data["email"]}
+        location_arr = {"id": location_serializer.data["id"], "address": location_serializer.data["address"], "lat": location_serializer.data["lat"], "lng": location_serializer.data["lng"]}
+        user_arr = {"id": student_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "location": location_arr, "phone_number": user_serializer.data["phone_number"], "email": user_serializer.data["email"]}
         student_user = student.account 
         try:
             account_id = student_user.pk
