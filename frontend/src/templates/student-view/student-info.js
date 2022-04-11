@@ -143,7 +143,7 @@ class StudentInfo extends Component {
                                 </div>
                                 <div className="row mt-4 flex-wrap">
                                     <div className="col">
-                                        <div className="row flex-nowrap">
+                                        <div className="row flex-nowrap mb-4">
                                             <div className="col-auto me-2">
                                                 <p className="gray-600">
                                                     Email
@@ -240,7 +240,7 @@ class StudentInfo extends Component {
                                         <h7 className="mb-3">
                                             PARENT CONTACT INFO
                                         </h7>
-                                        <div className="row flex-nowrap mt-3">
+                                        <div className="row flex-nowrap mt-3 mb-4">
                                             <div className="col-auto me-2">
                                                 <p className="gray-600">
                                                     Name
@@ -272,7 +272,7 @@ class StudentInfo extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row mt-4">
+                                <div className="row">
                                     <div className="col me-4">
                                         <h7 className="mb-3">
                                             BUS RUNS IN TRANSIT
