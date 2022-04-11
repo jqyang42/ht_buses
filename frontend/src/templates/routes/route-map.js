@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
@@ -8,7 +8,8 @@ import { MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 import StudentMarker from './student-marker';
 import StopMarker from './stop-marker';
-import BusMarker from './bus-marker'
+import BusMarker from './bus-marker';
+import SchoolMarker from './school-marker'
 import { PARENT_DASHBOARD_URL , LOGIN_URL, STUDENT_INFO_URL } from "../../constants";
 
 const containerStyle = {
@@ -65,14 +66,12 @@ class RouteMap extends Component {
     },
     buses: this.props.buses,
     // bus_info_window: false,
-    bus_tooltip: this.props.bus_tooltip
+    bus_tooltip: this.props.bus_tooltip,
+    school: this.props.school,
+    school_tooltips: this.props.school_tooltips
   }
 
   studentsChanged = []
-
-  handleCenterChange = (event) => {
-    //TODO: update state with new center
-  }
 
   toggleBusInfoWindow = (bus_number) => {
     // console.log(this.state.bus_tooltip)
@@ -89,6 +88,23 @@ class RouteMap extends Component {
       bus_tooltip: new_tooltip
     })
   }
+
+  // toggleSchoolInfoWindow = (bus_number) => {
+  //   // console.log(this.state.bus_tooltip)
+  //   // this.setState(prevState => ({
+  //   //   bus_tooltip: {
+  //   //     ...prevState.bus_tooltip,
+  //   //     [bus_number]: !prevState.bus_tooltip[bus_number]
+  //   //   }
+  //   // }))
+
+  //   const new_tooltip = this.state.school
+  //   // new_tooltip[school_id] = !new_tooltip[school_id]
+  //   this.setState({
+  //     bus_tooltip: new_tooltip
+  //   })
+  // }
+
 
   componentDidUpdate(prevProps) {
     if(this.props.existingStops !== prevProps.existingStops){
@@ -214,6 +230,7 @@ class RouteMap extends Component {
 
   render() {
     const center = this.props.center
+    console.log(this.props.school)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -235,12 +252,27 @@ class RouteMap extends Component {
               <Marker 
                 position={this.props.center} 
                 icon={this.props.centerIcon}
-              /> :
-              <Marker 
-                position={this.props.center} 
-              />
-            }
-            {console.log(this.props.buses)}
+                
+              />: ""}
+            {this.props.school ? 
+              <SchoolMarker 
+                location={this.props.center} 
+                name={this.props.school.name}
+                id={this.props.school.id}
+                key={this.props.school.id}
+              /> : ""}
+            {console.log(this.props.school_tooltips)}
+            {this.props.school_tooltips?.map((value, index) => {
+            {console.log(value.location)}
+            {console.log(value.id)}
+            {console.log(value.name)}
+            return <SchoolMarker 
+              location={value.location} 
+              name={value.name}
+              id={value.id}
+              key={`${value.location.lat}+${value.location.lng}`}
+          />
+            })}
             {this.props.buses?.map((value, index) => {
               console.log(value)
               return <BusMarker 

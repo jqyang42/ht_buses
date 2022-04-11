@@ -28,11 +28,11 @@ def update_buses():
                 url = 'http://tranzit.colab.duke.edu:8000/get'
                 bus_num = update_queue[index]
                 params = {'bus': bus_num}
-                r = requests.get(url=url, params=params)
+                r = requests.get(url=url, params=params, timeout=10)
                 data = r.json()
                 if isinstance(data, dict):
-                    bus_coords[bus_num] = {'lat': data['lat'], 'lng':data['lng']}
-                    bus_management.bus_location_update(bus_num, data['lat'], data['lng'])
+                    bus_coords[bus_num] = {'lat': data.get('lat'), 'lng':data.get('lng')}
+                    bus_management.bus_location_update(bus_num, data.get('lat'), data.get('lng'))
             _next_ten()
         except:
             traceback.print_exc()
