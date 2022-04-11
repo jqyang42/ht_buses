@@ -61,7 +61,7 @@ class StudentMarker extends Component {
       onMouseOut={this.handleMouseExit}>
         {showInfoWindow && (
           <InfoWindow>
-              <h6 className='text-center ms-1 me-0 mt-0 mb-1'>{stringData}</h6>
+              <h6 className='text-center ms-1 me-0 mt-0 mb-0'>{stringData}</h6>
           </InfoWindow>
         )}
       </Marker>

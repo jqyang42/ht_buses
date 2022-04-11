@@ -14,8 +14,9 @@ import { PARENT_DASHBOARD_URL , LOGIN_URL, STUDENT_INFO_URL } from "../../consta
 
 const containerStyle = {
   width: '100%',
-  height: '400px'
+  height: '600px'
 };
+
 const hidePOIs = [
   {
     "featureType": "administrative",
@@ -68,7 +69,8 @@ class RouteMap extends Component {
     // bus_info_window: false,
     bus_tooltip: this.props.bus_tooltip,
     school: this.props.school,
-    school_tooltips: this.props.school_tooltips
+    school_tooltips: this.props.school_tooltips,
+    // center: this.props.center
   }
 
   studentsChanged = []
@@ -229,8 +231,9 @@ class RouteMap extends Component {
   }
 
   render() {
-    const center = this.props.center
+    // const center = this.props.center
     const zoom = this.props.zoom ? this.props.zoom : 12 
+    // const center = this.props.center
     console.log(this.props.school)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
@@ -242,7 +245,7 @@ class RouteMap extends Component {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={center}
+            center={this.state.center}
             options={{
               styles: hidePOIs
             }}
