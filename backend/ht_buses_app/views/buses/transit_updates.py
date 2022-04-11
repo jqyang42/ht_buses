@@ -29,10 +29,18 @@ def update_buses():
                 bus_num = update_queue[index]
                 params = {'bus': bus_num}
                 r = requests.get(url=url, params=params, timeout=10)
-                data = r.json()
-                if isinstance(data, dict):
-                    bus_coords[bus_num] = {'lat': data.get('lat'), 'lng':data.get('lng')}
-                    bus_management.bus_location_update(bus_num, data.get('lat'), data.get('lng'))
+                try: 
+                    data = r.json()
+                    if isinstance(data, dict):
+                        lat = float(data.get('lat'))
+                        lng = float(data.get('lng'))
+                        if ( lat > -90 and lat < 90) and (lng > -180 and lng < 180):
+                            bus_coords[bus_num] = {'lat': lat, 'lng':lng}
+                            bus_management.bus_location_update(bus_num, lat, lng)
+                except:
+                    traceback.print_exc()
+                    print("something's wrong with data")
+
             _next_ten()
         except:
             traceback.print_exc()
