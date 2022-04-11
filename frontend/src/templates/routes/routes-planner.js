@@ -32,7 +32,7 @@ class BusRoutesPlanner extends Component {
             create_school_name: '',
             create_route_description: '',
             route_dropdown: [],
-            center: {},
+            center: null,
             markers: [],
             assign_mode: false,
             assign_mode_warning: false,
@@ -720,6 +720,7 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3 mb-4">
+                                            {this.state.center ? 
                                             <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 
@@ -733,6 +734,7 @@ class BusRoutesPlanner extends Component {
                                             handleStopModification={this.handleRouteStopModification}
                                             school={this.state.school}
                                             />
+                                            : ""}
                                         </div>
                                         { this.state.map_redirect_dropoff.length !== 0 ?
                                             <div className="mt-3"> 
