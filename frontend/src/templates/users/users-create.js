@@ -592,7 +592,7 @@ class UsersCreate extends Component {
                                                 :
                                                 <select className="form-select" placeholder="Select a Role" aria-label="Select a Role" id="roleType" required
                                                 onChange={(e) => this.handleRoleChange(e)}>
-                                                    <option value={0} disabled selected>Select a Role</option>
+                                                    <option value={0} selected>Select a Role</option>
                                                     <option value={4} id="4">General</option>
                                                     <option value={1} id="1">Administrator</option>
                                                     <option value={2} id="2">School Staff</option>

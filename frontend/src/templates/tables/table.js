@@ -8,16 +8,22 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, 
-  hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
-  totalPages, columnHeaderClick, sortOptions, searchValue }) {
+export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
+  totalPages, columnHeaderClick, sortOptions, searchValue, filterRoleValue }) {
 
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
         // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
-        updatePageCount(pageIndex, sortOptions, searchValue)
+        updatePageCount(pageIndex, sortOptions, searchValue, filterRoleValue)
+    };
+
+    const handleRoleInputChange = (e) => {
+      filterRoleValue = e.currentTarget.value;
+      updatePageCount(pageIndex, sortOptions, searchValue, filterRoleValue)
+      // TODO: Call backend API for search here, pass in value as query @jessica
+      // setGlobalFilter(value);
     };
 
     const [records, setRecords] = useState(data)
@@ -82,6 +88,20 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
             { searchOn ?
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
             : "" }
+            { filterOn ?
+            <>
+              <div className='row flex-nowrap align-items-center'>
+                <p className='w-auto'>Filter: </p>
+                <select className="form-select w-auto ms-2 mb-3" placeholder="Filter: Role" aria-label="Select a Role"  id="roleType" required onChange={handleRoleInputChange}>
+                  <option value={0} selected>Select a Role</option>
+                  <option value={4} id="4">General</option>
+                  <option value={1} id="1">Administrator</option>
+                  <option value={2} id="2">School Staff</option>
+                  <option value={3} id="3">Driver</option>
+                  <option value={5} id="4">Student</option>
+                </select>
+              </div></>
+            : "" }            
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
@@ -157,6 +177,7 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     totalPages={totalPages}
                     sortOptions={sortOptions}
                     searchValue={searchValue}
+                    filterParam={filterRoleValue}
                 />
             } 
         </>

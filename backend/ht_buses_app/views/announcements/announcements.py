@@ -18,7 +18,7 @@ def announcement_users(request):
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
     try:
         sender_role = get_role_string(request.user.role)
-        recipients = User.objects.all()
+        recipients = User.objects.filter(role=4)
         data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:
@@ -41,8 +41,7 @@ def announcement_school(request):
         return response_messages.PermissionDenied(data, "school")
     try:
         sender_role = get_role_string(request.user.role)
-        students = Student.objects.filter(school_id = school_id)
-        recipients = filtered_users_helper(students)
+        recipients = User.objects.filter(role=4)
         data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:
@@ -66,8 +65,7 @@ def announcement_route(request):
         return response_messages.PermissionDenied(data, "route")
     try:
         sender_role = get_role_string(request.user.role)
-        students = Student.objects.filter(route_id = route_id)
-        recipients = filtered_users_helper(students)
+        recipients = User.objects.filter(role=4)
         data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:

@@ -25,7 +25,6 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue, additi
         response = await api.get(`${url}?page=${pageIndex}&sort_by=${sort_by}&order_by=${order_by}&q=${searchValue}${params}`)
     }
 
-    // console.log(response)
     return {
         data: response.data,
         pageIndex: response.data.page.current_page,
