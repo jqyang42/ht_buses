@@ -18,7 +18,7 @@ class StudentsDetail extends Component {
         user: {},
         route: {},
         school: {},
-        center: {},
+        center: null,
         buses: [],
         bus_tooltip: {},
         redirect: false,
@@ -46,8 +46,8 @@ class StudentsDetail extends Component {
                 school: data.school,
                 user: data.user,
                 center: {
-                    lat: 0, //TODO: changes to data.user.location.lat and lng
-                    lng: 0
+                    lat: data.user.location.lat, //TODO: changes to data.user.location.lat and lng
+                    lng: data.user.location.lng
                 }
             });
             this.periodicCall(data.route.id)
@@ -90,7 +90,6 @@ class StudentsDetail extends Component {
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
-                    center: res.data.center,
                 })
             })
         }, 1000)
@@ -277,7 +276,7 @@ class StudentsDetail extends Component {
                                             {/* TODO: @thomas @jessica add the Transit Status Map here for in transit bus runs on routes that the student is on */}
                                             {/* <div className="col-md-7 me-4"> */}
                                                 <div className="mt-2">
-                                                {Object.keys(this.state.buses) ? 
+                                                {Object.keys(this.state.buses) && this.state.center ? 
                                                 <RouteMap 
                                                     assign_mode={false} 
                                                     key={false}

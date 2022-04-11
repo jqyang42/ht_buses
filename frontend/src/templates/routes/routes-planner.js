@@ -597,7 +597,7 @@ class BusRoutesPlanner extends Component {
                                     <p>{this.state.school.address}</p>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-md-7 me-4 mb-4">
+                                    <div className="col min-w-50 me-4 mb-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
                                         {!this.state.assign_mode ? 
                                         <div className="row d-flex mt-2 align-items-center align-middle">
@@ -773,7 +773,7 @@ class BusRoutesPlanner extends Component {
                                         }
                                         
                                     </div>
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h7>STUDENTS</h7>
                                         <SchoolStudentsTable 
                                         data={this.state.students_page} 
@@ -786,12 +786,12 @@ class BusRoutesPlanner extends Component {
                                         totalPages={this.state.students_table.totalPages}
                                         searchValue={''}
                                         />
-                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4 mt-0" onClick={this.handleStudentsShowAll}>
                                             { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"
                                             }
                                         </button>
-
+                                        <div className="mb-4"></div>
                                         {
                                             this.state.active_route === 0 ? "" : this.state.stops_page ?
                                             <>
@@ -828,7 +828,7 @@ class BusRoutesPlanner extends Component {
                                                 dnd={this.state.dnd} 
                                                 handleReorder={this.handleReorder}/>
                                                 { !this.state.stops_edit_mode ?                                                 
-                                                <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                <button className="btn btn-secondary align-self-center w-auto mb-4 mt-0" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }

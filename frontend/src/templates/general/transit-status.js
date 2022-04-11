@@ -16,7 +16,7 @@ import { PARENT_DASHBOARD_URL, ROUTES_URL, STUDENT_INFO_URL } from "../../consta
 class GlobalTransitStatus extends Component {
     state = {
         schools : [],
-        center: {},
+        center: null,
         markers: null,
         redirect: false,
         error_status: false,
@@ -132,7 +132,7 @@ class GlobalTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.buses  && this.state.schools ? 
+                                        {this.state.buses && this.state.schools && this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
@@ -142,6 +142,7 @@ class GlobalTransitStatus extends Component {
                                             // existingStops={this.state.stops}                                            
                                             buses={this.state.buses}
                                             school_tooltips={this.state.schools}
+                                            zoom={10}
                                         />
                                         : "" }
                                         </div>
