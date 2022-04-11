@@ -8,12 +8,18 @@ from django.db.models import Value as V
 from django.db.models.functions import Concat, Cast
 from ..general.general_tools import get_logs_for_user
 from .log_pagination import log_pagination
+from ..buses.transit_updates import remove_bus
+from ..logs.log_expiration import log_expiration
 
 # Added IsAdmin so I can test on Postman so I don't have to switch to being a driver
 @csrf_exempt
 @api_view(['GET'])
 @permission_classes([IsDriver|IsAdmin|IsSchoolStaff]) 
 def log_view(request):
+    expired_buses = log_expiration()
+    if len(expired_buses) > 0:
+        for expired_bus in expired_buses:
+            remove_bus(expired_bus)
     page_number = request.query_params["page"]
     sort_by = request.query_params["sort_by"]
     order_by = request.query_params["order_by"]

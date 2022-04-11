@@ -7,6 +7,8 @@ from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
 from ..general.general_tools import has_access_to_object
 from ..general.response_messages import PermissionDenied, DoesNotExist
 from datetime import timedelta
+from ..buses.transit_updates import remove_bus
+from ..logs.log_expiration import log_expiration
 from rest_framework.permissions import IsAuthenticated
 
 # TODO: This method needs log permissions
@@ -21,6 +23,10 @@ def get_buses(request):
         route_serializer = RouteSerializer(route, many=False)
         school_id = route_serializer.data["school_id"]
         school = School.objects.get(pk = school_id)
+        expired_buses = log_expiration()
+        if len(expired_buses) > 0:
+            for expired_bus in expired_buses:
+                remove_bus(expired_bus)
     except:
         return DoesNotExist(data, "school")
     try:

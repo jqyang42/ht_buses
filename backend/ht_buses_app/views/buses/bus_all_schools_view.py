@@ -7,6 +7,8 @@ from ...role_permissions import IsAdmin, IsDriver, IsSchoolStaff
 from ..general.general_tools import get_objects_for_user
 from ..general.response_messages import PermissionDenied, DoesNotExist
 from datetime import timedelta
+from ..buses.transit_updates import remove_bus
+from ..logs.log_expiration import log_expiration
 
 # TODO: This method needs log permissions
 @csrf_exempt
@@ -15,6 +17,10 @@ from datetime import timedelta
 def get_buses(request):
     try:
         schools = get_objects_for_user(request.user,"view_school", School.objects.all())
+        expired_buses = log_expiration()
+        if len(expired_buses) > 0:
+            for expired_bus in expired_buses:
+                remove_bus(expired_bus)
     except:
         return PermissionDenied(data, "school")
     data = active_buses_filter(schools)
