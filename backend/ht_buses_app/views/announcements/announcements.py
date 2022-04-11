@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from . import announcement_tools
 from django.conf import settings
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import has_access_to_object, get_role_string, filtered_users_helper
+from ..general.general_tools import has_access_to_object, get_role_string, announcements_filtered_users_helper
 from ..general import response_messages
 
 @csrf_exempt
@@ -42,7 +42,7 @@ def announcement_school(request):
     try:
         sender_role = get_role_string(request.user.role)
         students = Student.objects.filter(school_id=school_id)
-        recipients = filtered_users_helper(students)
+        recipients = announcements_filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:
@@ -68,7 +68,7 @@ def announcement_route(request):
     try:
         sender_role = get_role_string(request.user.role)
         students = Student.objects.filter(route_id=route_id)
-        recipients = filtered_users_helper(students)
+        recipients = announcements_filtered_users_helper(students)
         data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:

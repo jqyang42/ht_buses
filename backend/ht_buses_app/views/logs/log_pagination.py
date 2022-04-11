@@ -1,10 +1,16 @@
 from ...serializers import LogSerializer, UserSerializer, RouteSerializer, SchoolSerializer
 from django.core.paginator import Paginator
 from ...models import User, Route, School
+from ..buses.transit_updates import remove_bus
+from ..logs.log_expiration import log_expiration
 
 def log_pagination(logs, page_number):
     data = {}
     # how do I do pagination again lmfao
+    expired_buses = log_expiration()
+    if len(expired_buses) > 0:
+        for expired_bus in expired_buses:
+            remove_bus(expired_bus)
     if int(page_number) == 0:
         prev_page = False
         next_page = False

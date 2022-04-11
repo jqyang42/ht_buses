@@ -9,6 +9,8 @@ from ..general.general_tools import has_access_to_object, get_role_string, user_
 from ..general import response_messages
 from guardian.shortcuts import get_objects_for_user
 from rest_framework.authtoken.models import Token
+from ht_buses_app.views.buses import transit_updates
+from ht_buses_app.views.buses import bus_management
 
 @csrf_exempt
 @api_view(["GET"])
@@ -81,6 +83,10 @@ def user_account(request):
 @permission_classes([AllowAny])
 def update_stored_user_info(request):
     data = {}
+    if not transit_updates.is_running:
+        active_buses = bus_management.active_buses()
+        transit_updates.initialize_updater(active_buses=active_buses)
+
     try:
         user = request.user
         user = User.objects.get(pk = user.id)
@@ -112,3 +118,4 @@ def update_stored_user_info(request):
         data["logged_in"] = False
         message = "User authentication details could not extracted, try logging in again"
         return Response({"data": data, "message": message, "token": ''}, status = 401)
+    

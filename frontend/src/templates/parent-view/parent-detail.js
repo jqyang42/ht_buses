@@ -20,6 +20,8 @@ class ParentDetail extends Component {
         student: {},
         center: {},
         stops: {},
+        buses: [],
+        bus_tooltip: {},
         active_route: 1,
         error_status: false,
         error_code: 200,
@@ -70,6 +72,7 @@ class ParentDetail extends Component {
                 },
                 student: student,
              })
+             this.periodicCall(student.route.id)
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -80,6 +83,24 @@ class ParentDetail extends Component {
         })
     }
 
+    periodicCall = (route_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/route?id=${route_id}`)
+            .then(res => {
+                console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                    center: res.data.center,
+                })
+            })
+        }, 1000)
+    }
     // render handler
     handleStopsShowAll = () => {
         this.setState(prevState => ({
@@ -162,6 +183,8 @@ class ParentDetail extends Component {
                                             center={this.state.center}
                                             existingStops={this.state.stops}
                                             centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
+                                            buses={this.state.buses}
+                                            bus_tooltip={this.state.bus_tooltip}
                                         />
                                         : "" }
                                         </div>

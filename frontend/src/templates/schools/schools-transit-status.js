@@ -48,6 +48,7 @@ class SchoolsTransitStatus extends Component {
         api.get(`schools/detail?id=${this.props.params.id}`)
         .then(res => {
             const data = res.data
+            data["school"]["id"]=this.props.params.id
             this.setState({ 
                 school: data.school
             });
@@ -74,7 +75,6 @@ class SchoolsTransitStatus extends Component {
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
                     center: res.data.center,
-                    // school: res.data.schools
                 })
             })
             this.getActiveBuses(this.state.buses_table.pageIndex, null, '')
@@ -113,49 +113,6 @@ class SchoolsTransitStatus extends Component {
             })
         })
     }
-
-    // getStudentsFromUser = (users) => {
-    //     const students = users?.map(user => {
-    //         return user.students.map(student => {
-    //             return {
-    //                 student_school_id: student.student_school_id,
-    //                 id: student.id,
-    //                 first_name: student.first_name,
-    //                 last_name: student.last_name,
-    //                 in_range: student.in_range
-    //             }
-    //         })
-    //     })
-    //     return [].concat.apply([], students)
-    // }
-
-    // handlers
-    // handleDelete = (event) => {
-    //     event.preventDefault()
-
-    //     api.delete(`routes/delete?id=${this.props.params.id}`)
-    //         .then(res => {
-    //             // console.log("hello")
-    //             const success = res.data.success
-    //             // console.log(res.data)
-    //             if (success) {
-    //                 this.setState({ 
-    //                     delete_success: 1,
-    //                     redirect: true
-    //                 })
-    //             } else {
-    //                 this.setState({ delete_success: -1})
-    //             }
-    //         }) 
-    // }
-
-    // handleRoutesShowAll = () => {
-    //     this.setState(prevState => ({
-    //         routes_show_all: !prevState.routes_show_all
-    //     }), () => {
-    //         this.getStudentsPage(this.state.routes_show_all ? 0 : 1, null, '')
-    //     })
-    // }
 
     render() {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
@@ -202,11 +159,12 @@ class SchoolsTransitStatus extends Component {
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
-                                            active_route={this.props.params.id} 
+                                            // active_route={this.props.params.id} 
                                             center={this.state.center}
                                             bus_tooltip={this.state.bus_tooltip}
-                                            existingStops={this.state.stops}
+                                            // existingStops={this.state.stops}
                                             buses={this.state.buses}
+                                            school={this.state.school}
                                         />
                                         : "" }
                                         </div>

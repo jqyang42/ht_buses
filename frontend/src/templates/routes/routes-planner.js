@@ -731,6 +731,7 @@ class BusRoutesPlanner extends Component {
                                             handleUpdateNewStops={this.handleNewStopsChange}
                                             handleDeleteOrigStops={this.handleOrigStopsDeletion}
                                             handleStopModification={this.handleRouteStopModification}
+                                            school={this.state.school}
                                             />
                                         </div>
                                         { this.state.map_redirect_dropoff.length !== 0 ?
