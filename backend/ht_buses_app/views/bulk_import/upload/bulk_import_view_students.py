@@ -86,7 +86,11 @@ def bulk_import(request):
                         else:
                             email_error = False
                 else:
-                    email_error = False
+                    if len(row["parent_email"]) != 0:
+                        email_error = True
+                        email_error_message = "Parent email is not a valid email"
+                    else:
+                        email_error = False
 
         if row["name"] is None or row["name"] == "":
             name_error = True
@@ -249,7 +253,7 @@ def bulk_import(request):
                 students[j]["error"]["duplicate_parent_email"] = True
                 students[i]["error"]["duplicate_student_email"] = True
                 students[j]["error"]["duplicate_student_email"] = True
-                students[i]["exclude"] = False
+                students[i]["exclude"] = True
                 students[j]["exclude"] = True
                 if len(errors) == 0:
                     new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
@@ -289,7 +293,7 @@ def bulk_import(request):
                 students[j]["error"]["duplicate_name"] = True
                 students[i]["error"]["duplicate_parent_email"] = True
                 students[j]["error"]["duplicate_parent_email"] = True
-                students[i]["exclude"] = False
+                students[i]["exclude"] = True
                 students[j]["exclude"] = True
                 if len(errors) == 0:
                     new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": False, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
