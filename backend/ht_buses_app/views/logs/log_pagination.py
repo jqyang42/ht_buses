@@ -55,9 +55,9 @@ def log_pagination(logs, page_number):
         start_time = log["start_time"]
         duration = log["duration"]
         if duration == "03:00:00":
-            duration = duration[:-3]
+            duration = duration
         else:
-            duration = duration[:-10]
+            duration = duration[:-7]
         pickup = log["pickup"]
         log_arr.append({"id": log["id"], "route": route_arr, "school": school_obj, "bus_number": bus_number, "user": user_obj, "date": date, "start_time": start_time[:-10], "duration": duration, "pickup": pickup})
 
