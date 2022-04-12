@@ -28,8 +28,6 @@ class ParentSidebarMenu extends Component {
             localStorage.setItem('is_staff', false)
             localStorage.setItem('logged_in', false)
             localStorage.setItem('is_parent', false)
-            // console.log(localStorage.getItem('logged_in'))
-            // console.log(localStorage.getItem('token'))
             window.location.reload()
         })
     }
@@ -42,9 +40,6 @@ class ParentSidebarMenu extends Component {
     }
 
     render() {
-        // if (this.state.redirect) {
-        //     return <Navigate to={PARENT_PASSWORD_URL}/>;
-        // }
         var activeTab = this.props.activeTab ? "active" : ""
 
         return (
@@ -58,20 +53,14 @@ class ParentSidebarMenu extends Component {
                         <li className={"nav-item " + activeTab}>
                             <a href={PARENT_DASHBOARD_URL} className="nav-link align-middle mx-4 px-4">
                                 <i className="bi bi-house me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">Dashboard</span>
+                                <span className="ms-1 d-inline">Dashboard</span>
                             </a>
                         </li>
                     </ul>
                     <div className="w-100 px-auto pb-1 d-flex flex-wrap justify-content-around">
-                            {/* <Link to={PASSWORD_URL} className="btn btn-primary w-75 mb-2 mx-auto align-self-center  justify-content-around" role="button">
-                                <span className="btn-text">
-                                    Change Password
-                                </span>
-                            </Link> */}
                             <button className="btn btn-primary w-75 mb-4 mx-auto" role="button" onClick={this.handleLogout}>
                                 Log Out
                             </button> 
-                        
                     </div>
                 </div>
             </div>

@@ -64,24 +64,13 @@ export function SchoolsTable({ data, showAll, pageIndex, canPreviousPage, canNex
     const columnHeaderClick = async (column) => {
         switch (column.sortDirection) {
           case 'none':
-            // console.log(column.sortDirection)
-            // console.log(column.id)
             setSort({ sortDirection: 'ASC', accessor: column.id });
-            // const desc = await getClients( 'ASC', column.id );
-            // setData(desc);
-            // console.log(sort)
             break;
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
-            // const asc = await getClients('DESC', column.id);
-            // console.log(sort)
-            // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
-            // const newData = await getClients('none', column.id);
-            // setData(newData);
-            // console.log(sort)
             break;
         }
     };
@@ -92,7 +81,6 @@ export function SchoolsTable({ data, showAll, pageIndex, canPreviousPage, canNex
             data={data}
             searchOn={true}
             searchLabel="Search by name..."
-            // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/schools/"}
             rowProps={row => ({

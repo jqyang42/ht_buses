@@ -1,4 +1,5 @@
-from ...models import User
+from ...serializers import StudentSerializer
+from ...models import User, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
@@ -22,6 +23,12 @@ def user_delete(request):
     except:
         return response_messages.PermissionDenied(data, "user")
     try:
+        students = Student.objects.filter(user_id=id)
+        for student in students:
+            student_serializer = StudentSerializer(student, many=False)
+            if student_serializer.data["account_id"] is not None:  
+                student_user = User.objects.get(pk=student_serializer.data["account_id"])
+                student_user.delete()
         user_object.location.delete()
         user_object.delete()
         data["message"] = "user successfully deleted"

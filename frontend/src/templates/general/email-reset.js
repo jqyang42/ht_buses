@@ -6,7 +6,7 @@ import UnauthenticatedSidebarMenu from "../components/unauthenticated-sidebar-me
 import api from "../components/api";
 import EmailConfirmation from "./email-confirmation";
 import { STUDENTS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class EmailReset extends Component {
     state = {
@@ -14,7 +14,6 @@ class EmailReset extends Component {
         valid_email: 0,
         email: "",
         message_sent: 0
-
     }
 
     componentDidMount() {
@@ -64,8 +63,11 @@ class EmailReset extends Component {
         if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('is_staff'))) {
             return <Navigate to={STUDENTS_URL} />
         }
-        else if (JSON.parse(localStorage.getItem('logged_in')) && !JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('logged_in')) && JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
@@ -97,11 +99,6 @@ class EmailReset extends Component {
                                                     <label for="email" className="control-label pb-2">Email</label>
                                                     <input type="email" className="form-control pb-2" id="email" 
                                                     placeholder="Enter email" required onChange={this.handleEmailChange}></input>
-                                                    {/* {(!this.passwordValidation() && this.state.password !== "") ? 
-                                                        (<div class="alert alert-danger mt-3 mb-0" role="alert">
-                                                            Invalid email.
-                                                        </div>) : ""
-                                                    } */}
                                                 </div>
                                                 <div className="row justify-content-end ms-0 mt-2 me-0 pe-0 form-col">
                                                     <Link to={"/login"} className="btn btn-secondary w-auto me-3 justify-content-end" role="button">

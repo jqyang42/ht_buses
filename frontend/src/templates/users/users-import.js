@@ -8,7 +8,7 @@ import { getPage } from "../tables/server-side-pagination";
 import { Modal } from "react-bootstrap";
 
 import { LOGIN_URL, USERS_URL } from '../../constants';
-import { USERS_CREATE_URL, PARENT_DASHBOARD_URL } from "../../constants";
+import { USERS_CREATE_URL, PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import api from "../components/api";
 
 class UsersImport extends Component {
@@ -202,8 +202,11 @@ class UsersImport extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.users_redirect) {
             return <Navigate to={ USERS_URL }/>
@@ -292,60 +295,18 @@ class UsersImport extends Component {
                                         </Modal.Footer>
                                         </form>
                                     </Modal>
-
-                                    {/* <div className="modal fade" id="verifyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form onSubmit={this.state.verifyCheck ? this.handleSubmitImport : ''}>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Verify Users</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        { this.state.verifyCheck ? "All users have been verified and no errors exist. Your import is ready to be submitted!" :
-                                                        "Errors still exist in the file import. Please correct them before submitting."
-                                                        }
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type={this.state.verifyCheck ? "submit" : "button"} className="btn btn-secondary" data-bs-dismiss="modal">Save and Import</button>
-                                                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal">Continue Editing</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div> */}
-                                    {/* Submit button */}
-                                    {/* @jessica add  */}
-                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" data-bs-toggle="modal" data-bs-target="#submitModal" disabled={!this.state.verifyCheck}>Save and Import</button> */}
-
-                                    {/* Submit confirmation modal */}
-                                    <div className="modal fade" id="submitModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                        <div className="modal-dialog modal-dialog-centered">
-                                            <div className="modal-content">
-                                                <form onSubmit={this.handleSubmitImport}>
-                                                    <div className="modal-header">
-                                                        <h5 className="modal-title" id="staticBackdropLabel">Import Users</h5>
-                                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div className="modal-body">
-                                                        Are you sure you want to save and import all users?
-                                                    </div>
-                                                    <div className="modal-footer">
-                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                        <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
                                 <div className="extra-margin">
+                                <div class="alert alert-primary mt-2 mb-2" role="alert">
+                                    Please note that you can only import parent users.
+                                </div>
                                 {this.state.loading ? 
-                                    <div class="alert alert-primary mt-2 mb-3" role="alert">
+                                    <div class="alert alert-primary mt-2 mb-2" role="alert">
                                         Please wait patiently while we load and verify your file import.
                                     </div> : ""
                                 }
+                                
                                 {(this.state.errors.length !== 0) ? 
                                     this.state.errors.map(error => 
                                         error.exclude ? "" :

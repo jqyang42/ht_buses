@@ -6,11 +6,6 @@ export function SchoolRoutesTable({ data, showAll, pageIndex, canPreviousPage, c
 
     const columns = React.useMemo(
         () => [
-            // {
-            //     Header: '#',
-            //     accessor: 'id', // accessor is the "key" in the data
-            //     disableSortBy: true
-            // },
             {
                 Header: 'Name',
                 accessor: 'name',

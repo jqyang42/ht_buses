@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Location, Route, School, Stop, Student, User
+from .models import Bus, Location, Log, Route, School, Stop, Student, User
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ('id', 'first_name', 'last_name', 'school_id', 'student_school_id', 'route_id', 'user_id', 'in_range')
+        fields = ('id', 'first_name', 'last_name', 'school_id', 'student_school_id', 'route_id', 'user_id', 'in_range', 'account_id')
 
 class RouteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,7 +19,7 @@ class SchoolSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email', 'role', 'is_parent', 'location', 'phone_number')
+        fields = ('id', 'first_name', 'last_name', 'email', 'role', 'location', 'phone_number')
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -40,4 +40,14 @@ class ManageSchoolsSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
         fields = ('id', 'name')
+
+class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Log
+        fields = ('id', 'route_id', 'bus_number', 'user_id', 'date', 'start_time', 'duration', 'pickup')
+
+class BusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bus
+        fields = ('id','bus_number','last_updated','location_id','is_running')
     

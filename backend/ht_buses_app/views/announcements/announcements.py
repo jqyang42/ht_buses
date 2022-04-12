@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from . import announcement_tools
 from django.conf import settings
 from ...role_permissions import IsAdmin, IsSchoolStaff
-from ..general.general_tools import has_access_to_object
+from ..general.general_tools import has_access_to_object, get_role_string, announcements_filtered_users_helper
 from ..general import response_messages
 
 @csrf_exempt
@@ -17,12 +17,12 @@ def announcement_users(request):
     data={}
     subject, body, include_route_info = announcement_tools.email_request_parser(request.data)
     try:
-        recipients = User.objects.all()
-        data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
+        sender_role = get_role_string(request.user.role)
+        recipients = User.objects.filter(role=4)
+        data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:
         return response_messages.UnsuccessfulAction(data, "sending user announcement")
-
 
 @csrf_exempt
 @api_view(["POST"])
@@ -40,9 +40,10 @@ def announcement_school(request):
     except:
         return response_messages.PermissionDenied(data, "school")
     try:
-        students = Student.objects.filter(school_id = school_id)
-        recipients = announcement_tools.filtered_users_helper(students)
-        data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
+        sender_role = get_role_string(request.user.role)
+        students = Student.objects.filter(school_id=school_id)
+        recipients = announcements_filtered_users_helper(students)
+        data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:
         return response_messages.UnsuccessfulAction(data, "sending school announcement")
@@ -58,15 +59,17 @@ def announcement_route(request):
         uv_route_id = Route.objects.get(pk=id)
     except:
         return response_messages.DoesNotExist(data, "route")
+    
     route_id = has_access_to_object(request.user, uv_route_id)
     try:
         route_id = has_access_to_object(request.user, uv_route_id)
     except:
         return response_messages.PermissionDenied(data, "route")
     try:
-        students = Student.objects.filter(route_id = route_id)
-        recipients = announcement_tools.filtered_users_helper(students)
-        data = announcement_tools.send_mass_announcement(subject, body, recipients, include_route_info)
+        sender_role = get_role_string(request.user.role)
+        students = Student.objects.filter(route_id=route_id)
+        recipients = announcements_filtered_users_helper(students)
+        data = announcement_tools.send_mass_announcement(sender_role, subject, body, recipients, include_route_info)
         return Response(data)
     except:
         return response_messages.UnsuccessfulAction(data, "sending route announcement")

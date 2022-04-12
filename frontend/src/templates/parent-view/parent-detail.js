@@ -13,13 +13,15 @@ import { getPage } from "../tables/server-side-pagination";
 import { MARKER_ICONS } from '../../constants';
 
 import { LOGIN_URL } from "../../constants";
-import { STUDENTS_URL } from "../../constants";
+import { STUDENTS_URL, STUDENT_INFO_URL } from "../../constants";
 
 class ParentDetail extends Component {
     state = {
         student: {},
-        center: {},
+        center: null,
         stops: {},
+        buses: [],
+        bus_tooltip: {},
         active_route: 1,
         error_status: false,
         error_code: 200,
@@ -47,8 +49,6 @@ class ParentDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 stops_page: res.data.stops,
@@ -71,7 +71,10 @@ class ParentDetail extends Component {
                     lng: student.location.lng
                 },
                 student: student,
-             })
+            })
+            if (student.route.id !== 0) {
+                this.periodicCall(student.route.id)
+            }
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -82,6 +85,23 @@ class ParentDetail extends Component {
         })
     }
 
+    periodicCall = (route_id) => {
+        this.interval_id = setInterval(async () => {
+            api.get(`buses/route?id=${route_id}`)
+            .then(res => {
+                // console.log(res.data)
+                let bus_tooltip = {}
+                bus_tooltip = res.data.buses.reduce(
+                    (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
+                    {})
+                // console.log(bus_tooltip)
+                this.setState({
+                    buses: res.data.buses,
+                    bus_tooltip: bus_tooltip,
+                })
+            })
+        }, 1000)
+    }
     // render handler
     handleStopsShowAll = () => {
         this.setState(prevState => ({
@@ -93,8 +113,13 @@ class ParentDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
+        if (JSON.parse(localStorage.getItem('is_staff'))) {
+            return <Navigate to={STUDENTS_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
+        }
         if (this.state.error_status) {
-            // console.log("reached")
             return <ErrorPage code={this.state.error_code} />
         }
         if (Object.keys(this.state.student).length) {
@@ -104,6 +129,7 @@ class ParentDetail extends Component {
         } else {
             // console.log("theres nothing woahhhhhhh")
         }
+        console.log(this.state.student)
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">
@@ -124,7 +150,7 @@ class ParentDetail extends Component {
                                     <div className="col">
                                     </div>
                                 </div>
-                                <div className="row mt-4">
+                                {/* <div className="row mt-4">
                                     <div className="col-auto me-2">
                                         <p className="gray-600">
                                             School
@@ -147,11 +173,70 @@ class ParentDetail extends Component {
                                             {this.state.student.route?.description}
                                         </p>
                                     </div>
+                                </div> */}
+                                <div className="row mt-4 flex-wrap">
+                                    <div className="col">
+                                        <div className="row flex-nowrap mb-4">
+                                            <div className="col-auto me-2">
+                                                <p className="gray-600">
+                                                    Email
+                                                </p>
+                                                <p className="gray-600">
+                                                    Phone
+                                                </p>
+                                                <p className="gray-600">
+                                                    School
+                                                </p>
+                                                <p className="gray-600">
+                                                    Route
+                                                </p>
+                                                <p className="gray-600">
+                                                    Route Description
+                                                </p>
+                                                <p className="gray-600">
+                                                    Bus Stops
+                                                </p>
+                                            </div>
+                                            <div className="col me-6">
+                                                <p>
+                                                    {this.state.student.email ? this.state.student.email : "–"}
+                                                </p>
+                                                <p>
+                                                    {this.state.student.phone_number ? this.state.student.phone_number : "–"}
+                                                </p>
+                                                <p>
+                                                    {this.state.student.school_name}
+                                                </p>
+                                                {(this.state.student.route?.name === "Unassigned" || this.state.student.route?.name === "" ) ?
+                                                    <>
+                                                        <p className="unassigned"> {"Unassigned"}</p>
+                                                        <p>–</p>
+                                                    </> :
+                                                    <>
+                                                        <p>
+                                                            {this.state.student.route?.name}
+                                                        </p>
+                                                        <p>
+                                                            {this.state.student.route?.description === "" ? "–" : this.state.student.route?.description}
+                                                        </p>
+                                                    </>
+                                                }
+                                                {
+                                                    (this.state.student.in_range ?
+                                                        <p>
+                                                            In Range
+                                                        </p> :
+                                                        <p className="unassigned"> {"Out of Range"}</p> 
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="row mt-4">
                                     <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
-                                        {Object.keys(this.state.student).length ? 
+                                        {Object.keys(this.state.student).length && this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={false}
@@ -159,6 +244,8 @@ class ParentDetail extends Component {
                                             center={this.state.center}
                                             existingStops={this.state.stops}
                                             centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
+                                            buses={this.state.buses}
+                                            bus_tooltip={this.state.bus_tooltip}
                                         />
                                         : "" }
                                         </div>

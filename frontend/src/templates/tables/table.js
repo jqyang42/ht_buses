@@ -8,18 +8,22 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import TablePagination from "./pagination";
 import update from 'immutability-helper';
 
-export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, 
-  hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
-  totalPages, columnHeaderClick, sortOptions, searchValue }) {
+export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, 
+  totalPages, columnHeaderClick, sortOptions, searchValue, filterRoleValue }) {
 
     const navigate = useNavigate();
 
     const handleFilterInputChange = (e) => {
         // console.log(e.currentTarget.value);
         searchValue = e.currentTarget.value;
-        updatePageCount(pageIndex, sortOptions, searchValue)
-        // TODO: Call backend API for search here, pass in value as query @jessica
-        // setGlobalFilter(value);
+        updatePageCount(pageIndex, sortOptions, searchValue, filterRoleValue)
+    };
+
+    const handleRoleInputChange = (e) => {
+      filterRoleValue = e.currentTarget.value;
+      updatePageCount(pageIndex, sortOptions, searchValue, filterRoleValue)
+      // TODO: Call backend API for search here, pass in value as query @jessica
+      // setGlobalFilter(value);
     };
 
     const [records, setRecords] = useState(data)
@@ -30,7 +34,6 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
     }, [data])
 
     const getRowId = React.useCallback(row => {
-        // console.log(row)
         return row.id
     }, [])
 
@@ -40,16 +43,6 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         headerGroups,
         prepareRow,
         rows,
-        // page,
-        // canPreviousPage,
-        // canNextPage,
-        // pageOptions,
-        // nextPage,
-        // previousPage,
-        // state: { 
-            // pageIndex,
-            // pageSize
-        // },
         setGlobalFilter,
     } = useTable(
         {
@@ -61,15 +54,12 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
         manualSortBy: true,
         initialState: { 
             searchInput: "",
-            // pageIndex: 0,
-            // pageSize: 10,
             sortBy: dnd ? [] : ( hasCustomSortBy ? customSortBy : [
                 {
                     id: 'name',
                     desc: false
                 }
             ]),
-            // hiddenColumns: customHiddenColumn || []
         },
         },
         useFilters,
@@ -86,22 +76,34 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
               [hoverIndex, 0, dragRecord],
           ],
         })
-        // console.log(records)
         const new_order = new_records.map(row => {
             return row.id
         })
-        // console.log(new_records)
-        // console.log(new_order)
         handleReorder(new_order)
         setRecords(new_records)
     }
 
+    console.log(rows)
+
     return (
         <>
             { searchOn ?
-            // <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} ourGlobalFilterFunction={ourGlobalFilterFunction} /> 
             <SearchBar label={searchLabel} handleFilterInputChange={handleFilterInputChange} />
             : "" }
+            { filterOn ?
+            <>
+              <div className='row flex-nowrap align-items-center'>
+                <p className='w-auto'>Filter: </p>
+                <select className="form-select w-auto ms-2 mb-3" placeholder="Filter: Role" aria-label="Select a Role"  id="roleType" required onChange={handleRoleInputChange}>
+                  <option value={0} selected>Select a Role</option>
+                  <option value={4} id="4">General</option>
+                  <option value={1} id="1">Administrator</option>
+                  <option value={2} id="2">School Staff</option>
+                  <option value={3} id="3">Driver</option>
+                  <option value={5} id="4">Student</option>
+                </select>
+              </div></>
+            : "" }            
 
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
@@ -120,9 +122,6 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                         {// Render the header
                         column.render('Header')}
                         
-                        {/* Column filter UI */}
-                        {/* <div>{column.canFilter ? column.render('Filter') : null}</div> */}
-                        
                         {/* Sorting UI */}
                         <span className="w-auto ms-2 me-0 float-right text-end">
                             {!column.disableSortBy ? (column.sortDirection === 'ASC' ?
@@ -139,7 +138,6 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 {/* Apply the table body props */}
                 <tbody {...getTableBodyProps()}>
                 {// Loop over the table rows
-                // showAll ? 
                 (dnd ? 
                 rows.map((row, i) => 
                     // Prepare the row for display
@@ -164,30 +162,6 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                     </tr>
                     )
                 }))
-                //  : (dnd ? 
-                // page.map((row, i) => 
-                //     // Prepare the row for display
-                //     prepareRow(row) || (
-                //         <Row
-                //         index={i}
-                //         row={row}
-                //         moveRow={moveRow}
-                //         navUrl={navUrl}
-                //         {...row.getRowProps(rowProps(row))}
-                //         />
-                //     )
-                // ) :
-                // page.map((row, i) => {
-                //     // Prepare the row for display
-                //     prepareRow(row)
-                //     return (
-                //     <tr {...row.getRowProps(rowProps(row))} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
-                //         {row.cells.map(cell => {
-                //         return <td {...cell.getCellProps()}> {cell.render('Cell')}</td>
-                //         })}
-                //     </tr>
-                //     )
-                // }))}
                 }
                 </tbody>
             </table>
@@ -198,20 +172,16 @@ export function Table({ columns, data, searchOn, searchLabel, ourGlobalFilterFun
                 showAll ? "" :
                 <TablePagination
                     pageIndex={pageIndex}
-                    // pageOptions={pageOptions}
-                    // previousPage={previousPage}
                     canPreviousPage={canPreviousPage}
-                    // nextPage={nextPage}
                     canNextPage={canNextPage}
                     updatePageCount={updatePageCount}
                     pageSize={pageSize}
                     totalPages={totalPages}
                     sortOptions={sortOptions}
                     searchValue={searchValue}
-                    // page={page}
+                    filterParam={filterRoleValue}
                 />
-            }
-            
+            } 
         </>
     )
 }
@@ -257,7 +227,6 @@ const Row = ({ row, index, moveRow, navUrl }) => {
       }
       // Time to actually perform the action
       moveRow(dragIndex, hoverIndex)
-      // console.log(row)
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
@@ -279,15 +248,8 @@ const Row = ({ row, index, moveRow, navUrl }) => {
   preview(drop(dropRef))
   drag(dragRef)
 
-  // console.log(row)
 
   return (
-    // <tr ref={dropRef} style={{ opacity }}>
-    //   <td ref={dragRef}><i className="bi bi-list me-2"></i></td>
-    //   {row.cells.map(cell => {
-    //     return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-    //   })}
-    // </tr>
     <tr ref={dropRef} style={{ opacity }} {...row.getRowProps()} onClick={navUrl ? () => navigate(navUrl + row.original.id) : () => void 0}>
       <td ref={dragRef}><i className='bi bi-list'></i></td>
       {row.cells.map(cell => {

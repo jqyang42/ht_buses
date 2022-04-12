@@ -1,4 +1,4 @@
-from ...models import User, School
+from ...models import User, School, Student
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,6 +9,8 @@ from ..general.general_tools import has_access_to_object, get_role_string, user_
 from ..general import response_messages
 from guardian.shortcuts import get_objects_for_user
 from rest_framework.authtoken.models import Token
+from ht_buses_app.views.buses import transit_updates
+from ht_buses_app.views.buses import bus_management
 
 @csrf_exempt
 @api_view(["GET"])
@@ -27,6 +29,10 @@ def users_detail(request):
             return response_messages.PermissionDenied(data, "user")
     else:
         user = User.objects.get(pk = request.user.pk)
+    student_id = None
+    if user.role == User.STUDENT:
+        student_object = Student.objects.get(account = user)
+        student_id = student_object.pk
     try:
         user_serializer = UserSerializer(user, many=False)
         location_serializer = LocationSerializer(user.location, many=False)
@@ -37,7 +43,7 @@ def users_detail(request):
             role = User.role_choices[int(user_serializer.data["role"])-1][1]
         schools = get_objects_for_user(user,"view_school", School.objects.all())
         manage_schools_serializer = ManageSchoolsSerializer(schools, many=True)
-        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_serializer.data["is_parent"], "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools": manage_schools_serializer.data}
+        user_arr = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "email": user_serializer.data["email"], "role": role,"role_id": user_serializer.data["role"] ,"is_parent": user_is_parent(user), "phone_number": user_serializer.data["phone_number"],"location": location_arr, "managed_schools": manage_schools_serializer.data, "student_object_id": student_id}
         data["user"] = user_arr
         data["success"] = True
         return Response(data)
@@ -77,6 +83,10 @@ def user_account(request):
 @permission_classes([AllowAny])
 def update_stored_user_info(request):
     data = {}
+    if not transit_updates.is_running:
+        active_buses = bus_management.active_buses()
+        transit_updates.initialize_updater(active_buses=active_buses)
+
     try:
         user = request.user
         user = User.objects.get(pk = user.id)
@@ -95,7 +105,7 @@ def update_stored_user_info(request):
         data["user_id"] = user.id
         data["role_id"] = user.role
         data["role_value"] = get_role_string(user.role)
-        data["is_parent"] = user_is_parent(user.id)
+        # data["is_parent"] = user_is_parent(user.id)
         data["email"] = user.email
         data["first_name"] = user.first_name
         data["last_name"] = user.last_name
@@ -108,3 +118,4 @@ def update_stored_user_info(request):
         data["logged_in"] = False
         message = "User authentication details could not extracted, try logging in again"
         return Response({"data": data, "message": message, "token": ''}, status = 401)
+    

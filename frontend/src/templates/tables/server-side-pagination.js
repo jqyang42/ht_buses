@@ -2,12 +2,18 @@ import api from "../components/api";
 
 // additionalParams --> holds &id=x
 export async function getPage({ url, pageIndex, sortOptions, searchValue, additionalParams, only_pagination }) {
-    // const show_all = pageIndex === 0
     const has_sort = sortOptions === null ? false : sortOptions.sortDirection!== 'none' 
-    // const has_search = searchValue !== ''
     
-    const order_by = has_sort ? sortOptions.sortDirection.toLowerCase() : ''
+    let order_by = has_sort ? sortOptions.sortDirection.toLowerCase() : ''
     const sort_by = has_sort ? sortOptions.accessor : ''
+
+    if ((sort_by === 'in_range' || sort_by === 'pickup')&& (order_by === 'asc' || order_by === 'desc')) {
+        if (order_by === 'asc') {
+            order_by = 'desc'
+        } else {
+            order_by = 'asc'
+        }
+    }
     const params = additionalParams ? additionalParams : ''
 
     // console.log(only_pagination)
@@ -19,7 +25,6 @@ export async function getPage({ url, pageIndex, sortOptions, searchValue, additi
         response = await api.get(`${url}?page=${pageIndex}&sort_by=${sort_by}&order_by=${order_by}&q=${searchValue}${params}`)
     }
 
-    // console.log(response)
     return {
         data: response.data,
         pageIndex: response.data.page.current_page,

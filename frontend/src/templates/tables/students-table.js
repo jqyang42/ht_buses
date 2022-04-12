@@ -7,22 +7,10 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
     updatePageCount, pageSize, totalPages, searchValue}) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
-    // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
 
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
-    
-    // Filter by multiple columns
-    // const ourGlobalFilterFunction = useCallback(
-    //     (rows, ids, query) => {
-    //         return rows.filter((row) => 
-    //             row.values["student_school_id"].toString().includes(query.toString()) ||
-    //             row.values["name"].toLowerCase().includes(query.toLowerCase())
-    //         );
-    //     },
-    //     [],
-    // );
 
     const columns = React.useMemo(
         () => [
@@ -37,6 +25,19 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Phone',
+                accessor: 'phone_number',
+                id: 'phone_number',
+                disableSortBy: true,
+                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'School',
@@ -75,9 +76,10 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
             {
                 Header: 'Parent Phone',
                 accessor: 'parent.phone_number',
-                id: 'phone',
+                id: 'parent_phone',
                 disableFilter: true,
-                sortDirection: sort.accessor === 'phone' ? sort.sortDirection : 'none'
+                disableSortBy: true,
+                sortDirection: sort.accessor === 'parent_phone' ? sort.sortDirection : 'none'
             },
         ],
         [sort]
@@ -86,24 +88,13 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
     const columnHeaderClick = async (column) => {
         switch (column.sortDirection) {
           case 'none':
-            // console.log(column.sortDirection)
-            // console.log(column.id)
             setSort({ sortDirection: 'ASC', accessor: column.id });
-            // const desc = await getClients( 'ASC', column.id );
-            // setData(desc);
-            // console.log(sort)
             break;
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
-            // const asc = await getClients('DESC', column.id);
-            // console.log(sort)
-            // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
-            // const newData = await getClients('none', column.id);
-            // setData(newData);
-            // console.log(sort)
             break;
         }
     };
@@ -113,8 +104,7 @@ export function StudentsTable({ data, showAll, pageIndex, canPreviousPage, canNe
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by id or name..."
-            // ourGlobalFilterFunction={ourGlobalFilterFunction}
+            searchLabel="Search by id, name or email..."
             showAll={showAll}
             navUrl={"/students/"}
             rowProps={row => ({

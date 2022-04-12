@@ -188,7 +188,7 @@ def bulk_import_validate(request):
                         user_i_found = False
                         for k in range(0, len(errors)):
                             if errors[k]["row_num"] == users[i]["row_num"]:
-                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_name"] = False
                                 errors[k]["duplicate_email"] = True
                                 user_i_found = True
                         if user_i_found == False:
@@ -198,7 +198,7 @@ def bulk_import_validate(request):
                         user_j_found = False  
                         for k in range(0, len(errors)):    
                             if errors[k]["row_num"] == users[j]["row_num"]:
-                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_name"] = False
                                 errors[k]["duplicate_email"] = True
                                 user_j_found = True
                         if user_j_found == False:

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { Link , Navigate} from "react-router-dom";
 import { GOOGLE_API_KEY } from '../../constants';
 import { MARKER_COLORS } from '../../constants';
@@ -8,12 +8,15 @@ import { MARKER_ICONS } from '../../constants';
 import Geocode from "react-geocode";
 import StudentMarker from './student-marker';
 import StopMarker from './stop-marker';
-import { PARENT_DASHBOARD_URL , LOGIN_URL} from "../../constants";
+import BusMarker from './bus-marker';
+import SchoolMarker from './school-marker'
+import { PARENT_DASHBOARD_URL , LOGIN_URL, STUDENT_INFO_URL } from "../../constants";
 
 const containerStyle = {
   width: '100%',
-  height: '400px'
+  height: '600px'
 };
+
 const hidePOIs = [
   {
     "featureType": "administrative",
@@ -62,13 +65,48 @@ class RouteMap extends Component {
       lat: parseFloat(this.props.center.lat),
       lng: parseFloat(this.props.center.lng)
     },
+    buses: this.props.buses,
+    // bus_info_window: false,
+    bus_tooltip: this.props.bus_tooltip,
+    school: this.props.school,
+    school_tooltips: this.props.school_tooltips,
+    // center: this.props.center
   }
 
   studentsChanged = []
 
-  handleCenterChange = (event) => {
-    //TODO: update state with new center
+  toggleBusInfoWindow = (bus_number) => {
+    // console.log(this.state.bus_tooltip)
+    // this.setState(prevState => ({
+    //   bus_tooltip: {
+    //     ...prevState.bus_tooltip,
+    //     [bus_number]: !prevState.bus_tooltip[bus_number]
+    //   }
+    // }))
+
+    const new_tooltip = this.state.bus_tooltip
+    new_tooltip[bus_number] = !new_tooltip[bus_number]
+    this.setState({
+      bus_tooltip: new_tooltip
+    })
   }
+
+  // toggleSchoolInfoWindow = (bus_number) => {
+  //   // console.log(this.state.bus_tooltip)
+  //   // this.setState(prevState => ({
+  //   //   bus_tooltip: {
+  //   //     ...prevState.bus_tooltip,
+  //   //     [bus_number]: !prevState.bus_tooltip[bus_number]
+  //   //   }
+  //   // }))
+
+  //   const new_tooltip = this.state.school
+  //   // new_tooltip[school_id] = !new_tooltip[school_id]
+  //   this.setState({
+  //     bus_tooltip: new_tooltip
+  //   })
+  // }
+
 
   componentDidUpdate(prevProps) {
     if(this.props.existingStops !== prevProps.existingStops){
@@ -164,9 +202,6 @@ class RouteMap extends Component {
     // console.log(editedStop)
     const editedStopNames = this.state.editedStops;
     editedStopNames.push(editedStop)
-    // this.setState(prevState => ({
-    //   editedStops: [...prevState.editedStops, editedStop]
-    // }), console.log(this.state.editedStops))
     this.setState({
       editedStops: editedStopNames,
       existingStops: updatedStopNames
@@ -196,8 +231,10 @@ class RouteMap extends Component {
   }
 
   render() {
-    const center = this.props.center
-    // console.log(this.state.existingStops)
+    // const center = this.props.center
+    const zoom = this.props.zoom ? this.props.zoom : 12 
+    // const center = this.props.center
+    console.log(this.props.school)
     if (!JSON.parse(localStorage.getItem('logged_in'))) {
       return <Navigate to={LOGIN_URL} />
     }
@@ -208,22 +245,68 @@ class RouteMap extends Component {
         >
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={center}
+            center={this.state.center}
             options={{
               styles: hidePOIs
             }}
-            zoom={13}
+            zoom={zoom}
             onClick={this.createStopMarker}
           >
             {this.props.centerIcon ? 
               <Marker 
                 position={this.props.center} 
                 icon={this.props.centerIcon}
-              /> :
-              <Marker 
-                position={this.props.center} 
-              />
-            }
+                
+              />: ""}
+            {this.props.school ? 
+              <SchoolMarker 
+                location={this.props.center} 
+                name={this.props.school.name}
+                id={this.props.school.id}
+                key={`${this.props.center.lat}+${this.props.center.lng}`}
+              /> : ""}
+            {console.log(this.props.school)}
+            {this.props.school_tooltips?.map((value, index) => {
+            {console.log(value.location)}
+            {console.log(value.id)}
+            {console.log(value.name)}
+            return <SchoolMarker 
+              location={value.location} 
+              name={value.name}
+              id={value.id}
+              key={`${value.location.lat}+${value.location.lng}`}
+          />
+            })}
+            {this.props.buses?.map((value, index) => {
+              console.log(value)
+              return <BusMarker 
+                key={`${value.location.lat}+${value.location.lng}`}
+                id={index}
+                // uid={1}
+                bus_number={value.bus_number}
+                driver={value.user}
+                location={value.location}
+                // assign_mode={false} 
+                // routeID={5}
+                // handleDeleteStopMarker={() => {}}
+                // handleStopNameChange={() => {}}
+                // showInfoWindow={this.state.bus_info_window}
+                busToolTip={this.state.bus_tooltip}
+                toggleInfoWindow={this.toggleBusInfoWindow}
+                // key={index} 
+                // position={value.location}
+                // location={value.location} 
+                // assign_mode={this.props.assign_mode} 
+                // routeID={value.routeID} 
+                // active_route={this.props.active_route}
+                // id={value.id}
+                // studentIDs={value.studentIDs}
+                // studentNames={value.studentNames}
+                // onChange={this.handleRouteChanges} 
+                // data-bs-toggle="modal"
+                // data-bs-target="#staticBackdrop"
+                />
+            })}
             {this.props.students?.map((value, index) => {
               return <StudentMarker 
                 key={index} 

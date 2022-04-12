@@ -13,7 +13,7 @@ import { getPage } from "../tables/server-side-pagination";
 
 import { GOOGLE_API_KEY } from "../../constants";
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { GOOGLE_MAP_URL } from "../../constants";
 import { makeRoutesDropdown } from "../components/dropdown";
 import { StopsTable }  from "../tables/stops-table";
@@ -32,7 +32,7 @@ class BusRoutesPlanner extends Component {
             create_school_name: '',
             create_route_description: '',
             route_dropdown: [],
-            center: {},
+            center: null,
             markers: [],
             assign_mode: false,
             assign_mode_warning: false,
@@ -49,8 +49,6 @@ class BusRoutesPlanner extends Component {
                 canPreviousPage: null,
                 canNextPage: null,
                 totalPages: null,
-                // sortOptions: {},
-                // searchValue: ''
             },
             stops_page: [],
             stops_table: {
@@ -495,8 +493,6 @@ class BusRoutesPlanner extends Component {
             .then(res => {
                 this.switchStopsEditMode()
             })
-            // this.setState({ stops: res })
-            
         })
         
     }
@@ -576,11 +572,15 @@ class BusRoutesPlanner extends Component {
     }
 
     render() {
+        console.log(this.state.school)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
@@ -598,7 +598,7 @@ class BusRoutesPlanner extends Component {
                                     <p>{this.state.school.address}</p>
                                 </div>
                                 <div className="row mt-4">
-                                    <div className="col-md-7 me-4 mb-4">
+                                    <div className="col min-w-50 me-4 mb-4">
                                         <h7 className="text-muted text-small track-wide">PLAN ROUTES</h7>
                                         {!this.state.assign_mode ? 
                                         <div className="row d-flex mt-2 align-items-center align-middle">
@@ -674,13 +674,6 @@ class BusRoutesPlanner extends Component {
                                             <div className="col-auto align-self-center">
                                                 
                                                 <div className="row d-flex float-end me-0">
-                                                    {/* <select className="w-50 form-select float-end me-3" placeholder="Select a Route" aria-label="Select a Route" onChange={this.handleRouteSelection}>
-                                                        <option selected value={0}>Select a Route</option>
-                                                        <option selected value={0}>Unassign Student</option>
-                                                        {this.state.route_dropdown.map(route => 
-                                                            <option value={route.value} id={route.display}>{route.display}</option>
-                                                        )}
-                                                    </select> */}
                                                     {/* TODO: Change onClick handler to dismiss */}
                                                     <button type="button" className="btn btn-secondary w-auto me-3" onClick={this.handleAssignMode}>Cancel</button>
                                                     {/* TODO: Change onClick handler to save changes */}
@@ -689,18 +682,6 @@ class BusRoutesPlanner extends Component {
                                                     </button>
                                                 </div>
                                             </div>
-
-                                            {/* Cancel and Save buttons */}
-                                            {/* <div className="col-auto">
-                                                <div className="row d-inline-flex"> */}
-                                                    {/* TODO: Change onClick handler to dismiss */}
-                                                    {/* <button type="button" className="btn btn-secondary" onClick={this.handleAssignMode}>Cancel</button> */}
-                                                    {/* TODO: Change onClick handler to save changes */}
-                                                    {/* <button type="button" className="btn btn-primary float-end w-auto me-3" onClick={this.handleRouteAssignSubmit}> */}
-                                                        {/* Save
-                                                    </button>
-                                                </div>
-                                            </div> */}
                                         </div>
                                         }
 
@@ -733,13 +714,14 @@ class BusRoutesPlanner extends Component {
                                             (<div>
                                                 <div class="alert alert-primary mt-3 mb-2" role="alert">
                                                     <i className="bi bi-info-circle-fill me-2"></i>
-                                                        Click on a location marker to add students to this route. Click any location on the map to add a new stop there.
+                                                        Click on a location marker to add students to this route. Click any location on the map to add a new stop there in order of pickup time.
                                                 </div>
                                             </div>) : ""
                                         }
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3 mb-4">
+                                        {this.state.center ? 
                                             <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 
@@ -751,7 +733,9 @@ class BusRoutesPlanner extends Component {
                                             handleUpdateNewStops={this.handleNewStopsChange}
                                             handleDeleteOrigStops={this.handleOrigStopsDeletion}
                                             handleStopModification={this.handleRouteStopModification}
+                                            school={this.state.school}
                                             />
+                                            : ""}
                                         </div>
                                         { this.state.map_redirect_dropoff.length !== 0 ?
                                             <div className="mt-3"> 
@@ -792,7 +776,7 @@ class BusRoutesPlanner extends Component {
                                         }
                                         
                                     </div>
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h7>STUDENTS</h7>
                                         <SchoolStudentsTable 
                                         data={this.state.students_page} 
@@ -805,12 +789,12 @@ class BusRoutesPlanner extends Component {
                                         totalPages={this.state.students_table.totalPages}
                                         searchValue={''}
                                         />
-                                        <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStudentsShowAll}>
+                                        <button className="btn btn-secondary align-self-center w-auto mb-4 mt-0" onClick={this.handleStudentsShowAll}>
                                             { !this.state.students_show_all ?
                                                 "Show All" : "Show Pages"
                                             }
                                         </button>
-
+                                        <div className="mb-4"></div>
                                         {
                                             this.state.active_route === 0 ? "" : this.state.stops_page ?
                                             <>
@@ -847,7 +831,7 @@ class BusRoutesPlanner extends Component {
                                                 dnd={this.state.dnd} 
                                                 handleReorder={this.handleReorder}/>
                                                 { !this.state.stops_edit_mode ?                                                 
-                                                <button className="btn btn-secondary align-self-center w-auto mb-4" onClick={this.handleStopsShowAll}>
+                                                <button className="btn btn-secondary align-self-center w-auto mb-4 mt-0" onClick={this.handleStopsShowAll}>
                                                     { !this.state.stops_show_all ?
                                                         "Show All" : "Show Pages"
                                                     }
@@ -867,17 +851,9 @@ class BusRoutesPlanner extends Component {
     }
 }
 
-// function RouteSelectDropdown() { 
-//     let routes = this.state.routes(route => {
-//         return {value: route.id, display: route.name}
-//     })
-//     this.setState({ route_dropdown: routes })
-// }
-
 export default (props) => (
     <BusRoutesPlanner
         {...props}
         params={useParams()}
     />
 );
-// export default BusRoutesPlanner;

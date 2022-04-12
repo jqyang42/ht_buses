@@ -7,7 +7,7 @@ import api from "../components/api";
 import axios from "axios";
 import { API_DOMAIN } from "../../constants";
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 
 class Email extends Component {
     state = {
@@ -48,7 +48,6 @@ class Email extends Component {
             this.setState({ message_sent: -1 })
             return
         }
-        // var self = this
         const data = {
             email: {
                 subject: this.state.subject,
@@ -92,8 +91,11 @@ class Email extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         var root = (this.props.source === "Users") ? "Manage Users" : (this.props.source === "Routes" ? "Bus Routes" : this.props.source)
         var name = (this.props.source === "Users") ? "Send Announcement" : this.state.name
@@ -128,6 +130,11 @@ class Email extends Component {
                                     <div className="row">
                                         <div className="col mt-2">
                                             <div  onChange={this.handleAnnouncementTypeChange.bind(this)} className="form-group required pb-3 form-col">
+                                                {(this.props.source === "Users") ? 
+                                                    (<div class="alert alert-primary mt-0 mb-3" role="alert">
+                                                        Emails can only be sent to parent users.
+                                                    </div>) : ""
+                                                }
                                                 <div>
                                                     <label for="announcementType" className="control-label pb-2">Announcement Type</label>
                                                 </div>

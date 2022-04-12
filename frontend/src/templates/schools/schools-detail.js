@@ -10,7 +10,7 @@ import api from "../components/api";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL, SCHOOLS_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { toDisplayFormat } from "../components/time";
 
 class SchoolsDetail extends Component {
@@ -31,8 +31,6 @@ class SchoolsDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {},
-            // searchValue: ''
         },
         routes_page: [],
         routes_table: {
@@ -40,8 +38,6 @@ class SchoolsDetail extends Component {
             canPreviousPage: null,
             canNextPage: null,
             totalPages: null,
-            // sortOptions: {},
-            // searchValue: ''
         },
     }
 
@@ -61,8 +57,6 @@ class SchoolsDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 students_page: res.data.students,
@@ -79,8 +73,6 @@ class SchoolsDetail extends Component {
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
-                // sortOptions: sortOptions,
-                // searchValue: search
             }
             this.setState({
                 routes_page: res.data.routes,
@@ -157,8 +149,11 @@ class SchoolsDetail extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         const { redirect } = this.state;
         if (redirect) {
@@ -177,14 +172,14 @@ class SchoolsDetail extends Component {
                         <div className="container my-4 mx-0 w-100 mw-100">
                             <div className="container-fluid px-4 py-4 mt-4 mb-2 bg-white shadow-sm rounded align-content-start">
                                 <div className="row">
-                                    <div className="col">
+                                    <div className="col-auto">
                                         <h5>{this.state.school.name}</h5>
                                         <p>{this.state.school.location?.address}</p>
                                     </div>
                                     <div className="col">
                                         <div className="row d-inline-flex float-end">
                                             {
-                                                  (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
+                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') ?
                                                 <>
                                                 <Link to={"/schools/" + this.props.params.id + "/email"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
@@ -198,6 +193,12 @@ class SchoolsDetail extends Component {
                                                         Route Planner
                                                     </span>
                                                 </Link>
+                                                <Link to={"/schools/" + this.props.params.id + "/transit-status"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-pin-map-fill me-2"></i>
+                                                        Transit Status
+                                                    </span>
+                                                </Link>
                                                 <Link to={"/schools/" + this.props.params.id + "/edit"} className="btn btn-primary float-end w-auto me-3" role="button">
                                                     <span className="btn-text">
                                                         <i className="bi bi-pencil-square me-2"></i>
@@ -205,6 +206,15 @@ class SchoolsDetail extends Component {
                                                     </span>
                                                 </Link>
                                                 </> : ""
+                                            }
+                                            {
+                                                (localStorage.getItem('role') === 'Driver') ?
+                                                <Link to={"/schools/" + this.props.params.id + "/transit-status"} className="btn btn-primary float-end w-auto me-3" role="button">
+                                                    <span className="btn-text">
+                                                        <i className="bi bi-pin-map-fill me-2"></i>
+                                                        Transit Status
+                                                    </span>
+                                                </Link> : ""
                                             }
                                             {
                                                   localStorage.getItem('role') === 'Administrator' ? 

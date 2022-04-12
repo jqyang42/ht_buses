@@ -6,22 +6,10 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
     updatePageCount, pageSize, totalPages, searchValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
-    // const [sort, setSort] = useState({ sortDirection: '', accessor: '' });   for default no sort
 
     useEffect(() => {
         updatePageCount(pageIndex, sort, searchValue)
     }, [sort])
-
-    // Filter by multiple columns
-    // const ourGlobalFilterFunction = useCallback(
-    //     (rows, ids, query) => {
-    //         return rows.filter((row) => 
-    //             row.values["id"].toString().includes(query.toString()) ||
-    //             row.values["name"].toLowerCase().includes(query.toLowerCase())
-    //         );
-    //     },
-    //     [],
-    // );
 
     const columns = React.useMemo(
         () => [
@@ -36,6 +24,19 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
                 accessor: d => `${d.first_name} ${d.last_name}`,
                 id: 'name',
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Phone',
+                accessor: 'phone_number',
+                id: 'phone_number',
+                disableSortBy: true,
+                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
             },
             {
                 Header: 'School',
@@ -53,7 +54,17 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
                 ),
                 id: 'route',
                 sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
-            },            
+            },  
+            {
+                Header: 'Bus Stops',
+                accessor: 'in_range',
+                disableFilter: true,
+                id: 'in_range',
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
+                ),
+                sortDirection: sort.accessor === 'in_range' ? sort.sortDirection : 'none'
+            },          
         ],
         [sort]
         // []
@@ -62,24 +73,13 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
     const columnHeaderClick = async (column) => {
         switch (column.sortDirection) {
           case 'none':
-            // console.log(column.sortDirection)
-            // console.log(column.id)
             setSort({ sortDirection: 'ASC', accessor: column.id });
-            // const desc = await getClients( 'ASC', column.id );
-            // setData(desc);
-            // console.log(sort)
             break;
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
-            // const asc = await getClients('DESC', column.id);
-            // console.log(sort)
-            // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
-            // const newData = await getClients('none', column.id);
-            // setData(newData);
-            // console.log(sort)
             break;
         }
     };
@@ -90,7 +90,6 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
             data={data}
             searchOn={true}
             searchLabel="Search by id or name..."
-            // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/dashboard/"}
             rowProps={row => ({

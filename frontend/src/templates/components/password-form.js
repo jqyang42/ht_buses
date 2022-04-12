@@ -11,7 +11,6 @@ class PasswordForm extends Component {
         redirect: false,
         edit_success: 0
     }
-
     password2 = '';
     validEmail = false;
     validPassword = false;
@@ -19,8 +18,6 @@ class PasswordForm extends Component {
 
     componentDidMount() {
         this.setState({ edit_success: 0 })
-      
-      
     }
     
     passwordValidation() {
@@ -60,7 +57,6 @@ class PasswordForm extends Component {
                document.getElementById("password-form").reset()
             }
         })
-
     }
 
     render() {
@@ -89,16 +85,6 @@ class PasswordForm extends Component {
                 <form id="password-form" onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="col mt-2">
-                            {/* <div className="form-group required pb-3 w-75">
-                                <label for="oneTimePassword" className="control-label pb-2">One-Time Password</label>
-                                <input type="password" className="form-control pb-2" id="oneTimePassword" 
-                                placeholder="Enter one-time password" required ref={el => this.password1Field = el} onChange={this.handlePasswordChange}></input>
-                                {(!this.passwordValidation() && this.state.password !== "") ? 
-                                    (<div class="alert alert-danger mt-3 mb-0" role="alert">
-                                        Your password is too weak. Password must contain at least 8 characters, including a combination of uppercase letters, lowercase letters, and numbers.
-                                    </div>) : ""
-                                }
-                            </div> */}
                             <div className="form-group required pb-3 form-col">
                                 <label for="exampleInputPassword2" className="control-label pb-2">New Password</label>
                                 <input type="password" className="form-control pb-2" id="exampleInputPassword2" 
@@ -137,12 +123,9 @@ class PasswordForm extends Component {
                 </form>
                 </div>
                 }
-             </div>
-                    
-        );
-            
+             </div>        
+        );     
     }
-
 }
 
 export default React.memo(PasswordForm)

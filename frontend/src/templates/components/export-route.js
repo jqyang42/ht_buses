@@ -16,7 +16,6 @@ export default function pdfRender (route, users) {
 
     for (var i = 0; i < users.length; i++) {
         var dict = users[i]
-        // console.log(dict["students"])
         for (var j = 0; j < dict["students"].length; j++) {
             studentsObj.push({ 
                 "name": dict["students"][j]["first_name"].toString() + " " + dict["students"][j]["last_name"].toString(),
@@ -68,13 +67,11 @@ export default function pdfRender (route, users) {
             textColor: '#ffffff', 
             fontSize: 10, 
             cellWidth: 'wrap'},
-        // bodyStyles: {cellWidth: 'wrap', overflow: 'linebreak', halign: 'left', valign: 'middle'},
         styles: { 
             "overflow": "linebreak", 
             "cellWidth": "wrap", 
             "rowPageBreak": "auto", 
             "halign": "left" },
     })
-
     doc.save("route.pdf");
 }

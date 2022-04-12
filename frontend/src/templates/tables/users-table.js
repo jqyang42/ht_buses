@@ -3,22 +3,16 @@ import { Table } from "./table";
 import { useState } from "react";
     
 export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextPage, 
-    updatePageCount, pageSize, totalPages, searchValue }) {
+    updatePageCount, pageSize, totalPages, searchValue, filterRoleValue }) {
 
     const [sort, setSort] = useState({ sortDirection: 'ASC', accessor: 'name' });
 
     useEffect(() => {
-        updatePageCount(pageIndex, sort, searchValue)
+        updatePageCount(pageIndex, sort, searchValue, filterRoleValue)
     }, [sort])
 
     const columns = React.useMemo(
         () => [
-            // {
-            //     Header: '#',
-            //     accessor: 'id', // accessor is the "key" in the data
-            //     disableSortBy: true,
-            //     disableFilter: true
-            // },
             {
                 Header: 'Name',
                 accessor: d => `${d.first_name} ${d.last_name}`,
@@ -35,6 +29,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
                 Header: 'Phone Number',
                 accessor: 'phone_number',
                 id: 'phone_number',
+                disableSortBy: true,
                 sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
             },
             {
@@ -58,24 +53,13 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
     const columnHeaderClick = async (column) => {
         switch (column.sortDirection) {
           case 'none':
-            // console.log(column.sortDirection)
-            // console.log(column.id)
             setSort({ sortDirection: 'ASC', accessor: column.id });
-            // const desc = await getClients( 'ASC', column.id );
-            // setData(desc);
-            // console.log(sort)
             break;
           case 'ASC':
             setSort({ sortDirection: 'DESC', accessor: column.id });
-            // const asc = await getClients('DESC', column.id);
-            // console.log(sort)
-            // setData(asc);
             break;
           case 'DESC':
             setSort({ sortDirection: 'none', accessor: column.id });
-            // const newData = await getClients('none', column.id);
-            // setData(newData);
-            // console.log(sort)
             break;
         }
     };
@@ -85,7 +69,8 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             columns={columns}
             data={data}
             searchOn={true}
-            searchLabel="Search by name, email or role..."
+            searchLabel="Search by name or email..."
+            filterOn={true}
             // ourGlobalFilterFunction={ourGlobalFilterFunction}
             showAll={showAll}
             navUrl={"/users/"}
@@ -103,6 +88,7 @@ export function UsersTable({ data, showAll, pageIndex, canPreviousPage, canNextP
             columnHeaderClick={columnHeaderClick}
             sortOptions={sort}
             searchValue={searchValue}
+            filterRoleValue={filterRoleValue}
         />
     )
 }

@@ -6,7 +6,7 @@ import HeaderMenu from "../components/header-menu";
 import { getPage } from "../tables/server-side-pagination";
 
 import { LOGIN_URL } from "../../constants";
-import { PARENT_DASHBOARD_URL } from "../../constants";
+import { PARENT_DASHBOARD_URL, STUDENT_INFO_URL } from "../../constants";
 import { STUDENTS_IMPORT_URL } from "../../constants";
 import api from "../components/api";
 
@@ -129,8 +129,11 @@ class Students extends Component {
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
-        else if (!JSON.parse(localStorage.getItem('is_staff'))) {
+        else if (JSON.parse(localStorage.getItem('role') === "General")) {
             return <Navigate to={PARENT_DASHBOARD_URL} />
+        }
+        else if (JSON.parse(localStorage.getItem('role') === "Student")) {
+            return <Navigate to={STUDENT_INFO_URL} />
         }
         if (this.state.import_redirect) {
             return <Navigate to={ STUDENTS_IMPORT_URL } state={{file: this.fileUploaded}}/>
@@ -152,7 +155,7 @@ class Students extends Component {
                                     }
                                     {this.state.import_headers_error ? 
                                         <div class="alert alert-danger mt-2 mb-3" role="alert">
-                                            Your import file does not have the correct format. Please ensure that it contains the headers: name, parent_email, student_id, and school_name, in the respective order.
+                                            Your import file does not have the correct format. Please ensure that it contains the headers: name, parent_email, student_id, school_name, student_email, and phone_number in the respective order.
                                         </div> : ""
                                     }
                                     {this.state.loading ? 
