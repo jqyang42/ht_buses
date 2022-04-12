@@ -416,7 +416,6 @@ class BusRoutesDetail extends Component {
 
     startRun = (event) => {
         event.preventDefault()
-        if(this.state.valid_bus_number) {
         this.setState({ in_transit: true })
         this.on_run = true 
         const request = {
@@ -431,18 +430,15 @@ class BusRoutesDetail extends Component {
             this.openStartConfirmationRunModal()
         })
     }
-    }
 
     stopRun = () => {
-        this.on_run = false 
-        this.setState({ 
-            transit_driver: null,
-            // in_transit: false 
-        })
-        console.log(this.state.in_transit)
-        console.log(this.state.transit_driver)
         api.put(`logs/update?id=${this.state.transit_log_id}`)
         .then(res => {
+            this.on_run = false 
+            this.setState({ 
+                transit_driver: null,
+                // in_transit: false 
+            })
             this.getInTransit()
             // this.closeStartRunModal() 
             this.openStopConfirmationRunModal()   
@@ -522,7 +518,7 @@ class BusRoutesDetail extends Component {
                                             }
                                             {
                                                 (localStorage.getItem('role') === 'Driver') ? 
-                                                 (this.on_run && this.state.in_transit && this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                 (this.on_run && this.state.in_transit  ?
                                                  <button type="button" className="btn btn-primary float-end w-auto me-3"
                                                   onClick={() => this.stopRun()}>
                                                      <span className="btn-text">
@@ -539,25 +535,49 @@ class BusRoutesDetail extends Component {
                                                 <Modal.Title><h5>Start Run</h5></Modal.Title>
                                                 </Modal.Header>
                                                 <Modal.Body>
-                                                    {(this.state.user_on_run) ? 
-                                                        (<div>
-                                                            <div class="alert alert-warning mb-3" role="alert">
-                                                                <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                                                                You already have an active run. Starting a new run will stop your active run. 
+                                                    {
+                                                        (this.state.user_on_run) ? (this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                            <div>
+                                                                <div class="alert alert-warning mb-3" role="alert">
+                                                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                    You are already on an active run for this route. Starting this run will stop your current run.
+                                                                </div>
+                                                            </div> : 
+                                                            <div>
+                                                                <div class="alert alert-warning mb-3" role="alert">
+                                                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                    You are already on an active run for a different route. Starting this run will stop your current run.
+                                                                </div>
                                                             </div>
-                                                        </div>) : ""
+                                                        ) : ""
                                                     }
+                                                    {
+                                                        (this.state.in_transit) ? (this.state.transit_driver === parseInt  (localStorage.getItem("user_id")) ?
+                                                            "" : 
+                                                            <div>
+                                                                <div class="alert alert-warning mb-3" role="alert">
+                                                                    <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                                    Another driver is already on an active run for this route. Starting this run will stop their current run.
+                                                                </div>
+                                                            </div>
+                                                        ) : ""
+                                                    }
+
                                                     <div className="form-group required pb-3">
                                                         <label for="exampleInputBus" className="control-label pb-2">Bus Number</label>
                                                         <input type="number" className="form-control pb-2" id="exampleInputBus" min="1" max="99999"
                                                             placeholder="Enter bus number" required
                                                             onChange={this.handleBusNumberChange}></input>
-                                                        {(!this.state.valid_bus_number) ? 
-                                                        (<div class="alert alert-danger mt-2 mb-0" role="alert">
-                                                            Please choose a different bus number. A bus with this bus number is already in transit.
-                                                        </div>) : ""
-                                                        }
+                                                        
                                                     </div>
+                                                    {(!this.state.valid_bus_number) ? 
+                                                        (<div>
+                                                            <div class="alert alert-warning mb-3" role="alert">
+                                                                <i className="bi bi-exclamation-triangle-fill me-2"></i>
+                                                               A bus with this number is already on an active run. Starting this run will stop the current run and make you the new driver.
+                                                            </div>
+                                                        </div>) : ""
+                                                    }
                                                     <div className="form-group required pb-3" onChange={this.handleIsPickupChange.bind(this)}
                                                     >
                                                         <div>
