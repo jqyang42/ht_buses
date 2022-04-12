@@ -194,7 +194,11 @@ def bulk_import(request):
                     student_email_error = True
                     exclude = True
             else:
-                student_email_error = False
+                if len(row["student_email"]) != 0:
+                        student_email_error = True
+                        student_email_error_message = "Student email is not a valid email"
+                else:
+                    student_email_error = False
 
         if (row["student_email"] is None or row["student_email"] == "") and (row["phone_number"] is not None and row["phone_number"] != ""):
             phone_number_error = True
