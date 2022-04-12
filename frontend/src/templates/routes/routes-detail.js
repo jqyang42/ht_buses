@@ -228,7 +228,7 @@ class BusRoutesDetail extends Component {
                 return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)})
 
             const valid_bus_number = filtered_buses.length === 0
-            // console.log(data.buses.filter(buses => {
+            console.log(data.buses.filter(buses => {
                 return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)}))
             // console.log(valid_bus_number)
             this.setState({valid_bus_number: valid_bus_number})
