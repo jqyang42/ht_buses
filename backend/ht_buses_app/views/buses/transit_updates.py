@@ -23,7 +23,6 @@ def update_buses():
     global update_queue
     global bus_coords
     global counter
-    is_running = True
     if len(update_queue) > 0:
         try:
             counter += 1
@@ -79,6 +78,7 @@ def get_coords():
 
 def initialize_updater(active_buses="none"):
     global update_queue
+    global is_running
     print("fuck it we started")
     if active_buses != "none":
         print(active_buses)
@@ -89,7 +89,8 @@ def initialize_updater(active_buses="none"):
             traceback.print_exc()
             print("invalid bus number")
     update_queue = list(set(update_queue))
-    timer = RepeatTimer(4, update_buses)
+    is_running = True
+    timer = RepeatTimer(1, update_buses)
     timer.start()
 
 def _next_ten():
