@@ -27,7 +27,7 @@ def update_buses():
     if len(update_queue) > 0:
         try:
             counter += 1
-            for index in range(0, 5) if len(update_queue) > 5 else range(0, len(update_queue)):
+            for index in range(0, 10) if len(update_queue) > 10 else range(0, len(update_queue)):
                 url = 'http://tranzit.colab.duke.edu:8000/get'
                 bus_num = update_queue[index]
                 params = {'bus': bus_num}
@@ -90,8 +90,8 @@ def initialize_updater(active_buses="none"):
 
 def _next_ten():
     global update_queue
-    if (len(update_queue) > 5):
-        update_queue = update_queue[5:] + update_queue[:5]
+    if (len(update_queue) > 10):
+        update_queue = update_queue[10:] + update_queue[:10]
 
 
 
