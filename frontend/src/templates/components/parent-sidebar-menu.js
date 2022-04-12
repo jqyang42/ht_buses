@@ -53,7 +53,7 @@ class ParentSidebarMenu extends Component {
                         <li className={"nav-item " + activeTab}>
                             <a href={PARENT_DASHBOARD_URL} className="nav-link align-middle mx-4 px-4">
                                 <i className="bi bi-house me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">Dashboard</span>
+                                <span className="ms-1 d-inline">Dashboard</span>
                             </a>
                         </li>
                     </ul>
