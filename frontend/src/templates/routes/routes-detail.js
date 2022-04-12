@@ -546,7 +546,7 @@ class BusRoutesDetail extends Component {
                                                             <div>
                                                                 <div class="alert alert-warning mb-3" role="alert">
                                                                     <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                                                                    You are already on an active run for a different. Starting this run will stop your current run.
+                                                                    You are already on an active run for a different route. Starting this run will stop your current run.
                                                                 </div>
                                                             </div>
                                                         ) : ""
