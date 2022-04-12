@@ -177,12 +177,16 @@ class UsersDetail extends Component {
         .then(res => {
             const success = res.data.success
             if (success) {
-                this.setState({ create_success: 1 })     // TODO ERROR: edit_success?
-                this.setState({ modal_dismiss: true})
+                this.setState({ 
+                    create_success: 1,
+                    modal_dismiss: true
+                })
                 this.getUserDetails()
             } else {
-                this.setState({ create_success: -1 })      // TODO ERROR
-                this.setState({ modal_dismiss: false})
+                this.setState({ 
+                    create_success: -1,
+                    modal_dismiss: false
+                })
             }
         })
     } 
@@ -317,7 +321,7 @@ class UsersDetail extends Component {
             return
         }
         else {
-            this.setState({ modal_dismiss: true})
+            // this.setState({ modal_dismiss: true})
             this.sendStudentRequest(true)
         }
        
