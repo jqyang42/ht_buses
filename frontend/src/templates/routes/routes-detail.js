@@ -401,10 +401,14 @@ class BusRoutesDetail extends Component {
 
     openStartRunModal = () => {
         this.userOnRun()
+        this.setState({ valid_bus_number: true });
         this.setState({ startRunModalIsOpen: true });
     }
 
-    closeStartRunModal = () => this.setState({ startRunModalIsOpen: false });
+    closeStartRunModal = () => {
+        this.setState({ startRunModalIsOpen: false });
+        this.getInTransit();
+    }
 
     openStartConfirmationRunModal = () => this.setState({ startConfirmationRunModalIsOpen: true });
 
@@ -416,8 +420,7 @@ class BusRoutesDetail extends Component {
 
     startRun = (event) => {
         event.preventDefault()
-        this.setState({ in_transit: true })
-        this.on_run = true 
+        this.on_run = true
         const request = {
             log: this.state.log
 
@@ -425,7 +428,6 @@ class BusRoutesDetail extends Component {
         console.log(request)
         api.post(`logs/create`, request)
         .then(res => {
-            this.getInTransit()
             this.closeStartRunModal()
             this.openStartConfirmationRunModal()
         })
@@ -506,14 +508,15 @@ class BusRoutesDetail extends Component {
                                             }
                                             {
                                                 (localStorage.getItem('role') === 'Driver') ? 
-                                                (!this.state.in_transit || this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
+                                                // (!this.state.in_transit || this.state.transit_driver === parseInt(localStorage.getItem("user_id")) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3" 
                                                 onClick={() => this.openStartRunModal()}>
                                                     <span className="btn-text">
                                                         <i className="bi bi-play-circle me-2"></i>
                                                         Start Run
                                                     </span>
-                                                </button> : "" )
+                                                </button>
+                                                //  : "" )
                                                 : ""
                                             }
                                             {
