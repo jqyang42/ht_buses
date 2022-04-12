@@ -105,6 +105,12 @@
     width: 100%;
 }
 
+.full-width {
+    min-width: 120%;
+    width: 1200px;
+    overflow-x: scroll;
+}
+
 .table-hover tbody tr:hover td {
     --bs-table-accent-bg: #FFF3CD; 
 }
