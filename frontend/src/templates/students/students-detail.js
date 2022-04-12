@@ -39,7 +39,7 @@ class StudentsDetail extends Component {
         api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
             const data = res.data
-            console.log(data)
+            // console.log(data)
             this.setState({ 
                 student: data.student, 
                 route: data.route, 
@@ -83,12 +83,12 @@ class StudentsDetail extends Component {
         this.interval_id = setInterval(async () => {
             api.get(`buses/route?id=${route_id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 let bus_tooltip = {}
                 bus_tooltip = res.data.buses.reduce(
                     (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
                     {})
-                console.log(bus_tooltip)
+                // console.log(bus_tooltip)
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,

@@ -67,7 +67,7 @@ class BusMarker extends Component {
 
   render () {
     // const { showInfoWindow } = this.state;
-    console.log(this.props)
+    // console.log(this.props)
     return (
       <>
       {<Marker 

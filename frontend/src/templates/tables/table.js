@@ -83,7 +83,7 @@ export function Table({ columns, data, searchOn, searchLabel, filterOn, ourGloba
         setRecords(new_records)
     }
 
-    console.log(rows)
+    // console.log(rows)
 
     return (
         <>

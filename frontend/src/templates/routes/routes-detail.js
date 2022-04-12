@@ -85,12 +85,12 @@ class BusRoutesDetail extends Component {
         this.interval_id = setInterval(async () => {
             api.get(`buses/route?id=${this.props.params.id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 let bus_tooltip = {}
                 bus_tooltip = res.data.buses.reduce(
                     (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
                     {})
-                console.log(bus_tooltip)
+                // console.log(bus_tooltip)
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
@@ -209,7 +209,7 @@ class BusRoutesDetail extends Component {
             const transit_driver = in_transit ? in_transit_runs[0].user.id : null
             const transit_log_id = in_transit ? in_transit_runs[0].log_id : null
             const transit_bus_number = in_transit ? in_transit_runs[0].bus_number : null
-            console.log(in_transit_runs)
+            // console.log(in_transit_runs)
             this.setState({
                 in_transit: in_transit,
                 transit_log_id: transit_log_id,
@@ -223,14 +223,14 @@ class BusRoutesDetail extends Component {
         api.get(`transit`)
         .then(res => {
             const data = res.data
-            console.log(data)
+            // console.log(data)
             const filtered_buses =  data.buses.filter(buses => {
                 return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)})
 
             const valid_bus_number = filtered_buses.length === 0
-            console.log(data.buses.filter(buses => {
+            // console.log(data.buses.filter(buses => {
                 return parseInt(buses.bus_number) === parseInt(this.state.log.bus_number)}))
-            console.log(valid_bus_number)
+            // console.log(valid_bus_number)
             this.setState({valid_bus_number: valid_bus_number})
         })
 
@@ -425,7 +425,7 @@ class BusRoutesDetail extends Component {
             log: this.state.log
 
         }
-        console.log(request)
+        // console.log(request)
         api.post(`logs/create`, request)
         .then(res => {
             this.closeStartRunModal()
@@ -464,7 +464,7 @@ class BusRoutesDetail extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.in_transit)
+        // console.log(this.state.in_transit)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">

@@ -108,7 +108,7 @@ class UsersDetail extends Component {
         api.get(`users/transit?id=${this.props.params.id}`)
         .then(res => {
             const in_transit_runs = res.data
-            console.log(in_transit_runs)
+            // console.log(in_transit_runs)
             const in_transit = in_transit_runs.length !== 0
             const log_id = in_transit ? in_transit_runs[0].log_id : null
             const bus_number = in_transit ? in_transit_runs[0].bus_number : null
@@ -128,7 +128,7 @@ class UsersDetail extends Component {
         .then(res => {
             const user = res.data.user;
             this.setState({ user: user });
-            console.log(user)
+            // console.log(user)
         })
         .catch (err => {
             if (err.response.status !== 200) {
@@ -222,7 +222,7 @@ class UsersDetail extends Component {
         .then(res => {
             const data = res.data
             const can_delete_user = data.can_delete_user
-            console.log("checked can delete")
+            // console.log("checked can delete")
             this.setState({ can_delete_user: can_delete_user })
             return
         })
@@ -361,7 +361,7 @@ class UsersDetail extends Component {
         }
 
         // console.log(this.state.user.managed_schools)
-        console.log((this.state.user.role === "General"))
+        // console.log((this.state.user.role === "General"))
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">

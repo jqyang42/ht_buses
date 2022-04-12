@@ -40,14 +40,14 @@ class BusRoutesTransitLog extends Component {
     getTransitLogPage = (page, sortOptions, search) => {
         getPage({ url: `logs/route`, pageIndex: page, sortOptions: sortOptions, searchValue: search, additionalParams: `&id=${this.props.params.id}&active=false` })
         .then(res => {
-            console.log(res)
+            // console.log(res)
             const log_table = {
                 pageIndex: res.pageIndex,
                 canPreviousPage: res.canPreviousPage,
                 canNextPage: res.canNextPage,
                 totalPages: res.totalPages,
             }
-            console.log(log_table)
+            // console.log(log_table)
             this.setState({
                 transit_log: res.data.logs,
                 logs_table: log_table

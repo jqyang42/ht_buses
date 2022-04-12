@@ -62,7 +62,7 @@ class StudentInfo extends Component {
     getStudentDetail = () => {
         api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             // this.getStopsPage(this.state.stops_table.pageIndex, null, '', res.data.route.id)
             this.setState({
                 student: res.data.student,
@@ -102,12 +102,12 @@ class StudentInfo extends Component {
         this.interval_id = setInterval(async () => {
             api.get(`buses/route?id=${route_id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 let bus_tooltip = {}
                 bus_tooltip = res.data.buses.reduce(
                     (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
                     {})
-                console.log(bus_tooltip)
+                // console.log(bus_tooltip)
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,

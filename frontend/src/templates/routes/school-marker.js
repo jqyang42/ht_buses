@@ -34,7 +34,7 @@ class SchoolMarker extends Component {
 
   render () {
     const  showInfoWindow  = this.state.showInfoWindow;
-    console.log(this.props.location)
+    // console.log(this.props.location)
     return (
       <>
       <Marker 

@@ -65,12 +65,12 @@ class SchoolsTransitStatus extends Component {
         this.interval_id = setInterval(async () => {
             api.get(`buses/school?id=${this.props.params.id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 let bus_tooltip = {}
                 bus_tooltip = res.data.buses.reduce(
                     (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
                     {})
-                console.log(bus_tooltip)
+                // console.log(bus_tooltip)
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
@@ -131,7 +131,7 @@ class SchoolsTransitStatus extends Component {
         if (this.state.error_status) {
             return <ErrorPage code={this.state.error_code} />
         }
-        console.log(this.state.buses)
+        // console.log(this.state.buses)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">

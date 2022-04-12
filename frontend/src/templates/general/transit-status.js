@@ -48,7 +48,7 @@ class GlobalTransitStatus extends Component {
         api.get(`buses/all-schools`)
         .then(res => {
             const data = res.data
-            console.log(data)
+            // console.log(data)
             this.setState({
                 schools: data.schools,
                 center: data.center
@@ -60,12 +60,12 @@ class GlobalTransitStatus extends Component {
         this.interval_id = setInterval(async () => {
             api.get(`buses/all-schools`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 let bus_tooltip = {}
                 bus_tooltip = res.data.buses.reduce(
                     (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
                     {})
-                console.log(bus_tooltip)
+                // console.log(bus_tooltip)
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,

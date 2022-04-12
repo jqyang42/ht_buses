@@ -129,7 +129,7 @@ class ParentDetail extends Component {
         } else {
             // console.log("theres nothing woahhhhhhh")
         }
-        console.log(this.state.student)
+        // console.log(this.state.student)
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">

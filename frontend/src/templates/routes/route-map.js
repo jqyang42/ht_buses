@@ -265,11 +265,7 @@ class RouteMap extends Component {
                 id={this.props.school.id}
                 key={`${this.props.center.lat}+${this.props.center.lng}`}
               /> : ""}
-            {console.log(this.props.school)}
             {this.props.school_tooltips?.map((value, index) => {
-            {console.log(value.location)}
-            {console.log(value.id)}
-            {console.log(value.name)}
             return <SchoolMarker 
               location={value.location} 
               name={value.name}
@@ -278,7 +274,6 @@ class RouteMap extends Component {
           />
             })}
             {this.props.buses?.map((value, index) => {
-              console.log(value)
               return <BusMarker 
                 key={`${value.location.lat}+${value.location.lng}`}
                 id={index}
