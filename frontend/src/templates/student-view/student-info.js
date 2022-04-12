@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import StudentSidebarMenu from '../components/parent-sidebar-menu';
+import StudentSidebarMenu from '../components/student-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import RouteMap from "../routes/route-map";
@@ -73,10 +73,12 @@ class StudentInfo extends Component {
                     lat: res.data.user.location.lat,
                     lng: res.data.user.location.lng,
                 }
-             }, () => {
-                this.getStopsPage(this.state.stops_table.pageIndex, null, '')
-             })
-             this.periodicCall(res.data.route.id)
+            }, () => {
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+            })
+            if (res.data.route.id !== 0) {
+                this.periodicCall(res.data.route.id)
+            }
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
@@ -174,22 +176,18 @@ class StudentInfo extends Component {
                                                 <p>
                                                     {this.state.student.phone_number ? this.state.student.phone_number : "–"}
                                                 </p>
-                                                <a href={"/schools/" + this.state.school.id}>
-                                                    <p>
-                                                        {this.state.school.name}
-                                                    </p>
-                                                </a>
+                                                <p>
+                                                    {this.state.school.name}
+                                                </p>
                                                 {(this.state.route.name === "Unassigned" || this.state.route.name === "" ) ?
                                                     <>
                                                         <p className="unassigned"> {"Unassigned"}</p>
                                                         <p>–</p>
                                                     </> :
                                                     <>
-                                                        <a href={"/routes/" + this.state.route.id}>
-                                                            <p>
-                                                                {this.state.route.name}
-                                                            </p>
-                                                        </a> 
+                                                        <p>
+                                                            {this.state.route.name}
+                                                        </p>
                                                         <p>
                                                             {this.state.route.description === "" ? "–" : this.state.route.description}
                                                         </p>
@@ -205,42 +203,9 @@ class StudentInfo extends Component {
                                                 }
                                             </div>
                                         </div>
-                                        {/* <div className="row mt-4 mb-4">
-                                            <h7 className="mb-3">
-                                                PARENT CONTACT INFO
-                                            </h7>
-                                            <div className="col-auto me-2">
-                                                <p className="gray-600">
-                                                    Name
-                                                </p>
-                                                <p className="gray-600">
-                                                    Email
-                                                </p>
-                                                <p className="gray-600">
-                                                    Phone
-                                                </p>
-                                                <p className="gray-600">
-                                                    Address
-                                                </p>
-                                            </div>
-                                            <div className="col me-6">
-                                                <p>
-                                                    {this.state.user.first_name} {this.state.user.last_name}
-                                                </p>
-                                                <p>
-                                                    {this.state.user.email}
-                                                </p>
-                                                <p>
-                                                    {this.state.user.phone_number}
-                                                </p>
-                                                <p>
-                                                    {this.state.user.location?.address}
-                                                </p>
-                                            </div>
-                                        </div> */}
                                     </div>
                                     <div className="col">
-                                        <h7 className="mb-3">
+                                        <h7 className="mb-3 mt-0 pt-0">
                                             PARENT CONTACT INFO
                                         </h7>
                                         <div className="row flex-nowrap mt-3 mb-4">

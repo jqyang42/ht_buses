@@ -26,6 +26,19 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
                 sortDirection: sort.accessor === 'name' ? sort.sortDirection : 'none'
             },
             {
+                Header: 'Email',
+                accessor: 'email',
+                id: 'email',
+                sortDirection: sort.accessor === 'email' ? sort.sortDirection : 'none'
+            },
+            {
+                Header: 'Phone',
+                accessor: 'phone_number',
+                id: 'phone_number',
+                disableSortBy: true,
+                sortDirection: sort.accessor === 'phone_number' ? sort.sortDirection : 'none'
+            },
+            {
                 Header: 'School',
                 accessor: 'school_name',
                 disableFilter: true,
@@ -41,7 +54,17 @@ export function ParentDashboardTable({ data, showAll, pageIndex, canPreviousPage
                 ),
                 id: 'route',
                 sortDirection: sort.accessor === 'route' ? sort.sortDirection : 'none'
-            },            
+            },  
+            {
+                Header: 'Bus Stops',
+                accessor: 'in_range',
+                disableFilter: true,
+                id: 'in_range',
+                Cell: ({ cell: { value } }) => (
+                    value ? <>{"In Range"}</> : <><div className="unassigned">{"Out of Range"}</div></>
+                ),
+                sortDirection: sort.accessor === 'in_range' ? sort.sortDirection : 'none'
+            },          
         ],
         [sort]
         // []
