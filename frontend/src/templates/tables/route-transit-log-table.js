@@ -76,7 +76,7 @@ export function RouteTransitLogTable({ data, showAll, pageIndex, canPreviousPage
                 accessor: 'duration',
                 id: 'duration',
                 Cell: ({ cell: { value } }) => (
-                    value === "00:00" ? <div>{"Ongoing"}</div> : <div>{value}</div>
+                    value === "00:00:00" ? <div>{"Ongoing"}</div> : <div>{value}</div>
                 ),
                 disableFilter: true,
                 sortDirection: sort.accessor === 'duration' ? sort.sortDirection : 'none'

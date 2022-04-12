@@ -45,12 +45,14 @@ def active_buses_filter(schools):
             bus_lat = location_serializer.data["lat"]
             bus_lng = location_serializer.data["lng"]
             location_arr = {"id": location_serializer.data["id"], 'lat': bus_lat, 'lng': bus_lng}
-            log_obj = Log.objects.filter(bus_number=bus_number, duration=timedelta(hours=0))
-            if len(log_obj) != 0:
-                log_obj_serializer = LogSerializer(log_obj[0], many=False)
-                user_serializer = UserSerializer(User.objects.get(pk=log_obj_serializer.data["user_id"]), many=False)
-                user_arr = {'id': log_obj_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"]}
-                bus_arr.append({'bus_number': bus_number, 'location': location_arr, 'user': user_arr})
+            for school in schools:
+                log_obj = Log.objects.filter(bus_number=bus_number, duration=timedelta(hours=0), route_id__school_id=school)
+                if len(log_obj) != 0:
+                    log_obj_serializer = LogSerializer(log_obj[0], many=False)
+                    user_serializer = UserSerializer(User.objects.get(pk=log_obj_serializer.data["user_id"]), many=False)
+                    user_arr = {'id': log_obj_serializer.data["user_id"], "first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"]}
+                    bus_arr.append({'bus_number': bus_number, 'location': location_arr, 'user': user_arr})
+                
 
     school_serializer = SchoolSerializer(schools, many=True)
     for school in school_serializer.data:
