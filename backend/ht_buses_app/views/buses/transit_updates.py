@@ -85,13 +85,13 @@ def initialize_updater(active_buses="none"):
         except:
             traceback.print_exc()
             print("invalid bus number")
-    timer = RepeatTimer(4, update_buses)
+    timer = RepeatTimer(2.5, update_buses)
     timer.start()
 
 def _next_ten():
     global update_queue
-    if (len(update_queue) > 8):
-        update_queue = update_queue[8:] + update_queue[:8]
+    if (len(update_queue) > 5):
+        update_queue = update_queue[5:] + update_queue[:5]
 
 
 
