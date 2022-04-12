@@ -212,6 +212,8 @@ class StudentsImport extends Component {
         if (this.state.students_redirect) {
             return <Navigate to={ STUDENTS_URL }/>
         }
+
+        console.log(this.state.errors)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-md-nowrap">
