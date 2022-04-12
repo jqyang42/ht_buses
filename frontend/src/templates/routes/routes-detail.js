@@ -661,18 +661,18 @@ class BusRoutesDetail extends Component {
                                             {this.state.route.description}
                                         </p>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.markers ? 
-                                        <RouteMap 
-                                            assign_mode={false} 
-                                            key={this.state.assign_mode} 
-                                            active_route={this.props.params.id} 
-                                            center={this.state.center}
-                                            students={this.state.markers}
-                                            existingStops={this.state.stops}
-                                            bus_tooltip={this.state.bus_tooltip}
-                                            buses={this.state.buses}
-                                            school={this.state.school}
-                                        />
+                                        {Object.keys(this.state.school).length != 0 && Object.keys(this.state.center).length != 0 ? 
+                                            <RouteMap 
+                                                assign_mode={false} 
+                                                key={this.state.assign_mode} 
+                                                active_route={this.props.params.id} 
+                                                center={this.state.center}
+                                                students={this.state.markers}
+                                                existingStops={this.state.stops}
+                                                bus_tooltip={this.state.bus_tooltip}
+                                                buses={this.state.buses}
+                                                school={this.state.school}
+                                            />
                                         : "" }
                                         </div>
                                         { this.state.map_redirect_dropoff.length !== 0 ?

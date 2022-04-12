@@ -155,18 +155,18 @@ class SchoolsTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.buses ? 
-                                        <RouteMap 
-                                            assign_mode={false} 
-                                            key={this.state.assign_mode} 
-                                            // active_route={this.props.params.id} 
-                                            center={this.state.center}
-                                            bus_tooltip={this.state.bus_tooltip}
-                                            // existingStops={this.state.stops}
-                                            buses={this.state.buses}
-                                            school={this.state.school}
-                                        />
-                                        : "" }
+                                            {Object.keys(this.state.school).length != 0 && Object.keys(this.state.center).length != 0 ? 
+                                                <RouteMap 
+                                                    assign_mode={false} 
+                                                    key={this.state.assign_mode} 
+                                                    // active_route={this.props.params.id} 
+                                                    center={this.state.center}
+                                                    bus_tooltip={this.state.bus_tooltip}
+                                                    // existingStops={this.state.stops}
+                                                    buses={this.state.buses}
+                                                    school={this.state.school}
+                                                />
+                                            : "" }
                                         </div>
                                     </div>
                                     <div className="col">

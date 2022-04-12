@@ -572,6 +572,7 @@ class BusRoutesPlanner extends Component {
     }
 
     render() {
+        console.log(this.state.school)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
@@ -720,19 +721,20 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3 mb-4">
-                                            <RouteMap
-                                            assign_mode={this.state.assign_mode} 
-                                            key={this.state.assign_mode} 
-                                            active_route={this.state.active_route} 
-                                            center={this.state.center}
-                                            students={this.state.markers}
-                                            existingStops={this.state.stops}
-                                            onChange={this.handleRouteIDChange}
-                                            handleUpdateNewStops={this.handleNewStopsChange}
-                                            handleDeleteOrigStops={this.handleOrigStopsDeletion}
-                                            handleStopModification={this.handleRouteStopModification}
-                                            school={this.state.school}
-                                            />
+                                            {Object.keys(this.state.school).length != 0 && Object.keys(this.state.center).length != 0 ? 
+                                                <RouteMap
+                                                assign_mode={this.state.assign_mode} 
+                                                key={this.state.assign_mode} 
+                                                active_route={this.state.active_route} 
+                                                center={this.state.center}
+                                                students={this.state.markers}
+                                                existingStops={this.state.stops}
+                                                onChange={this.handleRouteIDChange}
+                                                handleUpdateNewStops={this.handleNewStopsChange}
+                                                handleDeleteOrigStops={this.handleOrigStopsDeletion}
+                                                handleStopModification={this.handleRouteStopModification}
+                                                school={this.state.school}
+                                            /> : ""}
                                         </div>
                                         { this.state.map_redirect_dropoff.length !== 0 ?
                                             <div className="mt-3"> 
