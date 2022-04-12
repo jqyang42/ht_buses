@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer
+from ...serializers import LocationSerializer, StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
 from ..stops import check_in_range
 
 @csrf_exempt
@@ -38,6 +38,14 @@ def student_arr_data(student):
     school = School.objects.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
     student_arr["school_name"] = school_serializer.data["name"]
+    student_user = User.objects.get(pk=student_serializer.data["account_id"])
+    if student_user is not None:
+        student_user_serializer = UserSerializer(student_user, many=False)
+        student_arr["email"] = student_user_serializer.data["email"]
+        student_arr["phone_number"] = student_user_serializer.data["phone_number"]
+    else:
+        student_arr["email"] = ""
+        student_arr["phone_number"] = ""
     user = User.objects.get(pk=student_serializer.data["user_id"])
     location_serializer = LocationSerializer(user.location, many=False)
     location_arr = {"id": location_serializer.data["id"], "address": location_serializer.data["address"],
