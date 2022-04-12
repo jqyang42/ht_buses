@@ -87,12 +87,12 @@ class ParentDetail extends Component {
         this.interval_id = setInterval(async () => {
             api.get(`buses/route?id=${route_id}`)
             .then(res => {
-                console.log(res.data)
+                // console.log(res.data)
                 let bus_tooltip = {}
                 bus_tooltip = res.data.buses.reduce(
                     (bus_tooltip, element, index) => (bus_tooltip[element.bus_number] = false, bus_tooltip), 
                     {})
-                console.log(bus_tooltip)
+                // console.log(bus_tooltip)
                 this.setState({
                     buses: res.data.buses,
                     bus_tooltip: bus_tooltip,
@@ -127,6 +127,7 @@ class ParentDetail extends Component {
         } else {
             // console.log("theres nothing woahhhhhhh")
         }
+        console.log(this.state.student)
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">
@@ -147,7 +148,7 @@ class ParentDetail extends Component {
                                     <div className="col">
                                     </div>
                                 </div>
-                                <div className="row mt-4">
+                                {/* <div className="row mt-4">
                                     <div className="col-auto me-2">
                                         <p className="gray-600">
                                             School
@@ -169,6 +170,65 @@ class ParentDetail extends Component {
                                         <p>
                                             {this.state.student.route?.description}
                                         </p>
+                                    </div>
+                                </div> */}
+                                <div className="row mt-4 flex-wrap">
+                                    <div className="col">
+                                        <div className="row flex-nowrap mb-4">
+                                            <div className="col-auto me-2">
+                                                <p className="gray-600">
+                                                    Email
+                                                </p>
+                                                <p className="gray-600">
+                                                    Phone
+                                                </p>
+                                                <p className="gray-600">
+                                                    School
+                                                </p>
+                                                <p className="gray-600">
+                                                    Route
+                                                </p>
+                                                <p className="gray-600">
+                                                    Route Description
+                                                </p>
+                                                <p className="gray-600">
+                                                    Bus Stops
+                                                </p>
+                                            </div>
+                                            <div className="col me-6">
+                                                <p>
+                                                    {this.state.student.email ? this.state.student.email : "–"}
+                                                </p>
+                                                <p>
+                                                    {this.state.student.phone_number ? this.state.student.phone_number : "–"}
+                                                </p>
+                                                <p>
+                                                    {this.state.student.school_name}
+                                                </p>
+                                                {(this.state.student.route?.name === "Unassigned" || this.state.student.route?.name === "" ) ?
+                                                    <>
+                                                        <p className="unassigned"> {"Unassigned"}</p>
+                                                        <p>–</p>
+                                                    </> :
+                                                    <>
+                                                        <p>
+                                                            {this.state.student.route?.name}
+                                                        </p>
+                                                        <p>
+                                                            {this.state.student.route?.description === "" ? "–" : this.state.student.route?.description}
+                                                        </p>
+                                                    </>
+                                                }
+                                                {
+                                                    (this.state.student.in_range ?
+                                                        <p>
+                                                            In Range
+                                                        </p> :
+                                                        <p className="unassigned"> {"Out of Range"}</p> 
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="row mt-4">

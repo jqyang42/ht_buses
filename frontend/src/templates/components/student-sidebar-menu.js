@@ -53,7 +53,7 @@ class StudentSidebarMenu extends Component {
                         <li className={"nav-item " + activeTab}>
                             <a href={STUDENT_INFO_URL} className="nav-link align-middle mx-4 px-4">
                                 <i className="bi bi-person me-2"></i>
-                                <span className="ms-1 d-none d-sm-inline">My Info</span>
+                                <span className="ms-1 d-inline">My Info</span>
                             </a>
                         </li>
                     </ul>
