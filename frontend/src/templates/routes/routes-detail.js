@@ -539,7 +539,7 @@ class BusRoutesDetail extends Component {
                                                         (<div>
                                                             <div class="alert alert-warning mb-3" role="alert">
                                                                 <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                                                              You have an active run. Starting this run will stop your active run.
+                                                                You are already on an active run. Starting this run will stop your current run.
                                                             </div>
                                                         </div>) : ""
                                                     }
@@ -547,7 +547,7 @@ class BusRoutesDetail extends Component {
                                                         (<div>
                                                             <div class="alert alert-warning mb-3" role="alert">
                                                                 <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                                                              There is an active run on this route. Starting this run will stop this active run.
+                                                                Another driver is already on an active run for this route. Starting this run will stop their current run.
                                                             </div>
                                                         </div>) : ""
                                                     }
@@ -562,7 +562,7 @@ class BusRoutesDetail extends Component {
                                                         (<div>
                                                             <div class="alert alert-warning mb-3" role="alert">
                                                                 <i className="bi bi-exclamation-triangle-fill me-2"></i>
-                                                               A bus with this number is already in transit. Clicking submit will make you the bus driver for this bus and reinitialize the start time. 
+                                                               Another bus with this number is already on an active run. Starting this run will stop the current run and make you the new driver.
                                                             </div>
                                                         </div>) : ""
                                                     }
