@@ -346,7 +346,7 @@ class UsersDetail extends Component {
         }
 
         // console.log(this.state.user.managed_schools)
-        console.log(this.state.user.role)
+        console.log((this.state.user.role === "General"))
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-wrap">
@@ -472,7 +472,7 @@ class UsersDetail extends Component {
                                                 </Link> : ""
                                             }
                                             {
-                                               (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
+                                               (localStorage.getItem('role') === 'Administrator' || (localStorage.getItem('role') === 'School Staff' && (this.state.user.role === "Student" || this.state.user.role === "General"))) &&
                                                 (localStorage.getItem("user_id") !== this.props.params.id) ?
                                                 <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
