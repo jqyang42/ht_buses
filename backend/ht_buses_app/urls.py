@@ -66,6 +66,7 @@ urlpatterns = [
     path('api/students/delete', student_delete.student_delete, name = "delete_student"),
     path('api/students/edit', student_edit.student_edit, name = "edit_student"),
     path('api/dashboard', parent_dashboard.parent_dashboard, name= "parent_dashboard"),
+    path('api/can-delete-user', parent_dashboard.can_delete_user, name= "delete"),
     path('api/dashboard/students/detail', parent_student_detail.parent_student_detail, name = "parent_student_detail"),
     path('api/routeplanner/edit', student_route_edit.student_route_edit, name='student_route_edit'),
     path('api/announcement/users', announcements.announcement_users, name='announcement_users'),

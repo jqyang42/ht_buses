@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from ...serializers import StudentSerializer, RouteSerializer, SchoolSerializer, UserSerializer
+from ...role_permissions import IsAdmin, IsSchoolStaff, IsDriver
+from ..general.general_tools import get_students_for_user
 
 @csrf_exempt
 @api_view(["GET"])
@@ -35,6 +37,29 @@ def parent_dashboard(request):
             parent_kids.append({'id' : id, 'student_school_id': student_school_id, 'first_name' : first_name, 'last_name' : last_name, 'school_name' : school_name, 'route' : route_arr})
         data["user"] = {"first_name": user_serializer.data["first_name"], "last_name": user_serializer.data["last_name"], "students": parent_kids}
         data["success"] = True
+        return Response(data)
+    except:
+        data["success"] = False
+        return Response(data, status = 404)
+
+
+@csrf_exempt
+@api_view(["GET"])
+@permission_classes([IsAuthenticated]) 
+def can_delete_user(request):
+    data = {}
+    try:
+        id = request.query_params["id"] # need id of parent
+        user = User.objects.get(pk=id)
+        can_delete = True 
+        if request.user.role == User.SCHOOL_STAFF and user.role == User.GENERAL:
+            students = get_students_for_user(request.user)
+            user_students = Student.objects.filter(user_id = user)
+            print(students)
+            print(user_students)
+            if user_students.exclude(pk__in = students).exists():
+                can_delete = False 
+        data["can_delete_user"] = can_delete
         return Response(data)
     except:
         data["success"] = False

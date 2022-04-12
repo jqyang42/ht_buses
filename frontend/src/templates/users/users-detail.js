@@ -42,6 +42,7 @@ class UsersDetail extends Component {
         error_status: false,
         error_code: 200,
         valid_id: 0,
+        can_delete_user: false,
         students_page: [],
         students_table: {
             pageIndex: 1,
@@ -210,7 +211,21 @@ class UsersDetail extends Component {
 
     handleDeleteSubmit = (event) => {
         event.preventDefault();
+       if (this.state.can_delete_user) {
         this.deleteUser();
+       }
+    }
+
+    canDelete = (event) => {
+        event.preventDefault()
+        api.get(`can-delete-user?id=${this.props.params.id}`)
+        .then(res => {
+            const data = res.data
+            const can_delete_user = data.can_delete_user
+            console.log("checked can delete")
+            this.setState({ can_delete_user: can_delete_user })
+            return
+        })
     }
 
     resetStudentValues = () => {
@@ -474,7 +489,7 @@ class UsersDetail extends Component {
                                             {
                                                (localStorage.getItem('role') === 'Administrator' || localStorage.getItem('role') === 'School Staff') &&
                                                 (localStorage.getItem("user_id") !== this.props.params.id) ?
-                                                <button type="button" className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                                <button type="button" onClick={this.canDelete} className="btn btn-primary float-end w-auto me-3"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                                     <i className="bi bi-trash me-2"></i>
                                                     Delete
                                                 </button> : ""
