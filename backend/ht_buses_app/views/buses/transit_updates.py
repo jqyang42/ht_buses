@@ -27,7 +27,9 @@ def update_buses():
     if len(update_queue) > 0:
         try:
             counter += 1
-            for index in range(0, 5) if len(update_queue) > 5 else range(0, len(update_queue)):
+            limit = len(update_queue) if len(update_queue) <= 5 else 5
+            print(update_queue)
+            for index in range(0, limit):
                 url = 'http://tranzit.colab.duke.edu:8000/get'
                 bus_num = update_queue[index]
                 params = {'bus': bus_num}
@@ -77,6 +79,7 @@ def get_coords():
 
 def initialize_updater(active_buses="none"):
     global update_queue
+    print("fuck it we started")
     if active_buses != "none":
         print(active_buses)
         try:
@@ -85,6 +88,7 @@ def initialize_updater(active_buses="none"):
         except:
             traceback.print_exc()
             print("invalid bus number")
+    update_queue = list(set(update_queue))
     timer = RepeatTimer(4, update_buses)
     timer.start()
 
