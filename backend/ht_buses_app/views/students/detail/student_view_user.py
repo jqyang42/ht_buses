@@ -1,4 +1,4 @@
-from ....models import Student
+from ....models import Student, User
 from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -21,11 +21,11 @@ def students_user(request):
     search = request.query_params["q"]
     order_by = request.query_params["order_by"]
     sort_by = request.query_params["sort_by"] # will look for asc or desc
-    students = student_search_and_sort(order_by, sort_by, search, user_id)
+    students = student_search_and_sort(order_by, sort_by, search, user_id, request.user)
     data = student_pagination(students, page_number)
     return Response(data)
 
-def student_search_and_sort(order_by, sort_by, search, user_id):
+def student_search_and_sort(order_by, sort_by, search, user_id, requesting_user):
     if sort_by == "name":
         sort_by = "first_name"
     if sort_by == "route":
@@ -36,6 +36,9 @@ def student_search_and_sort(order_by, sort_by, search, user_id):
         sort_by = "account_id__email"
     
     students = Student.objects.filter(user_id = user_id)
+    if requesting_user.role == User.SCHOOL_STAFF:
+        student_ids = students.values_list('pk', flat=True)
+        students = get_students_for_user(requesting_user).filter(pk__in = student_ids)
     if (sort_by == "" or sort_by == None) and (order_by == "" or order_by == None) and search != None:
         students = students.annotate(full_name=Concat('first_name', V(' '), 'last_name'))\
         .filter(Q(full_name__icontains=search) | Q(first_name__icontains=search) | Q(last_name__icontains=search) | Q(student_school_id__icontains = search)).filter(user_id=user_id).order_by("id")
