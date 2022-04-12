@@ -68,7 +68,7 @@ class UsersDetail extends Component {
         in_transit: false,
         transit_log_id: null,
         transit_bus_number: null,
-        transit_route: null
+        transit_route: null,
     }
 
     // initialize page
@@ -489,17 +489,44 @@ class UsersDetail extends Component {
                                                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div className="modal-body">
-                                                                {this.state.user.role === "Student" ?
+                                                                {!this.state.can_delete_user
+                                                                    ? "This user cannot be deleted, because they have students associated with other schools outside of your management. To remove this user from your view, delete all of their associated students via the Students page." :
+                                                                    (this.state.user.role === "Student" ?
+                                                                    "When deleting this student, do you want to keep student records or simply disable their login ability?"
+                                                                    : (
+                                                                        this.state.user.role === "General" ? 
+                                                                        "Are you sure you want to delete this user and all of their associated students? Note that all students' login ability and records will be completely erased." : 
+                                                                        "Are you sure you want to delete this user?"
+                                                                    ))
+                                                                }
+                                                                {/* {this.state.user.role === "Student" ?
                                                                     "When deleting this student, do you want to keep student records or simply disable their login ability?"
                                                                     : (
                                                                         this.state.user.role === "General" ? 
                                                                         "Are you sure you want to delete this user and all of its associated students? Note that all students' login ability and records will be completely erased." : 
                                                                         "Are you sure you want to delete this user?"
                                                                     )
-                                                                }
+                                                                } */}
                                                             </div>
                                                             <div className="modal-footer">
-                                                                {this.state.user.role === "Student" ?
+                                                                {
+                                                                    !this.state.can_delete_user ? 
+                                                                    <>
+                                                                    <button type="button" className="btn btn-primary" data-bs-dismiss="modal">OK</button> 
+                                                                    </> :
+                                                                    (this.state.user.role === "Student" ?
+                                                                        <>
+                                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                        <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={() => this.deleteStudentObject() }>Delete Records</button> 
+                                                                        <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Disable Login</button> 
+                                                                        </>
+                                                                        :
+                                                                        <>
+                                                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                        <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+                                                                        </>)
+                                                                }
+                                                                {/* {this.state.user.role === "Student" ?
                                                                 <>
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="button" className="btn btn-danger" data-bs-dismiss="modal" onClick={() => this.deleteStudentObject() }>Delete Records</button> 
@@ -510,7 +537,7 @@ class UsersDetail extends Component {
                                                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                                 <button type="submit" className="btn btn-danger" data-bs-dismiss="modal">Delete</button>
                                                                 </>
-                                                                }
+                                                                } */}
                                                             </div>
                                                         </form>
                                                     </div>
