@@ -13,7 +13,7 @@ import Autocomplete from "react-google-autocomplete";
 import { GOOGLE_API_KEY } from "../../constants";
 
 export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlobalFilterFunction, showAll, navUrl, dnd, handleReorder, hasCustomSortBy, customSortBy, 
-    rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData }) {
+    rowProps = () => ({}), pageIndex, canPreviousPage, canNextPage, updatePageCount, pageSize, totalPages, columnHeaderClick, sortOptions, searchValue, editable, updateData, fullWidth }) {
 
     const navigate = useNavigate();
 
@@ -95,7 +95,7 @@ export function TableEditable({ columns, origData, searchOn, searchLabel, ourGlo
             <DndProvider backend={HTML5Backend}>
             {/* // apply the table props */}
             <div className='table-responsive mb-4 w-100'>
-            <table {...getTableProps()} className="table table-striped table-hover full-width">
+            <table {...getTableProps()} className={fullWidth ? "table table-striped table-hover full-width" : "table table-striped table-hover med-width"}>
                 <thead>
                 {// Loop over the header rows
                 headerGroups.map(headerGroup => (

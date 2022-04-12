@@ -107,7 +107,13 @@
 
 .full-width {
     min-width: 120%;
-    width: 1200px;
+    width: 1250px;
+    overflow-x: scroll;
+}
+
+.med-width {
+    min-width: 100%;
+    width: 1000px;
     overflow-x: scroll;
 }
 
