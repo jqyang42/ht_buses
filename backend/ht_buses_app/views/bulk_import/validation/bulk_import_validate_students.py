@@ -94,8 +94,11 @@ def bulk_import_validate(request):
                         student_email_error = True
                         exclude = True
                 else:
-                    student_email_error = False
-
+                    if len(row["student_email"]) != 0:
+                        student_email_error = True
+                        student_email_error_message = "Student email is not a valid email"
+                    else:
+                        student_email_error = False
             if row["name"] is None or row["name"] == "":
                 name_error = True
                 name_error_message = "Name field cannot be empty"
