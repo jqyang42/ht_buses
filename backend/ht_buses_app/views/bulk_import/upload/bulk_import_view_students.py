@@ -86,7 +86,11 @@ def bulk_import(request):
                         else:
                             email_error = False
                 else:
-                    email_error = False
+                    if len(row["parent_email"]) != 0:
+                        email_error = True
+                        email_error_message = "Parent email is not a valid email"
+                    else:
+                        email_error = False
 
         if row["name"] is None or row["name"] == "":
             name_error = True

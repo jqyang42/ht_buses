@@ -62,7 +62,11 @@ def bulk_import_validate(request):
                             else:
                                 email_error = False
                     else:
-                        email_error = False
+                        if len(row["parent_email"]) != 0:
+                            email_error = True
+                            email_error_message = "Parent email is not a valid email"
+                        else:
+                            email_error = False
 
             if len(row["student_email"]) > 254:
                     student_email_error = True
