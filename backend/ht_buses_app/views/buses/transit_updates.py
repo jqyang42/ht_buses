@@ -9,6 +9,7 @@ from ..logs.log_expiration import log_expiration
 update_queue = []
 bus_coords = {}
 is_running = False
+counter = 0
 
 class RepeatTimer(threading.Timer):
     def run(self):
@@ -21,14 +22,17 @@ def update_buses():
     global is_running
     global update_queue
     global bus_coords
+    global counter
     is_running = True
     if len(update_queue) > 0:
         try:
-            for index in range(0, 10) if len(update_queue) > 10 else range(0, len(update_queue)):
+            counter += 1
+            for index in range(0, 5) if len(update_queue) > 5 else range(0, len(update_queue)):
                 url = 'http://tranzit.colab.duke.edu:8000/get'
                 bus_num = update_queue[index]
                 params = {'bus': bus_num}
                 r = requests.get(url=url, params=params, timeout=10)
+                print(counter)
                 try: 
                     data = r.json()
                     if isinstance(data, dict):
@@ -87,7 +91,7 @@ def initialize_updater(active_buses="none"):
 def _next_ten():
     global update_queue
     if (len(update_queue) > 10):
-        update_queue = update_queue[10:] + update_queue[:10]
+        update_queue = update_queue[5:] + update_queue[:5]
 
 
 
