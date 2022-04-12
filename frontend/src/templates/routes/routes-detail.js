@@ -664,7 +664,7 @@ class BusRoutesDetail extends Component {
                                             {this.state.route.description}
                                         </p>
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.markers && this.state.center ? 
+                                        {this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 
