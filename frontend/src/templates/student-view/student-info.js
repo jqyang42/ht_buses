@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Navigate} from "react-router-dom";
 import { useParams } from "react-router-dom";
-import StudentSidebarMenu from '../components/parent-sidebar-menu';
+import StudentSidebarMenu from '../components/student-sidebar-menu';
 import HeaderMenu from "../components/header-menu";
 import ErrorPage from "../error-page";
 import RouteMap from "../routes/route-map";
