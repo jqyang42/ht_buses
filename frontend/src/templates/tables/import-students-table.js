@@ -99,6 +99,7 @@ export function ImportStudentsTable({ data, showAll, pageIndex, canPreviousPage,
             // sortOptions={sort}
             // searchValue={searchValue}
             updateData={updateImportData}
+            fullWidth={true}
         />
     )
 }
