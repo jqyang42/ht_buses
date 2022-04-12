@@ -73,10 +73,12 @@ class StudentInfo extends Component {
                     lat: res.data.user.location.lat,
                     lng: res.data.user.location.lng,
                 }
-             }, () => {
-                this.getStopsPage(this.state.stops_table.pageIndex, null, '')
-             })
-             this.periodicCall(res.data.route.id)
+            }, () => {
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+            })
+            if (res.data.route.id !== 0) {
+                this.periodicCall(res.data.route.id)
+            }
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 

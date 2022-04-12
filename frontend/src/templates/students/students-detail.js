@@ -50,7 +50,9 @@ class StudentsDetail extends Component {
                     lng: data.user.location.lng
                 }
             });
-            this.periodicCall(data.route.id)
+            if (data.route.id !== 0) {
+                this.periodicCall(data.route.id)
+            }
         })
         .catch (error => {
             if (error.response.status !== 200) {

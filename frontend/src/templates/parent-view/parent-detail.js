@@ -71,8 +71,10 @@ class ParentDetail extends Component {
                     lng: student.location.lng
                 },
                 student: student,
-             })
-             this.periodicCall(student.route.id)
+            })
+            if (student.route.id !== 0) {
+                this.periodicCall(student.route.id)
+            }
         }).catch (error => {
             if (error.response.status !== 200) {
                 this.setState({ 
