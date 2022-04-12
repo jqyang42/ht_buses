@@ -661,7 +661,7 @@ class BusRoutesDetail extends Component {
                                             {this.state.route.description}
                                         </p>
                                         <div className="bg-gray rounded mb-4">
-                                        {Object.keys(this.state.school).length != 0 && Object.keys(this.state.center).length != 0 ? 
+                                        {this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 

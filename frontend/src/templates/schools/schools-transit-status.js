@@ -155,7 +155,7 @@ class SchoolsTransitStatus extends Component {
                                     <div className="col-md-7 me-4">
                                         <h6 className="mb-3">Buses in Transit</h6>
                                         <div className="bg-gray rounded mb-4">
-                                        {Object.keys(this.state.school).length != 0 && Object.keys(this.state.center).length != 0 ? 
+                                        {this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={this.state.assign_mode} 

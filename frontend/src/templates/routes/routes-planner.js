@@ -721,7 +721,7 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3 mb-4">
-                                        {Object.keys(this.state.school).length != 0 && Object.keys(this.state.center).length != 0 ? 
+                                        {this.state.center ? 
                                             <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 
