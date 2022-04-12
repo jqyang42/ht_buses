@@ -317,7 +317,7 @@ class UsersDetail extends Component {
             return
         }
         else {
-            this.setState({ modal_dismiss: true})
+            // this.setState({ modal_dismiss: true})
             this.sendStudentRequest(true)
         }
        
