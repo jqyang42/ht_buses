@@ -212,6 +212,8 @@ class StudentsImport extends Component {
         if (this.state.students_redirect) {
             return <Navigate to={ STUDENTS_URL }/>
         }
+
+        console.log(this.state.errors)
         return (
             <div className="container-fluid mx-0 px-0 overflow-hidden">
                 <div className="row flex-md-nowrap">
@@ -327,6 +329,7 @@ class StudentsImport extends Component {
                                                 {error.parent_email ? <li>{error.error_message.parent_email}</li> : ""}
                                                 {error.school_name ? <li>{error.error_message.school_name}</li> : ""}
                                                 {error.duplicate_name ? <li>Name may be a duplicate in file import</li> : ""}
+                                                {error.duplicate_student_email ? <li>Student email is a duplicate in file import</li> : ""}
                                                 {error.duplicate_parent_email ? <li>Parent email is a duplicate in file import</li> : ""}
                                             </ul>
                                         </div>
