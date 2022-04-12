@@ -482,6 +482,9 @@ class BusRoutesDetail extends Component {
                                             { this.state.route.is_complete ? "" :
                                                 <span className="badge bg-red ms-2">Incomplete</span>
                                             }
+                                            { this.state.in_transit ? 
+                                                <span className="badge bg-blue ms-2">In Transit</span> : ""
+                                            }
                                         </h5>
                                         <p className="mb-2"><a href={"/schools/" + this.state.school.id}>{this.state.school.name}</a></p>
                                     </div>
