@@ -572,6 +572,7 @@ class BusRoutesPlanner extends Component {
     }
 
     render() {
+        console.log(this.state.school)
         if (!JSON.parse(localStorage.getItem('logged_in'))) {
             return <Navigate to={LOGIN_URL} />
         }
@@ -720,7 +721,7 @@ class BusRoutesPlanner extends Component {
 
                                         {/* Map Interface */}
                                         <div className="bg-gray rounded mt-3 mb-4">
-                                            {this.state.center ? 
+                                        {this.state.center ? 
                                             <RouteMap
                                             assign_mode={this.state.assign_mode} 
                                             key={this.state.assign_mode} 

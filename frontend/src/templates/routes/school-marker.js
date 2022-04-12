@@ -33,16 +33,13 @@ class SchoolMarker extends Component {
 
 
   render () {
-    const { showInfoWindow } = this.state;
-    console.log(this.state.location)
-    // console.log(this.props.id)
-    // console.log(this.props.id)
+    const  showInfoWindow  = this.state.showInfoWindow;
+    console.log(this.props.location)
     return (
       <>
       <Marker 
       position={this.props.location} 
       id={this.props.id} 
-      key={this.props.key} 
       onClick={this.handleClick}
       onDragEnd={this.editLocation}
       draggable={this.props.assign_mode}>
