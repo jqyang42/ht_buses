@@ -20,7 +20,7 @@ export const STOP_MARKER_ICONS = stop_marker_icons;
 
 export const SITE_NAME = "Hypothetical Transportation Bus Management System";
 // export const API_DOMAIN = "http://localhost:8000/api/"
-export const API_DOMAIN = "https://vcm-25151.vm.duke.edu/api/"
+export const API_DOMAIN = "http://beesquaredtransport.colab.duke.edu/api/"
 
 // Link URLs
 export const INDEX_URL = "/";
