@@ -5,6 +5,7 @@ import { STUDENTS_URL } from "../../constants";
 import SidebarMenu from '../components/sidebar-menu';
 import HeaderMenu from '../components/header-menu';
 import api from "../components/api";
+import { getPage } from "../tables/server-side-pagination";
 
 import { MARKER_ICONS } from '../../constants';
 import { LOGIN_URL } from '../../constants';
@@ -19,6 +20,7 @@ class StudentsDetail extends Component {
         route: {},
         school: {},
         center: null,
+        stops: [],
         buses: [],
         bus_tooltip: {},
         redirect: false,
@@ -26,15 +28,38 @@ class StudentsDetail extends Component {
         error_status: false,
         error_code: 200
     }
+
+    interval_id = null
     
     // initialize
     componentDidMount() {
         this.getStudentDetails()
         this.updateIsParent()
+        this.getAllStops()
+    }
 
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
     }
 
     // api calls
+    getAllStops = () => {
+        getPage({ url: `dashboard/students/stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            // const stops_table = {
+            //     pageIndex: res.pageIndex,
+            //     canPreviousPage: res.canPreviousPage,
+            //     canNextPage: res.canNextPage,
+            //     totalPages: res.totalPages,
+            // }
+            this.setState({
+                stops: res.data.stops,
+                // stops_table: stops_table
+            })
+        })
+
+    }
+
     getStudentDetails = () => {
         api.get(`students/detail?id=${this.props.params.id}`)
         .then(res => {
@@ -52,6 +77,7 @@ class StudentsDetail extends Component {
             });
             if (data.route.id !== 0) {
                 this.periodicCall(data.route.id)
+                this.handleStopsGet(data.route.id)
             }
         })
         .catch (error => {
@@ -287,6 +313,8 @@ class StudentsDetail extends Component {
                                                     centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
                                                     buses={this.state.buses}
                                                     bus_tooltip={this.state.bus_tooltip}
+                                                    school={this.state.school}
+                                                    active_route={this.state.route.id}
                                                 />
                                                 : "" }
                                                 </div>

@@ -260,12 +260,13 @@ class RouteMap extends Component {
               />: ""}
             {this.props.school ? 
               <SchoolMarker 
-                location={this.props.center} 
+                location={{lat: this.props.school.location.lat, lng: this.props.school.location.lng}} 
                 name={this.props.school.name}
                 id={this.props.school.id}
-                key={`${this.props.center.lat}+${this.props.center.lng}`}
+                key={`${this.props.school.lat}+${this.props.school.lng}`}
               /> : ""}
             {console.log(this.props.school)}
+            {console.log(this.props.center)}
             {this.props.school_tooltips?.map((value, index) => {
             {console.log(value.location)}
             {console.log(value.id)}
