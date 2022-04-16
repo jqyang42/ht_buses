@@ -23,7 +23,7 @@ class StudentInfo extends Component {
         buses: [],
         bus_tooltip: {},
         center: null,
-        // stops: {},
+        stops: [],
         // active_route: 1,
         error_status: false,
         error_code: 200,
@@ -59,6 +59,22 @@ class StudentInfo extends Component {
     }
 
     // api calls
+    getAllStops = (student_id) => {
+        getPage({ url: `dashboard/students/stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${student_id}`, only_pagination: true })
+        .then(res => {
+            // const stops_table = {
+            //     pageIndex: res.pageIndex,
+            //     canPreviousPage: res.canPreviousPage,
+            //     canNextPage: res.canNextPage,
+            //     totalPages: res.totalPages,
+            // }
+            this.setState({
+                stops: res.data.stops,
+                // stops_table: stops_table
+            })
+        })
+    }
+
     getStudentDetail = () => {
         api.get(`students/account?id=${localStorage.getItem('user_id')}`)
         .then(res => {
@@ -73,11 +89,11 @@ class StudentInfo extends Component {
                     lat: res.data.user.location.lat,
                     lng: res.data.user.location.lng,
                 }
-            }, () => {
-            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
             })
+            this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+            this.getAllStops(res.data.student.id)
             if (res.data.route.id !== 0) {
-                this.periodicCall(res.data.route.id)
+                // this.periodicCall(res.data.route.id)
             }
         }).catch (error => {
             if (error.response.status !== 200) {
@@ -250,7 +266,7 @@ class StudentInfo extends Component {
                                             <RouteMap 
                                                 assign_mode={false} 
                                                 key={false}
-                                                active_route={this.state.active_route} 
+                                                active_route={this.state.route.id} 
                                                 center={this.state.center}
                                                 existingStops={this.state.stops}
                                                 centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
