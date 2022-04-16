@@ -37,8 +37,8 @@ def student_arr_data(student):
     student_arr["last_name"] = student_serializer.data["last_name"]
     school = School.objects.get(pk=student_serializer.data["school_id"])
     school_serializer = SchoolSerializer(school, many=False)
-    student_arr["school_name"] = school_serializer.data["name"]
-
+    school_location_serializer = LocationSerializer(Location.objects.get(pk=school_serializer.data["location_id"]), many=False)
+    student_arr["school"] = {"id": school_serializer.data["id"], "name": school_serializer.data["name"], "lat": school_location_serializer.data["lat"], "lng": school_location_serializer.data["lng"]}
     if student_serializer.data["account_id"] is not None:
         student_user = User.objects.get(pk=student_serializer.data["account_id"])
         student_user_serializer = UserSerializer(student_user, many=False)
