@@ -70,7 +70,7 @@ class StudentsDetail extends Component {
                 }
             });
             if (data.route.id !== 0) {
-                // this.periodicCall(data.route.id)
+                this.periodicCall(data.route.id)
                 this.handleStopsGet(data.route.id)
             }
         })
