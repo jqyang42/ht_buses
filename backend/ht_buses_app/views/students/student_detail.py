@@ -51,7 +51,9 @@ def students_detail(request):
         student_arr = {"student_school_id": student_serializer.data["student_school_id"], "first_name": student_serializer.data["first_name"], "last_name": student_serializer.data["last_name"], "email": get_students_email(student), "account_id": account_id, "phone_number": get_students_phone(student), "in_range": in_range}
         data["student"] = student_arr
         data["user"] = user_arr
-        data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"]}
+        school_location_serializer = LocationSerializer(Location.objects.get(pk=school_serializer.data["location_id"]), many=False)
+        unique_school_location= {"lat": school_location_serializer.data["lat"], "lng": school_location_serializer.data["lng"]}
+        data["school"] = {'id' : student_serializer.data["school_id"], 'name' : school_serializer.data["name"], 'location': unique_school_location}
         data["route"] = {'id' : route_id, 'name' : route_name}
         data["success"] = True
         return Response(data)
