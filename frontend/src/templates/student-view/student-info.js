@@ -99,7 +99,7 @@ class StudentInfo extends Component {
             this.getStopsPage(this.state.stops_table.pageIndex, null, '')
             this.getAllStops(res.data.student.id)
             if (res.data.route.id !== 0) {
-                // this.periodicCall(res.data.route.id)
+                this.periodicCall(res.data.route.id)
             }
         }).catch (error => {
             if (error.response.status !== 200) {
