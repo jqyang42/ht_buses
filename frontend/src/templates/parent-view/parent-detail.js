@@ -162,10 +162,6 @@ class ParentDetail extends Component {
         } else {
             // console.log("theres nothing woahhhhhhh")
         }
-<<<<<<< HEAD
-        // console.log(this.state.student)
-=======
->>>>>>> dev
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">
