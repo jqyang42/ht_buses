@@ -19,7 +19,7 @@ class ParentDetail extends Component {
     state = {
         student: {},
         center: null,
-        stops: {},
+        stops: null,
         school_location: {},
         buses: [],
         bus_tooltip: {},
@@ -39,6 +39,7 @@ class ParentDetail extends Component {
     componentDidMount() {
         this.getParentStudentDetail()
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
+        this.getAllStops()
     }
 
     // pagination
@@ -59,6 +60,23 @@ class ParentDetail extends Component {
     }
 
     // api calls
+    getAllStops = () => {
+        getPage({ url: `dashboard/students/stops`, pageIndex: 0, sortOptions: null, searchValue: '', additionalParams: `&id=${this.props.params.id}`, only_pagination: true })
+        .then(res => {
+            // const stops_table = {
+            //     pageIndex: res.pageIndex,
+            //     canPreviousPage: res.canPreviousPage,
+            //     canNextPage: res.canNextPage,
+            //     totalPages: res.totalPages,
+            // }
+            this.setState({
+                stops: res.data.stops,
+                // stops_table: stops_table
+            })
+        })
+
+    }
+
     getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
         .then(res => {
@@ -74,7 +92,7 @@ class ParentDetail extends Component {
                     location: {
                         lat: data.school.lat,
                         lng: data.school.lng,
-                        address: data.school.address
+                        // address: data.school.address
                     },
                     name: data.school.name,
                     id: data.school.id
@@ -244,13 +262,13 @@ class ParentDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.center ? 
+                                        {this.state.center && this.state.stops ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={false}
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
-                                            // existingStops={this.state.stops}
+                                            existingStops={this.state.stops}
                                             centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
                                             buses={this.state.buses}
                                             bus_tooltip={this.state.bus_tooltip}
