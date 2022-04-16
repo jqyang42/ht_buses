@@ -256,6 +256,7 @@ class StudentInfo extends Component {
                                                 centerIcon={MARKER_ICONS[this.state.route.id % MARKER_ICONS.length]}
                                                 buses={this.state.buses}
                                                 bus_tooltip={this.state.bus_tooltip}
+                                                school={this.state.school}
                                             />
                                             : "" }
                                         </div>
