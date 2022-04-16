@@ -20,7 +20,7 @@ class StudentsDetail extends Component {
         route: {},
         school: {},
         center: null,
-        stops: null,
+        stops: [],
         buses: [],
         bus_tooltip: {},
         redirect: false,
@@ -28,12 +28,18 @@ class StudentsDetail extends Component {
         error_status: false,
         error_code: 200
     }
+
+    interval_id = null
     
     // initialize
     componentDidMount() {
         this.getStudentDetails()
         this.updateIsParent()
         this.getAllStops()
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
     }
 
     // api calls

@@ -36,10 +36,16 @@ class ParentDetail extends Component {
         }
     }
 
+    interval_id = null
+
     componentDidMount() {
         this.getParentStudentDetail()
         this.getStopsPage(this.state.stops_table.pageIndex, null, '')
         this.getAllStops()
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
     }
 
     // pagination

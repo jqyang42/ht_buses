@@ -37,8 +37,14 @@ class StudentInfo extends Component {
         }
     }
 
+    interval_id = null
+
     componentDidMount() {
         this.getStudentDetail()
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval_id)
     }
 
     // pagination
