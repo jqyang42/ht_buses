@@ -308,6 +308,7 @@ class StudentsDetail extends Component {
                                                     buses={this.state.buses}
                                                     bus_tooltip={this.state.bus_tooltip}
                                                     school={this.state.school}
+                                                    active_route={this.state.route.id}
                                                 />
                                                 : "" }
                                                 </div>
