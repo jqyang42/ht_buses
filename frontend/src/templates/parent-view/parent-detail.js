@@ -19,7 +19,7 @@ class ParentDetail extends Component {
     state = {
         student: {},
         center: null,
-        stops: null,
+        stops: [],
         school_location: {},
         buses: [],
         bus_tooltip: {},
@@ -262,7 +262,7 @@ class ParentDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
-                                        {this.state.center && this.state.stops ? 
+                                        {this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={false}
