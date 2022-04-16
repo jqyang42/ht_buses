@@ -212,7 +212,7 @@ def bulk_import_validate(request):
             data["success"] = False
             return Response(data, status=404)
 
-        # duplicate checking
+    # duplicate checking
     for i in range(0, len(students)):
         for j in range(i + 1, len(students)):
             student_i_name = ' '.join(students[i]["name"].strip().split()).casefold()
@@ -224,47 +224,49 @@ def bulk_import_validate(request):
             student_account_i_email = students[i]["student_email"].strip().casefold()
             student_account_j_email = students[j]["student_email"].strip().casefold()
 
-            if student_i_name == student_j_name and student_i_email == student_j_email and student_account_i_email == student_account_j_email:
-                students[i]["error"]["duplicate_name"] = True
-                students[j]["error"]["duplicate_name"] = True
-                students[i]["error"]["duplicate_parent_email"] = True
-                students[j]["error"]["duplicate_parent_email"] = True
-                students[i]["error"]["duplicate_student_email"] = True
-                students[j]["error"]["duplicate_student_email"] = True
-                students[i]["exclude"] = True
-                students[j]["exclude"] = True
-                if len(errors) == 0:
-                    new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                    new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                else:
-                    student_i_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == students[i]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            errors[k]["duplicate_parent_email"] = True
-                            errors[k]["duplicate_student_email"] = True
-                            student_i_found = True
-                            #print(str(student_i_found) + " " + str(students[i]["row_num"]))
-                    if student_i_found == False:
-                        #print("we accidentally append here bc we don't find error for i")
-                        new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                        #print(new_errors)
-                        errors.append(new_errors)
 
-                    student_j_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == students[j]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            errors[k]["duplicate_parent_email"] = True
-                            errors[k]["duplicate_student_email"] = True
-                            student_j_found = True
-
-                    if student_j_found == False:
-                        #print("we accidentally append here bc we don't find error for j")
+            if len(student_account_i_email) != 0 and len(student_account_j_email) != 0:
+                if student_i_name == student_j_name and student_i_email == student_j_email and student_account_i_email == student_account_j_email:
+                    students[i]["error"]["duplicate_name"] = True
+                    students[j]["error"]["duplicate_name"] = True
+                    students[i]["error"]["duplicate_parent_email"] = True
+                    students[j]["error"]["duplicate_parent_email"] = True
+                    students[i]["error"]["duplicate_student_email"] = True
+                    students[j]["error"]["duplicate_student_email"] = True
+                    students[i]["exclude"] = True
+                    students[j]["exclude"] = True
+                    if len(errors) == 0:
                         new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                        new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
                         errors.append(new_error)
+                        errors.append(new_errors)
+                    else:
+                        student_i_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == students[i]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_parent_email"] = True
+                                errors[k]["duplicate_student_email"] = True
+                                student_i_found = True
+                                #print(str(student_i_found) + " " + str(students[i]["row_num"]))
+                        if student_i_found == False:
+                            #print("we accidentally append here bc we don't find error for i")
+                            new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                            #print(new_errors)
+                            errors.append(new_errors)
+
+                        student_j_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == students[j]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_parent_email"] = True
+                                errors[k]["duplicate_student_email"] = True
+                                student_j_found = True
+
+                        if student_j_found == False:
+                            #print("we accidentally append here bc we don't find error for j")
+                            new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                            errors.append(new_error)
 
             elif student_i_name == student_j_name and student_i_email == student_j_email:
                 students[i]["error"]["duplicate_name"] = True
@@ -303,44 +305,45 @@ def bulk_import_validate(request):
                         #print("we accidentally append here bc we don't find error for j")
                         new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": True, "duplicate_student_email": False, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
                         errors.append(new_error)
-
-            elif student_i_name == student_j_name and student_account_i_email == student_account_j_email:
-                students[i]["error"]["duplicate_name"] = True
-                students[j]["error"]["duplicate_name"] = True
-                students[i]["error"]["duplicate_student_email"] = True
-                students[j]["error"]["duplicate_student_email"] = True
-                students[i]["exclude"] = True
-                students[j]["exclude"] = True
-                if len(errors) == 0:
-                    new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                    new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                else:
-                    student_i_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == students[i]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            errors[k]["duplicate_student_email"] = True
-                            student_i_found = True
-                            #print(str(student_i_found) + " " + str(students[i]["row_num"]))
-                    if student_i_found == False:
-                        #print("we accidentally append here bc we don't find error for i")
-                        new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                        #print(new_errors)
-                        errors.append(new_errors)
-
-                    student_j_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == students[j]["row_num"]:
-                            errors[k]["duplicate_name"] = True
-                            errors[k]["duplicate_student_email"] = True
-                            student_j_found = True
-
-                    if student_j_found == False:
-                        #print("we accidentally append here bc we don't find error for j")
+            
+            elif len(student_account_i_email) != 0 and len(student_account_j_email) != 0:
+                if student_i_name == student_j_name and student_account_i_email == student_account_j_email:
+                    students[i]["error"]["duplicate_name"] = True
+                    students[j]["error"]["duplicate_name"] = True
+                    students[i]["error"]["duplicate_student_email"] = True
+                    students[j]["error"]["duplicate_student_email"] = True
+                    students[i]["exclude"] = True
+                    students[j]["exclude"] = True
+                    if len(errors) == 0:
                         new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                        new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
                         errors.append(new_error)
+                        errors.append(new_errors)
+                    else:
+                        student_i_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == students[i]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_student_email"] = True
+                                student_i_found = True
+                                #print(str(student_i_found) + " " + str(students[i]["row_num"]))
+                        if student_i_found == False:
+                            #print("we accidentally append here bc we don't find error for i")
+                            new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                            #print(new_errors)
+                            errors.append(new_errors)
+
+                        student_j_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == students[j]["row_num"]:
+                                errors[k]["duplicate_name"] = True
+                                errors[k]["duplicate_student_email"] = True
+                                student_j_found = True
+
+                        if student_j_found == False:
+                            #print("we accidentally append here bc we don't find error for j")
+                            new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                            errors.append(new_error)
 
 
             elif student_i_name == student_j_name:
@@ -374,34 +377,35 @@ def bulk_import_validate(request):
                         new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": True, "duplicate_parent_email": False, "duplicate_student_email": False, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
                         errors.append(new_errors)
 
-            elif student_account_i_email == student_account_j_email:
-                students[i]["error"]["duplicate_student_email"] = True
-                students[j]["error"]["duplicate_student_email"] = True
-                students[i]["exclude"] = True
-                students[j]["exclude"] = True
-                if len(errors) == 0:
-                    new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                    new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "error_message": [], "existing_students": [], "exclude": False}
-                    errors.append(new_error)
-                    errors.append(new_errors)
-                else:
-                    student_i_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == students[i]["row_num"]:
-                            errors[k]["duplicate_student_email"] = True
-                            student_i_found = True
-                    if student_i_found == False:
-                        new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
-                        errors.append(new_errors)
-
-                    student_j_found = False
-                    for k in range(0, len(errors)):
-                        if errors[k]["row_num"] == students[j]["row_num"]:
-                            errors[k]["duplicate_student_email"] = True
-                            student_j_found = True
-                    if student_j_found == False:
+            elif len(student_account_i_email) != 0 and len(student_account_j_email) != 0:
+                if student_account_i_email == student_account_j_email:
+                    students[i]["error"]["duplicate_student_email"] = True
+                    students[j]["error"]["duplicate_student_email"] = True
+                    students[i]["exclude"] = True
+                    students[j]["exclude"] = True
+                    if len(errors) == 0:
                         new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                        new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "error_message": [], "existing_students": [], "exclude": False}
+                        errors.append(new_error)
                         errors.append(new_errors)
+                    else:
+                        student_i_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == students[i]["row_num"]:
+                                errors[k]["duplicate_student_email"] = True
+                                student_i_found = True
+                        if student_i_found == False:
+                            new_errors = {"row_num" : students[i]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                            errors.append(new_errors)
+
+                        student_j_found = False
+                        for k in range(0, len(errors)):
+                            if errors[k]["row_num"] == students[j]["row_num"]:
+                                errors[k]["duplicate_student_email"] = True
+                                student_j_found = True
+                        if student_j_found == False:
+                            new_error = {"row_num" : students[j]["row_num"], "name": False, "parent_email": False, "student_id": False, "school_name": False, "duplicate_name": False, "duplicate_parent_email": False, "duplicate_student_email": True, "student_email": False, "phone_number": False, "error_message": [], "existing_students": [], "exclude": False}
+                            errors.append(new_errors)
         
     data["students"] = students
     data["errors"] = errors

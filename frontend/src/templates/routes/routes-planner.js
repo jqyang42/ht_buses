@@ -27,7 +27,7 @@ class BusRoutesPlanner extends Component {
             school: [],
             students: [],
             routes: [],
-            stops: null,
+            stops: [],
             create_route_name: '',
             create_school_name: '',
             create_route_description: '',
