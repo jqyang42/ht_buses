@@ -20,6 +20,7 @@ class ParentDetail extends Component {
         student: {},
         center: null,
         stops: {},
+        school_location: {},
         buses: [],
         bus_tooltip: {},
         active_route: 1,
@@ -61,19 +62,27 @@ class ParentDetail extends Component {
     getParentStudentDetail = () => {
         api.get(`dashboard/students/detail?id=${this.props.params.id}`)
         .then(res => {
-            // console.log(res.data.student)
-            const student = res.data.student
+            const data = res.data.student
+            console.log(data)
             this.setState({ 
-                stops: student.stops,
-                active_route: student.route.id,
+                active_route: data.route.id,
                 center: {
-                    lat: student.location.lat,
-                    lng: student.location.lng
+                    lat: data.location.lat,
+                    lng: data.location.lng
                 },
-                student: student,
+                school: {
+                    location: {
+                        lat: data.school.lat,
+                        lng: data.school.lng,
+                        address: data.school.address
+                    },
+                    name: data.school.name,
+                    id: data.school.id
+                },
+                student: data
             })
-            if (student.route.id !== 0) {
-                this.periodicCall(student.route.id)
+            if (data.route.id !== 0) {
+                this.periodicCall(data.route.id)
             }
         }).catch (error => {
             if (error.response.status !== 200) {
@@ -129,7 +138,6 @@ class ParentDetail extends Component {
         } else {
             // console.log("theres nothing woahhhhhhh")
         }
-        console.log(this.state.student)
         return (
             <div className="overflow-hidden container-fluid mx-0 px-0">
                 <div className="row flex-wrap">
@@ -236,16 +244,17 @@ class ParentDetail extends Component {
                                 <div className="row mt-4">
                                     <div className="col-md-7 me-4">
                                         <div className="bg-gray rounded mb-4">
-                                        {Object.keys(this.state.student).length && this.state.center ? 
+                                        {this.state.center ? 
                                         <RouteMap 
                                             assign_mode={false} 
                                             key={false}
                                             active_route={this.state.active_route} 
                                             center={this.state.center}
-                                            existingStops={this.state.stops}
+                                            // existingStops={this.state.stops}
                                             centerIcon={MARKER_ICONS[this.state.active_route % MARKER_ICONS.length]}
                                             buses={this.state.buses}
                                             bus_tooltip={this.state.bus_tooltip}
+                                            school={this.state.school}
                                         />
                                         : "" }
                                         </div>

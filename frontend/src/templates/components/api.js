@@ -18,7 +18,6 @@ api.interceptors.request.use( config => {
     interceptor_api.get(`users/update-stored-info`)
     .then(res => {
         const data = res.data.data
-        console.log(data)
         if(data.success) {
             localStorage.setItem('user_id', data.user_id)
             localStorage.setItem('role',  data.role_value)
